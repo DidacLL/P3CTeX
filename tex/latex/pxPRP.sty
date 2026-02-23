@@ -5,37 +5,95 @@
 \file_input:n {pxPRP.code.tex}
 
 
+%% Creació (o assegurament) d'un nou objecte lògic pxPRP.
+%%   #1 - identificador lògic de l'objecte (nom curt, p.ex. PATATA)
 \NewDocumentCommand{\pxNewObject}{m}{\pxPRP_ensure:n {#1}}
 
+%% Assigna un valor escalar (tl) a una clau dins d'un objecte.
+%% Si la clau ja existia, el valor anterior se sobreescriu completament.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - valor escalar (pot contenir comes)
 \NewDocumentCommand{\pxSet}{m m m}{
 	\pxPRP_set:nnnN	{#1}	{#2}	{#3} \g_pxprp__pxPRP_propREG_prop
 }
 
+%% Afegeix un element al final de la llista associada a una clau.
+%% La clau es tracta com una llista separada per comes (clist).
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - nou element a afegir
 \NewDocumentCommand{\pxPutValue}{m m +m}{
 	\pxPRP_put_items:nnn {#1}{#2}{#3}
 }
 
+%% Afegeix una llista de valors al final de la llista existent.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - llista separada per comes a concatenar a la dreta
 \NewDocumentCommand{\pxListPutRight}{m m m}{
 	\pxprp_list_put_right:nnn {#1}{#2}{#3}
 }
 
+%% Afegeix una llista de valors al principi de la llista existent.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - llista separada per comes a concatenar a l'esquerra
 \NewDocumentCommand{\pxListPutLeft}{m m m}{
 	\pxprp_list_put_left:nnn {#1}{#2}{#3}
 }
 
+%% Substitueix completament la llista associada a una clau.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - nova llista completa separada per comes
 \NewDocumentCommand{\pxListSet}{m m m}{
 	\pxprp_list_set:nnn {#1}{#2}{#3}
 }
 
+%% Retorna la llargada (nombre d'elements) de la llista associada a una clau.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+\NewDocumentCommand{\pxListLen}{m m}{
+  \pxPRP_list_length:nn {#1}{#2}
+}
+
+%% Elimina una clau (i el seu valor) d'un objecte.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau a eliminar
 \NewDocumentCommand{\pxClearKey}{m m}{
 	\pxPRP_clear_key:nn {#1}{#2}
 }
+%% Test boolean sobre el valor escalar d'una clau.
+%% El valor "false" o buit es considera fals; qualsevol altre, cert.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - codi executat si és cert
+%%   #4 - codi executat si és fals
 \def\pxIfTrueTF#1#2#3#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
+%% Test d'existència d'objecte: executa #2 si l'objecte existeix, #3 altrament.
+%%   #1 - identificador de l'objecte
+%%   #2 - codi per al cas existent
+%%   #3 - codi per al cas inexistent
+\def\pxIfObjectExistsTF#1#2#3{\pxPRP_object_exists:nTF {#1}{#2}{#3}}
+%% Test d'existència de clau dins d'un objecte.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - codi per al cas existent
+%%   #4 - codi per al cas inexistent
+\def\pxIfKeyExistsTF#1#2#3#4{\pxPRP_key_exists:nnTF {#1}{#2}{#3}{#4}}
 
+%% Elimina completament l'objecte i totes les seves claus del registre global.
+%%   #1 - identificador de l'objecte
 \NewDocumentCommand{\pxClearObject}{m}{
 	\pxPRP_clear_object:n {#1}
 }
 
 
+%% Accés compacte a un element de llista: \pxGet OBJ.clau[idx]
+%%   OBJ  - identificador de l'objecte
+%%   clau - clau dins de l'objecte
+%%   idx  - posició (1-based) dins de la llista
 \def\pxGet~#1.#2[#3]{\pxPRP_get_item:nnn {#1}{#2}{#3}}
+%% Variante que imprimeix una etiqueta en negreta abans del valor.
 \def\pxPrint~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }

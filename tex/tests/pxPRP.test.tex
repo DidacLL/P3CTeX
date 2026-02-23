@@ -81,14 +81,10 @@ Després d'esborrar la clau, podem tornar a definir-la:
 Ara: TEMP.k[1] = \pxGet TEMP.k[1].
 
 \pxClearObject{TEMP}
-%
-%Després d'esborrar l'objecte, podem recrear-lo sense errors:
-%
-%\pxNewObject{TEMP}
-%\pxSet{TEMP}{k}{NOU}
-%%
-%TEMP.k[1] = \pxGet TEMP.k[1].
-%%
+
+\pxNewObject{TEMP}
+\pxSet{TEMP}{k}{P,P}
+Ara: TEMP.k[1] = \pxGet TEMP.k[1].
 \bigskip
 
 \subsection*{Prova 6: Flags booleans}
@@ -107,30 +103,64 @@ Ara: TEMP.k[1] = \pxGet TEMP.k[1].
   {featureB és INACTIVA.}
 
 \bigskip
-%
-%\bigskip
-%\subsection*{Prova 8: Llistes amb \texttt{\textbackslash pxListPutLeft}}
-%
-%\pxNewObject{OBJL}
-%
-%\pxListPutRight{OBJL}{nums}{2,3}
-%\pxListPutLeft{OBJL}{nums}{1}
-%
-%Esperat: OBJL.nums = (\pxGet OBJL.nums[1], \pxGet OBJL.nums[2], \pxGet OBJL.nums[3]).
-%
-%\bigskip
-%
-%\subsection*{Prova 9: Substitució completa amb \texttt{\textbackslash pxListSet}}
-%
-%\pxNewObject{OBJS}
-%
-%\pxListPutRight{OBJS}{vals}{a,b,c}
-%
-%Abans de \pxListSet: OBJS.vals[1] = \pxGet OBJS.vals[1].
-%
-%\pxListSet{OBJS}{vals}{x,y}
-%
-%Després de \pxListSet: OBJS.vals[1] = \pxGet OBJS.vals[1],\quad
-%OBJS.vals[2] = \pxGet OBJS.vals[2].
+
+\subsection*{Prova 7: Llistes amb \texttt{\textbackslash pxListPutRight} i \texttt{\textbackslash pxListPutLeft}}
+
+\pxNewObject{OBJL}
+
+% Primer només a la dreta
+\pxListPutRight{OBJL}{nums}{2,3}
+
+Després de \pxListPutRight: OBJL.nums = (\pxGet OBJL.nums[1], \pxGet OBJL.nums[2]).
+
+\par\medskip
+
+% Ara afegim a l'esquerra
+\pxListPutLeft{OBJL}{nums}{1}
+
+Esperat final: OBJL.nums = (1,2,3). En realitat: (\pxGet OBJL.nums[1], \pxGet OBJL.nums[2], \pxGet OBJL.nums[3]).
+
+\bigskip
+
+\subsection*{Prova 8: Substitució completa amb \texttt{\textbackslash pxListSet}}
+
+\pxNewObject{OBJS}
+
+\pxListPutRight{OBJS}{vals}{a,b,c}
+
+Abans de \pxListSet: OBJS.vals[1] = \pxGet OBJS.vals[1].
+
+\pxListSet{OBJS}{vals}{x,y}
+
+Després de \pxListSet: OBJS.vals[1] = \pxGet OBJS.vals[1],\quad
+OBJS.vals[2] = \pxGet OBJS.vals[2].
+
+\bigskip
+
+\subsection*{Prova 9: Predicats d'existència i llargada de llista}
+
+\pxIfObjectExistsTF{NOEXISTEIX}
+  {OBJECTE NOEXISTEIX (no hauria de passar).}
+  {OBJECTE NOEXISTEIX no és present, com esperat.}
+
+\pxNewObject{CHK}
+\pxSet{CHK}{nums}{1,2,3}
+
+\par
+
+\pxIfObjectExistsTF{CHK}
+  {L'objecte CHK existeix.}
+  {L'objecte CHK \emph{no} existeix (error).}
+
+\par
+
+\pxIfKeyExistsTF{CHK}{nums}
+  {La clau nums existeix a CHK.}
+  {La clau nums \emph{no} existeix a CHK (error).}
+
+\par
+
+Llargada esperada de CHK.nums: 3.\quad
+%Llargada real: \pxListLen{CHK}{nums}.
 
 \end{document}
