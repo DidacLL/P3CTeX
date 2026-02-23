@@ -1,4 +1,4 @@
-% !TeX root = ../tests/pxPRP.test.tex
+% ! TeX root = ../tests/pxPRP.test.tex
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
 \ProvidesExplPackage{pxPRP}{2025}{v0.2}{Useful tools for managing prop maps containing keyvalue pairs}
@@ -51,11 +51,25 @@
 	\pxprp_list_set:nnn {#1}{#2}{#3}
 }
 
+%% Mostra tots els valors d'una clau com a llista, separats per un separador.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+%%   #3 - separador (opcional, per defecte ", ")
+\NewDocumentCommand{\pxListAll}{m m O{, }}{
+  \pxPRP_list_use:nnn {#1}{#2}{#3}
+}
+
 %% Retorna la llargada (nombre d'elements) de la llista associada a una clau.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 \NewDocumentCommand{\pxListLen}{m m}{
   \pxPRP_list_length:nn {#1}{#2}
+}
+%% Neteja el contingut de la llista associada a una clau, mantenint la clau.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+\NewDocumentCommand{\pxListClear}{m m}{
+  \pxprp_list_set:nnn {#1}{#2}{}
 }
 
 %% Elimina una clau (i el seu valor) d'un objecte.
@@ -63,6 +77,12 @@
 %%   #2 - clau a eliminar
 \NewDocumentCommand{\pxClearKey}{m m}{
 	\pxPRP_clear_key:nn {#1}{#2}
+}
+%% Obté el valor escalar (tl) associat a una clau, sense tractar-lo com a llista.
+%%   #1 - identificador de l'objecte
+%%   #2 - clau
+\NewDocumentCommand{\pxGetScalar}{m m}{
+  \pxPRP_get_scalar:nn {#1}{#2}
 }
 %% Test boolean sobre el valor escalar d'una clau.
 %% El valor "false" o buit es considera fals; qualsevol altre, cert.

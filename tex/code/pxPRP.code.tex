@@ -1,4 +1,4 @@
-% !TeX root = ../test/pxPRP.test.tex
+% ! TeX root = ../test/pxPRP.test.tex
 %% =======================================================
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
@@ -351,6 +351,22 @@
 	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
 	\clist_item:Nn \l_pxprp_get_item_aux_clist { #3 }
 }
+%% GET SCALAR VALUE (TL) AS RESULT
+%% \pxPRP_get_scalar:nn { <id> }{ <key> }
+%% Returns the scalar value for <key> in object <id> as a tl in an
+%% expansion-safe form. If the key does not exist, expands to empty.
+\cs_new:Npn \pxPRP_get_scalar:nn #1 #2 {
+	\tl_clear_new:N \l_pxprp_scalar_tmp_tl
+	\tl_clear_new:N \l_pxprp_scalar_propname_tl
+	\pxPRP_get_propname:nNTF {#1} \l_pxprp_scalar_propname_tl
+	  {
+	    \prop_get:cnNTF { \tl_use:N \l_pxprp_scalar_propname_tl } {#2} \l_pxprp_scalar_tmp_tl
+	      { }
+	      { \tl_clear:N \l_pxprp_scalar_tmp_tl }
+	  }
+	  { \tl_clear:N \l_pxprp_scalar_tmp_tl }
+	\tl_use:N \l_pxprp_scalar_tmp_tl
+}
 %% LIST LENGTH
 %% \pxPRP_list_length:nnN { <id> }{ <key> } <int>
 %%   #1 - logical object id
@@ -369,6 +385,16 @@
 	\clist_clear_new:N \l_pxprp_get_item_aux_clist
 	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
 	\clist_count:N \l_pxprp_get_item_aux_clist
+}
+%% LIST USE: RETURN ALL ITEMS SEPARATED BY A GIVEN SEPARATOR
+%% \pxPRP_list_use:nnn { <id> }{ <key> }{ <sep> }
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - separator token list (printed between items)
+\cs_new:Npn \pxPRP_list_use:nnn #1 #2 #3 {
+	\clist_clear_new:N \l_pxprp_get_item_aux_clist
+	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
+	\clist_use:Nn \l_pxprp_get_item_aux_clist {#3}
 }
 %% GET ITEM USING SPECIALISED SYNTAX
 %% \pxPRP_get_item_var:nnn  <id>.<key>[<index>];
