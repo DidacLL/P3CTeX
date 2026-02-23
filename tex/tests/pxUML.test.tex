@@ -1,0 +1,67 @@
+\documentclass{article}
+
+% Always load expl3 early in tests
+
+
+% Load your code directly from the working directory:
+\usepackage{pxUML}
+
+\begin{document}
+	\section{Pregunta 1} \label{ex1}
+
+\subsection*{Diagrama UML Original}
+Disseny inicial del sistema, tal com s'indica a l'enunciat:
+
+\PXdefClass[enumclass]{Role}
+{
+	DEVELOPER,
+	COMMUNITYMANAGER
+}
+\PXdefClass[enumclass]{AICategory}
+{
+	CHAT,
+	CODEGENERATOR,
+	POSTGENERATOR
+}
+
+\PXdefClass{Employee}
+{
+	- role : Role,
+	- email : String
+}[+ monthlyConsumptionCost(month : DateTime) : real]
+
+\PXdefClass{TokenConsumption}
+{
+	- timeStamp : DateTime,
+	- numTokens : UnlimitedNatural
+}
+
+\PXdefClass{AIAgent}
+{
+	- name : String,
+	- description : String,
+	- tokenPrice : Real,
+	- aiCategory : AICategory
+}[+ process(prompt : String) : String, + calculateCost(numTokens : UnliimitedNatural):Real	]
+
+\PXdefClass{Company}
+{
+	- name : String,
+	- address : String,
+	- tel : String,
+	- web : String
+}
+
+\PXuml{
+	\drawclass*[text width=15em]{Role}[2,0]
+	\drawclass*[text width=14em]{AICategory}[16,0]
+	\drawclass[text width=16em]{TokenConsumption}[9,-5]
+	\drawclass[text width=16em]{AIAgent}[18,-5]
+	\drawclass[text width=16em]{Employee}[0,-5]
+	\drawclass[text width=16em]{Company}[0,-10]
+	\association{Employee}{0..*}{ }{Company}{}{1}
+	\association{Employee}{1}{ }{TokenConsumption}{}{0..*}
+	\association{TokenConsumption}{0..*}{}{AIAgent}{}{1}
+}[1.1\linewidth]
+
+\end{document}

@@ -1,0 +1,163 @@
+% !TeX root = ../tests/pxUML.test.tex
+%% =======================================================
+%%  	P3C.TeX  			v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%  This file is part of the package P3C.TeX
+%%
+%%  Author's name: Scvria
+%%  File: pxUML.code.tex
+%% 	Version: v0.1 (02/2026)
+%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%
+%%  This file may be distributed and/or modified:
+%%
+%%   1. under the LaTeX Project Public License and/or
+%%   2. under the GNU Public License.
+%%
+%%   See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+%%	TODO:	- User level API
+%%			- Add more features to the UML class diagram implementation
+%% =======================================================
+\ProvidesExplFile{pxUML.code.tex}{2025}{v0.2}
+{P3CTeX UML Graphics implementation based on top of pgf-umlcd and TikZ packages}
+
+%% CLASS REGISTRY
+%% PROP NAME REG register all created classes
+\prop_if_exist:NF \g_pxuml_classREG_prop {
+	\prop_gclear_new:N \g_pxuml_classREG_prop
+}
+%% PCKG PRIVATE FUNCTIONS
+%% NEW CLASS
+%%  #1 - CLASS NAME
+%%  #2 - ATTRIBUTES
+%%  #3 - OPERATIONS
+%%  #4 - INHERITANCE
+%%  #5 - OBJ-TYPE
+%%  #6 - VISIBILITY
+%%  #7 - IMPLEMENTATION
+\cs_new:Npn \__pxuml_newclass:nnnnnnn #1#2#3#4#5#6#7{
+	\pxPRP_set:nnnN	{  #1 }	{ 	attributes	}	{ #2 } 	\g_pxuml_classREG_prop
+	\pxPRP_set:nnnN	{  #1 }	{ 	operations 	}	{ #3 } 	\g_pxuml_classREG_prop
+	\pxPRP_set:nnnN	{  #1 }	{ 	inheritance }	{ #4 } 	\g_pxuml_classREG_prop
+	\pxPRP_set:nnnN	{  #1 }	{ 	objtype 	}	{ #5 } 	\g_pxuml_classREG_prop
+	\pxPRP_set:nnnN	{  #1 }	{ 	visibility 	}	{ #6 } 	\g_pxuml_classREG_prop
+	\pxPRP_set:nnnN	{  #1 }	{ 	implement 	}	{ #7 } 	\g_pxuml_classREG_prop
+}
+%% NEW CLASS VARIANT
+\cs_generate_variant:Nn \__pxuml_newclass:nnnnnnn  {eeeeeee}
+\cs_new:Npn \__pxuml_newclass:nnn #1#2#3{\__pxuml_newclass:nnnnnnn {#1}{#2}{#3}{}{class}{public}{}}
+%% ADD ATTRIBUTE
+%%  #1 - CLASS NAME
+%%  #2 - ATTRIBUTE
+\cs_new:Npn \__pxuml_add_attribute:nn #1#2 {
+	\pxPRP_put_items:nnnN {  #1 }{ attributes } {#2} \g_pxuml_classREG_prop
+}
+%% ADD INHERITANCE
+%%  #1 - CLASS NAME
+%%  #2 - INHERITANCE
+\cs_new:Npn \__pxuml_add_inherit:nn #1#2 {
+	\pxPRP_put_items:nnnN {  #1 }{ inheritance } {#2} \g_pxuml_classREG_prop
+}
+%% ADD OPERATION
+%%  #1 - CLASS NAME
+%%  #2 - OPERATION
+\cs_new:Npn \__pxuml_add_operation:nn #1#2 {
+	\pxPRP_put_items:nnnN {  #1 }{ operations } {#2} \g_pxuml_classREG_prop
+}
+%% DRAW CLASS
+%%  #1 - CLASS NAME
+%%  #2 - ATTRIBUTES
+%%  #3 - OPERATIONS
+\cs_new:Npn \__pxuml_drawclass:nnn #1#2#3 {
+	%%%%%%%% ATTRIBUTES
+	\clist_clear_new:N  \l__attributes_clist
+	\tl_clear_new:N \l__attributes_tl
+	\pxprp_get_clist:nnNN {#1}{ attributes } \l__attributes_clist \g_pxuml_classREG_prop
+	%%%%%%%% OPERATIONS
+	\clist_clear_new:N  \l__operations_clist
+	\tl_clear_new:N \l__operations_tl
+	\pxprp_get_clist:nnNN { #1 }{ operations } \l__operations_clist \g_pxuml_classREG_prop
+	%%%%%%%% INHERITANCE
+	\tl_clear_new:N \l__inheritance_tl
+	\pxprp_get_tl:nnNN { #1 }{ inheritance } \l__inheritance_tl \g_pxuml_classREG_prop
+	%%%%%%%% OBJ-TYPE
+	\tl_clear_new:N \l__obj_type_tl
+	\pxprp_get_tl:nnNN { #1 }{ objtype } \l__obj_type_tl \g_pxuml_classREG_prop
+	%%%%%%%% visibilityy
+	\tl_clear_new:N \l__visibility_tl
+	\pxprp_get_tl:nnNN { #1 }{ visibility } \l__visibility_tl \g_pxuml_classREG_prop
+	%%%%%%%% implementation
+	\tl_clear_new:N \l__implementation_tl
+	\pxprp_get_tl:nnNN { #1 }{ implement } \l__implementation_tl \g_pxuml_classREG_prop
+	%%%%%%%% DRAW
+	\begin{\l__obj_type_tl}[ultra~thick, #3]{#1}{#2}
+
+		\tl_if_blank:VF \l__implementation_tl {\cs:w implement \cs_end:{\l__implementation_tl}}
+		\clist_if_empty:NF \l__operations_clist {
+			\clist_if_in:NVF \l__operations_clist \c_novalue_tl {
+				\clist_map_inline:Nn \l__operations_clist {\cs:w operation \cs_end: {##1}}
+			}
+		}
+		\clist_if_empty:NF \l__attributes_clist {
+			\clist_if_in:NVF \l__attributes_clist \c_novalue_tl {
+				\clist_map_inline:Nn \l__attributes_clist {\cs:w attribute \cs_end: {##1}}
+			}
+		}
+		\tl_if_blank:VF \l__inheritance_tl {\cs:w inherit \cs_end:{\l__inheritance_tl}}
+		%		\l__attributes_tl
+		%		\l__operations_tl
+	\end{\l__obj_type_tl}
+}
+%% DRAW SIMPLE CLASS
+%%  #1 - CLASS NAME
+%%  #2 - ATTRIBUTES
+%%  #3 - OPERATIONS
+\cs_new:Npn \__pxuml_drawsimpleclass:nnn #1#2#3 {
+	%%%%%%%% ATTRIBUTES
+	\clist_clear_new:N  \l__attributes_clist
+	\tl_clear_new:N \l__attributes_tl
+	\pxprp_get_clist:nnNN {#1}{ attributes } \l__attributes_clist \g_pxuml_classREG_prop
+	%%%%%%%% INHERITANCE
+	\tl_clear_new:N \l__inheritance_tl
+	\pxprp_get_tl:nnNN { #1 }{ inheritance } \l__inheritance_tl \g_pxuml_classREG_prop
+	%%%%%%%% OBJ-TYPE
+	\tl_clear_new:N \l__obj_type_tl
+	\pxprp_get_tl:nnNN { #1 }{ objtype } \l__obj_type_tl \g_pxuml_classREG_prop
+	%%%%%%%% visibilityy
+	\tl_clear_new:N \l__visibility_tl
+	\pxprp_get_tl:nnNN { #1 }{ visibility } \l__visibility_tl \g_pxuml_classREG_prop
+	%%%%%%%% implementation
+	\tl_clear_new:N \l__implementation_tl
+	\pxprp_get_tl:nnNN { #1 }{ implement } \l__implementation_tl \g_pxuml_classREG_prop
+	%%%%%%%% DRAW
+	\begin{\l__obj_type_tl}[ultra~thick, #3]{#1}{#2}
+		\foreach \objattr in \l__attributes_clist {\attribute{\objattr}}
+		\tl_if_blank:VF \l__inheritance_tl {\cs:w inherit \cs_end:{\l__inheritance_tl}}
+	\end{\l__obj_type_tl}
+}
+%% LOAD VARIABLE COLORS
+\cs_new:Nn \__pxuml_load_varcolor:{
+	\renewcommand {\umltextcolor }{white!}
+	\renewcommand {\umlfillcolor }{primaryColor!40!neutralColor!60!}
+	\renewcommand {\umldrawcolor }{white!}
+}
+%% LOAD MAIN COLORS
+\cs_new:Nn \__pxuml_load_maincolor:{
+	\renewcommand {\umltextcolor }{ primaryColor}
+	\renewcommand {\umlfillcolor }{ secondaryColor!20!}
+	\renewcommand {\umldrawcolor }{primaryColor}
+}
+%% SHOW CLASS
+%%  #1 - CLASS NAME
+\cs_new:Npn \__pxuml_showclass:n #1 {
+	\pxprp_get_tl:nnNN { #1 }{ attributes } \l__attributes_tl \g_pxuml_classREG_prop
+	\pxprp_get_tl:nnNN { #1 }{ operations } \l__operations_tl \g_pxuml_classREG_prop
+	\pxprp_get_tl:nnNN { #1 }{ inheritance } \l__inheritance_tl \g_pxuml_classREG_prop
+	\pxprp_get_tl:nnNN { #1 }{ objtype } \l__obj_type_tl \g_pxuml_classREG_prop
+	\pxprp_get_tl:nnNN { #1 }{ visibility } \l__visibility_tl \g_pxuml_classREG_prop
+	\pxprp_get_tl:nnNN { #1 }{ implement } \l__implementation_tl \g_pxuml_classREG_prop
+}
+\endinput

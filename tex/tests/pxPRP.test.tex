@@ -1,0 +1,28 @@
+\documentclass{article}
+
+% Always load expl3 early in tests
+
+
+% Load your code directly from the working directory:
+\usepackage{pxPRP}
+\usepackage{pxUML}
+
+\begin{document}
+% --- Smoke test: create object + set/get values
+
+\verb*|\pxNewObject{PATATA}|\\
+\pxNewObject{PATATA}
+
+\verb*|\pxSet{PATATA}{k1}{v1,v2}|\\
+\pxSet{PATATA}{k1}{v1,v2}
+
+\verb*|\pxSet{PATATA}{k2}{vA,vB,vC}|\\
+\pxSet{PATATA}{k2}{vA,vB,vC}
+
+\verb*|\pxGet PATATA.k1[2]| $\to$ \pxGet PATATA.k1[2]\\
+
+\verb*|\pxPrint PATATA.k2[2]|$\to$ \pxPrint PATATA.k2[2]
+
+%\ExplSyntaxOff
+
+\end{document}

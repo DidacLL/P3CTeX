@@ -1,0 +1,82 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+% !TeX root = pxPRP.test.tex
+
+% p3xUML.sty
+
+\RequirePackage{expl3}
+\RequirePackage{color,l3keys2e,xparse}
+\RequirePackage{pxpgf-umlcd}
+\RequirePackage{pxPRP}
+\RequirePackage{pgf-umlsd}
+\ProvidesExplPackage{pxUML}{2025/02/21}{v0.1dev}{
+	P3CTeX UML Graphics implementation based on top of pgf-umlcd and TikZ packages
+}
+\file_input:n {pxUML.code.tex}
+
+% COLORS
+\definecolor{primaryColor}{rgb}{0,0,.47}
+\definecolor{secondaryColor}{rgb}{.45,.93,1}
+\definecolor{neutralColor}{cmyk}{0.5,0.14, 0.16, 0}
+\definecolor{darkColor}{rgb}{.1,.25,.5}
+\definecolor{lighterColor}{rgb}{1,1,1}
+\definecolor{lightColor}{cmyk}{0,0,0,0.3}
+
+% PCKG PUBLIC LaTeX2e API
+% #1 private/public*
+% #2 class*/interface
+% #3 ClassName
+% #4
+\NewDocumentCommand{\PXdefClass}{s O{class} m o m o D<>{ } }{
+		\IfBooleanTF{#1}
+		{
+			\IfNoValueTF{#4}
+				{\__pxuml_newclass:nnnnnnn { #3 }{ #5 }{ #6}{}{#2}{private}{#7}}
+				{\__pxuml_newclass:nnnnnnn { #3 }{ #5 }{ #6 }{#4}{#2}{private}{#7}}
+		}{
+			\IfNoValueTF{#4}
+				{\__pxuml_newclass:nnnnnnn { #3 }{ #5 }{ #6}{}{#2}{public}{#7}}
+				{\__pxuml_newclass:nnnnnnn { #3 }{ #5 }{ #6 }{#4}{#2}{public}{#7}}
+		}
+}
+\NewDocumentCommand{\drawclass}{s O{} m O{0,0}}{
+	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
+	\__pxuml_drawclass:nnn {#3} {#4} {#2}
+	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
+}
+\NewDocumentCommand{\drawsimpleclass}{s O{} m O{0,0}}{
+	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
+	\__pxuml_drawsimpleclass:nnn {#3} {#4} {#2}
+	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
+}
+\NewDocumentCommand{\drawInstance}{s O{16} m O{0,0} m m o }{
+	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
+	\begin{object}[ text~ width= #2em]{#3}{#4}
+		\instanceOf{#5}
+		\foreach \currattr in {#6} {\attribute{\currattr}\\	}
+		\IfValueT{#7}{\foreach\currop in{#7}{\operation{\currop}}}
+	\end{object}
+	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
+}
+\NewDocumentCommand{\PXuml}{s O{ } +m O{.8\linewidth}}{
+
+	\IfBooleanTF{#1}{\__pxuml_load_varcolor:}{\__pxuml_load_maincolor:}
+	\vspace{2em}\noindent
+	\resizebox{#4}{!}{
+		\begin{tikzpicture}[line~width=1cm,rounded~corners, #2 ]
+			#3
+		\end{tikzpicture}
+	}
+	\vspace{2em}
+	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
+
+}
+\NewDocumentCommand{\PXshowclass}{m}{
+	\__pxuml_showclass:n {#1}
+}
+\NewDocumentCommand{\addAttribute}{m m}{
+	\__pxuml_add_attribute:nn {#1}{#2}
+}
+\NewDocumentCommand{\addOperation}{m m}{
+	\__pxuml_add_operation:nn {#1}{#2}
+}

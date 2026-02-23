@@ -1,0 +1,19 @@
+% !TeX root = pxPRP.test.tex
+\RequirePackage{expl3}
+\RequirePackage{color,l3keys2e,xparse}
+\ProvidesExplPackage{pxPRP}{2025}{v0.2}{Useful tools for managing prop maps containing keyvalue pairs}
+\file_input:n {pxPRP.code.tex}
+
+
+\NewDocumentCommand{\pxNewObject}{m}{\pxPRP_ensure:n {#1}}
+
+\NewDocumentCommand{\pxSet}{m m m}{
+	\pxPRP_set:nnnN	{#1}	{#2}	{#3} \g_pxprp__pxPRP_propREG_prop
+}
+
+\NewDocumentCommand{\pxPutValue}{m m +m}{
+	\pxPRP_set:nnn {#1}{#2}{#3}
+}
+
+\def\pxGet~#1.#2[#3]{\pxPRP_get_item:nnn {#1}{#2}{#3}}
+\def\pxPrint~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }
