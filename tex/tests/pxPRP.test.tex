@@ -1,15 +1,16 @@
 \documentclass{article}
 
-% Always load expl3 early in tests
-
-
 % Load your code directly from the working directory:
 \usepackage{pxPRP}
-\usepackage{pxUML}
 
 \begin{document}
-% --- Smoke test: create object + set/get values
 
+\section*{Proves bàsiques de pxPRP}
+
+
+% --- Prova 1: smoke test, creació i accés bàsic --------------------------------
+
+\subsection*{Prova 1: Creació i accés bàsic}
 \verb*|\pxNewObject{PATATA}|\\
 \pxNewObject{PATATA}
 
@@ -23,6 +24,113 @@
 
 \verb*|\pxPrint PATATA.k2[2]|$\to$ \pxPrint PATATA.k2[2]
 
-%\ExplSyntaxOff
+\bigskip
+
+\subsection*{Prova 2: Múltiples objectes i claus aïllades}
+
+\pxNewObject{OBJAA}
+\pxNewObject{OBJBB}
+
+\pxSet{OBJAA}{key}{AA1,AA2}
+\pxSet{OBJBB}{key}{BB1,BB2}
+
+En pantalla: OBJAA.key[1] = \pxGet OBJAA.key[1],\quad
+OBJBB.key[1] = \pxGet OBJBB.key[1].
+
+\bigskip
+
+\subsection*{Prova 3: Sobreescriptura amb \texttt{\textbackslash pxSet}}
+
+\pxNewObject{OVER}
+\pxSet{OVER}{state}{old}
+
+Abans de sobreescriure: OVER.state[1] = \pxGet OVER.state[1].
+
+\pxSet{OVER}{state}{newA,newB}
+
+Després de sobreescriure: OVER.state[1] = \pxGet OVER.state[1],\quad
+OVER.state[2] = \pxGet OVER.state[2].
+
+\bigskip
+
+\subsection*{Prova 4: Acumulació de llistes amb \texttt{\textbackslash pxPutValue}}
+
+\pxNewObject{LST}
+
+\pxPutValue{LST}{items}{a}
+\pxPutValue{LST}{items}{b}
+\pxPutValue{LST}{items}{c}
+
+Resultat esperat: LST.items = (\pxGet LST.items[1], \pxGet LST.items[2], \pxGet LST.items[3]).
+
+\bigskip
+%
+\subsection*{Prova 5: Esborrar claus i objectes}
+
+\pxNewObject{TEMP}
+\pxSet{TEMP}{k}{X,Y}
+
+Abans d'esborrar: TEMP.k[1] = \pxGet TEMP.k[1].
+
+\pxClearKey{TEMP}{k}
+
+Després d'esborrar la clau, podem tornar a definir-la:
+
+\pxSet{TEMP}{k}{Z}
+
+Ara: TEMP.k[1] = \pxGet TEMP.k[1].
+
+\pxClearObject{TEMP}
+%
+%Després d'esborrar l'objecte, podem recrear-lo sense errors:
+%
+%\pxNewObject{TEMP}
+%\pxSet{TEMP}{k}{NOU}
+%%
+%TEMP.k[1] = \pxGet TEMP.k[1].
+%%
+\bigskip
+
+\subsection*{Prova 6: Flags booleans}
+
+\pxNewObject{FLAGS}
+
+\pxSet{FLAGS}{featureA}{true}
+\pxSet{FLAGS}{featureB}{{false}}
+
+\pxIfTrueTF{FLAGS}{featureA}{ACTIVA}{INACTIVA}
+
+\par
+
+\pxIfTrueTF{FLAGS}{featureB}
+  {featureB és ACTIVA.}
+  {featureB és INACTIVA.}
+
+\bigskip
+%
+%\bigskip
+%\subsection*{Prova 8: Llistes amb \texttt{\textbackslash pxListPutLeft}}
+%
+%\pxNewObject{OBJL}
+%
+%\pxListPutRight{OBJL}{nums}{2,3}
+%\pxListPutLeft{OBJL}{nums}{1}
+%
+%Esperat: OBJL.nums = (\pxGet OBJL.nums[1], \pxGet OBJL.nums[2], \pxGet OBJL.nums[3]).
+%
+%\bigskip
+%
+%\subsection*{Prova 9: Substitució completa amb \texttt{\textbackslash pxListSet}}
+%
+%\pxNewObject{OBJS}
+%
+%\pxListPutRight{OBJS}{vals}{a,b,c}
+%
+%Abans de \pxListSet: OBJS.vals[1] = \pxGet OBJS.vals[1].
+%
+%\pxListSet{OBJS}{vals}{x,y}
+%
+%Després de \pxListSet: OBJS.vals[1] = \pxGet OBJS.vals[1],\quad
+%OBJS.vals[2] = \pxGet OBJS.vals[2].
 
 \end{document}

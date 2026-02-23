@@ -1,4 +1,4 @@
-% !TeX root = pxPRP.test.tex
+% !TeX root = ../tests/pxPRP.test.tex
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
 \ProvidesExplPackage{pxPRP}{2025}{v0.2}{Useful tools for managing prop maps containing keyvalue pairs}
@@ -12,8 +12,30 @@
 }
 
 \NewDocumentCommand{\pxPutValue}{m m +m}{
-	\pxPRP_set:nnn {#1}{#2}{#3}
+	\pxPRP_put_items:nnn {#1}{#2}{#3}
 }
+
+\NewDocumentCommand{\pxListPutRight}{m m m}{
+	\pxprp_list_put_right:nnn {#1}{#2}{#3}
+}
+
+\NewDocumentCommand{\pxListPutLeft}{m m m}{
+	\pxprp_list_put_left:nnn {#1}{#2}{#3}
+}
+
+\NewDocumentCommand{\pxListSet}{m m m}{
+	\pxprp_list_set:nnn {#1}{#2}{#3}
+}
+
+\NewDocumentCommand{\pxClearKey}{m m}{
+	\pxPRP_clear_key:nn {#1}{#2}
+}
+\def\pxIfTrueTF#1#2#3#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
+
+\NewDocumentCommand{\pxClearObject}{m}{
+	\pxPRP_clear_object:n {#1}
+}
+
 
 \def\pxGet~#1.#2[#3]{\pxPRP_get_item:nnn {#1}{#2}{#3}}
 \def\pxPrint~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }
