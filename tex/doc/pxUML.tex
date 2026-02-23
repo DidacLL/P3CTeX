@@ -1,0 +1,190 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxUML -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxUML.tex
+%   makeindex -s gind.ist -o pxUML.ind pxUML.idx
+%   pdflatex -interaction=nonstopmode doc/pxUML.tex
+%
+% Or from tex/doc/: set TEXINPUTS=../latex:../code; then
+%   pdflatex -interaction=nonstopmode pxUML.tex
+%   makeindex -s gind.ist -o pxUML.ind pxUML.idx
+%   pdflatex -interaction=nonstopmode pxUML.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage{pxUML}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{doc}
+\usepackage[colorlinks,urlcolor=blue,linkcolor=blue,hyperindex]{hyperref}
+
+\EnableCrossrefs
+
+\title{The \texttt{pxUML} package\\
+  \large UML class diagrams (pgf-umlcd) for P3CTeX / UOC}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2025/02 -- Version 0.1}
+\begin{document}
+\maketitle
+\begin{abstract}
+  \texttt{pxUML} provides a LaTeX2e API for UML class and object diagrams on top of
+  \texttt{pxpgf-umlcd} (and TikZ). Class definitions are stored in an internal
+  registry (via \texttt{pxPRP}); drawing is separate from definition, so the
+  same logic can be reused and layout adjusted without changing the model. It is
+  tailored for the UOC use case (e.g. PEC diagrams).
+\end{abstract}
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+
+\texttt{pxUML} keeps a \emph{class registry}: each class has a name, attributes,
+operations, inheritance, object type (e.g.\ \texttt{class}, \texttt{interface},
+\texttt{enumclass}), visibility, and optional implementation. You define classes
+with \texttt{\textbackslash PXdefClass} and optionally extend them with
+\texttt{\textbackslash addAttribute}, \texttt{\textbackslash addOperation}, and
+\texttt{\textbackslash addInheritance}. Drawing commands (\texttt{\textbackslash drawclass},
+\texttt{\textbackslash drawsimpleclass}, \texttt{\textbackslash drawInstance}) read from
+this registry, so you can change layout without redefining the class.
+
+\section{Loading the package}
+\label{sec:loading}
+
+\begin{verbatim}
+\usepackage{pxUML}
+\end{verbatim}
+
+The package requires \texttt{expl3}, \texttt{xparse}, \texttt{l3keys2e},
+\texttt{color}, \texttt{pxpgf-umlcd}, \texttt{pxPRP}, and \texttt{pgf-umlsd}.
+
+\section{User command reference}
+\label{sec:api}
+
+\subsection{Class definition}
+
+\DescribeMacro{\PXdefClass}
+Defines or overwrites a class in the registry. The starred form sets visibility
+to ``private'' (e.g. for diagram styling).
+\begin{verbatim}
+\PXdefClass[*][<objtype>]{<ClassName>}[<inheritance>]{<attributes>}[<operations>][<implementation>]
+\end{verbatim}
+\begin{itemize}
+  \item \texttt{<objtype>}: \texttt{class} (default), \texttt{interface},
+    \texttt{enumclass}, etc., as in the underlying pgf-umlcd environment.
+  \item \texttt{<attributes>}: comma-separated list of attribute strings
+    (e.g.\ \texttt{- name : String}).
+  \item \texttt{<operations>}: optional; comma-separated list of operation
+    strings.
+  \item \texttt{<implementation>}: optional; implementation class for interfaces.
+\end{itemize}
+Example: \texttt{\textbackslash PXdefClass\{MyClass\}\{- id : int\}\{[+ get() : int]\}}.
+
+\subsection{Extending a class}
+
+\DescribeMacro{\addAttribute}
+Appends an attribute to the list of attributes of an existing class.
+\begin{verbatim}
+\addAttribute{<ClassName>}{<attribute>}
+\end{verbatim}
+
+\DescribeMacro{\addOperation}
+Appends an operation to the list of operations of an existing class.
+\begin{verbatim}
+\addOperation{<ClassName>}{<operation>}
+\end{verbatim}
+
+\DescribeMacro{\addInheritance}
+Adds an inheritance (parent) to the class. The second argument is the
+\emph{parent class name} only (as expected by the underlying
+\texttt{\textbackslash inherit} of pgf-umlcd).
+\begin{verbatim}
+\addInheritance{<ClassName>}{<ParentClassName>}
+\end{verbatim}
+Example: \texttt{\textbackslash addInheritance\{DerivedClass\}\{BaseClass\}}.
+
+\subsection{Drawing}
+
+\DescribeMacro{\drawclass}
+Draws a full class box (attributes and operations) from the registry at the
+given TikZ coordinates. Optional first argument \texttt{[...]} is passed as
+TikZ options (e.g.\ \texttt{text width=14em}). Starred form uses the package
+``variable'' colour scheme for that class.
+\begin{verbatim}
+\drawclass[*][<options>]{<ClassName>}[<x,y>]
+\end{verbatim}
+
+\DescribeMacro{\drawsimpleclass}
+Same as \texttt{\textbackslash drawclass} but draws only the simple class form
+(attributes and inheritance, no operations list). Same optional behaviour for
+star and options.
+\begin{verbatim}
+\drawsimpleclass[*][<options>]{<ClassName>}[<x,y>]
+\end{verbatim}
+
+\DescribeMacro{\drawInstance}
+Draws an object instance (lifeline-style box) of a class, with explicit
+attribute and optional operation list.
+\begin{verbatim}
+\drawInstance[*][<text width em>]{<InstanceName>}[<x,y>]{<ClassName>}{<attr list>}[<op list>]
+\end{verbatim}
+Default text width is 16\,em. Starred form uses the variable colour scheme.
+
+\DescribeMacro{\PXuml}
+Puts the given TikZ/pgf-umlcd content inside a resized box and applies the
+package colour scheme. Starred form uses the variable colour scheme for the
+whole diagram. Optional width defaults to \texttt{.8\textbackslash linewidth}.
+\begin{verbatim}
+\PXuml[*][<tikz options>]{<content>}[<width>]
+\end{verbatim}
+Example: \texttt{\textbackslash PXuml\{\textbackslash drawclass\{MyClass\}\}[1\textbackslash linewidth]}.
+
+\subsection{Inspection}
+
+\DescribeMacro{\PXshowclass}
+Loads the stored data for the class into internal token lists (for debugging or
+further macros). If the class does not exist in the registry, all keys are
+effectively empty; no error is raised.
+\begin{verbatim}
+\PXshowclass{<ClassName>}
+\end{verbatim}
+
+\section{Minimal example}
+\label{sec:example}
+
+\begin{verbatim}
+\usepackage{pxUML}
+\begin{document}
+\PXdefClass{Person}{- name : String}[+ getName() : String]
+\addAttribute{Person}{- age : Integer}
+
+\PXdefClass{Base}{- id : int}
+\PXdefClass{Derived}{- extra : String}
+\addInheritance{Derived}{Base}
+
+\PXuml{
+  \drawclass[text width=12em]{Person}[0,0]
+  \drawsimpleclass{Base}[6,0]
+  \drawsimpleclass{Derived}[6,-3]
+}[0.9\linewidth]
+\end{document}
+\end{verbatim}
+
+\section{Change history}
+\label{sec:changes}
+
+\begin{description}
+  \item[v0.1] Initial release: class registry, \texttt{\textbackslash PXdefClass},
+    \texttt{\textbackslash drawclass}, \texttt{\textbackslash drawsimpleclass},
+    \texttt{\textbackslash drawInstance}, \texttt{\textbackslash PXuml},
+    \texttt{\textbackslash PXshowclass}, \texttt{\textbackslash addAttribute},
+    \texttt{\textbackslash addOperation}, \texttt{\textbackslash addInheritance}.
+    Documentation and tests aligned with pxPRP workflow.
+\end{description}
+
+\PrintIndex
+\end{document}

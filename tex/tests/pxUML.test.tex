@@ -42,7 +42,7 @@ Disseny inicial del sistema, tal com s'indica a l'enunciat:
 	- description : String,
 	- tokenPrice : Real,
 	- aiCategory : AICategory
-}[+ process(prompt : String) : String, + calculateCost(numTokens : UnliimitedNatural):Real	]
+}[+ process(prompt : String) : String, + calculateCost(numTokens : UnlimitedNatural):Real	]
 
 \PXdefClass{Company}
 {
@@ -63,5 +63,59 @@ Disseny inicial del sistema, tal com s'indica a l'enunciat:
 	\association{Employee}{1}{ }{TokenConsumption}{}{0..*}
 	\association{TokenConsumption}{0..*}{}{AIAgent}{}{1}
 }[1.1\linewidth]
+
+\subsection*{Proves de la API pxUML}
+
+En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet.
+
+% Classe simple amb atributs i operacions modificats posteriorment
+\PXdefClass{Person}
+{
+	- name : String
+}
+[+ getName() : String]
+
+\addAttribute{Person}{- age : Integer}
+\addOperation{Person}{+ setName(newName : String) : void}
+
+% Classe base i derivada per provar la herència
+\PXdefClass{BaseClass}
+{
+	- id : Integer
+}
+
+\PXdefClass{DerivedClass}
+{
+	- extra : String
+}
+
+\addInheritance{DerivedClass}{BaseClass}
+
+% Classe utilitzada per instàncies
+\PXdefClass{Service}
+{
+	- name : String
+}
+[+ run() : void]
+
+\PXuml{
+	% dibuix complet
+	\drawclass[text width=14em]{Person}[0,0]
+	% dibuix simplificat
+	\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
+	\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
+%	% instància d'una classe amb atributs i operacions
+	\drawInstance*[14]{ServiceInstance}[0,-6]{Service}{
+		- name : String
+	}{
+		+ run() : void
+	}
+}[0.9\linewidth]
+% prova que \PXshowclass no produeix cap error en accedir al registre
+\PXshowclass{Person}
+\PXshowclass{Service}
+
+% cas negatiu: classe inexistent no ha de provocar error
+\PXshowclass{NoExisteix}
 
 \end{document}

@@ -1,6 +1,6 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_EN-EnglishUnitedKingdom
-% !TeX root = pxPRP.test.tex
+% !Te X root = pxPRP.test.tex
 
 % p3xUML.sty
 
@@ -79,4 +79,7 @@
 }
 \NewDocumentCommand{\addOperation}{m m}{
 	\__pxuml_add_operation:nn {#1}{#2}
+}
+\NewDocumentCommand{\addInheritance}{m m}{
+	\__pxuml_add_inherit:nn {#1}{#2}
 }
