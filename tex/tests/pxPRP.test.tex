@@ -1,28 +1,171 @@
 \documentclass{article}
 
-% Always load expl3 early in tests
-
-
 % Load your code directly from the working directory:
 \usepackage{pxPRP}
-\usepackage{pxUML}
 
 \begin{document}
-% --- Smoke test: create object + set/get values
 
+\section*{Proves bàsiques de pxPRP}
+
+
+% --- Prova 1: smoke test, creació i accés bàsic --------------------------------
+
+\subsection*{Prova 1: Creació i accés bàsic}
 \verb*|\pxNewObject{PATATA}|\\
 \pxNewObject{PATATA}
 
-\verb*|\pxSet{PATATA}{k1}{v1,v2}|\\
-\pxSet{PATATA}{k1}{v1,v2}
+\verb*|\pxSetValue{PATATA}{k1}{v1,v2}|\\
+\pxSetValue{PATATA}{k1}{v1,v2}
 
-\verb*|\pxSet{PATATA}{k2}{vA,vB,vC}|\\
-\pxSet{PATATA}{k2}{vA,vB,vC}
+\verb*|\pxSetValue{PATATA}{k2}{vA,vB,vC}|\\
+\pxSetValue{PATATA}{k2}{vA,vB,vC}
 
-\verb*|\pxGet PATATA.k1[2]| $\to$ \pxGet PATATA.k1[2]\\
+\verb*|\pxGET PATATA.k1[2]| $\to$ \pxGET PATATA.k1[2]\\
 
-\verb*|\pxPrint PATATA.k2[2]|$\to$ \pxPrint PATATA.k2[2]
+\verb*|\pxPRINT PATATA.k2[2]|$\to$ \pxPRINT PATATA.k2[2]
 
-%\ExplSyntaxOff
+\bigskip
+
+\subsection*{Prova 2: Múltiples objectes i claus aïllades}
+
+\pxNewObject{OBJAA}
+\pxNewObject{OBJBB}
+
+\pxSetValue{OBJAA}{key}{AA1,AA2}
+\pxSetValue{OBJBB}{key}{BB1,BB2}
+
+En pantalla: OBJAA.key[1] = \pxGET OBJAA.key[1],\quad
+OBJBB.key[1] = \pxGET OBJBB.key[1].
+
+\bigskip
+
+\subsection*{Prova 3: Sobreescriptura amb \texttt{\textbackslash pxSet}}
+
+\pxNewObject{OVER}
+\pxSetValue{OVER}{state}{old}
+
+Abans de sobreescriure: OVER.state[1] = \pxGET OVER.state[1].
+
+\pxSetValue{OVER}{state}{newA,newB}
+
+Després de sobreescriure: OVER.state[1] = \pxGET OVER.state[1],\quad
+OVER.state[2] = \pxGET OVER.state[2].
+
+\bigskip
+
+\subsection*{Prova 4: Acumulació de llistes amb \texttt{\textbackslash pxPutValue}}
+
+\pxNewObject{LST}
+
+\pxPutValue{LST}{items}{a}
+\pxPutValue{LST}{items}{b}
+\pxPutValue{LST}{items}{c}
+
+Resultat esperat: LST.items = (\pxGET LST.items[1], \pxGET LST.items[2], \pxGET LST.items[3]).
+
+\bigskip
+%
+\subsection*{Prova 5: Esborrar claus i objectes}
+
+\pxNewObject{TEMP}
+\pxSetValue{TEMP}{k}{X,Y}
+
+Abans d'esborrar: TEMP.k[1] = \pxGET TEMP.k[1].
+
+\pxClearKey{TEMP}{k}
+
+Després d'esborrar la clau, podem tornar a definir-la:
+
+\pxSetValue{TEMP}{k}{Z}
+
+Ara: TEMP.k[1] = \pxGET TEMP.k[1].
+
+\pxClearObject{TEMP}
+
+\pxNewObject{TEMP}
+\pxSetValue{TEMP}{k}{P,P}
+Ara: TEMP.k[1] = \pxGET TEMP.k[1].
+\bigskip
+
+\subsection*{Prova 6: Flags booleans}
+
+\pxNewObject{FLAGS}
+
+\pxSetValue{FLAGS}{featureA}{true}
+\pxSetValue{FLAGS}{featureB}{{false}}
+
+\pxIfTrueTF{FLAGS}{featureA}{ACTIVA}{INACTIVA}
+
+\par
+
+\pxIfTrueTF{FLAGS}{featureB}
+  {featureB és ACTIVA.}
+  {featureB és INACTIVA.}
+
+\bigskip
+
+\subsection*{Prova 7 (mínima): Llistes i impressió completa}
+
+\pxNewObject{OBJL}
+\pxListSet{OBJL}{nums}{1,2,3}
+
+Tots els valors de OBJL.nums (esperat 1--3): \pxListAll{OBJL}{nums}[ -- ].
+
+\bigskip
+
+\pxNewObject{OBJS}
+\pxListPutRight{OBJS}{vals}{a}
+\pxListPutRight{OBJS}{vals}{b,c}
+
+Tots els valors de OBJS.vals (esperat a,b,c): \pxListAll{OBJS}{vals}.
+
+\bigskip
+
+\subsection*{Prova 8 (mínima): Predicats d'existència i llargada}
+
+\pxIfObjectExistsTF{NOEXISTEIX}
+  {OBJECTE NOEXISTEIX (no hauria de passar).}
+  {OBJECTE NOEXISTEIX no és present, com esperat.}
+
+\pxNewObject{CHK}
+\pxSetValue{CHK}{nums}{1,2,3}
+
+\pxIfObjectExistsTF{CHK}
+  {CHK existeix.}
+  {CHK \emph{no} existeix (error).}
+
+\pxIfKeyExistsTF{CHK}{nums}
+  {nums existeix a CHK.}
+  {nums \emph{no} existeix a CHK (error).}
+
+Llargada esperada de CHK.nums: 3.\quad
+Llargada real: \pxListLen{CHK}{nums}.
+
+\bigskip
+
+\subsection*{Prova 9: Accés escalar directe amb \texttt{\textbackslash pxGetScalar}}
+
+\pxNewObject{SCALAR}
+\pxSetValue{SCALAR}{flag}{true}
+\pxSetValue{SCALAR}{text}{Hola, món}
+
+Valor escalar de SCALAR.flag (esperat \texttt{true}): \pxGetScalar{SCALAR}{flag}.\\
+Valor escalar de SCALAR.text (esperat ``Hola, món''): \pxGetScalar{SCALAR}{text}.\\
+Valor escalar per a clau inexistent (esperat buit): [\pxGetScalar{SCALAR}{noexisteix}].
+
+\bigskip
+
+\subsection*{Prova 10: Neteja de llistes amb \texttt{\textbackslash pxListClear}}
+
+\pxNewObject{LCLR}
+\pxListSet{LCLR}{vals}{a,b,c}
+
+Abans de netejar, llargada esperada 3, real: \pxListLen{LCLR}{vals}.\\
+\pxListClear{LCLR}{vals}
+
+Després de netejar, llargada esperada 0, real: \pxListLen{LCLR}{vals}.\\
+Es pot tornar a omplir:
+\pxListPutRight{LCLR}{vals}{x,y}
+; valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.
 
 \end{document}

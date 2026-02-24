@@ -1,0 +1,249 @@
+%-----------------------------------------------------------------------------
+% pxPRP -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxPRP.tex
+%   makeindex -s gind.ist -o pxPRP.ind pxPRP.idx
+%   pdflatex -interaction=nonstopmode doc/pxPRP.tex
+%
+% Or from tex/doc/ so output goes to doc/: set TEXINPUTS=../latex:../code; then
+%   pdflatex -interaction=nonstopmode pxPRP.tex
+%   makeindex -s gind.ist -o pxPRP.ind pxPRP.idx
+%   pdflatex -interaction=nonstopmode pxPRP.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage{pxPRP}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{doc}
+\usepackage[colorlinks,urlcolor=blue,linkcolor=blue,hyperindex]{hyperref}
+
+\EnableCrossrefs
+%\CodelineIndex  % use if documenting source code
+%\RecordChanges % use with \changes{} for change log
+
+\title{The \texttt{pxPRP} package\\
+  \large Property maps with key/value lists for \LaTeX2e}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2025/02 -- Version 0.2}
+\begin{document}
+\maketitle
+\begin{abstract}
+  \texttt{pxPRP} provides a simple hashmap-like abstraction on top of \texttt{expl3}
+  property lists. Each logical \emph{object} is identified by a short name (e.g.\
+  \texttt{PATATA}); within an object, keys hold either a scalar value or a
+  comma-separated list. The package keeps an internal registry so that users refer
+  to objects by id instead of internal \texttt{expl3} variable names. It is
+  designed for use from plain \LaTeX2e\ and from other packages (e.g.\ \texttt{pxUML}).
+\end{abstract}
+\tableofcontents
+\section{Introduction}
+\label{sec:intro}
+
+\texttt{pxPRP} manages \emph{logical objects}: each object has an identifier (a
+short name) and a set of \emph{keys}. For each key you can store either:
+\begin{itemize}
+  \item a \textbf{scalar} value (a single token list), or
+  \item a \textbf{comma-separated list} of items (treated as a list for
+  append/set/length operations).
+\end{itemize}
+All data are stored in \texttt{expl3} \texttt{prop} variables; the package
+maintains a global registry mapping object ids to those variables so that you
+never need to use internal names in your document or in higher-level packages.
+
+\section{Loading the package}
+\label{sec:loading}
+
+\begin{verbatim}
+\usepackage{pxPRP}
+\end{verbatim}
+
+The package requires \texttt{expl3}, \texttt{xparse}, \texttt{l3keys2e}, and
+\texttt{color} (the last is required by the package dependencies).
+
+\section{Concepts}
+\label{sec:concepts}
+
+\begin{description}
+  \item[Object] A logical container identified by a string id (e.g.\
+  \texttt{MyObj}). Created with \texttt{\textbackslash pxNewObject}\ or
+  implicitly when you first set a key for that id.
+  \item[Key] A string key within an object. Keys are created when you first
+  assign a value or append to a list.
+  \item[Scalar value] A single value stored under a key (e.g.\ a flag
+  \texttt{true}/\texttt{false} or a short text). Use \texttt{\textbackslash pxSet}\
+  and \texttt{\textbackslash pxGetScalar}.
+  \item[List value] A key can instead hold a comma-separated list of items. Use
+  \texttt{\textbackslash pxPutValue}, \texttt{\textbackslash pxListSet},
+  \texttt{\textbackslash pxListAll}, \texttt{\textbackslash pxGet OBJ.key[i]},\
+  etc.
+\end{description}
+
+\section{User command reference}
+\label{sec:api}
+
+\subsection{Object and key management}
+
+\DescribeMacro{\pxNewObject}
+Creates (or ensures existence of) a logical object with the given id. If the
+object already exists, nothing is cleared.
+\begin{verbatim}
+\pxNewObject{<object-id>}
+\end{verbatim}
+Example: \texttt{\textbackslash pxNewObject\{PATATA\}}.
+
+\DescribeMacro{\pxClearObject}
+Removes the object and all its keys from the global registry. The object id can
+be reused afterwards.
+\begin{verbatim}
+\pxClearObject{<object-id>}
+\end{verbatim}
+
+\DescribeMacro{\pxClearKey}
+Removes a single key (and its value) from an object. The key can be set again
+later.
+\begin{verbatim}
+\pxClearKey{<object-id>}{<key>}
+\end{verbatim}
+
+\subsection{Scalar values}
+
+\DescribeMacro{\pxSetValue}
+Sets the scalar value for a key. Any previous value (scalar or list) is
+replaced. The value may contain commas.
+\begin{verbatim}
+\pxSetValue{<object-id>}{<key>}{<value>}
+\end{verbatim}
+
+\DescribeMacro{\pxGetScalar}
+Expands to the scalar value stored for the key. If the key or object does not
+exist, the result is empty. Use this when the key holds a single value (e.g.\
+a flag or label), not a list.
+\begin{verbatim}
+\pxGetScalar{<object-id>}{<key>}
+\end{verbatim}
+
+\subsection{List operations}
+
+\DescribeMacro{\pxPutValue}
+Appends one item to the comma-separated list stored at the key. If the key did
+not exist, a new list containing only that item is created.
+\begin{verbatim}
+\pxPutValue{<object-id>}{<key>}{<item>}
+\end{verbatim}
+The third argument can contain commas (it is one “item” as a whole).
+
+\DescribeMacro{\pxListSet}
+Replaces the entire list at the key with the given comma-separated list.
+\begin{verbatim}
+\pxListSet{<object-id>}{<key>}{<list>}
+\end{verbatim}
+
+\DescribeMacro{\pxListPutRight}
+Appends a comma-separated list to the right of the existing list at the key.
+\begin{verbatim}
+\pxListPutRight{<object-id>}{<key>}{<list>}
+\end{verbatim}
+
+\DescribeMacro{\pxListPutLeft}
+Prepends a comma-separated list to the left of the existing list at the key.
+\begin{verbatim}
+\pxListPutLeft{<object-id>}{<key>}{<list>}
+\end{verbatim}
+
+\DescribeMacro{\pxListClear}
+Clears the list at the key but keeps the key present (empty list). Contrast with
+\texttt{\textbackslash pxClearKey}, which removes the key entirely.
+\begin{verbatim}
+\pxListClear{<object-id>}{<key>}
+\end{verbatim}
+
+\DescribeMacro{\pxListAll}
+Typesets all items of the list at the key, separated by the given separator.
+Default separator is \texttt{, }.
+\begin{verbatim}
+\pxListAll{<object-id>}{<key>}[<separator>]
+\end{verbatim}
+Example: \texttt{\textbackslash pxListAll\{OBJ\}\{nums\}[ -- ]}.
+
+\DescribeMacro{\pxListLen}
+Expands to the number of items in the list at the key (0 if the key is missing
+or empty).
+\begin{verbatim}
+\pxListLen{<object-id>}{<key>}
+\end{verbatim}
+
+\subsection{Indexed list access}
+
+\DescribeMacro{\pxGET}
+Compact syntax to get the \texttt{<index>}-th item (1-based) of the list at
+\texttt{<key>} in object \texttt{<object-id>}. Space after \texttt{\textbackslash pxGet}\
+is required; the syntax is \texttt{OBJ.key[index]}.
+\begin{verbatim}
+\pxGET <object-id>.<key>[<index>]
+\end{verbatim}
+Example: \texttt{\textbackslash pxGet PATATA.k1[2]}.
+
+\DescribeMacro{\pxPRINT}
+Same as \texttt{\textbackslash pxGet}\ but typesets a bold label
+\texttt{object.key [ index ] :} before the value.
+\begin{verbatim}
+\pxPRINT <object-id>.<key>[<index>]
+\end{verbatim}
+
+\subsection{Conditionals}
+
+\DescribeMacro{\pxIfTrueTF}
+Evaluates the scalar value at the key as a boolean: empty or the literal
+\texttt{false} is false; anything else is true. Executes the true or false branch
+accordingly.
+\begin{verbatim}
+\pxIfTrueTF{<object-id>}{<key>}{<true code>}{<false code>}
+\end{verbatim}
+
+\DescribeMacro{\pxIfObjectExistsTF}
+Executes the first branch if the object id is registered, otherwise the second.
+\begin{verbatim}
+\pxIfObjectExistsTF{<object-id>}{<true code>}{<false code>}
+\end{verbatim}
+
+\DescribeMacro{\pxIfKeyExistsTF}
+Executes the first branch if the key exists in the object, otherwise the second.
+\begin{verbatim}
+\pxIfKeyExistsTF{<object-id>}{<key>}{<true code>}{<false code>}
+\end{verbatim}
+
+\section{Minimal example}
+\label{sec:example}
+
+\begin{verbatim}
+\usepackage{pxPRP}
+\begin{document}
+\pxNewObject{OBJ}
+\pxSetValue{OBJ}{name}{MyObject}
+\pxPutValue{OBJ}{items}{a}
+\pxPutValue{OBJ}{items}{b}
+Name: \pxGetScalar{OBJ}{name}.
+Items: \pxListAll{OBJ}{items}.
+First item: \pxGET OBJ.items[1].
+Length: \pxListLen{OBJ}{items}.
+\end{document}
+\end{verbatim}
+
+\section{Change history}
+\label{sec:changes}
+
+\begin{description}
+  \item[v0.2] Added \texttt{\textbackslash pxGetScalar}, \texttt{\textbackslash pxListClear};
+  fixed scalar getter for missing keys; documentation.
+  \item[v0.1] Initial release: objects, keys, scalar/list storage, conditionals,
+  \texttt{\textbackslash pxGet}/\texttt{\textbackslash pxPrint} syntax.
+\end{description}
+
+%\PrintChanges
+\PrintIndex
+\end{document}

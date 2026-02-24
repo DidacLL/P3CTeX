@@ -1,4 +1,4 @@
-% !TeX root = pxPRP.test.tex
+% ! TeX root = ../test/pxPRP.test.tex
 %% =======================================================
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
@@ -26,218 +26,382 @@
 \ProvidesExplFile{pxPRP.code.tex}{2025}{v0.2}
 {Useful tools for managing prop maps containing keyvalue pairs}
 %% MAIN VARIABLES
-%% PROP NAME REG register all created pxPROPS	INTERNAL
+%% -------------------------------------------------------
+%% Global registry of all pxPRP logical objects.
+%% Each logical object name (e.g. "PATATA") is mapped to the
+%% fully-qualified expl3 prop variable name that stores its data.
+%% This registry is internal; users should work with logical ids.
+%% -------------------------------------------------------
 \prop_if_exist:NF \g_pxprp__pxPRP_propREG_prop
 {
 	\prop_gclear_new:N \g_pxprp__pxPRP_propREG_prop
 }
+
+%% \pxPRP_REG:n { <registry-id> }
+%% Create (if needed) and return a registry prop specific to a logical
+%% namespace <registry-id>. Each such registry maps logical object ids
+%% to fully-qualified expl3 prop variable names.
+%% This is intended for internal module use (e.g. pxUML) to maintain
+%% independent object spaces on top of pxPRP.
 \cs_new:Npn \pxPRP_REG:n #1 {
 	\prop_if_exist:cF {g_pxprp__pxPRP_ #1 REG_prop} {\prop_new:c {g_pxprp__pxPRP_ #1 REG_prop}}
 	\use:c {g_pxprp__pxPRP_ #1 REG_prop}
 }
-%% GET PROP NAME
-%%  #1 - PROP NAME
-%%  #2 - PROP REGISTER (INTERNAL)
-%%  #3 - RETURN VALUE tl var
+
+%% GET PROP NAME (REGISTRY-AWARE)
+%% \pxPRP_get_propname:nNN { <id> } <reg-prop> <tl>
+%%   #1 - logical object id
+%%   #2 - registry prop (mapping id -> prop name)
+%%   #3 - tl variable that will receive the fully-qualified prop name
+%% Returns in <tl> the expl3 prop variable name (as a string) associated
+%% with logical object <id> in registry <reg-prop>.
 \cs_new:Npn \pxPRP_get_propname:nNN #1 #2 #3{
 	\prop_get:NnN #2 { #1 } #3
 }
+%% \pxPRP_get_propname:nN { <id> } <tl>
+%%   #1 - logical object id
+%%   #2 - tl variable that will receive the fully-qualified prop name
+%% Uses the global pxPRP object registry \g_pxprp__pxPRP_propREG_prop.
 \cs_new:Npn \pxPRP_get_propname:nN #1 #2{
 	\prop_get:NnN \g_pxprp__pxPRP_propREG_prop {#1} #2
 }
-\prg_new_conditional:Npnn \pxPRP_get_propname:nNN #1 #2 #3 { T , F, TF }{
-	\prop_get:NnNTF #2 { #1 } #3 {	\prg_return_true:}{ \prg_return_false:}
-}
-\prg_new_conditional:Npnn \pxPRP_get_propname:nN #1 #2 { T , F, TF }{
-	\prop_get:NnNTF \g_pxprp__pxPRP_propREG_prop {#1} #2 {	\prg_return_true:}{	\prg_return_false:	}
-}
+\prg_new_conditional:Npnn \pxPRP_get_propname:nNN #1 #2 #3 { T , F, TF }
+  {
+    \prop_get:NnNTF #2 { #1 } #3
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+\prg_new_conditional:Npnn \pxPRP_get_propname:nN #1 #2 { T , F, TF }
+  {
+    \prop_get:NnNTF \g_pxprp__pxPRP_propREG_prop {#1} #2
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
 %% BUILD PROP NAME
-%%  #1 - PROP NAME
-%%  #2 - tlvar
+%% \__pxprp_build_name:nN { <id> } <tl>
+%%   #1 - logical object id
+%%   #2 - tl variable that will receive the fully-qualified prop name
+%% Internal helper: builds a name of the form l_pxprp_<id>_prop.
 \cs_new:Npn \__pxprp_build_name:nN #1 #2{
 	\str_set:Ne #2 {#1}
 	\str_put_right:Ne #2 {_prop}
 	\str_put_left:Ne #2 {l_pxprp_}
 }
+%% \__pxprp_build_name:n { <id> }
+%%   #1 - logical object id
+%% Returns the fully-qualified prop name as a string.
 \cs_new:Npn \__pxprp_build_name:n #1{
 	\tl_clear_new:N \l_pxprp_name_tmp_tl
 	\__pxprp_build_name:nN {#1} \l_pxprp_name_tmp_tl
 	\tl_use:N  \l_pxprp_name_tmp_tl
 }
+
 %% NEW PROP
-%% Creates new PROP object and registers its existence into REGISTER (INTERNAL)
-%%  #1 - PROP NAME
-%%  #2 - PROP REGISTER (INTERNAL)
+%% \pxPRP_new_prop:nN { <id> } <reg-prop>
+%%   #1 - logical object id
+%%   #2 - registry prop (internal)
+%% Creates (or reinitialises) the expl3 prop for logical object <id> and
+%% records its fully-qualified name into the given registry prop.
 \cs_new:Npn \pxPRP_new_prop:nN #1 #2 {
 	\tl_clear_new:N  \l_pxprp_regnew_tmpa_tl
 	\__pxprp_build_name:nN {	#1	}		\l_pxprp_regnew_tmpa_tl
-	\prop_if_exist:cF		{ 	\tl_use:N	\l_pxprp_regnew_tmpa_tl	}
-	{
-		\prop_new:c 		{	\tl_use:N 	\l_pxprp_regnew_tmpa_tl	}
-		\prop_gput:NnV	#2	{	#1 	}		\l_pxprp_regnew_tmpa_tl
-	}
+	\prop_if_exist:cTF { \tl_use:N \l_pxprp_regnew_tmpa_tl }
+	  { \prop_clear:c { \tl_use:N \l_pxprp_regnew_tmpa_tl } }
+	  { \prop_new:c   { \tl_use:N \l_pxprp_regnew_tmpa_tl } }
+	\prop_gput:NnV	#2	{	#1 	}		\l_pxprp_regnew_tmpa_tl
 }
-%% ENSURE PROP EXISTS AND CREATE IT IF IT DOES NOT EXIST
-%%  #1 - PROP NAME
-%%  #2 - PROP REGISTER (INTERNAL)
+%% ENSURE PROP EXISTS (REGISTRY-AWARE)
+%% \pxPRP_ensure:nN { <id> } <reg-prop>
+%%   #1 - logical object id
+%%   #2 - registry prop (internal)
+%% Ensures that logical object <id> is registered in <reg-prop> and that
+%% the underlying expl3 prop exists. If not present, it is created.
 \cs_new:Npn \pxPRP_ensure:nN #1 #2 {
 	\prop_if_in:NnF		#2 		{	#1	}	{
 		\pxPRP_new_prop:nN		{	#1	}	#2
 	}
 }
+%% \pxPRP_ensure:n { <id> }
+%%   #1 - logical object id
+%% Convenience wrapper around \pxPRP_ensure:nN using the global object
+%% registry \g_pxprp__pxPRP_propREG_prop.
 \cs_new:Nn \pxPRP_ensure:n {
 	\prop_if_exist:NF \g_pxprp__pxPRP_propREG_prop {
 		\prop_gclear_new:N \g_pxprp__pxPRP_propREG_prop
 	}
 	\pxPRP_ensure:nN {#1} \g_pxprp__pxPRP_propREG_prop
 }
-%% GET PROP
-%% Get the full qualified name for PROP from prop REGISTER (INTERNAL)
-%%  #1 - PROP NAME
-%%  #2 - PROP REGISTER (INTERNAL)
-%%  #3 - RETURN VALUE tl var
+%% GET PROP NAME THROUGH REGISTRY
+%% \pxPRP_getprop:nNN { <id> } <reg-prop> <tl>
+%%   #1 - logical object id
+%%   #2 - registry prop (internal)
+%%   #3 - tl variable that will receive the fully-qualified prop name
+%% Ensures that <id> exists in <reg-prop> and then fetches the associated
+%% expl3 prop variable name into <tl>.
 \cs_new:Npn \pxPRP_getprop:nNN #1 #2 #3{
 	\pxPRP_ensure:nN { #1 } #2
 	\prop_get:NnN #2 {#1} #3
 }
+%% \pxPRP_getprop:nN { <id> } <tl>
+%%   #1 - logical object id
+%%   #2 - tl variable that will receive the fully-qualified prop name
+%% Uses the global object registry \g_pxprp__pxPRP_propREG_prop.
 \cs_new:Npn \pxPRP_getprop:nN #1 #2{
-	\pxPRP_ensure:n { #1 }
-	\prop_get:NnN #2 {#1} \g_pxprp__pxPRP_propREG_prop
-%	 \pxPRP_get_propname:nN {#1} #2
+	% Get fully-qualified prop name for PROP #1 from global register into tl #2
+	\pxPRP_get_propname:nN {#1} #2
 }
 %%%%	PROP KEYS MANAGER >>>>
-%% SET NEW KEY
-%%  #1 - PROP ID NAME
-%%  #2 - KEY
-%%  #3 - VALUE
-%%  #4 - PROP REGISTER (INTERNAL)
+%% SET NEW KEY (SCALAR VALUE)
+%% \pxPRP_set:nnnN { <id> }{ <key> }{ <value> } <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - value (arbitrary tl)
+%%   #4 - registry prop (internal)
+%% Sets the value associated with <key> in the expl3 prop backing object
+%% <id> within registry <reg-prop>. Any previous value for <key> is
+%% removed before storing the new one.
 \cs_new:Npn \pxPRP_set:nnnN #1 #2 #3 #4{
 	\tl_clear_new:N \l_pxprp_set_propfullname_tl
 	\pxPRP_getprop:nNN {#1} #4 \l_pxprp_set_propfullname_tl
-	\prop_if_in:cnTF {\l_pxprp_set_propfullname_tl} { #2 }
+	\prop_if_in:cnTF {\tl_use:N \l_pxprp_set_propfullname_tl} { #2 }
 	{
-		\prop_remove:cn {\l_pxprp_set_propfullname_tl} { #2 }
+		\prop_remove:cn {\tl_use:N \l_pxprp_set_propfullname_tl} { #2 }
 	}{
 	}
-	\prop_put:cnn {\l_pxprp_set_propfullname_tl} {#2} {#3}
+	\prop_put:cnn {\tl_use:N \l_pxprp_set_propfullname_tl} {#2} {#3}
 }
-%% SET NEW KEY
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - VALUE
-%%  #4 - PROP REGISTER (INTERNAL)
+%% \pxPRP_set:nnn { <id> }{ <key> }{ <value> }
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - value (arbitrary tl)
+%% Convenience wrapper using the global object registry.
 \cs_new:Npn \pxPRP_set:nnn #1 #2 #3{
 	\tl_clear_new:N \l_pxprp_set_propfullname_tl
 	\pxPRP_getprop:nN {#1} \l_pxprp_set_propfullname_tl
-	\prop_if_in:cnTF {\l_pxprp_set_propfullname_tl} { #2 }
+	\prop_if_in:cnTF {\tl_use:N \l_pxprp_set_propfullname_tl} { #2 }
 	{
-		\prop_remove:cn {\l_pxprp_set_propfullname_tl} { #2 }
+		\prop_remove:cn {\tl_use:N \l_pxprp_set_propfullname_tl} { #2 }
 	}{
 	}
-	\prop_put:cnn {\l_pxprp_set_propfullname_tl} {#2} {#3}
+	\prop_put:cnn {\tl_use:N \l_pxprp_set_propfullname_tl} {#2} {#3}
 }
-%% PUT ITEMS IN A LIST
-%% Set value for a key in a PROP object as a list
-%%  #1 - PROP ID NAME
-%%  #2 - KEY
-%%  #3 - VALUE
-%%  #4 - PROP REGISTER (INTERNAL)
+%% PUT ITEMS IN A LIST (APPEND)
+%% \pxPRP_put_items:nnnN { <id> }{ <key> }{ <item> } <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - item to append to the clist value
+%%   #4 - registry prop (internal)
+%% Treats the value stored at <key> as a comma-separated list (clist).
+%% If the key is present, the item is appended to the clist; otherwise
+%% a new single-item clist is created.
 \cs_new:Npn \pxPRP_put_items:nnnN #1 #2 #3 #4{
 	\tl_clear_new:N \l_pxprp_put_item_propfullname_tl
 	\pxPRP_getprop:nNN {#1} #4 \l_pxprp_put_item_propfullname_tl
 	\clist_clear_new:N \l_pxprp_put_item_aux_clist
-	\prop_get:cnNTF {\l_pxprp_put_item_propfullname_tl} { #2 } \l_pxprp_put_item_aux_clist
+	\prop_get:cnNTF {\tl_use:N \l_pxprp_put_item_propfullname_tl} { #2 } \l_pxprp_put_item_aux_clist
 	{	\clist_put_right:Nn \l_pxprp_put_item_aux_clist {	#3	}	}
 	{	\clist_set:Nn \l_pxprp_put_item_aux_clist {	#3	}  	}
-	\prop_put:cnV {\l_pxprp_put_item_propfullname_tl} {#2} \l_pxprp_put_item_aux_clist
+	\prop_put:cnV {\tl_use:N \l_pxprp_put_item_propfullname_tl} {#2} \l_pxprp_put_item_aux_clist
 }
-%% PUT ITEMS IN A LIST
-%% Set value for a key in a PROP object as a list
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - VALUE
-%%  #4 - PROP REGISTER (INTERNAL)
+%% \pxPRP_put_items:nnn { <id> }{ <key> }{ <item> }
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - item to append to the clist value
+%% Convenience wrapper using the global object registry.
 \cs_new:Npn \pxPRP_put_items:nnn #1 #2 #3{
 	\tl_clear_new:N \l_pxprp_put_item_propfullname_tl
 	\clist_clear_new:N \l_pxprp_put_item_aux_clist
 
 	\pxPRP_getprop:nN {#1} \l_pxprp_put_item_propfullname_tl
 
-	\prop_get:cnNTF {\l_pxprp_put_item_propfullname_tl} { #2 } \l_pxprp_put_item_aux_clist {
+	\prop_get:cnNTF {\tl_use:N \l_pxprp_put_item_propfullname_tl} { #2 } \l_pxprp_put_item_aux_clist {
 		\clist_put_right:Nn 	\l_pxprp_put_item_aux_clist 	{	#3	}
 	}{
 		\clist_set:Nn 	\l_pxprp_put_item_aux_clist 	{	#3	}
 	}
-	\prop_put:cnV {	\l_pxprp_put_item_propfullname_tl	} {	#2	} 	\l_pxprp_put_item_aux_clist
+	\prop_put:cnV {	\tl_use:N \l_pxprp_put_item_propfullname_tl	} {	#2	} 	\l_pxprp_put_item_aux_clist
 }
 
-%% CLEAR KEY
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - PROP REGISTER (INTERNAL)
+%% CLEAR KEY (INTERNAL)
+%% \__pxprp_clear_key:nnN { <id> }{ <key> } <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - registry prop (internal)
+%% Internal helper: if the object <id> is present in <reg-prop> and key
+%% <key> exists in the underlying expl3 prop, remove that key.
 \cs_new:Npn \__pxprp_clear_key:nnN  #1 #2 #3{
 	\tl_clear_new:N 		\l_strlst_clearlist_name_tl
-	\pxPRP_get_propname:nNNT {#1}  #3 \l_strlst_clearlist_name_tl {
-		\prop_if_in:cnT {\l_strlst_clearlist_name_tl} {#2} {
-			\prop_remove:cn	{#1	} {	#2	}
+	\pxPRP_get_propname:nNNTF {#1}  #3 \l_strlst_clearlist_name_tl
+	  {
+		\prop_if_in:cnT {\tl_use:N \l_strlst_clearlist_name_tl} {#2} {
+			\prop_remove:cn	{\tl_use:N \l_strlst_clearlist_name_tl} {	#2	}
 		}
-	}
+	  }
+	  { }
 }
+%% CLEAR KEY (PUBLIC WRAPPER)
+%% \pxPRP_clear_key:nn { <id> }{ <key> }
+%%   #1 - logical object id
+%%   #2 - key (string)
+%% Removes key <key> from logical object <id> in the global registry.
+\cs_new:Npn \pxPRP_clear_key:nn #1 #2 {
+  \__pxprp_clear_key:nnN { #1 }{ #2 } \g_pxprp__pxPRP_propREG_prop
+}
+
+%% CLEAR OBJECT
+%% \pxPRP_clear_object:n { <id> }
+%%   #1 - logical object id
+%% Removes the entire underlying prop for <id> (if it exists) and
+%% removes its entry from the global registry.
+\cs_new:Npn \pxPRP_clear_object:n #1 {
+	\tl_clear_new:N \l_pxprp_clearobj_name_tl
+	\pxPRP_get_propname:nNTF {#1} \l_pxprp_clearobj_name_tl
+    {
+      \prop_clear:c { \tl_use:N \l_pxprp_clearobj_name_tl }
+      \prop_remove:Nn \g_pxprp__pxPRP_propREG_prop { #1 }
+    }
+    { }
+}
+%% OBJECT EXISTENCE TEST
+%% \pxPRP_object_exists:nTF { <id> } {<true code>} {<false code>}
+%%   #1 - logical object id
+%% Tests whether a logical object is currently registered.
+\prg_new_conditional:Npnn \pxPRP_object_exists:n #1 { T , F , TF }
+  {
+    \tl_clear_new:N \l_pxprp_name_tmp_tl
+    \pxPRP_get_propname:nNTF {#1} \l_pxprp_name_tmp_tl
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+%% KEY EXISTENCE TEST
+%% \pxPRP_key_exists:nnTF { <id> }{ <key> } {<true code>} {<false code>}
+%%   #1 - logical object id
+%%   #2 - key (string)
+%% Tests whether <key> is present in the object <id> of the global registry.
+\prg_new_conditional:Npnn \pxPRP_key_exists:nn #1 #2 { T , F , TF }
+  {
+    \tl_clear_new:N \l_strlst_clearlist_name_tl
+    \pxPRP_get_propname:nNNTF {#1} \g_pxprp__pxPRP_propREG_prop \l_strlst_clearlist_name_tl
+      {
+        \prop_if_in:cnTF { \tl_use:N \l_strlst_clearlist_name_tl } {#2}
+          { \prg_return_true: }
+          { \prg_return_false: }
+      }
+      { \prg_return_false: }
+  }
 %%%%   GET PROP ITEM
-%% 	GET as a CLIST
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - RETURN VALUE CLIST
-%%  #4 - PROP REGISTER (INTERNAL)
+%% GET VALUE AS A CLIST
+%% \pxprp_get_clist:nnNN { <id> }{ <key> } <clist> <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - clist variable that will receive the value
+%%   #4 - registry prop (internal)
+%% Fetch the value of <key> for object <id> as a clist. If the key does
+%% not exist, <clist> is cleared to the empty clist.
 \cs_new:Npn \pxprp_get_clist:nnNN #1 #2 #3 #4 {
 	\tl_clear_new:N \l_pxprp_gtlst_name_tl
 	 \pxPRP_get_propname:nNNTF 	{	#1	}	#4   \l_pxprp_gtlst_name_tl
-	 {	\prop_get:cnN {\l_pxprp_gtlst_name_tl} {#2} #3	}
+	 {	\prop_get:cnN {\tl_use:N \l_pxprp_gtlst_name_tl} {#2} #3	}
 	 {	\clist_clear_new:N #3	}
 }
-%% GET ITEM AS A TL
-%% Get item as a TL
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - RETURN VALUE TL
-%%  #4 - PROP REGISTER (INTERNAL)
+%% GET VALUE AS A TOKEN LIST
+%% \pxprp_get_tl:nnNN { <id> }{ <key> } <tl> <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - tl variable that will receive the value
+%%   #4 - registry prop (internal)
+%% Fetch the value of <key> for object <id> as a tl. If the key does
+%% not exist, <tl> is set equal to \c_empty_tl.
 \cs_new:Npn \pxprp_get_tl:nnNN #1 #2 #3 #4 {
 	\tl_clear_new:N \l_pxprp_gettl_name_tl
 	 \pxPRP_get_propname:nNNTF 	{	#1	}	#4   \l_pxprp_gettl_name_tl
-	 {	\prop_get:cnN {\l_pxprp_gettl_name_tl} {#2} #3	}
+	 {	\prop_get:cnN {\tl_use:N \l_pxprp_gettl_name_tl} {#2} #3	}
 	 {	\tl_set_eq:NN #3 \c_empty_tl }
 }
 %%%%%%    C L I S T - S H O R T     %%%%%
-\cs_new:Npn \pxprp_get_clist:nnN #1 #2 #3 {	
+%% \pxprp_get_clist:nnN { <id> }{ <key> } <clist>
+%% Convenience wrapper using the global object registry.
+\cs_new:Npn \pxprp_get_clist:nnN #1 #2 #3 {
 	\pxprp_get_clist:nnNN {#1}{#2} #3 \g_pxprp__pxPRP_propREG_prop
 }
-%% 	GET CLIST ITEM VALUE
-%%  #1 - PRPLST NAME tl
-%%  #2 - PRPLST KEY tl
-%%  #3 - CLIST INT POSITION
-%%  #4 - retVal clist
-%%  #5 - Registry prop (Opt.)
+%% GET CLIST ITEM VALUE
+%% \pxPRP_get_item:nnnNN { <id> }{ <key> }{ <index> } <tl> <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - 1-based index into the clist
+%%   #4 - tl variable that will receive the item
+%%   #5 - registry prop (internal)
+%% Retrieves the <index>-th item of the clist stored at <key>.
 \cs_new:Npn \pxPRP_get_item:nnnNN #1 #2 #3 #4 #5 {
 	\clist_clear_new:N \l_pxprp_get_item_aux_clist
 	\pxprp_get_clist:nnNN{#1}{#2} \l_pxprp_get_item_aux_clist #5
 	\tl_set:Nn #4 { \clist_item:Nn \l_pxprp_get_item_aux_clist { #3 }}
 }
+%% \pxPRP_get_item:nnnN { <id> }{ <key> }{ <index> } <tl>
+%% Convenience wrapper using the global object registry.
 \cs_new:Npn \pxPRP_get_item:nnnN #1 #2 #3 #4 {
 	\clist_clear_new:N \l_pxprp_get_item_aux_clist
 	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
 	\tl_set:Nn #4 { \clist_item:Nn \l_pxprp_get_item_aux_clist { #3 }}
 }
+%% \pxPRP_get_item:nnn { <id> }{ <key> }{ <index> }
+%% Returns the item directly, suitable for use in expansion contexts.
 \cs_new:Npn \pxPRP_get_item:nnn #1 #2 #3 {
 	\clist_clear_new:N \l_pxprp_get_item_aux_clist
 	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
 	\clist_item:Nn \l_pxprp_get_item_aux_clist { #3 }
 }
-%% GET ITEM AS A VARIABLE
-%% Get item as a VARIABLE
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - VARIABLE NAME
-%%  #4 - PROP REGISTER (INTERNAL)
+%% GET SCALAR VALUE (TL) AS RESULT
+%% \pxPRP_get_scalar:nn { <id> }{ <key> }
+%% Returns the scalar value for <key> in object <id> as a tl in an
+%% expansion-safe form. If the key does not exist, expands to empty.
+\cs_new:Npn \pxPRP_get_scalar:nn #1 #2 {
+	\tl_clear_new:N \l_pxprp_scalar_tmp_tl
+	\tl_clear_new:N \l_pxprp_scalar_propname_tl
+	\pxPRP_get_propname:nNTF {#1} \l_pxprp_scalar_propname_tl
+	  {
+	    \prop_get:cnNTF { \tl_use:N \l_pxprp_scalar_propname_tl } {#2} \l_pxprp_scalar_tmp_tl
+	      { }
+	      { \tl_clear:N \l_pxprp_scalar_tmp_tl }
+	  }
+	  { \tl_clear:N \l_pxprp_scalar_tmp_tl }
+	\tl_use:N \l_pxprp_scalar_tmp_tl
+}
+%% LIST LENGTH
+%% \pxPRP_list_length:nnN { <id> }{ <key> } <int>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - int variable that will receive the length (number of items)
+%% Computes the length of the clist stored at <key>. If the key does not
+%% exist, the result is 0.
+\cs_new:Npn \pxPRP_list_length:nnN #1 #2 #3 {
+	\clist_clear_new:N \l_pxprp_get_item_aux_clist
+	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
+	\int_set:Nn #3 { \clist_count:N \l_pxprp_get_item_aux_clist }
+}
+%% \pxPRP_list_length:nn { <id> }{ <key> }
+%% Returns the length directly, suitable for expansion.
+\cs_new:Npn \pxPRP_list_length:nn #1 #2 {
+	\clist_clear_new:N \l_pxprp_get_item_aux_clist
+	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
+	\clist_count:N \l_pxprp_get_item_aux_clist
+}
+%% LIST USE: RETURN ALL ITEMS SEPARATED BY A GIVEN SEPARATOR
+%% \pxPRP_list_use:nnn { <id> }{ <key> }{ <sep> }
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - separator token list (printed between items)
+\cs_new:Npn \pxPRP_list_use:nnn #1 #2 #3 {
+	\clist_clear_new:N \l_pxprp_get_item_aux_clist
+	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
+	\clist_use:Nn \l_pxprp_get_item_aux_clist {#3}
+}
+%% GET ITEM USING SPECIALISED SYNTAX
+%% \pxPRP_get_item_var:nnn  <id>.<key>[<index>];
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - (currently) numeric index into the clist
+%% Experimental utility using a compact "id.key[index]" syntax.
 \cs_new:Npn \pxPRP_get_item_var:nnn #1.#2[#3];  {
 	\clist_clear_new:N \l_pxprp_get_item_aux_clist
 	\pxprp_get_clist:nnN{#1}{#2} \l_pxprp_get_item_aux_clist
@@ -245,16 +409,21 @@
 }
 
 %% 	GET as BOOLEAN
-%%  #1 - PROP NAME
-%%  #2 - PRPLST KEY tl
-%%  #3 - retVal bool
-%%  #4 - Registry prop (Opt.)
+%% \pxprp_get_bool:nnNN { <id> }{ <key> } <bool> <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - boolean variable that will receive the result
+%%   #4 - registry prop (internal)
+%% Reads the scalar value stored at <key> and interprets it as a boolean:
+%%   - missing or blank value      -> false
+%%   - the literal token list "false" -> false
+%%   - anything else               -> true
 \cs_new:Npn \pxprp_get_bool:nnNN #1 #2 #3 #4 {
 	\tl_clear_new:N \l_pxprp_getbool_name_tl
 	\tl_clear_new:N \l_pxprp_gtbool_aux_tl
 	 \pxPRP_get_propname:nNNTF {#1} #4 \l_pxprp_getbool_name_tl {
 		\prop_get:cnN {\tl_use:N \l_pxprp_getbool_name_tl} {#2} \l_pxprp_gtbool_aux_tl
-		\tl_if_blank:NTF \l_pxprp_gtbool_aux_tl {
+		\tl_if_blank:VTF \l_pxprp_gtbool_aux_tl {
 			\bool_set_false:N  #3
 		}{
 			\tl_if_eq:NnTF \l_pxprp_gtbool_aux_tl {false} {
@@ -266,93 +435,88 @@
 	}{
 		\bool_set_false:N  #3
 	}
-
 }%%%%%% B O O L E A N - S H O R T    %%%%%
+%% \pxprp_get_bool:nnN { <id> }{ <key> } <bool>
+%% Convenience wrapper using the global object registry.
 \cs_new:Npn \pxprp_get_bool:nnN #1 #2 #3 {
 	\pxprp_get_bool:nnNN {#1}{#2} #3 \g_pxprp__pxPRP_propREG_prop
 }
-%%  PUT INTO LIST
-%%  #1 - PROP NAME
-%%  #2 - KEY
-%%  #3 - COMMA SEPARATED LIST
-%%  #4 - Registry prop (Opt.)
-%%    R I G H T
-\cs_new:Npn \pxprp_list_put_right:nnnN #1 #2 #3 #4 {
-	%% ENSURE THAT PRPLIST EXIST OR CREATE IT
-	\pxPRP_ensure:nN	{	#1	}	#4
-	%% CREATE CLEAN VARIABLES
-	\tl_clear_new:N 	\l_strlstputr_name_tl
-	\tl_clear_new:N 	\l_strlstputr_rawlist_tl
-	\clist_clear_new:N 	\l_strlstputr_list_clist
-	\pxPRP_get_propname:nNNT { #1 } #4  \l_strlstputr_name_tl
-	{
-		\pxprp_get_clist:nnNN 	{	#1	}	{	#2	}	\l_strlstputr_list_clist	#4
-		\clist_if_empty:NTF \l_strlstputr_list_clist
-		{
-			\prop_put:cnn	{	\l_strlstputr_name_tl	}	{	#2	}	{	#3	}
-		}{
-			\clist_put_right:Nn \l_strlstputr_list_clist {	#3	}
-		}
 
-		\prop_put:cnn	{	\l_strlstputr_name_tl	}	{	#2	}
-		{
-			\clist_use:Nn	\l_strlstputr_list_clist		{,}
-		}
-	}
-}%%%%%%    R I G H T - S H O R T     %%%%%
-\cs_new:Npn \pxprp_list_put_right:nnn #1 #2 #3 {
-	 \pxprp_list_put_right:nnnN		{	#1	}	{	#2	}	{	#3	}	\g_pxprp__pxPRP_propREG_prop
-}%%%%%%    L E F T                   %%%%%
-\cs_new:Npn \pxprp_list_put_left:nnnN #1 #2 #3 #4 {
-	\pxPRP_ensure:nN {	#1	}	#4
-	\tl_clear_new:N 	\l_strlstputl_name_tl
-	\tl_clear_new:N 	\l_strlstputl_rawlist_tl
-	\clist_clear_new:N 	\l_strlstputl_list_clist
-	%% OBTAIN PRPLST NAME
-	\prop_get:NnN 	#4 	{	#1	}	\l_strlstputl_name_tl
-	\prop_get:cnNTF {\tl_use:N \l_strlstputl_name_tl} {#2} \l_strlstputl_rawlist_tl
-	{ %% OBTAIN PRPLST #1 >> KEY #2 >> LIST#1
-		\clist_set:NV \l_strlstputl_list_clist \l_strlstputl_rawlist_tl
-		\clist_put_left:Nn \l_strlstputl_list_clist {	#3	}
-		\prop_put:cnn	{	\l_strlstputl_name_tl	}	{	#2	}
-		{
-			\clist_use:Nn	\l_strlstputl_list_clist		{,}
-		}
-	}{ %% PUT VALUE IN PRPLST #1 >> KEY #2 >> LIST#1
-		\prop_put:cnn	{	\l_strlstputl_name_tl	}	{	#2	}	{	#3	}
-	}
-}%%%%%%    L E F T  - S H O R T      %%%%%
-\cs_new:Npn \pxprp_list_put_left:nnn #1 #2 #3 {
-	 \pxprp_list_put_left:nnnN		{	#1	}	{	#2	}	{	#3	}	\g_pxprp__pxPRP_propREG_prop
+%% BOOLEAN TEST ON STRING VALUE (PUBLIC CONDITIONAL)
+%% \pxPRP_if_true:nnTF { <id> }{ <key> } {<true code>} {<false code>}
+%% Uses the boolean interpretation of the scalar value at <key>.
+\bool_new:N \l_pxprp_tmp_bool
+\prg_new_conditional:Npnn \pxPRP_if_true:nn #1 #2 { T , F , TF }
+  {
+    \pxprp_get_bool:nnN {#1}{#2} \l_pxprp_tmp_bool
+    \bool_if:NTF \l_pxprp_tmp_bool
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+%%  PUT INTO LIST (TL-BASED, NO COMPLEX EXPANSIÓ)
+%% \pxprp_list_put_right:nnnN { <id> }{ <key> }{ <clist> } <reg-prop>
+%%   #1 - logical object id
+%%   #2 - key (string)
+%%   #3 - text to append (interpreted com a llista separada per comes)
+%%   #4 - registry prop (internal)
+%% Implementació: tracta el valor com a text "a,b,c" i concatena
+%% simplement amb comes, evitant lògica recursiva complicada.
+\cs_new:Npn \pxprp_list_put_right:nnnN #1 #2 #3 #4 {
+	\pxPRP_ensure:nN { #1 } #4
+	\tl_clear_new:N \l_strlstputr_name_tl
+	\tl_clear_new:N \l_strlstputr_rawlist_tl
+	\pxPRP_getprop:nNN {#1} #4 \l_strlstputr_name_tl
+	\prop_get:cnNTF { \tl_use:N \l_strlstputr_name_tl } {#2} \l_strlstputr_rawlist_tl
+	  {
+	    \tl_if_blank:VTF \l_strlstputr_rawlist_tl
+	      { \prop_put:cnn { \tl_use:N \l_strlstputr_name_tl } {#2} {#3} }
+	      { \prop_put:cnn { \tl_use:N \l_strlstputr_name_tl } {#2}
+	                      { \l_strlstputr_rawlist_tl , #3 } }
+	  }
+	  { \prop_put:cnn { \tl_use:N \l_strlstputr_name_tl } {#2} {#3} }
 }
-%%%% SET LIST
-%% SET LST \pxprp_list_set:nnnN
-%% %BEGIN_FOLD >>> SET FULL LIST VALUE
-%%  #1 - PRPLST NAME
-%%  #2 - PRPLST KEY
-%%  #3 - CLIST       tl
-%%  #4 - Registry prop (Opt.)
+%%%%%%    R I G H T - S H O R T     %%%%%
+%% \pxprp_list_put_right:nnn { <id> }{ <key> }{ <clist> }
+%% Convenience wrapper using the global object registry.
+\cs_new:Npn \pxprp_list_put_right:nnn #1 #2 #3 {
+	\pxprp_list_put_right:nnnN {#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop
+}
+%%%%%%    L E F T                   %%%%%
+%% \pxprp_list_put_left:nnnN { <id> }{ <key> }{ <clist> } <reg-prop>
+%% Com \pxprp_list_put_right:nnnN però afegint a l'inici.
+\cs_new:Npn \pxprp_list_put_left:nnnN #1 #2 #3 #4 {
+	\pxPRP_ensure:nN { #1 } #4
+	\tl_clear_new:N \l_strlstputl_name_tl
+	\tl_clear_new:N \l_strlstputl_rawlist_tl
+	\pxPRP_getprop:nNN {#1} #4 \l_strlstputl_name_tl
+	\prop_get:cnNTF { \tl_use:N \l_strlstputl_name_tl } {#2} \l_strlstputl_rawlist_tl
+	  {
+	    \tl_if_blank:VTF \l_strlstputl_rawlist_tl
+	      { \prop_put:cnn { \tl_use:N \l_strlstputl_name_tl } {#2} {#3} }
+	      { \prop_put:cnn { \tl_use:N \l_strlstputl_name_tl } {#2}
+	                      { #3 , \l_strlstputl_rawlist_tl } }
+	  }
+	  { \prop_put:cnn { \tl_use:N \l_strlstputl_name_tl } {#2} {#3} }
+}
+%%%%%%    L E F T  - S H O R T      %%%%%
+%% \pxprp_list_put_left:nnn { <id> }{ <key> }{ <clist> }
+%% Convenience wrapper using the global object registry.
+\cs_new:Npn \pxprp_list_put_left:nnn #1 #2 #3 {
+	\pxprp_list_put_left:nnnN {#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop
+}
+%%%% SET LIST (SUBSTITUCIÓ COMPLETA)
+%% \pxprp_list_set:nnnN { <id> }{ <key> }{ <clist> } <reg-prop>
+%% Reemplaça completament el valor de la clau pel text donat.
 \cs_new:Npn \pxprp_list_set:nnnN #1 #2 #3 #4 {
-	\pxPRP_ensure:nN 			{	#1	}		#4
-	\tl_clear_new:N 		\l_strlstset_name_tl
-	\tl_clear_new:N 		\l_strlstset_rawlist_tl
-	\clist_clear_new:N 		\l_strlstset_list_clist
-	%% OBTAIN PRPLST NAME
-	\prop_get:NnN 				#4 		{	#1	}	\l_strlstset_name_tl
-	\pxprp_get_clist:nnNN 	{	#1	}	{	#2	}	\l_strlstset_list_clist 	#4
-	\clist_if_empty:NF \l_strlstset_list_clist
-	{
-		\__pxprp_clear_key:nnN: 	{	#1	}	{	#2	}	#4
-%		\clist_clear_new:N 		\l_strlstset_list_clist
-%		\prop_remove:cn 	{	\tl_use:N 	\l_strlstset_name_tl } {#2}
-	}
-	\clist_set:Nn 			\l_strlstset_list_clist 	{	#3 }
-	\prop_put:cnn		{	\tl_use:N 	\l_strlstset_name_tl	}	{	#2	}
-		{
-			\clist_use:Nn	\l_strlstputl_list_clist	{,}
-		}
-}%%%%%%    SET LIST - S H O R T      %%%%%
+	\pxPRP_ensure:nN { #1 } #4
+	\tl_clear_new:N \l_strlstset_name_tl
+	\pxPRP_getprop:nNN {#1} #4 \l_strlstset_name_tl
+	\prop_put:cnn { \tl_use:N \l_strlstset_name_tl } {#2} {#3}
+}
+%%%%%%    SET LIST - S H O R T      %%%%%
+%% \pxprp_list_set:nnn { <id> }{ <key> }{ <clist> }
+%% Convenience wrapper using the global object registry.
 \cs_new:Npn \pxprp_list_set:nnn #1 #2 #3 {
-	 \pxprp_list_set:nnnN		{	#1	}	{	#2	}	{	#3	}	\g_pxprp__pxPRP_propREG_prop
+	\pxprp_list_set:nnnN {#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop
 }
 \endinput

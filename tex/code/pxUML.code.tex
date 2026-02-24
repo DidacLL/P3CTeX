@@ -1,4 +1,4 @@
-% !TeX root = ../tests/pxUML.test.tex
+% ! T eX root = ../tests/pxUML.test.tex
 %% =======================================================
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
@@ -29,6 +29,18 @@
 \prop_if_exist:NF \g_pxuml_classREG_prop {
 	\prop_gclear_new:N \g_pxuml_classREG_prop
 }
+\keys_define:nn { pxUML }
+{
+	maincolor	 		.tl_set:N		=	\l__pxuml_main_color_tl,
+		maincolor	 	.initial:n		=	UMLprimaryColor,
+	auxcolor	 		.tl_set:N		=	\l__pxuml_aux_color_tl,
+		auxcolor	 	.initial:n		=	UMLsecondaryColor,
+	neutralcolor		.tl_set:N		=	\l__pxuml_neutral_color_tl,
+		neutralcolor	.initial:n		=	UMLneutralColor,
+	bgcolor 			.tl_set:N		=	\l__pxuml_bg_color_tl,
+		bgcolor			.initial:n		=	UMLBackgroundColor,
+}
+\ProcessKeysOptions{ pxUML }
 %% PCKG PRIVATE FUNCTIONS
 %% NEW CLASS
 %%  #1 - CLASS NAME
@@ -140,15 +152,15 @@
 }
 %% LOAD VARIABLE COLORS
 \cs_new:Nn \__pxuml_load_varcolor:{
-	\renewcommand {\umltextcolor }{white!}
-	\renewcommand {\umlfillcolor }{primaryColor!40!neutralColor!60!}
-	\renewcommand {\umldrawcolor }{white!}
+	\renewcommand {\umltextcolor }{\l__pxuml_bg_color_tl!}
+	\renewcommand {\umlfillcolor }{\l__pxuml_main_color_tl!40!\l__pxuml_neutral_color_tl!60!}
+	\renewcommand {\umldrawcolor }{\l__pxuml_bg_color_tl!}
 }
 %% LOAD MAIN COLORS
 \cs_new:Nn \__pxuml_load_maincolor:{
-	\renewcommand {\umltextcolor }{ primaryColor}
-	\renewcommand {\umlfillcolor }{ secondaryColor!20!}
-	\renewcommand {\umldrawcolor }{primaryColor}
+	\renewcommand {\umltextcolor }{\l__pxuml_main_color_tl}
+	\renewcommand {\umlfillcolor }{\l__pxuml_aux_color_tl!20!}
+	\renewcommand {\umldrawcolor }{\l__pxuml_main_color_tl}
 }
 %% SHOW CLASS
 %%  #1 - CLASS NAME

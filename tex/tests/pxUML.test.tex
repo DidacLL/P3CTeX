@@ -4,47 +4,104 @@
 
 
 % Load your code directly from the working directory:
-\usepackage{pxUML}
+\usepackage[
+	maincolor   = blue,
+	auxcolor    = yellow,
+	neutralcolor= gray,
+	bgcolor     = white
+]{pxUML}
 
 \begin{document}
-	\section{Pregunta 1} \label{ex1}
+\subsection*{Proves de la API pxUML}
 
-\subsection*{Diagrama UML Original}
+En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet.
+
+% Classe simple amb atributs i operacions modificats posteriorment
+\pxUMLClass{Person}
+{
+	- name : String
+}
+[+ getName() : String]
+
+\addAttribute{Person}{- age : Integer}
+\addOperation{Person}{+ setName(newName : String) : void}
+
+% Classe base i derivada per provar la herència
+\pxUMLClass{BaseClass}
+{
+	- id : Integer
+}
+
+\pxUMLClass{DerivedClass}
+{
+	- extra : String
+}
+
+\addInheritance{DerivedClass}{BaseClass}
+
+% Classe utilitzada per instàncies
+\pxUMLClass{Service}
+{
+	- name : String
+}
+[+ run() : void]
+
+\pxUMLDiagram{
+	% dibuix complet
+	\drawclass[text width=14em]{Person}[0,0]
+	% dibuix simplificat
+	\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
+	\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
+%	% instància d'una classe amb atributs i operacions
+	\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{
+		- name : String
+	}{
+		+ run() : void
+	}
+}[0.9\linewidth]
+% prova que \PXshowclass no produeix cap error en accedir al registre
+\PXshowclass{Person}
+\PXshowclass{Service}
+
+% cas negatiu: classe inexistent no ha de provocar error
+\PXshowclass{NoExisteix}
+
+\subsection*{Diagrama UML}
 Disseny inicial del sistema, tal com s'indica a l'enunciat:
 
-\PXdefClass[enumclass]{Role}
+\pxUMLClass[enumclass]{Role}
 {
 	DEVELOPER,
 	COMMUNITYMANAGER
 }
-\PXdefClass[enumclass]{AICategory}
+\pxUMLClass[enumclass]{AICategory}
 {
 	CHAT,
 	CODEGENERATOR,
 	POSTGENERATOR
 }
 
-\PXdefClass{Employee}
+\pxUMLClass{Employee}
 {
 	- role : Role,
 	- email : String
 }[+ monthlyConsumptionCost(month : DateTime) : real]
 
-\PXdefClass{TokenConsumption}
+\pxUMLClass{TokenConsumption}
 {
 	- timeStamp : DateTime,
 	- numTokens : UnlimitedNatural
 }
 
-\PXdefClass{AIAgent}
+\pxUMLClass{AIAgent}
 {
 	- name : String,
 	- description : String,
 	- tokenPrice : Real,
 	- aiCategory : AICategory
-}[+ process(prompt : String) : String, + calculateCost(numTokens : UnliimitedNatural):Real	]
+}[+ process(prompt : String) : String, + calculateCost(numTokens : UnlimitedNatural):Real	]
 
-\PXdefClass{Company}
+\pxUMLClass{Company}
 {
 	- name : String,
 	- address : String,
@@ -52,7 +109,7 @@ Disseny inicial del sistema, tal com s'indica a l'enunciat:
 	- web : String
 }
 
-\PXuml{
+\pxUMLDiagram{
 	\drawclass*[text width=15em]{Role}[2,0]
 	\drawclass*[text width=14em]{AICategory}[16,0]
 	\drawclass[text width=16em]{TokenConsumption}[9,-5]
