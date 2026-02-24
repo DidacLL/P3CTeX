@@ -1,0 +1,192 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+\ProvidesExplFile{P3CTeX.code.tex}{2025/02/21}{v0.1}
+{
+	P3CTeX UML Graphics implementation based on top of pgf-corecd and TikZ packages
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	OTHER PCKG IMPORT		--		%%%
+%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
+\RequirePackage{fp}
+\RequirePackage{graphicx}   		% Graphics
+\RequirePackage[a4paper]{geometry}  % Page dimensions
+\RequirePackage{amsmath}   			% Mathematical support
+\RequirePackage{arev}       		% Fonts
+\RequirePackage{fancyhdr}   		% Header/footer customization
+\RequirePackage{array}      		% Table formatting
+\RequirePackage{colortbl}   		% Color tables
+\RequirePackage{longtable}
+\RequirePackage{tikz}       	    % Drawing figures with TikZ
+\RequirePackage{url}        	 	% URL formatting
+\RequirePackage{float}				% Handling floats
+\RequirePackage{pdfpages}			% Including PDFs
+\RequirePackage{pgf} 				% Graphics (PGF/TikZ)
+\RequirePackage{caption}    	    % Custom captions
+\RequirePackage{tocloft}    	    % Table of contents formatting
+\RequirePackage{hyperref} 			% Configuration setup triggered by P3CTeX / pdf
+\RequirePackage{cleveref}			% FIX - Package cleveref Error: cleveref must be loaded after hyperref
+\RequirePackage{lastpage}
+\RequirePackage{cite} 				%% -> allows cite soft line wrap
+%\file_input:n {p3xlang.tex}
+%\RequirePackage{p3xGDX}
+%\RequirePackage{p3xSRC}
+%%END_FOLD%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PCKG KEYS DEFINITION	--		%%%
+%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  	--	PCKG KEYS DEFINITION
+\keys_define:nn { P3CTeX }
+{
+	cover 			.bool_set:N 	=		\l_pxdoc_usecover_bool,
+	cover 		.initial:n 		= 		false,
+	cover 		.default:n 		= 		true,
+	no-cover	.meta:n 		= 	{ 	cover ={ false }},
+	CA				.meta:n			=	{	cover = {false}, en},
+	PAC				.meta:n			=	{	cover = {false}, cat},
+	PEC				.meta:n			=	{	cover = {false}, es},
+	PR				.meta:n			=	{	cover = {true}	},
+	EN				.meta:n			=	{	en	},
+	ES				.meta:n			=	{	es	},
+	CAT				.meta:n			=	{	cat	},
+	cat	.code		={
+		\RequirePackage[catalan]{babel}
+	},
+	es	.code		={
+		\RequirePackage[spanish]{babel}
+		\_pxcore_set_language_spanish
+	},
+	en	.code		={
+		\RequirePackage[english]{babel}
+		\_pxcore_set_language_english
+	},
+	user-data 				.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
+	debug 					.bool_set:N 		=		\l_pxcore_debug_bool,
+	debug 					.initial:n 		= 		false,
+	debug 					.default:n 		= 		true,
+	print-doc 				.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
+	print-doc				.initial:n 		= 		false,
+	print-doc				.default:n 		= 		true,
+	UML						.bool_set:N			=		\l_pxcore_uml_use_bool,
+	UML						.initial:n 		= 		false,
+	UML						.default:n 		= 		true,
+}
+\keys_define:nn { P3CTeX / data}
+{
+	alumne				.tl_set:N 		=		\l__pxdata_student_tl,
+	alumne			.initial:n		=	{Nom~Alumne},
+	alumno			.meta:n 		=	{	alumne={ #1 }	},
+	student			.meta:n 		=	{	alumne={ #1 }	},
+	author			.meta:n 		=	{	alumne={ #1 }	},
+	titulacio			.tl_set:N		=		\l__pxdata_course_tl,
+	titulacio		.initial:n		=	{Nom~de~la~Titulació},
+	titulacion		.meta:n 		=	{	titulacio={ #1 }	},
+	gradename		.meta:n 		=	{	titulacio={ #1 }	},
+	grade			.meta:n 		=	{	titulacio={ #1 }	},
+	assignatura			.tl_set:N		=		\l__pxdata_subj_name_tl,
+	assignatura		.initial:n		=	{Nom de la Assignatura},
+	asignatura			.meta:n 		=	{	assignatura={ #1 }	},
+	subject			.meta:n 		=	{	assignatura={ #1 }	},
+	subj-fullname	.meta:n 		=	{	assignatura={ #1 }	},
+	assig-curt			.tl_set:N		=		\l__pxdata_subj_short_tl,
+	assig-curt		.initial:n 		=	{NmAsg},
+	asig-corto		.meta:n 		=	{	assig-curt={ #1 }	},
+	subject-short	.meta:n 		=	{	assig-curt={ #1 }	},
+	subj-shortname	.meta:n 		=	{	assig-curt={ #1 }	},
+	subj			.meta:n 		=	{	assig-curt={ #1 }	},
+	assig			.meta:n 		=	{	assig-curt={ #1 }	},
+	assig-codi			.tl_set:N		=		\l__pxdata_subj_code_tl,
+	assig-codi		.initial:n		=	{codiAsg},
+	subj-code		.meta:n 		=	{	assig-codi={ #1 }	},
+	codigo			.meta:n 		=	{	assig-codi={ #1 }	},
+	code			.meta:n 		=	{	assig-codi={ #1 }	},
+	activitat			.tl_set:N		=		\l__pxdata_activity_tl,
+	activitat		.initial:n		=	{Nom de l'activitat},
+	actividad		.meta:n 		=	{	activitat={ #1 }	},
+	activity		.meta:n 		=	{	activitat={ #1 }	},
+	ca-fullname		.meta:n			=	{	activitat={ #1 }	},
+	assessment		.meta:n 		=	{	activitat={ #1 }	},
+	nomcurt				.tl_set:N 		=		\l__pxdata_act_short_tl,
+	nomcurt			.initial:n		=	{NmAct},
+	act-corto		.meta:n 		=	{	nomcurt={ #1 }	},
+	act-curt		.meta:n 		=	{	nomcurt={ #1 }	},
+	short-title		.meta:n 		=	{	nomcurt={ #1 }	},
+	ca-shortname	.meta:n 		=	{	nomcurt={ #1 }	},
+	date 				.tl_set:N		=		\l__px_date_tl,
+	date 			.initial:n		=	{\today},
+	example			.meta:n	={
+		alumne = {Guillem~Portes},
+		titulacio = {Software~Engineering~Degree},
+		assignatura	= {Pràctiques~de~Procrastinació-Avançada~en~\LaTeX},
+		assig-curt = {PPAL},
+		assig-codi = {01312},
+		activitat = {Repte~1:~Introducció~a~\texttt{xpl3} },
+		nomcurt = {PAC1},
+		date = {1~de~Gener~de~1970}
+	},
+	help	.meta:n	={
+		alumne = {student},
+		titulacio = {grade},
+		assignatura	= {subj-fullname},
+		assig-curt = {subj-shortname},
+		assig-codi = {subj-code},
+		activitat = {ca-fullname},
+		nomcurt = {ca-shortname},
+		date = {date}
+	},
+	load-data		.code:n	={
+	}
+
+}
+%%END_FOLD%%
+	\AtEndPreamble{
+		\PECTeXLoad:
+		\usetikzlibrary{positioning,arrows.meta,
+		shadows,graphs,math,automata,calligraphy,
+		decorations.shapes,fit,
+		shapes.geometric,shapes}
+	}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  	--	PCKG PRIVATE FUNCTIONS	--		%%%
+%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%  RULES  %%%%%%%%%%%%%%%%%%%%%%%%%
+\cs_new:Nn  \__pxDEV_HRule: { \noindent \rule{\linewidth}{1.5pt} }
+\cs_new:Nn  \__pxDEV_HRule:n { \noindent \rule{#1}{1.5pt} }
+\cs_new:Nn  \__pxDEV_Hrule: { \noindent \rule{\linewidth}{0.75pt} }
+\cs_new:Nn  \__pxDEV_Hrule:n { \noindent \rule{#1}{0.75pt} }
+%%END_FOLD%%
+
+\DeclareDocumentCommand\PECTeXconfig { +m } {
+	\keys_set:nn { p3xCORE } {#1}
+	\PECTeXLoad
+}
+\cs_new:Nn \PECTeXLoad:{
+	\ProcessKeysOptions{ P3CTeX }
+	\pxGDX_config:n {
+		cover-config={
+			text-backtitle		=	{\l__pxdata_course_tl},
+			text-uppertitle 	=	{\l__pxdata_activity_tl},
+			text-title		 	=	{\l__pxdata_subj_name_tl},
+			text-minititle	 	=	{\l__pxdata_act_short_tl},
+			text-subtitle	 	=	{\l__pxdata_activity_tl},
+			text-subsubtitle 	=	{\l__pxdata_subj_code_tl},
+			text-author		 	=	{\l__pxdata_student_tl},
+			text-date		 	=	{\today},
+			text-auxtext	 	=	{ }
+		},
+		page-config={
+			author-name			=	{\l__pxdata_student_tl},
+			doc-name			=	{\l__pxdata_act_short_tl},
+			subj-name			=	{\l__pxdata_subj_short_tl},
+			refcode				=	{\l__pxdata_subj_code_tl},
+			course-name			=	{\l__pxdata_course_tl}
+		}
+	}
+	\RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
+	\IfBooleanT{\l_pxcore_uml_use_bool}{\RequirePackage{p3xUML}}
+}
+
+%\ProvideDocumentCommand{\PECTeXloadUML}{o}{\RequirePackage[#1]{p3xUML}}
+
+\endinput
