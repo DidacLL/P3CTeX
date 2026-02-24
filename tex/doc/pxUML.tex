@@ -28,7 +28,7 @@
 \title{The \texttt{pxUML} package\\
   \large UML class diagrams (pgf-umlcd) for P3CTeX / UOC}
 \author{Scvria\\P3CTeX / UOC PEC Repository}
-\date{2025/02 -- Version 0.1}
+\date{2025/02 -- Version 0.2}
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -46,7 +46,7 @@
 \texttt{pxUML} keeps a \emph{class registry}: each class has a name, attributes,
 operations, inheritance, object type (e.g.\ \texttt{class}, \texttt{interface},
 \texttt{enumclass}), visibility, and optional implementation. You define classes
-with \texttt{\textbackslash PXdefClass} and optionally extend them with
+with \texttt{\textbackslash pxUMLClass} and optionally extend them with
 \texttt{\textbackslash addAttribute}, \texttt{\textbackslash addOperation}, and
 \texttt{\textbackslash addInheritance}. Drawing commands (\texttt{\textbackslash drawclass},
 \texttt{\textbackslash drawsimpleclass}, \texttt{\textbackslash drawInstance}) read from
@@ -61,6 +61,36 @@ this registry, so you can change layout without redefining the class.
 
 The package requires \texttt{expl3}, \texttt{xparse}, \texttt{l3keys2e},
 \texttt{color}, \texttt{pxpgf-umlcd}, \texttt{pxPRP}, and \texttt{pgf-umlsd}.
+It also defines a small set of package options to customise the default
+colour scheme used by the diagrams (see below).
+
+\subsection*{Package options and colour customisation}
+
+At load time you may override the colours used by \texttt{pxUML} by passing
+key--value options:
+\begin{verbatim}
+\usepackage[
+  maincolor   = <color>,
+  auxcolor    = <color>,
+  neutralcolor= <color>,
+  bgcolor     = <color>
+]{pxUML}
+\end{verbatim}
+Each \texttt{<color>} is any colour name or expression understood by
+\texttt{xcolor} (for example \texttt{blue}, \texttt{gray!20!white}, or a
+colour defined with \texttt{\textbackslash definecolor}). The defaults are:
+\begin{itemize}
+  \item \texttt{maincolor}~(\verb|UMLprimaryColor|): main stroke and text
+    colour for the standard scheme;
+  \item \texttt{auxcolor}~(\verb|UMLsecondaryColor|): background accent colour;
+  \item \texttt{neutralcolor}~(\verb|UMLneutralColor|): neutral tone used in
+    the variable scheme;
+  \item \texttt{bgcolor}~(\verb|UMLBackgroundColor|): background and text
+    colour for the variable scheme.
+\end{itemize}
+The starred forms of \verb|\drawclass|, \verb|\drawsimpleclass|,
+\verb|\drawinstance| and \verb|\pxUMLDiagram| switch temporarily to the
+``variable'' colour scheme, still honouring these options.
 
 \section{User command reference}
 \label{sec:api}
@@ -82,7 +112,16 @@ to ``private'' (e.g. for diagram styling).
     strings.
   \item \texttt{<implementation>}: optional; implementation class for interfaces.
 \end{itemize}
-Example: \texttt{\textbackslash PXdefClass\{MyClass\}\{- id : int\}\{[+ get() : int]\}}.
+Example:
+\begin{verbatim}
+\pxUMLClass{MyClass}
+  {
+    - id : int
+  }
+  [
+    + get() : int
+  ]
+\end{verbatim}
 
 \subsection{Extending a class}
 
@@ -224,12 +263,16 @@ effectively empty; no error is raised.
 \label{sec:changes}
 
 \begin{description}
-  \item[v0.1] Initial release: class registry, \texttt{\textbackslash PXdefClass},
+  \item[v0.2] Added colour customisation via \texttt{l3keys2e} package options
+    (\texttt{maincolor}, \texttt{auxcolor}, \texttt{neutralcolor},
+    \texttt{bgcolor}); documentation and tests updated accordingly.
+  \item[v0.1] Initial release: class registry,
+    \texttt{\textbackslash pxUMLClass},
     \texttt{\textbackslash drawclass}, \texttt{\textbackslash drawsimpleclass},
-    \texttt{\textbackslash drawInstance}, \texttt{\textbackslash PXuml},
+    \texttt{\textbackslash drawInstance}, \texttt{\textbackslash pxUMLDiagram},
     \texttt{\textbackslash PXshowclass}, \texttt{\textbackslash addAttribute},
     \texttt{\textbackslash addOperation}, \texttt{\textbackslash addInheritance}.
-    Documentation and tests aligned with pxPRP workflow.
+    Documentation and tests aligned with \texttt{pxPRP} workflow.
 \end{description}
 
 \PrintIndex
