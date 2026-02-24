@@ -14,7 +14,7 @@
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - valor escalar (pot contenir comes)
-\NewDocumentCommand{\pxSet}{m m m}{
+\NewDocumentCommand{\pxSetValue}{m m m}{
 	\pxPRP_set:nnnN	{#1}	{#2}	{#3} \g_pxprp__pxPRP_propREG_prop
 }
 
@@ -114,6 +114,9 @@
 %%   OBJ  - identificador de l'objecte
 %%   clau - clau dins de l'objecte
 %%   idx  - posició (1-based) dins de la llista
-\def\pxGet~#1.#2[#3]{\pxPRP_get_item:nnn {#1}{#2}{#3}}
+\def\pxGET~#1.#2[#3]{	\pxPRP_get_item:nnn {#1}{#2}{#3}	}
+\def\pxSET~#1.#2=#3{	\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
+\def\pxPUT~#1.#2+=#3{	\pxPRP_put_items:nnn {#1}{#2}{#3}	}
+\def\pxIF(#1.#2)#3\pxELSE#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
 %% Variante que imprimeix una etiqueta en negreta abans del valor.
-\def\pxPrint~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }
+\def\pxPRINT~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }

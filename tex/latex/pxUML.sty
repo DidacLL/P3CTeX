@@ -15,19 +15,17 @@
 \file_input:n {pxUML.code.tex}
 
 % COLORS
-\definecolor{primaryColor}{rgb}{0,0,.47}
-\definecolor{secondaryColor}{rgb}{.45,.93,1}
-\definecolor{neutralColor}{cmyk}{0.5,0.14, 0.16, 0}
-\definecolor{darkColor}{rgb}{.1,.25,.5}
-\definecolor{lighterColor}{rgb}{1,1,1}
-\definecolor{lightColor}{cmyk}{0,0,0,0.3}
+\definecolor{UMLprimaryColor}{rgb}{0,0,.47}
+\definecolor{UMLsecondaryColor}{rgb}{.45,.93,1}
+\definecolor{UMLneutralColor}{cmyk}{0.5,0.14, 0.16, 0}
+\definecolor{UMLBackgroundColor}{rgb}{1,1,1}
 
 % PCKG PUBLIC LaTeX2e API
 % #1 private/public*
 % #2 class*/interface
 % #3 ClassName
 % #4
-\NewDocumentCommand{\PXdefClass}{s O{class} m o m o D<>{ } }{
+\NewDocumentCommand{\pxUMLClass}{s O{class} m o m o D<>{ } }{
 		\IfBooleanTF{#1}
 		{
 			\IfNoValueTF{#4}
@@ -49,7 +47,7 @@
 	\__pxuml_drawsimpleclass:nnn {#3} {#4} {#2}
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 }
-\NewDocumentCommand{\drawInstance}{s O{16} m O{0,0} m m o }{
+\NewDocumentCommand{\drawinstance}{s O{16} m O{0,0} m m o }{
 	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
 	\begin{object}[ text~ width= #2em]{#3}{#4}
 		\instanceOf{#5}
@@ -58,12 +56,12 @@
 	\end{object}
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 }
-\NewDocumentCommand{\PXuml}{s O{ } +m O{.8\linewidth}}{
+\NewDocumentCommand{\pxUMLDiagram}{s O{ } +m O{.8\linewidth} D<>{-2em}}{
 
 	\IfBooleanTF{#1}{\__pxuml_load_varcolor:}{\__pxuml_load_maincolor:}
 	\vspace{2em}\noindent
 	\resizebox{#4}{!}{
-		\begin{tikzpicture}[line~width=1cm,rounded~corners, #2 ]
+		\hspace*{#5}\begin{tikzpicture}[line~width=1cm,rounded~corners, #2 ]
 			#3
 		\end{tikzpicture}
 	}

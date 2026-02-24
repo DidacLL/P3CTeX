@@ -14,15 +14,15 @@
 \verb*|\pxNewObject{PATATA}|\\
 \pxNewObject{PATATA}
 
-\verb*|\pxSet{PATATA}{k1}{v1,v2}|\\
-\pxSet{PATATA}{k1}{v1,v2}
+\verb*|\pxSetValue{PATATA}{k1}{v1,v2}|\\
+\pxSetValue{PATATA}{k1}{v1,v2}
 
-\verb*|\pxSet{PATATA}{k2}{vA,vB,vC}|\\
-\pxSet{PATATA}{k2}{vA,vB,vC}
+\verb*|\pxSetValue{PATATA}{k2}{vA,vB,vC}|\\
+\pxSetValue{PATATA}{k2}{vA,vB,vC}
 
-\verb*|\pxGet PATATA.k1[2]| $\to$ \pxGet PATATA.k1[2]\\
+\verb*|\pxGET PATATA.k1[2]| $\to$ \pxGET PATATA.k1[2]\\
 
-\verb*|\pxPrint PATATA.k2[2]|$\to$ \pxPrint PATATA.k2[2]
+\verb*|\pxPRINT PATATA.k2[2]|$\to$ \pxPRINT PATATA.k2[2]
 
 \bigskip
 
@@ -31,25 +31,25 @@
 \pxNewObject{OBJAA}
 \pxNewObject{OBJBB}
 
-\pxSet{OBJAA}{key}{AA1,AA2}
-\pxSet{OBJBB}{key}{BB1,BB2}
+\pxSetValue{OBJAA}{key}{AA1,AA2}
+\pxSetValue{OBJBB}{key}{BB1,BB2}
 
-En pantalla: OBJAA.key[1] = \pxGet OBJAA.key[1],\quad
-OBJBB.key[1] = \pxGet OBJBB.key[1].
+En pantalla: OBJAA.key[1] = \pxGET OBJAA.key[1],\quad
+OBJBB.key[1] = \pxGET OBJBB.key[1].
 
 \bigskip
 
 \subsection*{Prova 3: Sobreescriptura amb \texttt{\textbackslash pxSet}}
 
 \pxNewObject{OVER}
-\pxSet{OVER}{state}{old}
+\pxSetValue{OVER}{state}{old}
 
-Abans de sobreescriure: OVER.state[1] = \pxGet OVER.state[1].
+Abans de sobreescriure: OVER.state[1] = \pxGET OVER.state[1].
 
-\pxSet{OVER}{state}{newA,newB}
+\pxSetValue{OVER}{state}{newA,newB}
 
-Després de sobreescriure: OVER.state[1] = \pxGet OVER.state[1],\quad
-OVER.state[2] = \pxGet OVER.state[2].
+Després de sobreescriure: OVER.state[1] = \pxGET OVER.state[1],\quad
+OVER.state[2] = \pxGET OVER.state[2].
 
 \bigskip
 
@@ -61,38 +61,38 @@ OVER.state[2] = \pxGet OVER.state[2].
 \pxPutValue{LST}{items}{b}
 \pxPutValue{LST}{items}{c}
 
-Resultat esperat: LST.items = (\pxGet LST.items[1], \pxGet LST.items[2], \pxGet LST.items[3]).
+Resultat esperat: LST.items = (\pxGET LST.items[1], \pxGET LST.items[2], \pxGET LST.items[3]).
 
 \bigskip
 %
 \subsection*{Prova 5: Esborrar claus i objectes}
 
 \pxNewObject{TEMP}
-\pxSet{TEMP}{k}{X,Y}
+\pxSetValue{TEMP}{k}{X,Y}
 
-Abans d'esborrar: TEMP.k[1] = \pxGet TEMP.k[1].
+Abans d'esborrar: TEMP.k[1] = \pxGET TEMP.k[1].
 
 \pxClearKey{TEMP}{k}
 
 Després d'esborrar la clau, podem tornar a definir-la:
 
-\pxSet{TEMP}{k}{Z}
+\pxSetValue{TEMP}{k}{Z}
 
-Ara: TEMP.k[1] = \pxGet TEMP.k[1].
+Ara: TEMP.k[1] = \pxGET TEMP.k[1].
 
 \pxClearObject{TEMP}
 
 \pxNewObject{TEMP}
-\pxSet{TEMP}{k}{P,P}
-Ara: TEMP.k[1] = \pxGet TEMP.k[1].
+\pxSetValue{TEMP}{k}{P,P}
+Ara: TEMP.k[1] = \pxGET TEMP.k[1].
 \bigskip
 
 \subsection*{Prova 6: Flags booleans}
 
 \pxNewObject{FLAGS}
 
-\pxSet{FLAGS}{featureA}{true}
-\pxSet{FLAGS}{featureB}{{false}}
+\pxSetValue{FLAGS}{featureA}{true}
+\pxSetValue{FLAGS}{featureB}{{false}}
 
 \pxIfTrueTF{FLAGS}{featureA}{ACTIVA}{INACTIVA}
 
@@ -128,7 +128,7 @@ Tots els valors de OBJS.vals (esperat a,b,c): \pxListAll{OBJS}{vals}.
   {OBJECTE NOEXISTEIX no és present, com esperat.}
 
 \pxNewObject{CHK}
-\pxSet{CHK}{nums}{1,2,3}
+\pxSetValue{CHK}{nums}{1,2,3}
 
 \pxIfObjectExistsTF{CHK}
   {CHK existeix.}
@@ -146,8 +146,8 @@ Llargada real: \pxListLen{CHK}{nums}.
 \subsection*{Prova 9: Accés escalar directe amb \texttt{\textbackslash pxGetScalar}}
 
 \pxNewObject{SCALAR}
-\pxSet{SCALAR}{flag}{true}
-\pxSet{SCALAR}{text}{Hola, món}
+\pxSetValue{SCALAR}{flag}{true}
+\pxSetValue{SCALAR}{text}{Hola, món}
 
 Valor escalar de SCALAR.flag (esperat \texttt{true}): \pxGetScalar{SCALAR}{flag}.\\
 Valor escalar de SCALAR.text (esperat ``Hola, món''): \pxGetScalar{SCALAR}{text}.\\
@@ -164,7 +164,7 @@ Abans de netejar, llargada esperada 3, real: \pxListLen{LCLR}{vals}.\\
 \pxListClear{LCLR}{vals}
 
 Després de netejar, llargada esperada 0, real: \pxListLen{LCLR}{vals}.\\
-Es pot tornar a omplir: 
+Es pot tornar a omplir:
 \pxListPutRight{LCLR}{vals}{x,y}
 ; valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.
 

@@ -67,11 +67,11 @@ The package requires \texttt{expl3}, \texttt{xparse}, \texttt{l3keys2e},
 
 \subsection{Class definition}
 
-\DescribeMacro{\PXdefClass}
+\DescribeMacro{\pxUMLClass}
 Defines or overwrites a class in the registry. The starred form sets visibility
 to ``private'' (e.g. for diagram styling).
 \begin{verbatim}
-\PXdefClass[*][<objtype>]{<ClassName>}[<inheritance>]{<attributes>}[<operations>][<implementation>]
+\pxUMLClass[*][objtype]{ClassName}[inherit]{attributes}[operations]<implementation>
 \end{verbatim}
 \begin{itemize}
   \item \texttt{<objtype>}: \texttt{class} (default), \texttt{interface},
@@ -126,20 +126,21 @@ star and options.
 \drawsimpleclass[*][<options>]{<ClassName>}[<x,y>]
 \end{verbatim}
 
-\DescribeMacro{\drawInstance}
+\DescribeMacro{\drawinstance}
 Draws an object instance (lifeline-style box) of a class, with explicit
 attribute and optional operation list.
 \begin{verbatim}
-\drawInstance[*][<text width em>]{<InstanceName>}[<x,y>]{<ClassName>}{<attr list>}[<op list>]
+\drawinstance[*][<text width em>]{<InsName>}[<x,y>]{<ClassName>}{<attr list>}[<op list>]
 \end{verbatim}
 Default text width is 16\,em. Starred form uses the variable colour scheme.
 
-\DescribeMacro{\PXuml}
+\DescribeMacro{\pxUMLDiagram}
 Puts the given TikZ/pgf-umlcd content inside a resized box and applies the
 package colour scheme. Starred form uses the variable colour scheme for the
 whole diagram. Optional width defaults to \texttt{.8\textbackslash linewidth}.
+Optional size for horizontal space before diagram defaults to \texttt{-2em}.
 \begin{verbatim}
-\PXuml[*][<tikz options>]{<content>}[<width>]
+\pxUMLDiagram[*][<tikz options>]{<content>}[<width>]<hspace>
 \end{verbatim}
 Example: \texttt{\textbackslash PXuml\{\textbackslash drawclass\{MyClass\}\}[1\textbackslash linewidth]}.
 
@@ -158,21 +159,66 @@ effectively empty; no error is raised.
 
 \begin{verbatim}
 \usepackage{pxUML}
+
 \begin{document}
-\PXdefClass{Person}{- name : String}[+ getName() : String]
-\addAttribute{Person}{- age : Integer}
 
-\PXdefClass{Base}{- id : int}
-\PXdefClass{Derived}{- extra : String}
-\addInheritance{Derived}{Base}
+%%DEFINE CLASSES
+	\pxUMLClass{Person}[Animal]{- name : String}[+ getName() : String]
+	\pxUMLClass[abstractclass]{Animal}{- name : String}[+ getName() : String]
+	\pxUMLClass[enumclass]{EyeColor}{Brown, Blue, Green}
+	\pxUMLClass[interface]{Science}{- id : int}[+ solveProblem(): int]
+	\pxUMLClass[interface]{Knowledge}{- extra : String}
+	\pxUMLClass{KnowledgeImpl}{}[+ solveSpecificProblem(): int]<Knowledge>
+%%ADD NEW PROPERTIES
+	\addAttribute{Person}{- age : Integer}
+	\addInheritance{Knowledge}{Science}
+%%DRAW DIAGRAM
+	\pxUMLDiagram{
 
-\PXuml{
-  \drawclass[text width=12em]{Person}[0,0]
-  \drawsimpleclass{Base}[6,0]
-  \drawsimpleclass{Derived}[6,-3]
-}[0.9\linewidth]
+		\drawsimpleclass*{Animal}[-6,3]
+		\drawclass[text width=12em]{Animal}[0,0]
+		\drawclass[text width=12em]{Person}[0,-5]
+		\drawclass[text width=10em]{EyeColor}[-6,-3]
+
+		\drawclass*{Science}[5,5]
+		\drawsimpleclass{Knowledge}[10,0]
+		\drawclass{KnowledgeImpl}[10,-5]
+		%%  RELATIONS
+		\association{Animal}{0..*}{is known }{Knowledge}{knows}{1..*}
+		\composition{Person}{1}{*}{EyeColor}
+		\aggregation{Person}{Learned}{1..*}{KnowledgeImpl}
+
+	}[.9\linewidth]<-4em>
+
 \end{document}
 \end{verbatim}
+%%  DEFINE CLASSES
+\pxUMLClass{Person}[Animal]{- name : String}[+ getName() : String]  % STANDARD CLASS
+\pxUMLClass[abstractclass]{Animal}{- name : String}[+ getName() : String]  % ABSTRACT CLASS
+\pxUMLClass[enumclass]{EyeColor}{Brown, Blue, Green} %ENUM
+\pxUMLClass[interface]{Science}{- id : int}[+ solveProblem(): int] %INTERFACE
+\pxUMLClass[interface]{Knowledge}{- extra : String}
+\pxUMLClass{KnowledgeImpl}{}[+ solveSpecificProblem(): int]<Knowledge> %IMPLEMENTATION
+%%   ADD NEW PROPERTIES
+\addAttribute{Person}{- age : Integer}
+\addInheritance{Knowledge}{Science}
+%%   DRAW DIAGRAM
+\pxUMLDiagram{
+
+	\drawsimpleclass*{Animal}[-6,3]
+	\drawclass[text width=12em]{Animal}[0,0]
+	\drawclass[text width=12em]{Person}[0,-5]
+	\drawclass[text width=10em]{EyeColor}[-6,-3]
+
+	\drawclass*{Science}[5,5]
+	\drawsimpleclass{Knowledge}[10,0]
+	\drawclass{KnowledgeImpl}[10,-5]
+%%  RELATIONS
+	\association{Animal}{0..*}{is known }{Knowledge}{knows}{1..*}
+	\composition{Person}{1}{*}{EyeColor}
+	\aggregation{Person}{Learned}{1..*}{KnowledgeImpl}
+
+}[.9\linewidth]<-4em>
 
 \section{Change history}
 \label{sec:changes}

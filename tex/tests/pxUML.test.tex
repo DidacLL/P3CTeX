@@ -7,69 +7,12 @@
 \usepackage{pxUML}
 
 \begin{document}
-	\section{Pregunta 1} \label{ex1}
-
-\subsection*{Diagrama UML Original}
-Disseny inicial del sistema, tal com s'indica a l'enunciat:
-
-\PXdefClass[enumclass]{Role}
-{
-	DEVELOPER,
-	COMMUNITYMANAGER
-}
-\PXdefClass[enumclass]{AICategory}
-{
-	CHAT,
-	CODEGENERATOR,
-	POSTGENERATOR
-}
-
-\PXdefClass{Employee}
-{
-	- role : Role,
-	- email : String
-}[+ monthlyConsumptionCost(month : DateTime) : real]
-
-\PXdefClass{TokenConsumption}
-{
-	- timeStamp : DateTime,
-	- numTokens : UnlimitedNatural
-}
-
-\PXdefClass{AIAgent}
-{
-	- name : String,
-	- description : String,
-	- tokenPrice : Real,
-	- aiCategory : AICategory
-}[+ process(prompt : String) : String, + calculateCost(numTokens : UnlimitedNatural):Real	]
-
-\PXdefClass{Company}
-{
-	- name : String,
-	- address : String,
-	- tel : String,
-	- web : String
-}
-
-\PXuml{
-	\drawclass*[text width=15em]{Role}[2,0]
-	\drawclass*[text width=14em]{AICategory}[16,0]
-	\drawclass[text width=16em]{TokenConsumption}[9,-5]
-	\drawclass[text width=16em]{AIAgent}[18,-5]
-	\drawclass[text width=16em]{Employee}[0,-5]
-	\drawclass[text width=16em]{Company}[0,-10]
-	\association{Employee}{0..*}{ }{Company}{}{1}
-	\association{Employee}{1}{ }{TokenConsumption}{}{0..*}
-	\association{TokenConsumption}{0..*}{}{AIAgent}{}{1}
-}[1.1\linewidth]
-
 \subsection*{Proves de la API pxUML}
 
 En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet.
 
 % Classe simple amb atributs i operacions modificats posteriorment
-\PXdefClass{Person}
+\pxUMLClass{Person}
 {
 	- name : String
 }
@@ -79,12 +22,12 @@ En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet
 \addOperation{Person}{+ setName(newName : String) : void}
 
 % Classe base i derivada per provar la herència
-\PXdefClass{BaseClass}
+\pxUMLClass{BaseClass}
 {
 	- id : Integer
 }
 
-\PXdefClass{DerivedClass}
+\pxUMLClass{DerivedClass}
 {
 	- extra : String
 }
@@ -92,20 +35,20 @@ En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet
 \addInheritance{DerivedClass}{BaseClass}
 
 % Classe utilitzada per instàncies
-\PXdefClass{Service}
+\pxUMLClass{Service}
 {
 	- name : String
 }
 [+ run() : void]
 
-\PXuml{
+\pxUMLDiagram{
 	% dibuix complet
 	\drawclass[text width=14em]{Person}[0,0]
 	% dibuix simplificat
 	\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
 	\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
 %	% instància d'una classe amb atributs i operacions
-	\drawInstance*[14]{ServiceInstance}[0,-6]{Service}{
+	\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{
 		- name : String
 	}{
 		+ run() : void
@@ -117,5 +60,60 @@ En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet
 
 % cas negatiu: classe inexistent no ha de provocar error
 \PXshowclass{NoExisteix}
+
+\subsection*{Diagrama UML}
+Disseny inicial del sistema, tal com s'indica a l'enunciat:
+
+\pxUMLClass[enumclass]{Role}
+{
+	DEVELOPER,
+	COMMUNITYMANAGER
+}
+\pxUMLClass[enumclass]{AICategory}
+{
+	CHAT,
+	CODEGENERATOR,
+	POSTGENERATOR
+}
+
+\pxUMLClass{Employee}
+{
+	- role : Role,
+	- email : String
+}[+ monthlyConsumptionCost(month : DateTime) : real]
+
+\pxUMLClass{TokenConsumption}
+{
+	- timeStamp : DateTime,
+	- numTokens : UnlimitedNatural
+}
+
+\pxUMLClass{AIAgent}
+{
+	- name : String,
+	- description : String,
+	- tokenPrice : Real,
+	- aiCategory : AICategory
+}[+ process(prompt : String) : String, + calculateCost(numTokens : UnlimitedNatural):Real	]
+
+\pxUMLClass{Company}
+{
+	- name : String,
+	- address : String,
+	- tel : String,
+	- web : String
+}
+
+\pxUMLDiagram{
+	\drawclass*[text width=15em]{Role}[2,0]
+	\drawclass*[text width=14em]{AICategory}[16,0]
+	\drawclass[text width=16em]{TokenConsumption}[9,-5]
+	\drawclass[text width=16em]{AIAgent}[18,-5]
+	\drawclass[text width=16em]{Employee}[0,-5]
+	\drawclass[text width=16em]{Company}[0,-10]
+	\association{Employee}{0..*}{ }{Company}{}{1}
+	\association{Employee}{1}{ }{TokenConsumption}{}{0..*}
+	\association{TokenConsumption}{0..*}{}{AIAgent}{}{1}
+}[1.1\linewidth]
 
 \end{document}

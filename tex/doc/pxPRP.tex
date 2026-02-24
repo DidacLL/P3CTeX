@@ -1,4 +1,3 @@
-% -*- mode: latex; coding: utf-8 -*-
 %-----------------------------------------------------------------------------
 % pxPRP -- User manual and API reference
 % Part of P3CTeX. Author: Scvria.
@@ -113,11 +112,11 @@ later.
 
 \subsection{Scalar values}
 
-\DescribeMacro{\pxSet}
+\DescribeMacro{\pxSetValue}
 Sets the scalar value for a key. Any previous value (scalar or list) is
 replaced. The value may contain commas.
 \begin{verbatim}
-\pxSet{<object-id>}{<key>}{<value>}
+\pxSetValue{<object-id>}{<key>}{<value>}
 \end{verbatim}
 
 \DescribeMacro{\pxGetScalar}
@@ -180,20 +179,20 @@ or empty).
 
 \subsection{Indexed list access}
 
-\DescribeMacro{\pxGet}
+\DescribeMacro{\pxGET}
 Compact syntax to get the \texttt{<index>}-th item (1-based) of the list at
 \texttt{<key>} in object \texttt{<object-id>}. Space after \texttt{\textbackslash pxGet}\
 is required; the syntax is \texttt{OBJ.key[index]}.
 \begin{verbatim}
-\pxGet <object-id>.<key>[<index>]
+\pxGET <object-id>.<key>[<index>]
 \end{verbatim}
 Example: \texttt{\textbackslash pxGet PATATA.k1[2]}.
 
-\DescribeMacro{\pxPrint}
+\DescribeMacro{\pxPRINT}
 Same as \texttt{\textbackslash pxGet}\ but typesets a bold label
 \texttt{object.key [ index ] :} before the value.
 \begin{verbatim}
-\pxPrint <object-id>.<key>[<index>]
+\pxPRINT <object-id>.<key>[<index>]
 \end{verbatim}
 
 \subsection{Conditionals}
@@ -225,12 +224,12 @@ Executes the first branch if the key exists in the object, otherwise the second.
 \usepackage{pxPRP}
 \begin{document}
 \pxNewObject{OBJ}
-\pxSet{OBJ}{name}{MyObject}
+\pxSetValue{OBJ}{name}{MyObject}
 \pxPutValue{OBJ}{items}{a}
 \pxPutValue{OBJ}{items}{b}
 Name: \pxGetScalar{OBJ}{name}.
 Items: \pxListAll{OBJ}{items}.
-First item: \pxGet OBJ.items[1].
+First item: \pxGET OBJ.items[1].
 Length: \pxListLen{OBJ}{items}.
 \end{document}
 \end{verbatim}
