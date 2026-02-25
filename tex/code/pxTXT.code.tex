@@ -1,0 +1,50 @@
+% LaTeX2e approach done with Perplecity IA// GPT.4.5 MODEL
+\RequirePackage{expl3}
+\RequirePackage{color,l3keys2e,xparse}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesExplFile{p3xlang}{2025}{0.1}{P3C.TeX LANGUAGE RELATED DEFINITIONS}
+% Define supported languages
+
+\newcommand{\pxDEFtocname}{Índex}
+\newcommand{\pxDEFnoplagi}[1]{	Jo~	\textbf{ #1 } \label{{alumne}}
+,~declaro~que~ostento~l'autoria~total~i~plena~de~totes~les~tasques~que~es~duen~a~terme~al~present~document.~
+Sóc~l'única~persona~que~ha~fet~cada~exercici.~
+No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~través~de~l'aula~de~la~UOC~i~el~seu~professorat.~
+}
+\newcommand{\pxDEFpximgname}{Imatge}
+\newcommand{\pxDEFpximglistname}{Imatges}
+\newcommand{\pxDEFpxshotname}{Captura}
+\newcommand{\pxDEFpxshotlistname}{Captures~de~pantalla}
+\newcommand{\pxDEFpxcodename}{Fragment~de~Codi}
+\newcommand{\pxDEFpxcodelistname}{Codi~font}
+\newcommand{\pxDEFpxcmdname}{Comanda}
+\newcommand{\pxDEFpxcmdlistname}{Comandes~de~Consola}
+\newcommand{\_pxcore_set_language_spanish}{
+	\renewcommand{\pxDEFtocname}{Índice}
+	\renewcommand{\pxDEFnoplagi}[1]{ Yo~	\textbf{ ##1 } \label{{alumne}}
+		,~declaro~que~ostento~la~autoría~total~y~plena~de~todas~las~tareas~que~se~llevan~a~cabo~en~el~presente~documento.~
+		Soy~la~única~persona~que~ha~elaborado~cada~ejercicio.~
+		No~he~compartido~los~enunciados~con~nadie~y~la~única~ayuda~que~he~recibido~ha~sido~a~través~del~aula~de~la~UOC~y~su~profesorado.~
+	}
+	\renewcommand{\pxDEFpximgname}{Imagen}
+	\renewcommand{\pxDEFpximglistname}{Imágenes}
+	\renewcommand{\pxDEFpxshotname}{Captura}
+	\renewcommand{\pxDEFpxshotlistname}{Capturas~de~pantalla}
+	\renewcommand{\pxDEFpxcodename}{Fragmento~de~Código}
+	\renewcommand{\pxDEFpxcodelistname}{Código~fuente}
+	\renewcommand{\pxDEFpxcmdname}{Comando}
+	\renewcommand{\pxDEFpxcmdlistname}{Comandos~de~Consola}
+}
+\newcommand{\_pxcore_set_language_english}{
+	\renewcommand{\pxDEFtocname}{Table~of~Contents}
+	\renewcommand{\pxDEFnoplagi}[1]{I,~\textbf{ ##1 }	\label{alumne},~declare~that~I~hold~the~total~and~full~authorship~of~all~the~tasks~that~are~carried~out~in~this~document.~I~am~the~only~one~who~has~elaborated~each~exercise.~I~have~not~shared~the~statements~with~anyone~and~the~only~help~I~have~received~has~been~through~the~UOC~classroom~and~teachers~there.}
+	\renewcommand{\pxDEFpximgname}{Picture}
+	\renewcommand{\pxDEFpximglistname}{Pictures}
+	\renewcommand{\pxDEFpxshotname}{Screenshot}
+	\renewcommand{\pxDEFpxshotlistname}{Screenshots}
+	\renewcommand{\pxDEFpxcodename}{Code~chunk}
+	\renewcommand{\pxDEFpxcodelistname}{Source~Code}
+	\renewcommand{\pxDEFpxcmdname}{Prompt}
+	\renewcommand{\pxDEFpxcmdlistname}{Console~Prompts}
+}
+\endinput

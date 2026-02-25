@@ -22,14 +22,14 @@
 %%	TODO:	- User level API
 %%			- Add more features to the UML class diagram implementation
 %% =======================================================
-\ProvidesExplFile{P3CTeX.code.tex}{2025/02/21}{v0.1}
+\ProvidesExplFile{pxCORE.code.tex}{2025/02/21}{v0.1}
 {
 	P3CTeX UML Graphics implementation based on top of pgf-corecd and TikZ packages
 }%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	PCKG KEYS DEFINITION	--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\keys_define:nn {P3CTeXCORE}
+\keys_define:nn {pxCORE}
 {
 	debug 			.bool_set:N 	=	\l_pxcore_debug_bool,
 		debug 			.initial:n 	= 	false,
@@ -43,12 +43,12 @@
 	PRP				.bool_set:N		=	\l_pxcore_prp_use_bool,
 		PRP				.initial:n 	= 	false,
 		PRP				.default:n 	= 	true,
-	UML-configuration .tl_set:N	 	=	\l_pxcore_uml_config_tl,
-		UML-configuration .initial:n=	{},
-		UMLconfig		.meta:n 	=	{UML-configuration={ #1 },UML={true}}
+	UMLconfig		.tl_set_x:N	 	=	\l_pxcore_uml_config_tl,
+		UMLconfig		.initial:n 	=	{},
+%		UMLconfig		.meta:n 	=	{UML-configuration={ #1 },UML={true}}
 }
 %}
-\ProcessKeyOptions{P3CTeXCORE}
+\ProcessKeysOptions{pxCORE}
 \IfBooleanT{\l_pxcore_uml_use_bool}{\RequirePackage[\l_pxcore_uml_config_tl]{pxUML}}
 \IfBooleanT{\l_pxcore_prp_use_bool}{\RequirePackage{pxPRP}}
 %\ProvideDocumentCommand{\PECTeXloadUML}{o}{\RequirePackage[#1]{p3xUML}}
