@@ -40,20 +40,23 @@
 \bool_new:N \l_pxdoc_language_bool
 \bool_set_false:N \l_pxdoc_language_bool
 \AtEndOfClass{
-	\bool_if:NF  \l_pxdoc_language_bool {
-		\RequirePackage[catalan]{babel}
-	}
 }
 \keys_define:nn {P3CTeX}
 {
 	cover 			.bool_set:N 	=		\l_pxdoc_usecover_bool,
-	cover 		.initial:n 		= 		false,
-	cover 		.default:n 		= 		true,
-	no-cover	.meta:n 		= 	{ 	cover ={ false }},
-	CA				.meta:n			=	{	cover = {false}, en},
-	PAC				.meta:n			=	{	cover = {false}, cat},
-	PEC				.meta:n			=	{	cover = {false}, es},
-	PR				.meta:n			=	{	cover = {true}	},
+	cover 			.initial:n 		= 		false,
+	cover 			.default:n 		= 		true,
+	no-cover		.meta:n 		= 	{ 	cover ={ false }},
+	toc 			.bool_set:N 	=		\l_pxdoc_usetoc_bool,
+	toc 			.initial:n 		= 		false,
+	toc 			.default:n 		= 		true,
+	no-toc			.meta:n 		= 	{ 	toc ={ false }},
+	CA				.meta:n			=	{	cover = {false}, toc ={ true }, en},
+	PAC				.meta:n			=	{	cover = {false}, toc ={ true }, cat},
+	PEC				.meta:n			=	{	cover = {false}, toc ={ true }, es},
+	PR				.meta:n			=	{	cover = {true}, toc ={ true }	},
+	help			.meta:n			=	{	cover = {true}, toc ={ true },en, data={help}},
+	fake			.meta:n			=	{	cover = {true}, toc ={ true },en, data={example}},
 	EN				.meta:n			=	{	en	},
 	ES				.meta:n			=	{	es	},
 	CAT				.meta:n			=	{	cat	},
@@ -64,12 +67,14 @@
 	es	.code		={
 		\RequirePackage[spanish]{babel}
 		\bool_set_true:N \l_pxdoc_language_bool
+		\_pxcore_set_language_spanish
 	},
 	en	.code		={
 		\RequirePackage[english]{babel}
 		\bool_set_true:N \l_pxdoc_language_bool
+		\_pxcore_set_language_english
 	},
-	user-data 			.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
+	data 			.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
 	debug 				.bool_set:N 		=		\l_pxcore_debug_bool,
 		debug 				.initial:n 		= 		false,
 		debug 				.default:n 		= 		true,
@@ -96,7 +101,7 @@
 		ca-shortname	.initial:n		=	{NmAct},
 	date 				.tl_set:N		=		\l__px_date_tl,
 	date 			.initial:n		=	{\today},
-	example			.meta:n	={
+	fake			.meta:n	={
 		student = {Vladimir~Scoriae},
 		grade = {Software~Engineering~Degree},
 		subj-fullname	= {Pràctiques~de~Procrastinació-Avançada~en~\LaTeX},
@@ -120,35 +125,33 @@
 	}
 
 }
-
-\ProcessKeysOptions{P3CTeX}
 \file_input:n {pxTXT.code.tex}
+\ProcessKeysOptions{P3CTeX}
+\bool_if:NF  \l_pxdoc_language_bool {
+	\RequirePackage[catalan]{babel}
+}
 \file_input:n {pxGDX.code.tex}
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE}
-%\RequirePackage{p3xGDX}
-%\RequirePackage{p3xSRC}
-%% GLOBAL VARIABLES DEFINITION
-\prop_gclear_new:N \g_pxCORE_main_prop
-	\pxGDX_config:n {
-			cover-config={
-					text-backtitle		=	{\l__pxdata_course_tl},
-					text-uppertitle 	=	{\l__pxdata_activity_tl},
-					text-title		 	=	{\l__pxdata_subj_name_tl},
-					text-minititle	 	=	{\l__pxdata_act_short_tl},
-					text-subtitle	 	=	{\l__pxdata_activity_tl},
-					text-subsubtitle 	=	{\l__pxdata_subj_code_tl},
-					text-author		 	=	{\l__pxdata_student_tl},
-					text-date		 	=	{\today},
-					text-auxtext	 	=	{ }
-				},
-			page-config={
-					author-name			=	{\l__pxdata_student_tl},
-					doc-name			=	{\l__pxdata_act_short_tl},
-					subj-name			=	{\l__pxdata_subj_short_tl},
-					refcode				=	{\l__pxdata_subj_code_tl},
-					course-name			=	{\l__pxdata_course_tl}
-				}
-		}
+\pxGDX_config:n {
+	cover-config={
+		text-backtitle		=	{\l__pxdata_course_tl},
+		text-uppertitle 	=	{\l__pxdata_activity_tl},
+		text-title		 	=	{\l__pxdata_subj_name_tl},
+		text-minititle	 	=	{\l__pxdata_act_short_tl},
+		text-subtitle	 	=	{\l__pxdata_activity_tl},
+		text-subsubtitle 	=	{\l__pxdata_subj_code_tl},
+		text-author		 	=	{\l__pxdata_student_tl},
+		text-date		 	=	{\today},
+		text-auxtext	 	=	{ }
+	},
+	page-config={
+		author-name			=	{\l__pxdata_student_tl},
+		doc-name			=	{\l__pxdata_act_short_tl},
+		subj-name			=	{\l__pxdata_subj_short_tl},
+		refcode				=	{\l__pxdata_subj_code_tl},
+		course-name			=	{\l__pxdata_course_tl}
+	}
+}
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
 \cs_new:Nn \__ifcover:nn {
 	\bool_if:NTF  \l_pxdoc_usecover_bool {#1}{#2}
@@ -158,8 +161,8 @@
 	\pxGDX_config:n {#1}
 }
 \NewDocumentCommand{\PECTeXprintCover}{s}{
-	\IfBooleanT{#1}{\pxGDX_cover_config:n{noplagi}}
 	\setcounter{page}{-1}
+	\IfBooleanT{#1}{\pxGDX_cover_config:n{noplagi}}
 	\pxGDX_print_cover:
 	\clearpage
 }

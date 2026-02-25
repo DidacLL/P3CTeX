@@ -246,14 +246,14 @@
 		text-auxtext 		=	auxtext
 	}
 }%%END_FOLD%%
-\keys_define:nn { p3xGDX }
+\keys_define:nn { pxGDX }
 {
 	cover-config			.code:n			=	{	\keys_set:nn { gdxCOVER } {#1}	},
 	page-config				.code:n			=	{	\keys_set:nn { gdxSTYLE } {#1}	},
 	pdf-config				.code:n			=	{	\keys_set:nn { gdxPDF } {#1}	},
 	src-path				.tl_set_x:N		=	 \l__gdx_src_path_tl,
 		src-path			.initial:n		=	 { } ,
-	unknown					.code:n		=	 { }
+	unknown					.code:n		=	 { 	\keys_set:nn { gdxCOVER } {#1}}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % -------- P3C.TeX KEY SET: gdxPDF ---------- %
@@ -674,7 +674,7 @@
 }
 
 \cs_gset:Nn \pxGDX_config:n {
-	\keys_set:nn { p3xGDX } { #1 }
+	\keys_set:nn { pxGDX } { #1 }
 	\pxGDX_process:
 }
 \cs_gset:Nn \pxGDX_cover_config:n {
