@@ -63,8 +63,14 @@ En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet
 \PXshowclass{Person}
 \PXshowclass{Service}
 
-% cas negatiu: classe inexistent no ha de provocar error
+% inspecció bàsica: accessos de lectura no haurien de fallar
+Class Person attributes: [\pxUMLAttributes{Person}].\\
+Class Service operations: [\pxUMLOperations{Service}].\\
+Parents of DerivedClass: [\pxUMLParents{DerivedClass}].\\
+
+% cas negatiu: classe inexistent no ha de provocar error ni produir sortida
 \PXshowclass{NoExisteix}
+Class NoExisteix attributes (hauria de ser buit): [\pxUMLAttributes{NoExisteix}].
 
 \subsection*{Diagrama UML}
 Disseny inicial del sistema, tal com s'indica a l'enunciat:

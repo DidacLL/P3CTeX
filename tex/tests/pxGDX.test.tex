@@ -1,0 +1,47 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = ca_ES
+%
+% Proves bàsiques del mòdul pxGDX integrat a P3CTeX.
+
+\documentclass{P3CTeX}
+\PECTeXconfig{
+	cover-config={
+		text-minititle = {PxGDXTest},
+		text-author    = {Autor de prova}
+	},
+	page-config={
+		doc-name   = {PxGDX Doc},
+		subj-name  = {Assignatura de Prova},
+		refcode    = {REF1234}
+	},
+	pdf-config={
+		pdf-title  = {PxGDX Title},
+		pdf-author = {PxGDX Author}
+	}
+}
+\begin{document}
+
+\section*{Proves bàsiques de pxGDX}
+
+Configuració bàsica de la portada i el layout mitjançant \texttt{\textbackslash PECTeXconfig}:
+
+
+
+% Forcem la generació de portada i sumari.
+\PECTeXprintCover
+\PECTeXprintTOC
+
+\sectionuoc{Primera secció UOC}
+Text d'exemple dins de la secció amb estil UOC.
+
+\subsectionuoc{Subsecció UOC}
+Més text amb l'estil de subsecció UOC.
+
+Una regla horitzontal fina:
+\pxHRule
+
+Una regla horitzontal gruixuda centrada a la pàgina:
+\pxPageRule*
+
+\end{document}
+

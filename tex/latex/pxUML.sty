@@ -2,7 +2,7 @@
 % !TeX spellcheck = en_EN-EnglishUnitedKingdom
 % !Te X root = pxPRP.test.tex
 
-% p3xUML.sty
+% pxUML.sty
 
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
@@ -71,6 +71,15 @@
 }
 \NewDocumentCommand{\PXshowclass}{m}{
 	\__pxuml_showclass:n {#1}
+}
+\NewDocumentCommand{\pxUMLAttributes}{m}{
+	\__pxuml_print_attributes:n {#1}
+}
+\NewDocumentCommand{\pxUMLOperations}{m}{
+	\__pxuml_print_operations:n {#1}
+}
+\NewDocumentCommand{\pxUMLParents}{m}{
+	\__pxuml_print_parents:n {#1}
 }
 \NewDocumentCommand{\addAttribute}{m m}{
 	\__pxuml_add_attribute:nn {#1}{#2}

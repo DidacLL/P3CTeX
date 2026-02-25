@@ -1,0 +1,76 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = ca_ES
+%
+% P3CTeX-architecture.tex
+% High-level architecture overview for the P3CTeX ecosystem.
+%
+% This document is informational only; it does not define any user API.
+%
+\documentclass[EN]{P3CTeX}
+
+\begin{document}
+
+\section*{Arquitectura de P3CTeX}
+
+P3CTeX es divideix en tres capes principals, cadascuna amb una
+responsabilitat ben delimitada:
+
+\begin{description}
+  \item[\texttt{P3CTeX.cls}] Classe de document principal. Gestiona:
+    \begin{itemize}
+      \item El comportament global del document (format, pàgina,
+            tipografia bàsica).
+      \item Les dades de context: estudiant, assignatura, activitat,
+            idioma, etc.
+      \item La interfície d'usuari de nivell document (\LaTeX2e): ordres
+            com ara la configuració de la portada i el sumari.
+    \end{itemize}
+    La classe \emph{no} carrega biblioteques independents directament
+    (\texttt{pxUML}, \texttt{pxPRP}, \dots); ho fa sempre a través del
+    paquet d'agregació \texttt{pxCORE}.
+
+  \item[\texttt{pxCORE.sty}] Paquet nucli i d'agregació. S'encarrega de:
+    \begin{itemize}
+      \item Centralitzar el \emph{bootstrap} de paquets externs
+            compartits (gràfics, tipografies, enllaços, etc.).
+      \item Definir la família de claus \texttt{pxCORE}, que permet
+            activar o desactivar biblioteques independents
+            (\texttt{UML}, \texttt{PRP}, \dots) i passar-los opcions.
+      \item Carregar les biblioteques independents (\texttt{pxUML},
+            \texttt{pxPRP}, i futures com \texttt{pxALG}) segons les
+            claus definides.
+    \end{itemize}
+    El paquet \texttt{pxCORE} no defineix macros d'usuari
+    específiques de cap classe de document; simplement ofereix un
+    punt únic d'integració.
+
+  \item[Biblioteques independents (\texttt{pxPRP}, \texttt{pxUML}, \dots)]
+    Cada biblioteca encapsula una funcionalitat concreta:
+    \begin{itemize}
+      \item \texttt{pxPRP}: gestió d'objectes lògics basats en
+            \texttt{prop} amb llistes separades per comes.
+      \item \texttt{pxUML}: diagrames UML basats en \texttt{pgf-umlcd}
+            i \texttt{TikZ}, recolzats en \texttt{pxPRP}.
+    \end{itemize}
+    Les biblioteques:
+    \begin{itemize}
+      \item Defineixen la seva API pública només mitjançant macros
+            \LaTeX2e als fitxers \texttt{*.sty}.
+      \item Concentren la lògica d'implementació interna en fitxers
+            \texttt{*.code.tex} basats en \texttt{expl3}.
+      \item No depenen de detalls interns de \texttt{P3CTeX.cls};
+            poden ser utilitzades, en la mesura del possible, de
+            manera autònoma.
+    \end{itemize}
+\end{description}
+
+\bigskip
+
+En resum:
+\begin{center}
+  \texttt{P3CTeX.cls} $\rightarrow$ (configura) \texttt{pxCORE.sty}
+  $\rightarrow$ (activa) biblioteques \texttt{px*}.
+\end{center}
+
+\end{document}
+

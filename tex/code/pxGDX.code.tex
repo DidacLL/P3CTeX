@@ -18,6 +18,7 @@
 %allow ref to total pages and link to last page
 \RequirePackage{lastpage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%END_FOLD%%%%%
+
 \newgeometry{hmargin=1in,vmargin=1.2in}
 % COLORS
 \definecolor{primaryColor}{rgb}{0,0,.47}
@@ -52,7 +53,7 @@
 		course-name			.initial:n		=		{Course~or~Degree~Full~Name},
 
 		% ------------- LAYOUT: CABECERA Y PIE -------------
-	header-left         .tl_set:N		=		{	\l__gdx_header_left_tl },
+		header-left         .tl_set:N		=		{	\l__gdx_header_left_tl },
 		header-left         .initial:n	=		{	 %TODO quit hardcoded logo name
 													\raisebox{0.075truecm}
 													{
@@ -596,8 +597,7 @@
 									keepaspectratio		=	true,
 									width				=	\l__gdx_cover_square_size,
 									]{
-										img/
-										\l__gdx_cover_image_square_tl
+										img/\l__gdx_cover_image_square_tl
 									}
 								\end{minipage}
 							\endtcolorbox
@@ -682,9 +682,10 @@
 }
 \cs_gset:Nn \pxGDX_page_config:n {
 	\keys_set:nn { gdxLAYOUT } { #1 }
-
+	\keys_set:nn { gdxSTYLE } { #1 }
 }
 %%END_FOLD%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	PCKG PUBLIC LaTeX2e API	--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -709,5 +710,5 @@
 		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
 	}
 }
-\endinput
 %%END_FOLD%%
+\endinput

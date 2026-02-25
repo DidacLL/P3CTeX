@@ -1,0 +1,196 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxGDX -- Disseny gràfic i portada per a P3CTeX
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxGDX.tex
+%
+% Or from tex/doc/: set TEXINPUTS=../latex:../code; then
+%   pdflatex -interaction=nonstopmode pxGDX.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{doc}
+\usepackage[colorlinks,urlcolor=blue,linkcolor=blue,hyperindex]{hyperref}
+
+\EnableCrossrefs
+
+\title{El mòdul \texttt{pxGDX}\\
+  \large Portada, estil de pàgina i metadades PDF a P3CTeX}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/02 -- Versió 0.1}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+  El mòdul \texttt{pxGDX} encapsula la configuració gràfica de P3CTeX:
+  portada, encapçalaments i peus de pàgina amb el format UOC, així com
+  les metadades principals del fitxer PDF. Aquest document descriu la
+  configuració recomanada a través de la classe \texttt{P3CTeX.cls} i
+  les macros d'alt nivell disponibles.
+\end{abstract}
+\tableofcontents
+
+\section{Introducció}
+
+El codi intern de \texttt{pxGDX} viu al fitxer \verb|pxGDX.code.tex| i
+es carrega automàticament per la classe \verb|P3CTeX.cls|. Els usuaris
+no han d'invocar aquest fitxer directament: la manera recomanada és
+sempre mitjançant la classe o, en casos especials, mitjançant les
+macros d'alt nivell descrites en aquest manual.
+
+
+\section{Activació i integració amb P3CTeX}
+
+Quan es fa servir la classe \verb|P3CTeX.cls|, el mòdul \texttt{pxGDX}
+es carrega de forma transparent i s'encarrega de:
+\begin{itemize}
+  \item definir la portada UOC;
+  \item definir l'estil de pàgina (\emph{header/footer}) per a les
+        pàgines normals i per al sumari;
+  \item configurar els paràmetres bàsics de \texttt{hyperref} i les
+        metadades del PDF.
+\end{itemize}
+
+La macro principal per configurar \texttt{pxGDX} a través de la classe
+és:
+\begin{verbatim}
+\PECTeXconfig{<opcions>}
+\end{verbatim}
+
+On \verb|<opcions>| és un conjunt de claus que es distribueixen entre
+els grups interns \verb|cover-config|, \verb|page-config| i
+\verb|pdf-config|.
+
+\section{Configuració de portada}
+
+Les claus de \verb|cover-config| controlen el contingut i estil de la
+portada. Un exemple típic:
+\begin{verbatim}
+\PECTeXconfig{
+  cover-config = {
+    text-backtitle = {Enginyeria Informàtica},
+    text-uppertitle = {PAC 1},
+    text-title = {Assignatura d'Exemple},
+    text-minititle = {PAC1},
+    text-author = {Nom de l'Estudiant}
+  }
+}
+\end{verbatim}
+
+Les claus més importants són:
+\begin{itemize}
+  \item \verb|text-backtitle|: títol de fons (grau o màster);
+  \item \verb|text-title|: nom complet de l'assignatura;
+  \item \verb|text-minititle|: codi o nom curt del document (per
+        exemple, \verb|PAC1|);
+  \item \verb|text-author|: nom de l'estudiant;
+  \item \verb|text-date|: data que es mostrarà a la portada (per
+        defecte, \verb|\today|).
+\end{itemize}
+
+Altres claus com \verb|uppertitle|, \verb|subtitle|, \verb|subsubtitle|
+o \verb|add-picture| permeten activar o desactivar elements opcionals
+de la portada, però en la majoria de casos no cal tocar-les directament.
+
+\section{Configuració de la pàgina}
+
+Les claus de \verb|page-config| controlen el text dels encapçalaments
+i peus de pàgina (\emph{layout} UOC). Per exemple:
+\begin{verbatim}
+\PECTeXconfig{
+  page-config = {
+    author-name = {Nom de l'Estudiant},
+    doc-name    = {PAC 1},
+    subj-name   = {Nom Curt Assignatura},
+    refcode     = {01312},
+    course-name = {Enginyeria Informàtica}
+  }
+}
+\end{verbatim}
+
+Aquests valors es mostren a les capçaleres i als peus de pàgina de
+les pàgines habituals i del sumari, mantenint la identitat visual
+coherent en tot el document.
+
+\section{Metadades PDF}
+
+Finalment, les claus de \verb|pdf-config| permeten establir les
+metadades principals del fitxer PDF generat a través de
+\texttt{hyperref}:
+\begin{verbatim}
+\PECTeXconfig{
+  pdf-config = {
+    pdf-title  = {Títol del Document},
+    pdf-author = {Nom de l'Estudiant},
+    pdfsubject = {Assignatura o àrea},
+    pdfkeywords = {P3CTeX, UOC, LaTeX}
+  }
+}
+\end{verbatim}
+
+Les claus \verb|linkcolor|, \verb|citecolor| i \verb|urlcolor| es poden
+ajustar si cal canviar els colors per defecte dels enllaços.
+
+\section{Macros d'ajuda per al cos del document}
+
+A més de la configuració, \texttt{pxGDX} proporciona algunes macros
+útils per al cos del document:
+
+\begin{description}
+  \item{\verb|\sectionuoc{<titol>}|} Crea una secció amb el color
+    corporatiu UOC.
+  \item{\verb|\subsectionuoc{<titol>}|} Variant per a subseccions.
+  \item{\verb|\subsubsectionuoc{<titol>}|} Variant per a subsubseccions.
+  \item{\verb|\pxHRule|} Dibuixa una línia horitzontal; la versió amb
+    estrella i/o argument opcional permet controlar gruix i amplada.
+  \item{\verb|\pxPageRule|} Dibuixa una línia horitzontal centrada a
+    la pàgina, pensada per a separadors dins d'enunciats.
+\end{description}
+
+\section{Exemple mínim amb P3CTeX}
+
+\begin{verbatim}
+\documentclass[fake]{P3CTeX}
+
+\begin{document}
+
+\PECTeXconfig{
+  cover-config = {
+    text-minititle = {PAC1},
+    text-author    = {Nom de l'Estudiant}
+  },
+  page-config = {
+    doc-name   = {PAC 1},
+    subj-name  = {Nom Curt},
+    refcode    = {01312}
+  }
+}
+
+\PECTeXprintCover*
+\PECTeXprintTOC*
+
+\sectionuoc{Introducció}
+Text d'exemple amb l'estil UOC.
+
+\pxPageRule*
+
+\end{document}
+\end{verbatim}
+
+\section{Historial de canvis}
+
+\begin{description}
+  \item[v0.1] Versió inicial de la documentació de \texttt{pxGDX}:
+    resum de la configuració de portada, pàgina i metadades, i llistat
+    de macros d'ajuda principals.
+\end{description}
+
+\PrintIndex
+\end{document}
+

@@ -4,9 +4,8 @@
 \ProvidesExplPackage{pxPRP}{2025}{v0.2}{Useful tools for managing prop maps containing keyvalue pairs}
 \file_input:n {pxPRP.code.tex}
 
-
-%% Creació (o assegurament) d'un nou objecte lògic pxPRP.
-%%   #1 - identificador lògic de l'objecte (nom curt, p.ex. PATATA)
+%% Create (or ensure existence of) a new logical pxPRP object.
+%%   #1 - logical object identifier (short name, e.g. PATATA)
 \NewDocumentCommand{\pxNewObject}{m}{\pxPRP_ensure:n {#1}}
 
 %% Assigna un valor escalar (tl) a una clau dins d'un objecte.

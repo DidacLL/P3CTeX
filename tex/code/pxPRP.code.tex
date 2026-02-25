@@ -3,14 +3,14 @@
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%  This file is part of the P3CTeX project.
 %%
 %%  Author's name: Scvria
 %%  File: pxPRP.code.tex
 %% 	Version: v0.1 (02/2026)
-%%  Description: Provides a hashmap function using prop variables
-%%  			 with nested comma separated lists while keeping
-%%  			 track for created maps and ease to access.
+%%  Description:
+%%    Provides a hashmap abstraction using expl3 prop variables, with
+%%    nested comma-separated lists and a registry of logical objects.
 %%
 %%
 %%  This file may be distributed and/or modified:
@@ -453,7 +453,7 @@
       { \prg_return_true: }
       { \prg_return_false: }
   }
-%%  PUT INTO LIST (TL-BASED, NO COMPLEX EXPANSIÓ)
+%%  PUT INTO LIST (TL-BASED, NO COMPLEX EXPANSION)
 %% \pxprp_list_put_right:nnnN { <id> }{ <key> }{ <clist> } <reg-prop>
 %%   #1 - logical object id
 %%   #2 - key (string)

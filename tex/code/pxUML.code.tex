@@ -26,7 +26,9 @@
 {P3CTeX UML Graphics implementation based on top of pgf-umlcd and TikZ packages}
 
 %% CLASS REGISTRY
-%% PROP NAME REG register all created classes
+%% Global registry for all UML classes managed by pxUML.
+%% Each logical class name is mapped (via pxPRP) to a backing prop
+%% storing attributes, operations and other metadata.
 \prop_if_exist:NF \g_pxuml_classREG_prop {
 	\prop_gclear_new:N \g_pxuml_classREG_prop
 }
@@ -161,7 +163,7 @@
 	\renewcommand {\umlfillcolor }{\l__pxuml_aux_color_tl!20!}
 	\renewcommand {\umldrawcolor }{\l__pxuml_main_color_tl}
 }
-%% SHOW CLASS
+%% SHOW CLASS (INTERNAL DATA LOAD)
 %%  #1 - CLASS NAME
 \cs_new:Npn \__pxuml_showclass:n #1 {
 	\pxprp_get_tl:nnNN { #1 }{ attributes } \l__attributes_tl \g_pxuml_classREG_prop
@@ -170,5 +172,24 @@
 	\pxprp_get_tl:nnNN { #1 }{ objtype } \l__obj_type_tl \g_pxuml_classREG_prop
 	\pxprp_get_tl:nnNN { #1 }{ visibility } \l__visibility_tl \g_pxuml_classREG_prop
 	\pxprp_get_tl:nnNN { #1 }{ implement } \l__implementation_tl \g_pxuml_classREG_prop
+}
+
+%% INSPECTION HELPERS (READ-ONLY)
+%%  #1 - CLASS NAME
+%% Expand to stored attributes / operations / inheritance respectively.
+\cs_new:Npn \__pxuml_print_attributes:n #1 {
+	\tl_clear_new:N \l__pxuml_attrs_out_tl
+	\pxprp_get_tl:nnNN { #1 }{ attributes } \l__pxuml_attrs_out_tl \g_pxuml_classREG_prop
+	\tl_use:N \l__pxuml_attrs_out_tl
+}
+\cs_new:Npn \__pxuml_print_operations:n #1 {
+	\tl_clear_new:N \l__pxuml_ops_out_tl
+	\pxprp_get_tl:nnNN { #1 }{ operations } \l__pxuml_ops_out_tl \g_pxuml_classREG_prop
+	\tl_use:N \l__pxuml_ops_out_tl
+}
+\cs_new:Npn \__pxuml_print_parents:n #1 {
+	\tl_clear_new:N \l__pxuml_inh_out_tl
+	\pxprp_get_tl:nnNN { #1 }{ inheritance } \l__pxuml_inh_out_tl \g_pxuml_classREG_prop
+	\tl_use:N \l__pxuml_inh_out_tl
 }
 \endinput

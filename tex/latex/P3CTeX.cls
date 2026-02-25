@@ -4,12 +4,24 @@
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%  This file is part of the P3CTeX project.
 %%
-%%  Author's name: Scvria
-%%  File: pxUML.code.tex
-%% 	Version: v0.1 (02/2026)
-%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%  Author: Scvria
+%%  File: P3CTeX.cls
+%%  Version: v0.5 (03/2025)
+%%  Description:
+%%    Main document class for UOC assignments and projects.
+%%    - Owns page layout, typography and global document behaviour.
+%%    - Owns student / subject / activity metadata and language selection.
+%%    - Delegates feature libraries (UML, property maps, etc.) to pxCORE.
+%%
+%%  Architectural role:
+%%    - P3CTeX.cls never loads standalone libraries (pxUML, pxPRP, ...) directly.
+%%      It only talks to the aggregation package `pxCORE` via package options.
+%%    - All user-level interfaces that are document-wide (covers, TOC, metadata)
+%%      are defined here as LaTeX2e commands.
+%%    - expl3 implementation details live in dedicated *.code.tex files or
+%%      in library packages; this class only orchestrates them.
 %%
 %%  This file may be distributed and/or modified:
 %%
@@ -17,10 +29,6 @@
 %%   2. under the GNU Public License.
 %%
 %%   See the file doc/LICENSE for more details.
-%%
-%% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
 %% =======================================================
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{expl3}
@@ -101,7 +109,7 @@
 		ca-shortname	.initial:n		=	{NmAct},
 	date 				.tl_set:N		=		\l__px_date_tl,
 	date 			.initial:n		=	{\today},
-	fake			.meta:n	={
+	example			.meta:n	={
 		student = {Vladimir~Scoriae},
 		grade = {Software~Engineering~Degree},
 		subj-fullname	= {Pràctiques~de~Procrastinació-Avançada~en~\LaTeX},
