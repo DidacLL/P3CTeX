@@ -1,0 +1,43 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%  	P3C.TeX  			v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%  This file is part of the P3CTeX project.
+%%
+%%  Author: Scvria
+%%  File: pxCORE.test.tex
+%%  Version: v0.2 (02/2026)
+%%  Description:
+%%    LaTeX2e-level smoke tests for pxCORE keys and helpers.
+%%
+%%  This file may be distributed and/or modified:
+%%
+%%   1. under the LaTeX Project Public License and/or
+%%   2. under the GNU Public License.
+%%
+%%   See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+
+\documentclass{article}
+
+% Load pxCORE with debug enabled, libraries disabled (unit-test style).
+\usepackage[debug,PRP=false,UML=false,SRC=false]{pxCORE}
+
+\begin{document}
+
+Debug should be ON:
+\pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}
+
+\pxCOREsetup{debug=false}
+
+Debug should now be OFF:
+\pxCOREIfDebugTF{[DEBUG-ON-2]}{[DEBUG-OFF-2]}
+
+% Changing non-boolean keys should be a no-op at LaTeX2e level in this test.
+\pxCOREsetup{print-doc=true}
+
+\end{document}
+

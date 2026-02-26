@@ -8,7 +8,7 @@
 %%
 %%  Author: Scvria
 %%  File: pxCORE.code.tex
-%%  Version: v0.1 (02/2025)
+%%  Version: v0.2 (02/2026)
 %%  Description:
 %%    Core key definitions and library activation for pxCORE.
 %%
@@ -20,38 +20,57 @@
 %%   See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
+%%  TODO:
+%%    - Consider exposing more introspection helpers for library state.
 %% =======================================================
-\ProvidesExplFile{pxCORE.code.tex}{2025/02/21}{v0.1}
-{
-	P3CTeX UML Graphics implementation based on top of pgf-corecd and TikZ packages
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ProvidesExplFile{pxCORE.code.tex}{2026/02/26}{v0.2}
+  {P3CTeX core key definitions and library activation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	PCKG KEYS DEFINITION	--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\keys_define:nn {pxCORE}
-{
-	debug 			.bool_set:N 	=	\l_pxcore_debug_bool,
-		debug 			.initial:n 	= 	false,
-		debug 			.default:n 	= 	true,
-	print-doc 		.bool_set:N 	=	\l_pxcore_pxdoc_use_bool,
-		print-doc		.initial:n 	= 	false,
-		print-doc		.default:n 	= 	true,
-	PRP				.bool_set:N		=	\l_pxcore_prp_use_bool,
-		PRP				.initial:n 	= 	false,
-		PRP				.default:n 	= 	true,
-	UML				.bool_set:N		=	\l_pxcore_uml_use_bool,
-		UML				.initial:n 	= 	false,
-		UML				.default:n 	= 	true,
-	UMLconfig		.tl_set_x:N	 	=	\l_pxcore_uml_config_tl,
-		UMLconfig		.initial:n 	=	{},
-	SRC				.bool_set:N		=	\l_pxcore_src_use_bool,
-		SRC				.initial:n 	= 	false,
-		SRC				.default:n 	= 	true,
-}
-\ProcessKeysOptions{pxCORE}
-\IfBooleanT{\l_pxcore_uml_use_bool}{\RequirePackage[\l_pxcore_uml_config_tl]{pxUML}}
-\IfBooleanT{\l_pxcore_prp_use_bool}{\RequirePackage{pxPRP}}
-\IfBooleanT{\l_pxcore_src_use_bool}{\RequirePackage{pxSRC}}
+\bool_if_exist:NF \l_pxcore_debug_bool      { \bool_new:N \l_pxcore_debug_bool }
+\bool_if_exist:NF \l_pxcore_pxdoc_use_bool  { \bool_new:N \l_pxcore_pxdoc_use_bool }
+\bool_if_exist:NF \l_pxcore_prp_use_bool    { \bool_new:N \l_pxcore_prp_use_bool }
+\bool_if_exist:NF \l_pxcore_uml_use_bool    { \bool_new:N \l_pxcore_uml_use_bool }
+\bool_if_exist:NF \l_pxcore_src_use_bool    { \bool_new:N \l_pxcore_src_use_bool }
+
+\tl_if_exist:NF \l_pxcore_uml_config_tl     { \tl_new:N  \l_pxcore_uml_config_tl }
+
+\keys_define:nn { pxCORE }
+  {
+    debug       .bool_set:N = \l_pxcore_debug_bool,
+    debug       .initial:n  = false,
+    debug       .default:n  = true,
+
+    print-doc   .bool_set:N = \l_pxcore_pxdoc_use_bool,
+    print-doc   .initial:n  = false,
+    print-doc   .default:n  = true,
+
+    PRP         .bool_set:N = \l_pxcore_prp_use_bool,
+    PRP         .initial:n  = false,
+    PRP         .default:n  = true,
+
+    UML         .bool_set:N = \l_pxcore_uml_use_bool,
+    UML         .initial:n  = false,
+    UML         .default:n  = true,
+
+    UMLconfig   .tl_set_x:N = \l_pxcore_uml_config_tl,
+    UMLconfig   .initial:n  = {},
+
+    SRC         .bool_set:N = \l_pxcore_src_use_bool,
+    SRC         .initial:n  = false,
+    SRC         .default:n  = true,
+  }
+
+\ProcessKeysOptions{ pxCORE }
+
+\bool_if:NT \l_pxcore_uml_use_bool
+  {
+    \tl_if_blank:VTF \l_pxcore_uml_config_tl
+      { \RequirePackage{pxUML} }
+      { \RequirePackage[\l_pxcore_uml_config_tl]{pxUML} }
+  }
+\bool_if:NT \l_pxcore_prp_use_bool { \RequirePackage{pxPRP} }
+\bool_if:NT \l_pxcore_src_use_bool { \RequirePackage{pxSRC} }
 \endinput

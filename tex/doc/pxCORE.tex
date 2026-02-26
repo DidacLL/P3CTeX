@@ -1,0 +1,134 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxCORE -- Core aggregation package: keys and library activation
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxCORE.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{pxCORE}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue,hyperindex}{hyperref}
+
+\title{The \texttt{pxCORE} package\\
+  \large Core aggregation and key management for P3CTeX}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/02/26 -- Version 0.2}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxCORE} is the central aggregation package in the P3CTeX stack.
+  It owns the \texttt{pxCORE} key family, which controls activation of
+  standalone libraries (\texttt{pxPRP}, \texttt{pxUML}, \texttt{pxSRC}, \dots)
+  and offers a minimal LaTeX2e configuration API.
+\end{abstract}
+
+\tableofcontents
+
+\section{Loading the package}
+
+In standalone documents, load \texttt{pxCORE} as a normal package:
+
+\begin{verbatim}
+\usepackage[<options>]{pxCORE}
+\end{verbatim}
+
+In P3CTeX-based workflows, \texttt{pxCORE} is normally loaded by the
+document class (\texttt{P3CTeX.cls}) and configured via class options.
+
+\section{Key family \texttt{pxCORE}}
+
+The \texttt{pxCORE} key family controls which libraries are activated and
+stores a few global flags:
+
+\begin{description}
+  \item[\texttt{debug} (bool)] enables internal debugging.
+    When set, \verb|\pxCOREIfDebugTF| will take its “true” branch.
+
+  \item[\texttt{print-doc} (bool)] reserved flag for future “print
+    documentation” workflows. Currently stored but not interpreted.
+
+  \item[\texttt{PRP} (bool)] toggles loading of the \texttt{pxPRP}
+    property-map library.
+
+  \item[\texttt{UML} (bool)] toggles loading of the \texttt{pxUML}
+    UML diagram library.
+
+  \item[\texttt{UMLconfig} (token list)] raw option string passed to
+    \texttt{pxUML}. When non-empty, \texttt{pxCORE} executes
+\begin{verbatim}
+\RequirePackage[<UMLconfig>]{pxUML}
+\end{verbatim}
+    instead of a bare \verb|\RequirePackage{pxUML}|.
+
+  \item[\texttt{SRC} (bool)] toggles loading of the \texttt{pxSRC}
+    included-sources library.
+\end{description}
+
+Keys are typically set via package options:
+
+\begin{verbatim}
+\usepackage[PRP,UML,SRC]{pxCORE}
+\end{verbatim}
+
+or adjusted later with \verb|\pxCOREsetup| (see below).
+
+\section{User command reference}
+
+\subsection{\texttt{\textbackslash pxCOREsetup}}
+
+\subsubsection*{Synopsis}
+
+\begin{verbatim}
+\pxCOREsetup{<key>=<value>,...}
+\end{verbatim}
+
+Updates the \texttt{pxCORE} key family after package loading. This is
+useful to toggle flags such as \texttt{debug} programmatically or to
+adjust options in local scopes.
+
+Example:
+
+\begin{verbatim}
+\pxCOREsetup{debug=true}
+...
+\pxCOREsetup{debug=false}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxCOREIfDebugTF}}
+
+\subsubsection*{Synopsis}
+
+\begin{verbatim}
+\pxCOREIfDebugTF{<true-code>}{<false-code>}
+\end{verbatim}
+
+Branch on the \texttt{debug} flag in the \texttt{pxCORE} key family.
+Both branches are arbitrary LaTeX code.
+
+Example:
+
+\begin{verbatim}
+\pxCOREIfDebugTF
+  {\typeout{[pxCORE] Debug mode enabled}}
+  {}
+\end{verbatim}
+
+\section{Minimal example}
+
+\begin{verbatim}
+\usepackage[PRP,UML,SRC]{pxCORE}
+\begin{document}
+\pxCOREsetup{debug=true}
+\pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}
+\end{document}
+\end{verbatim}
+
+\end{document}
+

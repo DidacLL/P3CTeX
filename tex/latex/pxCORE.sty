@@ -37,10 +37,8 @@
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
-\ProvidesExplPackage{pxCORE}{2026/02/24}{v0.2}
-{
-	P3CTeX CORE Module
-}
+\ProvidesExplPackage{pxCORE}{2026/02/26}{v0.2}
+  {P3CTeX core aggregation and key management}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	OTHER PCKG IMPORT		--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,3 +71,16 @@
 %%%    	--	PCKG KEYS DEFINITION	--		%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \file_input:n {pxCORE.code.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PUBLIC LaTeX2e API	--		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Configure pxCORE keys after package loading.
+%   \pxCOREsetup{<key>=<value>,...}
+\NewDocumentCommand{\pxCOREsetup}{m}
+  { \keys_set:nn { pxCORE } { #1 } }
+
+% Branch on pxCORE debug flag (set via [debug] or \pxCOREsetup{debug=<bool>}).
+\NewDocumentCommand{\pxCOREIfDebugTF}{+m +m}
+  { \bool_if:NTF \l_pxcore_debug_bool { #1 } { #2 } }
