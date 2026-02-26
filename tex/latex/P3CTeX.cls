@@ -42,134 +42,13 @@
 
 % Fonts
 \RequirePackage{arev}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ENDFOLD%%%%%
-%%%    	--	CLASS KEYS DEFINITION	--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\bool_new:N \l_pxdoc_language_bool
-\bool_set_false:N \l_pxdoc_language_bool
-\AtEndOfClass{
-}
-\keys_define:nn {P3CTeX}
-{
-	cover 			.bool_set:N 	=		\l_pxdoc_usecover_bool,
-	cover 			.initial:n 		= 		false,
-	cover 			.default:n 		= 		true,
-	no-cover		.meta:n 		= 	{ 	cover ={ false }},
-	toc 			.bool_set:N 	=		\l_pxdoc_usetoc_bool,
-	toc 			.initial:n 		= 		false,
-	toc 			.default:n 		= 		true,
-	no-toc			.meta:n 		= 	{ 	toc ={ false }},
-	CA				.meta:n			=	{	cover = {false}, toc ={ true }, en},
-	PAC				.meta:n			=	{	cover = {false}, toc ={ true }, cat},
-	PEC				.meta:n			=	{	cover = {false}, toc ={ true }, es},
-	PR				.meta:n			=	{	cover = {true}, toc ={ true }	},
-	help			.meta:n			=	{	cover = {true}, toc ={ true },en, data={help}},
-	fake			.meta:n			=	{	cover = {true}, toc ={ true },en, data={example}},
-	EN				.meta:n			=	{	en	},
-	ES				.meta:n			=	{	es	},
-	CAT				.meta:n			=	{	cat	},
-	cat	.code		={
-		\RequirePackage[catalan]{babel}
-		\bool_set_true:N \l_pxdoc_language_bool
-	},
-	es	.code		={
-		\RequirePackage[spanish]{babel}
-		\bool_set_true:N \l_pxdoc_language_bool
-		\_pxcore_set_language_spanish
-	},
-	en	.code		={
-		\RequirePackage[english]{babel}
-		\bool_set_true:N \l_pxdoc_language_bool
-		\_pxcore_set_language_english
-	},
-	data 			.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
-	debug 				.bool_set:N 		=		\l_pxcore_debug_bool,
-		debug 				.initial:n 		= 		false,
-		debug 				.default:n 		= 		true,
-	print-doc 			.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
-		print-doc			.initial:n 		= 		false,
-		print-doc			.default:n 		= 		true,
-	unknown 			.tl_set:N	 		= 	\l__pxdoc_unknown_tl
-}
-\keys_define:nn { P3CTeX / data}
-{
-	student				.tl_set:N 		=		\l__pxdata_student_tl,
-		student			.initial:n		=	{Nom~Alumne},
-	grade				.tl_set:N		=		\l__pxdata_course_tl,
-		grade			.initial:n		=	{Nom~de~la~Titulació},
-	subj-fullname		.tl_set:N		=		\l__pxdata_subj_name_tl,
-		subj-fullname	.initial:n		=	{Nom de la Assignatura},
-	subj-shortname		.tl_set:N		=		\l__pxdata_subj_short_tl,
-		subj-shortname	.initial:n 		=	{NmAsg},
-	subj-code			.tl_set:N		=		\l__pxdata_subj_code_tl,
-		subj-code		.initial:n		=	{codiAsg},
-	ca-fullname			.tl_set:N		=		\l__pxdata_activity_tl,
-		ca-fullname		.initial:n		=	{Nom de l'activitat},
-	ca-shortname		.tl_set:N 		=		\l__pxdata_act_short_tl,
-		ca-shortname	.initial:n		=	{NmAct},
-	date 				.tl_set:N		=		\l__px_date_tl,
-	date 			.initial:n		=	{\today},
-	example			.meta:n	={
-		student = {Vladimir~Scoriae},
-		grade = {Software~Engineering~Degree},
-		subj-fullname	= {Pràctiques~de~Procrastinació-Avançada~en~\LaTeX},
-		subj-shortname = {PPAL},
-		subj-code = {01312},
-		ca-fullname = {Repte~1:~Introducció~a~\texttt{xpl3} },
-		ca-shortname = {PAC1},
-		date = {1~de~Gener~de~1970}
-	},
-	help	.meta:n	={
-		student = {student},
-		grade = {grade},
-		subj-fullname	= {subj-fullname},
-		subj-shortname = {subj-shortname},
-		subj-code = {subj-code},
-		ca-fullname = {ca-fullname},
-		ca-shortname = {ca-shortname},
-		date = {date}
-	},
-	load-data		.code:n	={
-	}
-
-}
-\file_input:n {pxTXT.code.tex}
-\ProcessKeysOptions{P3CTeX}
-\bool_if:NF  \l_pxdoc_language_bool {
-	\RequirePackage[catalan]{babel}
-}
-\file_input:n {pxGDX.code.tex}
-\RequirePackage[\l__pxdoc_unknown_tl]{pxCORE}
-\pxGDX_config:n {
-	cover-config={
-		text-backtitle		=	{\l__pxdata_course_tl},
-		text-uppertitle 	=	{\l__pxdata_activity_tl},
-		text-title		 	=	{\l__pxdata_subj_name_tl},
-		text-minititle	 	=	{\l__pxdata_act_short_tl},
-		text-subtitle	 	=	{\l__pxdata_activity_tl},
-		text-subsubtitle 	=	{\l__pxdata_subj_code_tl},
-		text-author		 	=	{\l__pxdata_student_tl},
-		text-date		 	=	{\today},
-		text-auxtext	 	=	{ }
-	},
-	page-config={
-		author-name			=	{\l__pxdata_student_tl},
-		doc-name			=	{\l__pxdata_act_short_tl},
-		subj-name			=	{\l__pxdata_subj_short_tl},
-		refcode				=	{\l__pxdata_subj_code_tl},
-		course-name			=	{\l__pxdata_course_tl}
-	}
-}
-\RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
-\cs_new:Nn \__ifcover:nn {
-	\bool_if:NTF  \l_pxdoc_usecover_bool {#1}{#2}
-}
+\file_input:n {P3CTeX.code.tex}
 %  	--	PCKG PUBLIC LaTeX2e API	-
 \NewDocumentCommand{\PECTeXconfig}{+m}{
 	\pxGDX_config:n {#1}
 }
 \NewDocumentCommand{\PECTeXprintCover}{s}{
-	\setcounter{page}{-1}
+	\setcounter{page}{0}
 	\IfBooleanT{#1}{\pxGDX_cover_config:n{noplagi}}
 	\pxGDX_print_cover:
 	\clearpage
@@ -185,11 +64,39 @@
 	\tableofcontents
 	\clearpage
 }
+\DeclareDocumentCommand\pxGDXconfig{ +m } {\pxGDX_config:n{ #1 }}
+\NewDocumentCommand{\pxGrow}{ s O{1} m O{42pt} }{\__pxgdx_grow:nnnn {#1}{#2}{#3}{#4}}
+\NewDocumentCommand{\pxFill}{}{	\__pxgdx_hfill:	}
+\NewDocumentCommand{\sectionuoc}{ m }{\__px_sectionuoc:n {#1}}
+\NewDocumentCommand{\subsectionuoc}{ m }{\__px_subsectionuoc:n {#1}}
+\NewDocumentCommand{\subsubsectionuoc}{ m }{\__px_subsubsectionuoc:n {#1}}
+\NewDocumentCommand{\pxHRule}{s o}{
+	\IfNoValueTF{#2}{
+		\IfBooleanTF{#1}{	\__pxDEV_HRule: }{	\__pxDEV_Hrule:}
+	}{
+		\IfBooleanTF{#1}{	\__pxDEV_HRule:n{#2} 	}{	\__pxDEV_Hrule:n{#2}	}
+	}
+}
+\NewDocumentCommand{\pxPageRule}{s}{
+	\IfBooleanTF{#1}{
+		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
+	}{
+		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
+	}
+}
 \AfterBeginDocument{
 	\__ifcover:nn{
 		\PECTeXprintCover*
-		\tableofcontents %
-		\clearpage
-	}{	\PECTeXprintTOC*}
+		\__iftoc:nn{\PECTeXprintTOC}{}
+	}{
+		\__iftoc:nn{\PECTeXprintTOC*}{
+			\__ifplagi:nn{
+				\par\noindent
+				\pxDEFnoplagi{\l__gdx_cover_author_tl}
+				\par \__pxDEV_HRule:
+			}{}
+		}
+	}
+
 }
 %%END_FOLD%%

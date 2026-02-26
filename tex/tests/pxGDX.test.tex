@@ -3,7 +3,10 @@
 %
 % Proves bàsiques del mòdul pxGDX integrat a P3CTeX.
 
-\documentclass{P3CTeX}
+%\documentclass{P3CTeX}
+\documentclass[fake]{P3CTeX}
+%\documentclass[no-plagi]{P3CTeX}
+
 \PECTeXconfig{
 	cover-config={
 		text-minititle = {PxGDXTest},
@@ -20,6 +23,9 @@
 	}
 }
 \begin{document}
+% Forcem la generació de portada i sumari.
+\PECTeXprintCover
+\PECTeXprintTOC*
 
 \section*{Proves bàsiques de pxGDX}
 
@@ -27,9 +33,6 @@ Configuració bàsica de la portada i el layout mitjançant \texttt{\textbacksla
 
 
 
-% Forcem la generació de portada i sumari.
-\PECTeXprintCover
-\PECTeXprintTOC
 
 \sectionuoc{Primera secció UOC}
 Text d'exemple dins de la secció amb estil UOC.

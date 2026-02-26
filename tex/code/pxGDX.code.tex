@@ -1,7 +1,29 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%  	P3C.TeX  			v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%  This file is part of the package P3C.TeX
+%%
+%%  Author's name: Scvria
+%%  File: pxUML.code.tex
+%% 	Version: v0.1 (02/2026)
+%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%
+%%  This file may be distributed and/or modified:
+%%
+%%   1. under the LaTeX Project Public License and/or
+%%   2. under the GNU Public License.
+%%
+%%   See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+%%	TODO:	- User level API
+%%			- Add more features to the UML class diagram implementation
+%% =======================================================
 \RequirePackage{color,l3keys2e,xparse}
-\ProvidesExplFile{ p3xGDX }{2025/02/21}{v0.3}{P3CTeX Graphic Designs Module}
+\ProvidesExplFile{ pxGDX }{2025/02/21}{v0.3}{P3CTeX Graphic Designs Module}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	OTHER PCKG IMPORT		--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -664,11 +686,11 @@
 	\restoregeometry
 }
 \cs_new:Nn \pxGDX_process: {
-	\ProcessKeysOptions{ gdxSTYLES}
+	\ProcessKeysOptions{ gdxSTYLE }
 	\__gdx_def_styles:
 	\pagestyle{uocstyle}
 	\ProcessKeysOptions{ gdxCOVER }
-	\ProcessKeysOptions{ p3xGDX }
+	\ProcessKeysOptions{ pxGDX }
 	\color{primaryColor}
 	\__px_apply_pdf:
 }
@@ -690,25 +712,6 @@
 %%%    	--	PCKG PUBLIC LaTeX2e API	--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Wrapper Commands in CamelCase syntax for Latex2e documents use
-\DeclareDocumentCommand\pxGDXconfig{ +m } {\pxGDX_config:n{ #1 }}
-\NewDocumentCommand{\pxGrow}{ s O{1} m O{42pt} }{\__pxgdx_grow:nnnn {#1}{#2}{#3}{#4}}
-\NewDocumentCommand{\pxFill}{}{	\__pxgdx_hfill:	}
-\NewDocumentCommand{\sectionuoc}{ m }{\__px_sectionuoc:n {#1}}
-\NewDocumentCommand{\subsectionuoc}{ m }{\__px_subsectionuoc:n {#1}}
-\NewDocumentCommand{\subsubsectionuoc}{ m }{\__px_subsubsectionuoc:n {#1}}
-\NewDocumentCommand{\pxHRule}{s o}{
-	\IfNoValueTF{#2}{
-		\IfBooleanTF{#1}{	\__pxDEV_HRule: }{	\__pxDEV_Hrule:}
-	}{
-		\IfBooleanTF{#1}{	\__pxDEV_HRule:n{#2} 	}{	\__pxDEV_Hrule:n{#2}	}
-	}
-}
-\NewDocumentCommand{\pxPageRule}{s}{
-	\IfBooleanTF{#1}{
-		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
-	}{
-		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
-	}
-}
+
 %%END_FOLD%%
 \endinput

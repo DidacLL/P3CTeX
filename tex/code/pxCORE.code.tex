@@ -37,16 +37,20 @@
 	print-doc 		.bool_set:N 	=	\l_pxcore_pxdoc_use_bool,
 		print-doc		.initial:n 	= 	false,
 		print-doc		.default:n 	= 	true,
-	UML				.bool_set:N		=	\l_pxcore_uml_use_bool,
-		UML				.initial:n 	= 	false,
-		UML				.default:n 	= 	true,
 	PRP				.bool_set:N		=	\l_pxcore_prp_use_bool,
 		PRP				.initial:n 	= 	false,
 		PRP				.default:n 	= 	true,
+	UML				.bool_set:N		=	\l_pxcore_uml_use_bool,
+		UML				.initial:n 	= 	false,
+		UML				.default:n 	= 	true,
 	UMLconfig		.tl_set_x:N	 	=	\l_pxcore_uml_config_tl,
 		UMLconfig		.initial:n 	=	{},
+	SRC				.bool_set:N		=	\l_pxcore_src_use_bool,
+		SRC				.initial:n 	= 	false,
+		SRC				.default:n 	= 	true,
 }
 \ProcessKeysOptions{pxCORE}
 \IfBooleanT{\l_pxcore_uml_use_bool}{\RequirePackage[\l_pxcore_uml_config_tl]{pxUML}}
 \IfBooleanT{\l_pxcore_prp_use_bool}{\RequirePackage{pxPRP}}
+\IfBooleanT{\l_pxcore_src_use_bool}{\RequirePackage{pxSRC}}
 \endinput
