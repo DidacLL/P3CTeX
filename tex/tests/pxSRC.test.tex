@@ -4,12 +4,12 @@
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%  This file is part of the P3CTeX project.
 %%
 %%  Author's name: Scvria
-%%  File: pxUML.code.tex
-%% 	Version: v0.1 (02/2026)
-%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%  File: pxSRC.test.tex
+%%  Version: v0.2 (02/2026)
+%%  Description: LaTeX2e-level smoke tests for pxSRC.
 %%
 %%  This file may be distributed and/or modified:
 %%
@@ -19,8 +19,8 @@
 %%   See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
+%%  Notes:
+%%    - Tests must only exercise the LaTeX2e API (\pxIMG, \pxIMGpair, \pxIMGList, \pxSRCsetup).
 %% =======================================================
 
 %\documentclass[PR,fake,UML,SRC]{P3CTeX}
@@ -29,11 +29,21 @@
 \usepackage{pxSRC}
 \begin{document}
 
-	\pxIMG[.2\linewidth]{img/testimage}[blue]{Patatas patatodos}[TestPicture]
+\pxIMG[.2\linewidth]{img/testimage}[blue]{Patatas patatodos}[TestPicture]
 
 	\pxIMG[.2\linewidth]{testimage}{Patatas patatodos}[TestPicture2]
-	\pxIMG[.6\linewidth]{wrongimage}[blue]{Patatas patatodos}[TestPicture2]
+	\pxIMG[.6\linewidth]{wrongimage}[blue]{Patatas patatodos}[TestPicture2b]
 
-	\pxIMGpair{img/testimage}{img/testimage}[blue]{Patatas patatodos}[TestPicture3]
+\pxIMGpair{img/testimage}{img/testimage}[blue]{Patatas patatodos}[TestPicture3]
+
+% Parell amb un fitxer inexistent: ha de mostrar una imatge i un placeholder (sense error).
+\pxIMGpair{img/testimage}{img/does-not-exist}[blue]{Pair with placeholder}[TestPicture4]
+
+% Auto-generated labels must be safe even with path separators.
+\pxIMG{img/testimage}{Auto label single image}
+Auto single ref: \ref{img:img-testimage}
+
+\pxIMGpair{img/testimage}{img/testimage}{Auto label pair}
+Auto pair ref: \ref{img:img-testimage-img-testimage}
 	\pxIMGList{testimage}{ITERATION 1,ITERATION 2,ITERATION 3,ITERATION 4}
 \end{document}

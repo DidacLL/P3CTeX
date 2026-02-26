@@ -1,0 +1,121 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxSRC -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxSRC.tex
+%   makeindex -s gind.ist -o pxSRC.ind pxSRC.idx
+%   pdflatex -interaction=nonstopmode doc/pxSRC.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue,hyperindex}{hyperref}
+\usepackage{pxSRC}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+
+
+\title{The \texttt{pxSRC} package\\
+  \large Safe inclusion of referenced sources for \LaTeX2e}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/02/26 -- Version 0.2}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxSRC} provides a small \LaTeX2e\ API to include figures robustly.
+  When an image file is missing, a consistent placeholder is rendered instead
+  of raising a compilation error. This is intended for PEC workflows where
+  some assets may be produced later but the document must remain buildable.
+\end{abstract}
+
+\tableofcontents
+
+\section{Loading the package}
+
+\begin{verbatim}
+\usepackage{pxSRC}
+\end{verbatim}
+
+\section{Configuration (keys)}
+
+\texttt{pxSRC} provides a small key family \texttt{pxSRC} to tune defaults.
+Set keys with:
+
+\begin{verbatim}
+\pxSRCsetup{<key>=<value>,...}
+\end{verbatim}
+
+Available keys (defaults shown):
+\begin{itemize}
+  \item \texttt{default-width} (default \texttt{.8\textbackslash linewidth})
+  \item \texttt{pair-width} (default \texttt{.4\textbackslash linewidth})
+  \item \texttt{placeholder-color} (default \texttt{gray})
+  \item \texttt{float-spec} (default \texttt{H})
+  \item \texttt{pair-gap} (default \texttt{4em})
+  \item \texttt{label-prefix} (default \texttt{img:})
+\end{itemize}
+
+\section{User command reference}
+
+\subsection{Single image}
+
+\subsubsection*{\texttt{\textbackslash pxIMG}}
+Safely includes an image (or a placeholder if not found) in a \texttt{figure}
+environment.
+
+\begin{verbatim}
+\pxIMG[<width>]{<image>}[<placeholder-color>]{<caption>}[<short/label>]
+\end{verbatim}
+
+The \texttt{<image>} argument may be provided without extension; \texttt{pxSRC}
+tries common extensions (\texttt{.png}, \texttt{.pdf}, \texttt{.jpg}) when
+resolving the file.
+
+If the last optional argument is omitted, \texttt{pxSRC} auto-generates a safe
+\texttt{\textbackslash label} from the image name (sanitising path separators),
+prefixed by \texttt{label-prefix} (default \texttt{img:}).
+
+\subsection{Image pair}
+
+\subsubsection*{\texttt{\textbackslash pxIMGpair}}
+Safely includes two images side-by-side. Each missing file becomes a
+placeholder, independently.
+
+\begin{verbatim}
+\pxIMGpair[<width>]{<left-image>}{<right-image>}[<placeholder-color>]{<caption>}[<short/label>]
+\end{verbatim}
+
+\subsection{Sequential image list}
+
+\subsubsection*{\texttt{\textbackslash pxIMGList}}
+Includes a list of consecutively numbered images whose filenames follow the
+pattern \texttt{<base><n>} (e.g.\ \texttt{plot1}, \texttt{plot2}, \dots), using
+one caption per item.
+
+\begin{verbatim}
+\pxIMGList[<path-prefix>]{<base>}[<caption-prefix>]{cap1,cap2,cap3}
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+\pxIMGList[img/]{iter}{Step: }{one,two,three}
+\end{verbatim}
+
+\section{Minimal example}
+
+\begin{verbatim}
+\usepackage{pxSRC}
+\begin{document}
+\pxSRCsetup{placeholder-color=blue,float-spec=htbp}
+\pxIMG[.6\linewidth]{img/diagram}[blue]{System diagram}[fig:system]
+\pxIMGpair{img/a}{img/b}[gray]{Comparison}[fig:pair]
+\pxIMGList[img/]{run}{Iteration: }{first,second,third}
+\end{document}
+\end{verbatim}
+
+\end{document}
+

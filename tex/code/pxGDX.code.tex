@@ -4,12 +4,14 @@
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%  This file is part of the P3CTeX project.
 %%
-%%  Author's name: Scvria
-%%  File: pxUML.code.tex
-%% 	Version: v0.1 (02/2026)
-%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%  Author: Scvria
+%%  File: pxGDX.code.tex
+%%  Version: v0.3 (02/2025)
+%%  Description:
+%%    Graphic designs module: cover page, page style (header/footer),
+%%    and PDF metadata helpers for P3CTeX.
 %%
 %%  This file may be distributed and/or modified:
 %%
@@ -19,11 +21,12 @@
 %%   See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
+%%  TODO:
+%%    - Replace hard-coded logo names with key values.
+%%    - Provide an explicit standalone wrapper package if needed.
 %% =======================================================
 \RequirePackage{color,l3keys2e,xparse}
-\ProvidesExplFile{ pxGDX }{2025/02/21}{v0.3}{P3CTeX Graphic Designs Module}
+\ProvidesExplFile{pxGDX.code.tex}{2025/02/21}{v0.3}{P3CTeX Graphic Designs Module}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	OTHER PCKG IMPORT		--		%%%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,6 +34,8 @@
 \RequirePackage[a4paper]{geometry}
 % Header/footer customization
 \RequirePackage{fancyhdr}
+% Graphics inclusion (logos, cover images)
+\RequirePackage{graphicx}
 % Colored boxes
 \RequirePackage{tcolorbox}
 % Hyperlinks configuration
@@ -703,7 +708,6 @@
 	\keys_set:nn { gdxCOVER } { #1 }
 }
 \cs_gset:Nn \pxGDX_page_config:n {
-	\keys_set:nn { gdxLAYOUT } { #1 }
 	\keys_set:nn { gdxSTYLE } { #1 }
 }
 %%END_FOLD%%

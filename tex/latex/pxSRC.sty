@@ -4,12 +4,14 @@
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%  This file is part of the P3CTeX project.
 %%
-%%  Author's name: Scvria
-%%  File: pxUML.code.tex
-%% 	Version: v0.1 (02/2026)
-%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%  Author: Scvria
+%%  File: pxSRC.sty
+%%  Version: v0.2 (02/2026)
+%%  Description:
+%%    Included sources manager: safe inclusion of figures with robust
+%%    placeholders when files are missing.
 %%
 %%  This file may be distributed and/or modified:
 %%
@@ -19,32 +21,58 @@
 %%   See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
+%%  TODO:
+%%    - Expand inclusion utilities (matrices, multi-format resolution).
 %% =======================================================
 % pxSRC.sty
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
-\ProvidesExplPackage{pxSRC}{2025/02/21}{v0.1}{
-	P3CTeX Included Sources Manager that tracks and keep referenced of all included sources
-}
+\ProvidesExplPackage{pxSRC}{2026/02/26}{v0.2}
+  {P3CTeX included sources manager (safe figure inclusion)}
 % Positioning figures
 \RequirePackage{float}
+% Graphics inclusion
+\RequirePackage{graphicx}
 % Colored boxes
 \RequirePackage{tcolorbox}
 % Hyperlinks configuration
 \RequirePackage{hyperref}
+% Foreach loops used by \pxIMGList
+\RequirePackage{pgffor}
 % Load Code
 \file_input:n {pxSRC.code.tex}
 %%%%%%%%%%%%%%  LaTeX2e API %%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%
+%% Package configuration (pxSRC key family).
+\NewDocumentCommand{\pxSRCsetup}{m}{\keys_set:nn { pxSRC } { #1 }}
+
 %% SAFE INCLUDE IMAGES OR PLACEHOLDER
 %% [#1] IMAGE WIDTH *optional
 %% {#2} IMAGE NAME (OR PATH)
 %% [#3] PLACEHOLDER COLOR *optional
 %% {#4} CAPTION TEXT
-%% [#5] Image printname *optional (if not present uses #2)
-\NewDocumentCommand{\pxIMG}{ O{.8\linewidth} m O{gray} m o }{\_pxIMG:nnnnn{#1}{#2}{#3}{#4}{#5}}
+%% [#5] Caption short / label *optional (if not present, a safe label is auto-generated)
+\NewDocumentCommand{\pxIMG}{ o m o m o }
+  {
+    \group_begin:
+      \IfNoValueTF {#1}
+        { \dim_set:Nn \l_tmpa_dim { \l__pxsrc_default_width_tl } }
+        { \dim_set:Nn \l_tmpa_dim { #1 } }
+      \IfNoValueTF {#3}
+        { \tl_set:Nx \l__pxsrc_tmpa_tl { \l__pxsrc_placeholder_color_tl } }
+        { \tl_set:Nn \l__pxsrc_tmpa_tl { #3 } }
+      \IfNoValueTF {#5}
+        {
+          \__pxsrc_label_from_string:nN { #2 } \l__pxsrc_label_tl
+          \__pxsrc_safeimg:nnnnn
+            { \dim_use:N \l_tmpa_dim }{ #2 }{ \l__pxsrc_tmpa_tl }{ #4 }{ \l__pxsrc_label_tl }
+        }
+        {
+          \__pxsrc_safeimg_short:nnnnnn
+            { \dim_use:N \l_tmpa_dim }{ #2 }{ \l__pxsrc_tmpa_tl }{ #4 }{ #5 }{ #5 }
+        }
+    \group_end:
+  }
 
 %% SAFE INCLUDE PAIRS OF IMAGES
 %% [#1] IMAGE WIDTH *optional
@@ -52,8 +80,28 @@
 %% {#3} right IMAGE NAME (OR PATH)
 %% [#4] PLACEHOLDER COLOR *optional
 %% {#5} CAPTION TEXT
-%% [#6] Image printname *optional (if not present uses #2)
-\NewDocumentCommand{\pxIMGpair}{ O{.4\linewidth} m m O{gray} m o }{\__px_safeimg_pair:nnnnnn{#1}{#2}{#3}{#4}{#5}{#6}}
+%% [#6] Caption short / label *optional (if not present, a safe label is auto-generated)
+\NewDocumentCommand{\pxIMGpair}{ o m m o m o }
+  {
+    \group_begin:
+      \IfNoValueTF {#1}
+        { \dim_set:Nn \l_tmpa_dim { \l__pxsrc_pair_width_tl } }
+        { \dim_set:Nn \l_tmpa_dim { #1 } }
+      \IfNoValueTF {#4}
+        { \tl_set:Nx \l__pxsrc_tmpa_tl { \l__pxsrc_placeholder_color_tl } }
+        { \tl_set:Nn \l__pxsrc_tmpa_tl { #4 } }
+      \IfNoValueTF {#6}
+        {
+          \__pxsrc_label_from_string:nN { #2-#3 } \l__pxsrc_label_tl
+          \__pxsrc_safeimg_pair:nnnnnn
+            { \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ \l__pxsrc_tmpa_tl }{ #5 }{ \l__pxsrc_label_tl }
+        }
+        {
+          \__pxsrc_safeimg_pair_short:nnnnnnn
+            { \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ \l__pxsrc_tmpa_tl }{ #5 }{ #6 }{ #6 }
+        }
+    \group_end:
+  }
 %% IMPORT IMAGELISTS WITH CONSECUTIVE FILENAME (randomName1.png,...,randomName5.png):
 %	\addIMGList[relative/path/]{randomName}{
 %%		First img caption,

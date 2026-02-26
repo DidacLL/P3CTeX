@@ -4,12 +4,14 @@
 %%  	P3C.TeX  			v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%  This file is part of the P3CTeX project.
 %%
-%%  Author's name: Scvria
-%%  File: pxUML.code.tex
-%% 	Version: v0.1 (02/2026)
-%%  Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%  Author: Scvria
+%%  File: pxSRC.code.tex
+%%  Version: v0.2 (02/2026)
+%%  Description:
+%%    Included sources manager: safe inclusion of figures with robust
+%%    placeholders when files are missing.
 %%
 %%  This file may be distributed and/or modified:
 %%
@@ -19,15 +21,64 @@
 %%   See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
+%%  TODO:
+%%    - Add a general n-by-m matrix of images.
+%%    - Add an optional pxPRP register to track included sources.
 %% =======================================================
-\RequirePackage{color,l3keys2e,xparse}
-\ProvidesExplFile{pxSRC.code.tex}{2-26-2026}{v0.2}{
-P3CTeX package for including linked sources
-}
+\ProvidesExplFile{pxSRC.code.tex}{2026/02/26}{v0.2}
+  {P3CTeX included sources manager (implementation)}
+
+% -----------------------------------------------------------------------------
+% Module configuration (user-facing via \pxSRCsetup in pxSRC.sty).
+% -----------------------------------------------------------------------------
+\tl_new:N \l__pxsrc_default_width_tl
+\tl_new:N \l__pxsrc_pair_width_tl
+\tl_new:N \l__pxsrc_placeholder_color_tl
+\tl_new:N \l__pxsrc_float_spec_tl
+\tl_new:N \l__pxsrc_pair_gap_tl
+\tl_new:N \l__pxsrc_label_prefix_tl
+\tl_new:N \l__pxsrc_graphic_file_tl
+\tl_new:N \l__pxsrc_label_tl
+\tl_new:N \l__pxsrc_tmpa_tl
+
+\tl_set:Nn \l__pxsrc_default_width_tl { .8\linewidth }
+\tl_set:Nn \l__pxsrc_pair_width_tl { .4\linewidth }
+\tl_set:Nn \l__pxsrc_placeholder_color_tl { gray }
+\tl_set:Nn \l__pxsrc_float_spec_tl { H }
+\tl_set:Nn \l__pxsrc_pair_gap_tl { 4em }
+\tl_set:Nn \l__pxsrc_label_prefix_tl { img: }
+
+\keys_define:nn { pxSRC }
+  {
+    default-width      .tl_set:N = \l__pxsrc_default_width_tl,
+    default-width      .initial:n = { .8\linewidth },
+    pair-width         .tl_set:N = \l__pxsrc_pair_width_tl,
+    pair-width         .initial:n = { .4\linewidth },
+    placeholder-color  .tl_set:N = \l__pxsrc_placeholder_color_tl,
+    placeholder-color  .initial:n = { gray },
+    float-spec         .tl_set:N = \l__pxsrc_float_spec_tl,
+    float-spec         .initial:n = { H },
+    pair-gap           .tl_set:N = \l__pxsrc_pair_gap_tl,
+    pair-gap           .initial:n = { 4em },
+    label-prefix       .tl_set:N = \l__pxsrc_label_prefix_tl,
+    label-prefix       .initial:n = { img: },
+  }
+
+\cs_new_protected:Npn \__pxsrc_label_from_string:nN #1 #2
+  {
+    \tl_set:Nn #2 { #1 }
+    % Drop a leading ./ which is common in relative paths.
+    \regex_replace_once:nnN { \A \./ } { } #2
+    % Keep only characters that are safe for \label (csname-based storage).
+    \regex_replace_all:nnN { [^-A-Za-z0-9:_.]+ } { - } #2
+    \regex_replace_all:nnN { -+ } { - } #2
+    \tl_set:Nx #2 { \l__pxsrc_label_prefix_tl \tl_use:N #2 }
+  }
+
+\cs_new_protected:Npn \__pxsrc_figure_begin:
+  { \expanded { \noexpand \begin { figure } [ \l__pxsrc_float_spec_tl ] } }
+\cs_new_protected:Npn \__pxsrc_figure_end: { \end{figure} }
 %% SAFE METHOD TO INCLUDE IMAGES OR PLACEHOLDER
-%% #1 dim 0.7  #3caption #4label #5color
 \cs_new:Npn \__px_fancy_shadowbox:nnnnnnnnn #1 #2 #3 #4 #5 #6 #7 #8 #9 { %TODO ADD A PRP Register for future references to included inputs
 	% #1 width
 	% #2 TOP Rectangle TEXT
@@ -107,60 +158,102 @@ P3CTeX package for including linked sources
 		}
 	}
 }
-\cs_new:Npn \__px_safeimg:nnnnn  #1 #2 #3 #4 #5 {
-	\file_if_exist:nTF { #2 .png}{
-		\begin{figure}[H]
-			\centering
-			\includegraphics[width= #1 ]{ #2 }
-			\caption[#5]{#4}\label{{#5}}
-		\end{figure}
-	}{
-		\__px_safeimg_placeholder:nnnnn  {#1} {#2} {#3} {#4} {#5}
-	}
-}
+\cs_new:Npn \__pxsrc_resolve_graphic:nN #1 #2
+  {
+    \tl_clear:N #2
+    \file_if_exist:nTF { #1 }
+      { \tl_set:Nn #2 { #1 } }
+      {
+        \file_if_exist:nTF { #1 .png }
+          { \tl_set:Nn #2 { #1 .png } }
+          {
+            \file_if_exist:nTF { #1 .pdf }
+              { \tl_set:Nn #2 { #1 .pdf } }
+              {
+                \file_if_exist:nTF { #1 .jpg }
+                  { \tl_set:Nn #2 { #1 .jpg } }
+                  { }
+              }
+          }
+      }
+  }
+
+\cs_new:Npn \__pxsrc_graphic_box:nnn #1 #2 #3
+  {
+    \tl_clear:N \l__pxsrc_graphic_file_tl
+    \__pxsrc_resolve_graphic:nN { #2 } \l__pxsrc_graphic_file_tl
+    \tl_if_blank:VTF \l__pxsrc_graphic_file_tl
+      { \__px_fancy_shadowbox:nnnnn { #1 } { ``~ #2 ~'' } { ~~>>ERR! #2.png} {IMAGE~ NOT~FOUND } { #3 } }
+      { \includegraphics[width = #1]{ \l__pxsrc_graphic_file_tl } }
+  }
+
+\cs_new_protected:Npn \__pxsrc_safeimg:nnnnn  #1 #2 #3 #4 #5
+  {
+    \__pxsrc_figure_begin:
+      \centering
+      \__pxsrc_graphic_box:nnn { #1 } { #2 } { #3 }
+      \caption{#4}\label{#5}
+    \__pxsrc_figure_end:
+  }
+
+\cs_new_protected:Npn \__pxsrc_safeimg_short:nnnnnn  #1 #2 #3 #4 #5 #6
+  {
+    \__pxsrc_figure_begin:
+      \centering
+      \__pxsrc_graphic_box:nnn { #1 } { #2 } { #3 }
+      \caption[#5]{#4}\label{#6}
+    \__pxsrc_figure_end:
+  }
 %% TODO ADD METHOD FOR A MATRIX OF IMAGES WITH ROWS AND COLUMNS USING FOREACH LIST
-\cs_new:Npn \__px_safeimg_pair:nnnnnn  #1 #2 #3 #4 #5 #6 {
-	\file_if_exist:nTF { #2 .png}{
-		\file_if_exist:nTF { #3 .png}{
-			\begin{figure}[H]
-				\centering
-				\includegraphics[width= #1 ]{ #2 }
-				\hspace*{4em}
-				\includegraphics[width= #1 ]{ #3 }
-				\caption[#6]{#5}\label{{#6}}
-			\end{figure}
-		}{\__px_safeimg_placeholder:nnnnn  {#1} {#3} {#4} {#5} {#6}}
-	}{
-		\__px_safeimg_placeholder:nnnnn  {#1} {#2} {#4} {#5} {#6}
-	}
-}
+\cs_new_protected:Npn \__pxsrc_safeimg_pair:nnnnnn  #1 #2 #3 #4 #5 #6
+  {
+    \__pxsrc_figure_begin:
+      \centering
+      \__pxsrc_graphic_box:nnn { #1 } { #2 } { #4 }
+      \hspace*{\l__pxsrc_pair_gap_tl}
+      \__pxsrc_graphic_box:nnn { #1 } { #3 } { #4 }
+      \caption{#5}\label{#6}
+    \__pxsrc_figure_end:
+  }
+
+\cs_new_protected:Npn \__pxsrc_safeimg_pair_short:nnnnnnn  #1 #2 #3 #4 #5 #6 #7
+  {
+    \__pxsrc_figure_begin:
+      \centering
+      \__pxsrc_graphic_box:nnn { #1 } { #2 } { #4 }
+      \hspace*{\l__pxsrc_pair_gap_tl}
+      \__pxsrc_graphic_box:nnn { #1 } { #3 } { #4 }
+      \caption[#6]{#5}\label{#7}
+    \__pxsrc_figure_end:
+  }
+% Legacy placeholder (kept for backwards compatibility; prefer \__pxsrc_graphic_box:nnn).
 \cs_new:Npn \__px_safeimg_placeholder:nnnnn  #1 #2 #3 #4 #5 {
 	\begin{figure}[H]
 		\centering
 		\dim_set:Nn \l_tmpb_dim {#1}
-		\__px_fancy_shadowbox:nnnnnnnnn{.8\l_tmpb_dim}{ ``~ #2 .png~'' }
+		\__px_fancy_shadowbox:nnnnnnnnn{.8\l_tmpb_dim}{ ``~ #2 ~'' }
 		{
-			\tiny{~>>~File~ #2 .png~ not~ found.}
+			\tiny{~>>~File~ #2 ~ not~ found.}
 		}
 		{\textbf{~~~--~To Do~--~}}
 		{	\hspace{-.25ex}	X	}	{!}
 		{ #3 !75!}	{ #3 !50!}	{ #3 !25!}
-		%			\__px_fancy_shadowbox:nnnnn{.8\l_tmpb_dim}{ ``~ #2 .png~'' }{IMAGEHOLDER}{GRAPHICS~NOT~FOUND~}{#5}
 		\caption{ #4 }
 		\label{#5}
 	\end{figure}
 }
 
 \cs_new:Npn \_pxIMG:nnnnn #1#2#3#4#5{
-	\IfValueTF{ #1 }{%
-		\dim_set:Nn \l_tmpa_dim { #1 }%
-	}{%
-		\dim_set:Nn \l_tmpa_dim {.8\textwidth}%
-	}%
-	\IfNoValueTF{ #5 }{%
-		\__px_safeimg:nnnnn { \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ #4 }{ #2 }%
-	}{%
-		\__px_safeimg:nnnnn { \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ #4 }{ #5 }%
-	}%
+	\dim_set:Nn \l_tmpa_dim { #1 }
+	\IfNoValueTF{ #5 }
+	  {
+	    \__pxsrc_label_from_string:nN { #2 } \l__pxsrc_tmpa_tl
+	    \__pxsrc_safeimg:nnnnn
+	      { \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ #4 }{ \l__pxsrc_tmpa_tl }
+	  }
+	  {
+	    \__pxsrc_safeimg_short:nnnnnn
+	      { \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ #4 }{ #5 }{ #5 }
+	  }
 }
 \endinput
