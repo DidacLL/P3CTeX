@@ -96,7 +96,106 @@ Les claus més importants són:
 
 Altres claus com \verb|uppertitle|, \verb|subtitle|, \verb|subsubtitle|
 o \verb|add-picture| permeten activar o desactivar elements opcionals
-de la portada, però en la majoria de casos no cal tocar-les directament.
+de la portada. A continuació es detalla la llista completa de claus
+de la família interna \verb|gdxCOVER|, amb els valors per defecte:
+
+\subsection*{Claus de disseny (\texttt{gdxCOVER})}
+
+\begin{description}
+  \item{\verb|cover-header-height| ($\backslash$dim)} alçada del bloc superior de la
+    portada (capçalera). Per defecte \verb|0.25\textheight|.
+  \item{\verb|cover-subheader-height| ($\backslash$dim)} alçada del subbloc on es
+    mostra el títol principal. Per defecte \verb|0.20\textheight|.
+  \item{\verb|cover-body-height| ($\backslash$dim)} alçada del cos central de la
+    portada (imatge i text auxiliar). Per defecte
+    \verb|0.75\textheight|.
+  \item{\verb|cover-square-size| ($\backslash$dim)} mida del requadre quadrat de la
+    imatge central. Per defecte \verb|0.48\textwidth|.
+  \item{\verb|cover-em| ($\backslash$dim)} unitat bàsica per a desplaçaments i
+    marges interns. Per defecte \verb|0.08\textwidth|.
+  \item{\verb|cover-font-max| ($\backslash$dim)} mida màxima de la tipografia de
+    títols escalats. Per defecte \verb|42pt|.
+\end{description}
+
+\subsection*{Interruptors de contingut}
+
+\begin{description}
+  \item{\verb|uppertitle| (bool)} mostra el títol superior opcional
+    (per exemple, ``PAC 1'') damunt del codi curt. Per defecte es
+    considera \emph{fals} però la meta-clau \verb|fullcover| l'activa.
+  \item{\verb|subtitle| (bool)} activa el subtítol sota el títol
+    principal.
+  \item{\verb|subsubtitle| (bool)} activa una franja amb informació
+    addicional (normalment el codi de l'assignatura o un text curt).
+  \item{\verb|add-picture| (bool)} activa la inserció de la imatge
+    principal de portada (\verb|set-mainpicture| / \verb|set-auxpicture|).
+  \item{\verb|outter-backtitle| (bool)} dibuixa el títol de fons sobre
+    una franja de color a la part superior de la pàgina.
+  \item{\verb|inner-backtitle| (bool)} repeteix el títol de fons dins
+    del requadre principal.
+  \item{\verb|noplagi| (bool)} controla si s'inclou el text de
+    declaració de no plagi al peu de la portada.
+  \item{\verb|offset| (bool)} aplica un petit desplaçament (\emph{offset})
+    per aconseguir un efecte de superposició entre blocs.
+  \item{\verb|clip-author| (bool)} controla si el nom de l'autor es
+    mostra amb un efecte de ``retall'' de color.
+  \item{\verb|unlink| (bool)} desactiva certs enllaços interns de
+    \texttt{hyperref} a la portada (per evitar sobrecarregar la
+    pàgina).
+\end{description}
+
+\subsection*{Textos i imatges de portada}
+
+\begin{description}
+  \item{\verb|text-backtitle|} títol de fons (grau, màster, etc.).
+  \item{\verb|text-uppertitle|} títol superior opcional.
+  \item{\verb|text-title|} títol principal (nom complet de
+    l'assignatura).
+  \item{\verb|text-minititle|} nom curt del document (PAC, PR, etc.).
+  \item{\verb|text-subtitle|} subtítol opcional del document.
+  \item{\verb|text-subsubtitle|} línia addicional (codi de
+    l'assignatura, per exemple).
+  \item{\verb|text-author|} nom de l'estudiant.
+  \item{\verb|text-date|} data de lliurament; per defecte \verb|\today|.
+  \item{\verb|text-auxtext|} text auxiliar a la part inferior del bloc
+    principal; per defecte indica que el document s'ha fet amb P3CTeX.
+  \item{\verb|set-mainpicture|} nom base de la imatge vertical
+    principal (sense \verb|img/|); per defecte \verb|pxlngcover|.
+  \item{\verb|set-auxpicture|} nom base de la imatge quadrada secundària;
+    per defecte \verb|pxsqrcover|.
+\end{description}
+
+\subsection*{Colors, tipografia i marges}
+
+\begin{description}
+  \item{\verb|maincolor|} color principal de la portada (franges i
+    elements destacats); per defecte \verb|secondaryColor|.
+  \item{\verb|auxcolor|} color auxiliar per a caixes i fons; per
+    defecte \verb|lightColor|.
+  \item{\verb|textcolor|} color principal del text.
+  \item{\verb|textcolor-aux|} color auxiliar del text sobre fons
+    foscos; per defecte \verb|lighterColor|.
+  \item{\verb|bg-color|} color de fons de les imatges i blocs; per
+    defecte \verb|lighterColor|.
+  \item{\verb|title-size|} macro de mida per al títol principal
+    (per defecte \verb|\Huge|).
+  \item{\verb|subtitle-size|} macro de mida per al subtítol
+    (per defecte \verb|\large|).
+  \item{\verb|margin-h| ($\backslash$dim)} marge horitzontal de la portada;
+    per defecte \verb|24pt|.
+  \item{\verb|margin-v| ($\backslash$dim)} marge vertical de la portada;
+    per defecte \verb|36pt|.
+\end{description}
+
+\subsection*{Meta-claus}
+
+\begin{description}
+  \item{\verb|fullcover|} activa un conjunt coherent de booleans per
+    obtenir una portada ``completa'' (tots els elements visibles).
+  \item{\verb|print-placeholders|} configura la portada perquè mostri
+    textos de mostra (placeholders) per a totes les etiquetes, útil
+    per a depuració o com a guia per emplenar metadades.
+\end{description}
 
 \section{Configuració de la pàgina}
 
@@ -118,6 +217,33 @@ Aquests valors es mostren a les capçaleres i als peus de pàgina de
 les pàgines habituals i del sumari, mantenint la identitat visual
 coherent en tot el document.
 
+\subsection*{Claus de \texttt{gdxSTYLE}}
+
+La família \verb|gdxSTYLE| agrupa totes les claus relacionades amb el
+text i la disposició dels encapçalaments i peus:
+
+\begin{description}
+  \item{\verb|author-name|} nom de l'estudiant que es mostra al
+    capçal de la pàgina (i que també s'utilitza com a valor per
+    defecte de \verb|pdf-author|).
+  \item{\verb|doc-name|} nom curt del document (PAC, PR, etc.) que
+    apareix al centre de la capçalera.
+  \item{\verb|subj-name|} nom curt de l'assignatura.
+  \item{\verb|refcode|} codi de l'assignatura o referència acadèmica.
+  \item{\verb|course-name|} nom complet del grau o màster.
+  \item{\verb|header-left|} codi \LaTeX\ per al bloc esquerre de la
+    capçalera; per defecte inclou el logotip UOC.
+  \item{\verb|header-center|} codi del bloc central de la capçalera;
+    per defecte mostra el nom del document i l'estudiant.
+  \item{\verb|header-right|} codi del bloc dret; per defecte mostra el
+    nom curt de l'assignatura i el codi.
+  \item{\verb|footer-left|} codi del peu esquerre (buit per defecte).
+  \item{\verb|footer-center|} codi del peu central; per defecte mostra
+    la numeració ``pàgina X de Y''.
+  \item{\verb|footer-right|} codi del peu dret; per defecte inclou el
+    logotip secundari.
+\end{description}
+
 \section{Metadades PDF}
 
 Finalment, les claus de \verb|pdf-config| permeten establir les
@@ -136,6 +262,45 @@ metadades principals del fitxer PDF generat a través de
 
 Les claus \verb|linkcolor|, \verb|citecolor| i \verb|urlcolor| es poden
 ajustar si cal canviar els colors per defecte dels enllaços.
+
+\subsection*{Claus de \texttt{gdxPDF} i \texttt{pxGDX}}
+
+Internament, \verb|pdf-config| es correspon amb la família de claus
+\verb|gdxPDF|, que controla totes les metadades passades a
+\texttt{hyperref}:
+
+\begin{description}
+  \item{\verb|pdf-title|} títol del document (camp \texttt{/Title} del
+    PDF).
+  \item{\verb|pdf-author|} autor del document; per defecte pren el
+    valor d'\verb|author-name|.
+  \item{\verb|pdfsubject|} assumpte o descripció breu del contingut.
+  \item{\verb|pdfkeywords|} paraules clau separades per comes.
+  \item{\verb|pdf-creator|} cadena lliure que identifica l'aplicació
+    que ha generat el fitxer.
+  \item{\verb|pdf-producer|} producte utilitzat com a ``producer'' del
+    PDF; per defecte \verb|P3C.TeX v.3|.
+  \item{\verb|linkcolor|} color dels enllaços interns.
+  \item{\verb|citecolor|} color de les cites.
+  \item{\verb|urlcolor|} color dels enllaços URL.
+  \item{\verb|filecolor|} color dels enllaços a fitxers.
+  \item{\verb|bookmarks| (bool)} activa o desactiva els marcadors de
+    navegació (bookmarks) al PDF.
+\end{description}
+
+A nivell més alt, la família \verb|pxGDX| ofereix les claus següents,
+que són les que utilitza \verb|\PECTeXconfig|:
+
+\begin{description}
+  \item{\verb|cover-config|} aplega totes les claus de \verb|gdxCOVER|
+    per configurar la portada.
+  \item{\verb|page-config|} aplega les claus de \verb|gdxSTYLE| per a
+    encapçalaments i peus.
+  \item{\verb|pdf-config|} aplega les claus de \verb|gdxPDF| per a les
+    metadades del PDF.
+  \item{\verb|src-path|} prefix de camí per a recursos gràfics
+    utilitzats per \texttt{pxGDX} (per defecte buit).
+\end{description}
 
 \section{Macros d'ajuda per al cos del document}
 
