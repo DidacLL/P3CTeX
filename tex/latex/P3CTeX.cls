@@ -86,16 +86,16 @@
 }
 \AfterBeginDocument{
 	\__ifcover:nn{
-		\PECTeXprintCover*
+		\__ifplagi:nn{\PECTeXprintCover*}{\PECTeXprintCover}
 		\__iftoc:nn{\PECTeXprintTOC}{}
 	}{
-		\__iftoc:nn{\PECTeXprintTOC*}{
-			\__ifplagi:nn{
+		\__ifplagi:nn{
+			\__iftoc:nn{\PECTeXprintTOC*}{
 				\par\noindent
 				\pxDEFnoplagi{\l__gdx_cover_author_tl}
 				\par \__pxDEV_HRule:
 			}{}
-		}
+		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
 
 }
