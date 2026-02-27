@@ -13,76 +13,54 @@
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - valor escalar (pot contenir comes)
-\NewDocumentCommand{\pxSetValue}{m m m}{
-	\pxPRP_set:nnnN	{#1}	{#2}	{#3} \g_pxprp__pxPRP_propREG_prop
-}
-
+\NewDocumentCommand{\pxSetValue}{m m m}{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
+%\def\pxSET#1.#2=#3{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
 %% Afegeix un element al final de la llista associada a una clau.
 %% La clau es tracta com una llista separada per comes (clist).
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - nou element a afegir
-\NewDocumentCommand{\pxPutValue}{m m +m}{
-	\pxPRP_put_items:nnn {#1}{#2}{#3}
-}
-
+\NewDocumentCommand{\pxPutValue}{m m +m}{\pxPRP_put_items:nnn {#1}{#2}{#3}}
+%\def\pxPUT #1.#2+=#3{\pxPRP_put_items:nnn {#1}{#2}{#3}}
 %% Afegeix una llista de valors al final de la llista existent.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - llista separada per comes a concatenar a la dreta
-\NewDocumentCommand{\pxListPutRight}{m m m}{
-	\pxprp_list_put_right:nnn {#1}{#2}{#3}
-}
-
+\NewDocumentCommand{\pxListPutRight}{m m m}{\pxprp_list_put_right:nnn {#1}{#2}{#3}}
 %% Afegeix una llista de valors al principi de la llista existent.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - llista separada per comes a concatenar a l'esquerra
-\NewDocumentCommand{\pxListPutLeft}{m m m}{
-	\pxprp_list_put_left:nnn {#1}{#2}{#3}
-}
+\NewDocumentCommand{\pxListPutLeft}{m m m}{\pxprp_list_put_left:nnn {#1}{#2}{#3}}
 
 %% Substitueix completament la llista associada a una clau.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - nova llista completa separada per comes
-\NewDocumentCommand{\pxListSet}{m m m}{
-	\pxprp_list_set:nnn {#1}{#2}{#3}
-}
-
+\NewDocumentCommand{\pxListSet}{m m m}{\pxprp_list_set:nnn {#1}{#2}{#3}}
 %% Mostra tots els valors d'una clau com a llista, separats per un separador.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
 %%   #3 - separador (opcional, per defecte ", ")
-\NewDocumentCommand{\pxListAll}{m m O{, }}{
-  \pxPRP_list_use:nnn {#1}{#2}{#3}
-}
+\NewDocumentCommand{\pxListAll}{m m O{, }}{ \pxPRP_list_use:nnn {#1}{#2}{#3}}
 
 %% Retorna la llargada (nombre d'elements) de la llista associada a una clau.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
-\NewDocumentCommand{\pxListLen}{m m}{
-  \pxPRP_list_length:nn {#1}{#2}
-}
+\NewDocumentCommand{\pxListLen}{m m}{\pxPRP_list_length:nn {#1}{#2}}
 %% Neteja el contingut de la llista associada a una clau, mantenint la clau.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
-\NewDocumentCommand{\pxListClear}{m m}{
-  \pxprp_list_set:nnn {#1}{#2}{}
-}
+\NewDocumentCommand{\pxListClear}{m m}{\pxprp_list_set:nnn {#1}{#2}{}}
 
 %% Elimina una clau (i el seu valor) d'un objecte.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau a eliminar
-\NewDocumentCommand{\pxClearKey}{m m}{
-	\pxPRP_clear_key:nn {#1}{#2}
-}
+\NewDocumentCommand{\pxClearKey}{m m}{\pxPRP_clear_key:nn {#1}{#2}}
 %% Obté el valor escalar (tl) associat a una clau, sense tractar-lo com a llista.
 %%   #1 - identificador de l'objecte
 %%   #2 - clau
-\NewDocumentCommand{\pxGetScalar}{m m}{
-  \pxPRP_get_scalar:nn {#1}{#2}
-}
+\NewDocumentCommand{\pxGetScalar}{m m}{\pxPRP_get_scalar:nn {#1}{#2}}
 %% Test boolean sobre el valor escalar d'una clau.
 %% El valor "false" o buit es considera fals; qualsevol altre, cert.
 %%   #1 - identificador de l'objecte
@@ -101,14 +79,9 @@
 %%   #3 - codi per al cas existent
 %%   #4 - codi per al cas inexistent
 \def\pxIfKeyExistsTF#1#2#3#4{\pxPRP_key_exists:nnTF {#1}{#2}{#3}{#4}}
-
 %% Elimina completament l'objecte i totes les seves claus del registre global.
 %%   #1 - identificador de l'objecte
-\NewDocumentCommand{\pxClearObject}{m}{
-	\pxPRP_clear_object:n {#1}
-}
-
-
+\NewDocumentCommand{\pxClearObject}{m}{	\pxPRP_clear_object:n {#1}}
 %% Accés compacte a un element de llista: \pxGet OBJ.clau[idx]
 %%   OBJ  - identificador de l'objecte
 %%   clau - clau dins de l'objecte
@@ -117,5 +90,11 @@
 \def\pxSET~#1.#2=#3{	\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
 \def\pxPUT~#1.#2+=#3{	\pxPRP_put_items:nnn {#1}{#2}{#3}	}
 \def\pxIF(#1.#2)#3\pxELSE#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
+\def\pxGETtl(#1.#2){\pxPRP_get_scalar:nn {#1}{#2}}
+\def\pxSETlst#1.#2=#3 {\pxprp_list_set:nnn {#1}{#2}{#3}}
+\def\pxIfVal#1.#2:#3#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
+\def\pxIfObj#1:#2#3{\pxPRP_object_exists:nTF {#1}{#2}{#3}}
+\def\pxIfKey#1.#2:#3#4{\pxPRP_key_exists:nnTF {#1}{#2}{#3}{#4}}
 %% Variante que imprimeix una etiqueta en negreta abans del valor.
-\def\pxPRINT~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }
+\def\pxPRINTF~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }
+\def\pxPRINTlst#1.#2(#3){ \pxPRP_list_use:nnn {#1}{#2}{#3}}

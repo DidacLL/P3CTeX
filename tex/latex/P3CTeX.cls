@@ -46,25 +46,15 @@
 %% =================================
 %% ===== PCKG PUBLIC LaTeX2e API ===
 %% =================================
-\NewDocumentCommand{\PECTeXconfig}{+m}{
-	\pxGDX_config:n {#1}
-}
+\NewDocumentCommand{\PECTeXconfig}{+m}{\pxGDX_config:n {#1}}
 \NewDocumentCommand{\PECTeXprintCover}{s}{
 	\setcounter{page}{0}
 	\IfBooleanT{#1}{\pxGDX_cover_config:n{noplagi}}
-	\pxGDX_print_cover:
-	\clearpage
+	\pxGDX_print_cover:\clearpage
 }
-
 \NewDocumentCommand{\PECTeXprintTOC}{s}{
-	\IfBooleanT{#1}{
-		\par\noindent
-		\pxDEFnoplagi{\l__gdx_cover_author_tl}
-		\par \__pxDEV_HRule:
-	}{
-	}
-	\tableofcontents
-	\clearpage
+	\IfBooleanT{#1}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par\__pxDEV_HRule:}
+	\tableofcontents\clearpage
 }
 \DeclareDocumentCommand\pxGDXconfig{ +m } {\pxGDX_config:n{ #1 }}
 % pxGrow: Resizes content to fit especified width
@@ -81,18 +71,12 @@
 \NewDocumentCommand{\subsubsectionuoc}{ m }{\__px_subsubsectionuoc:n {#1}}
 % Horizontal rules
 \NewDocumentCommand{\pxHRule}{s o}{
-	\IfNoValueTF{#2}{
-		\IfBooleanTF{#1}{	\__pxDEV_HRule: }{	\__pxDEV_Hrule:}
-	}{
-		\IfBooleanTF{#1}{	\__pxDEV_HRule:n{#2} 	}{	\__pxDEV_Hrule:n{#2}	}
-	}
+	\IfNoValueTF{#2}{\IfBooleanTF{#1}{\__pxDEV_HRule:}{\__pxDEV_Hrule:}}
+		{\IfBooleanTF{#1}{\__pxDEV_HRule:n{#2}}{\__pxDEV_Hrule:n{#2}}}
 }
 \NewDocumentCommand{\pxPageRule}{s}{
-	\IfBooleanTF{#1}{
-		\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\
-	}{
-		\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\
-	}
+	\IfBooleanTF{#1}{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
+		{\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\}
 }
 %% AUTO LOAD COVER AND TOC
 \AfterBeginDocument{
@@ -101,12 +85,7 @@
 		\__iftoc:nn{\PECTeXprintTOC}{}
 	}{
 		\__ifplagi:nn{
-			\__iftoc:nn{\PECTeXprintTOC*}{
-				\par\noindent
-				\pxDEFnoplagi{\l__gdx_cover_author_tl}
-				\par \__pxDEV_HRule:
-			}{}
+			\__iftoc:nn{\PECTeXprintTOC*}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par \__pxDEV_HRule:}{}
 		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
-
 }

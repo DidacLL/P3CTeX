@@ -97,17 +97,17 @@
 \keys_define:nn { gdxCOVER }
 { 		% --- Dimensions ---
 	cover-header-height		.dim_set:N 		=	\l__gdx_cover_header_height,
-		cover-header-height 	.initial:n	= 								{ 0.25\textheight },
+		cover-header-height 	.initial:n	= 	{ 0.25\textheight },
 	cover-subheader-height 	.dim_set:N 		=	\l__gdx_cover_subheader_height,
-		cover-subheader-height 	.initial:n 	= 								{ 0.20\textheight },
+		cover-subheader-height 	.initial:n 	= 	{ 0.20\textheight },
 	cover-body-height 		.dim_set:N 		=	\l__gdx_cover_body_height,
-		cover-body-height 		.initial:n 	= 								{ 0.75\textheight },
+		cover-body-height 		.initial:n 	= 	{ 0.75\textheight },
 	cover-square-size 		.dim_set:N 		=	\l__gdx_cover_square_size,
-		cover-square-size 		.initial:n 	= 								{ 0.48\textwidth },
+		cover-square-size 		.initial:n 	= 	{ 0.48\textwidth },
 	cover-em 				.dim_set:N 		=	\l__gdx_em,
-		cover-em 				.initial:n 	=								{ 0.08\textwidth },
+		cover-em 				.initial:n 	=	{ 0.08\textwidth },
 	cover-font-max 			.dim_set:N 		= 	\l__gdx_cover_fontmax,
-		cover-font-max 			.initial:n 	= 								{ 42pt },
+		cover-font-max 			.initial:n 	= 	{ 42pt },
 	% --- Elementos opcionales de la portada ---
 	uppertitle 			.bool_set:N		=	\l__gdx_cover_upper_title_bool,
 		uppertitle			.initial:n	=			false,
@@ -130,7 +130,7 @@
 	noplagi				.bool_set:N		=	\l__gdx_cover_noplagi_bool,
 		noplagi				.initial:n	=			false,
 		noplagi				.default:n	=			true,
-	offset 				.bool_set:N		=	\l__gdx_cover_offset_bool,
+	 				.bool_set:N		=	\l__gdx_cover_offset_bool,
 		offset				.initial:n	=			false,
 		offset				.default:n	=			true,
 	clip-author			.bool_set:N		=	\l__gdx_cover_clip_author_bool,
@@ -160,30 +160,30 @@
 	text-auxtext				.initial:n 	=	{ Document~done~using~P3C.TeX~LaTeX~repository.},
 	% --- Imágenes en la portada ---
 	set-mainpicture			.tl_set:N		=	\l__gdx_cover_image_long_tl,
-		set-mainpicture			.initial:n 	=								pxlngcover,
+		set-mainpicture			.initial:n 	=	pxlngcover,
 	set-auxpicture			.tl_set:N		=	\l__gdx_cover_image_square_tl,
-		set-auxpicture			.initial:n 	=								pxsqrcover,
+		set-auxpicture			.initial:n 	=	pxsqrcover,
 	% --- Estilo de la portada ---
 	maincolor	 			.tl_set:N		=	\l__gdx_cover_color_tl,
-		maincolor	 			.initial:n	=								secondaryColor,
+		maincolor	 			.initial:n	=	secondaryColor,
 	auxcolor	 			.tl_set:N		=	\l__gdx_cover_aux_color_tl,
-		auxcolor	 			.initial:n	=								lightColor,
+		auxcolor	 			.initial:n	=	lightColor,
 	textcolor				.tl_set:N		=	\l__gdx_cover_text_color_tl,
-		textcolor 				.initial:n	=								primaryColor,
+		textcolor 				.initial:n	=	primaryColor,
 	textcolor-aux 			.tl_set:N		=	\l__gdx_cover_text_aux_color_tl,
-		textcolor-aux			.initial:n	=								lighterColor,
+		textcolor-aux			.initial:n	=	lighterColor,
 	bg-color 				.tl_set:N		=	\l__gdx_cover_img_bg_tl,
-		bg-color 				.initial:n	=								lighterColor,
+		bg-color 				.initial:n	=	lighterColor,
 	% --- Tamaños de fuente ---
 	title-size 				.tl_set:N		=	\l__gdx_cover_title_size_tl,
-		title-size 				.initial:n	=								\Huge,
+		title-size 				.initial:n	=	\Huge,
 	subtitle-size 			.tl_set:N		=	\l__gdx_cover_subtitle_size_tl,
-		subtitle-size 			.initial:n	=								\large,
+		subtitle-size 			.initial:n	=	\large,
 	% --- Márgenes de la portada ---
 	margin-h				.dim_set:N		=	\l__gdx_cover_margin_h_tl,
-		margin-h 				.initial:n	=								{24pt},
+		margin-h 				.initial:n	=	{24pt},
 	margin-v 				.dim_set:N		=	\l__gdx_cover_margin_v_tl ,
-		margin-v 				.initial:n	=								{36pt},
+		margin-v 				.initial:n	=	{36pt},
 	unknown .code:n ={ },
 	%% SWITCHERS
 	fullcover				.meta:n = {
@@ -336,10 +336,10 @@
 \cs_new:Nn \pxGDX_print_cover:{
 	\thispagestyle{empty}
 	\newgeometry{
-		left		=	\l__gdx_cover_margin_h_tl,
-		right		=	\l__gdx_cover_margin_h_tl,
-		top			=	\l__gdx_cover_margin_v_tl,
-		bottom		=	\l__gdx_cover_margin_v_tl
+		left	=	\l__gdx_cover_margin_h_tl,
+		right	=	\l__gdx_cover_margin_h_tl,
+		top		=	\l__gdx_cover_margin_v_tl,
+		bottom	=	\l__gdx_cover_margin_v_tl
 	}% ---- PORTADA ----
 	\setlength{\fboxrule}{0pt}
 	\color{\l__gdx_cover_text_color_tl}
@@ -425,13 +425,13 @@
 						\__ifoffset:nn {\vspace{-2em}\par\hspace*{2em}}{\par \hspace*{-2em}}
 						\bool_if:NTF \l__gdx_cover_image_bool {
 							\tcolorbox[
-							boxsep			=		0ex,
-							left			=		1ex,
-							right			=		1ex,
-							top				=		1ex,
-							bottom			=		1ex,
-							colback			=		\l__gdx_cover_img_bg_tl,
-							opacityframe	=		0
+							boxsep			=	0ex,
+							left			=	1ex,
+							right			=	1ex,
+							top				=	1ex,
+							bottom			=	1ex,
+							colback			=	\l__gdx_cover_img_bg_tl,
+							opacityframe	=	0
 							]
 							\begin{minipage}[b][\l__gdx_cover_square_size][c]{\l__gdx_cover_square_size}
 									\__ifoffset:n {\par\vspace*{-10pt}}

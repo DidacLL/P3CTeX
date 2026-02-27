@@ -43,26 +43,26 @@
 %% =================================
 \keys_define:nn {P3CTeX}
 {
-	cover 			.bool_set:N 	=		\l_pxdoc_usecover_bool,
-	cover 			.initial:n 		= 		false,
-	cover 			.default:n 		= 		true,
-	no-cover		.meta:n 		= 	{ 	cover ={ false }},
-	toc 			.bool_set:N 	=		\l_pxdoc_usetoc_bool,
-	toc 			.initial:n 		= 		false,
-	toc 			.default:n 		= 		true,
-	no-toc			.meta:n 		= 	{ 	toc ={ false }},
-	no-plagi		.bool_set:N 	=		\l_pxdoc_useplagi_bool,
-	no-plagi 		.initial:n 		= 		false,
-	no-plagi		.default:n 		= 		true,
-	CA				.meta:n			=	{	cover = {false}, toc ={ true }, no-plagi ={true}, en},
-	PAC				.meta:n			=	{	cover = {false}, toc ={ true }, no-plagi ={true}, cat},
-	PEC				.meta:n			=	{	cover = {false}, toc ={ true }, no-plagi ={true}, es},
-	PR				.meta:n			=	{	cover = {true}, toc ={ true }	},
-	help			.meta:n			=	{	cover = {true}, toc ={ true }, no-plagi ={true}, en, data={help}},
-	fake			.meta:n			=	{	cover = {true}, toc ={ true }, no-plagi ={true}, en, data={example}},
-	EN				.meta:n			=	{	en	},
-	ES				.meta:n			=	{	es	},
-	CAT				.meta:n			=	{	cat	},
+	cover		.bool_set:N 	=\l_pxdoc_usecover_bool,
+		cover		.initial:n 	=	false,
+		cover		.default:n 	=	true,
+		no-cover	.meta:n 	=	{cover ={ false }},
+	toc 		.bool_set:N 	=\l_pxdoc_usetoc_bool,
+		toc 		.initial:n 	= 	false,
+		toc 		.default:n 	= 	true,
+		no-toc		.meta:n 	= 	{toc ={ false }},
+	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
+		no-plagi	.initial:n 	=	false,
+		no-plagi	.default:n 	=	true,
+	CA		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, en},
+	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, cat},
+	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
+	PR		.meta:n	={cover = {true} , toc ={ true }},
+	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
+	fake	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={example}},
+	EN		.meta:n	={en},
+	ES		.meta:n	={es},
+	CAT		.meta:n	={cat},
 	cat	.code		={
 		\RequirePackage[catalan]{babel}
 		\bool_set_true:N \l_pxdoc_language_bool
@@ -77,96 +77,87 @@
 		\bool_set_true:N \l_pxdoc_language_bool
 		\_pxcore_set_language_english
 	},
-	data 			.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
-	debug 				.bool_set:N 		=		\l_pxcore_debug_bool,
-	debug 				.initial:n 		= 		false,
-	debug 				.default:n 		= 		true,
-	print-doc 			.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
-	print-doc			.initial:n 		= 		false,
-	print-doc			.default:n 		= 		true,
-	unknown 			.tl_set:N	 		= 	\l__pxdoc_unknown_tl
+	data 		.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
+	debug 		.bool_set:N 		=		\l_pxcore_debug_bool,
+		debug 		.initial:n 		= 		false,
+		debug 		.default:n 		= 		true,
+	print-doc 	.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
+		print-doc	.initial:n 		= 		false,
+		print-doc	.default:n 		= 		true,
+	unknown 	.tl_set:N	 		= 	\l__pxdoc_unknown_tl
 }
 %% =================================
 %% == P3CTeX/data KEYS DEFINITION ==
 %% =================================
 \keys_define:nn { P3CTeX / data}
 {
-	student				.tl_set:N 		=		\l__pxdata_student_tl,
-	student			.initial:n		=	{Nom~Alumne},
-	grade				.tl_set:N		=		\l__pxdata_course_tl,
-	grade			.initial:n		=	{Nom~de~la~Titulació},
-	subj-fullname		.tl_set:N		=		\l__pxdata_subj_name_tl,
-	subj-fullname	.initial:n		=	{Nom de la Assignatura},
-	subj-shortname		.tl_set:N		=		\l__pxdata_subj_short_tl,
-	subj-shortname	.initial:n 		=	{NmAsg},
-	subj-code			.tl_set:N		=		\l__pxdata_subj_code_tl,
-	subj-code		.initial:n		=	{codiAsg},
-	ca-fullname			.tl_set:N		=		\l__pxdata_activity_tl,
-	ca-fullname		.initial:n		=	{Nom de l'activitat},
-	ca-shortname		.tl_set:N 		=		\l__pxdata_act_short_tl,
-	ca-shortname	.initial:n		=	{NmAct},
-	date 				.tl_set:N		=		\l__px_date_tl,
-	date 			.initial:n		=	{\today},
-	example			.meta:n	={
-		student = {Vladimir~Scoriae},
-		grade = {Software~Engineering~Degree},
+	student			.tl_set:N 		= \l__pxdata_student_tl,
+		student			.initial:n	= {Nom~Alumne},
+	grade			.tl_set:N		= \l__pxdata_course_tl,
+		grade			.initial:n	= {Nom~de~la~Titulació},
+	subj-fullname	.tl_set:N		= \l__pxdata_subj_name_tl,
+		subj-fullname	.initial:n	= {Nom de la Assignatura},
+	subj-shortname	.tl_set:N		= \l__pxdata_subj_short_tl,
+		subj-shortname	.initial:n 	= {NmAsg},
+	subj-code		.tl_set:N		= \l__pxdata_subj_code_tl,
+		subj-code		.initial:n	= {codiAsg},
+	ca-fullname		.tl_set:N		= \l__pxdata_activity_tl,
+		ca-fullname		.initial:n	= {Nom de l'activitat},
+	ca-shortname	.tl_set:N 		= \l__pxdata_act_short_tl,
+		ca-shortname	.initial:n	= {NmAct},
+	date 			.tl_set:N		= \l__px_date_tl,
+		date 			.initial:n	= {\today},
+	example	.meta:n	={
+		student 		= {Vladimir~Scoriae},
+		grade 			= {Software~Engineering~Degree},
 		subj-fullname	= {Pràctiques~de~Procrastinació-Avançada~en~\LaTeX},
-		subj-shortname = {PPAL},
-		subj-code = {01312},
-		ca-fullname = {Repte~1:~Introducció~a~\texttt{expl3} },
-		ca-shortname = {PAC1},
-		date = {1~de~Gener~de~1970}
+		subj-shortname	= {PPAL},
+		subj-code		= {01312},
+		ca-fullname		= {Repte~1:~Introducció~a~\texttt{expl3} },
+		ca-shortname	= {PAC1},
+		date 			= {1~de~Gener~de~1970}
 	},
 	help	.meta:n	={
-		student = {student},
-		grade = {grade},
+		student 		= {student},
+		grade 			= {grade},
 		subj-fullname	= {subj-fullname},
-		subj-shortname = {subj-shortname},
-		subj-code = {subj-code},
-		ca-fullname = {ca-fullname},
-		ca-shortname = {ca-shortname},
-		date = {date}
+		subj-shortname 	= {subj-shortname},
+		subj-code 		= {subj-code},
+		ca-fullname 	= {ca-fullname},
+		ca-shortname 	= {ca-shortname},
+		date 			= {date}
 	},
-	load-data		.code:n	={
-	}
+	load-data		.code:n	={}
 }
-\cs_new:Nn \__ifcover:nn {
-	\bool_if:NTF  \l_pxdoc_usecover_bool {#1}{#2}
-}
-\cs_new:Nn \__iftoc:nn {
-	\bool_if:NTF  \l_pxdoc_usetoc_bool {#1}{#2}
-}
-\cs_new:Nn \__ifplagi:nn {
-	\bool_if:NTF  \l_pxdoc_useplagi_bool {#1}{#2}
-}
+\cs_new:Nn \__ifcover:nn {\bool_if:NTF  \l_pxdoc_usecover_bool{#1}{#2}}
+\cs_new:Nn \__iftoc:nn   {\bool_if:NTF  \l_pxdoc_usetoc_bool  {#1}{#2}}
+\cs_new:Nn \__ifplagi:nn {\bool_if:NTF  \l_pxdoc_useplagi_bool{#1}{#2}}
 %% =================================
 %% ======= LOAD P3CTeX DATA ========
 %% =================================
-\file_input:n {pxTXT.code.tex}
+\file_input:n {pxTXT.code.tex}%% Load multilanguage text comands
 \ProcessKeysOptions{P3CTeX}
-\bool_if:NF  \l_pxdoc_language_bool {
-	\RequirePackage[catalan]{babel}
-}
-\file_input:n {pxGDX.code.tex}
-\RequirePackage[\l__pxdoc_unknown_tl]{pxCORE}
-\pxGDX_config:n {
+\bool_if:NF  \l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
+\file_input:n {pxGDX.code.tex} %% Load Graphic module
+\RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
+\pxGDX_config:n { %% Pass P3CTeX / data keys to pxCORE
 	cover-config={
-		text-backtitle		=	{\l__pxdata_course_tl},
-		text-uppertitle 	=	{\l__pxdata_activity_tl},
-		text-title		 	=	{\l__pxdata_subj_name_tl},
-		text-minititle	 	=	{\l__pxdata_act_short_tl},
-		text-subtitle	 	=	{\l__pxdata_activity_tl},
-		text-subsubtitle 	=	{\l__pxdata_subj_code_tl},
-		text-author		 	=	{\l__pxdata_student_tl},
-		text-date		 	=	{\today},
-		text-auxtext	 	=	{ }
+		text-backtitle	 ={\l__pxdata_course_tl},
+		text-uppertitle	 ={\l__pxdata_activity_tl},
+		text-title		 ={\l__pxdata_subj_name_tl},
+		text-minititle	 ={\l__pxdata_act_short_tl},
+		text-subtitle	 ={\l__pxdata_activity_tl},
+		text-subsubtitle ={\l__pxdata_subj_code_tl},
+		text-author		 ={\l__pxdata_student_tl},
+		text-date		 ={\today},
+		text-auxtext	 ={ }
 	},
 	page-config={
-		author-name			=	{\l__pxdata_student_tl},
-		doc-name			=	{\l__pxdata_act_short_tl},
-		subj-name			=	{\l__pxdata_subj_short_tl},
-		refcode				=	{\l__pxdata_subj_code_tl},
-		course-name			=	{\l__pxdata_course_tl}
+		author-name	={\l__pxdata_student_tl},
+		doc-name	={\l__pxdata_act_short_tl},
+		subj-name	={\l__pxdata_subj_short_tl},
+		refcode		={\l__pxdata_subj_code_tl},
+		course-name	={\l__pxdata_course_tl}
 	}
 }
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}

@@ -22,7 +22,7 @@
 
 \verb*|\pxGET PATATA.k1[2]| $\to$ \pxGET PATATA.k1[2]\\
 
-\verb*|\pxPRINT PATATA.k2[2]|$\to$ \pxPRINT PATATA.k2[2]
+\verb*|\pxPRINTF PATATA.k2[2]|$\to$ \pxPRINTF PATATA.k2[2]
 
 \bigskip
 
@@ -164,8 +164,14 @@ Abans de netejar, llargada esperada 3, real: \pxListLen{LCLR}{vals}.\\
 \pxListClear{LCLR}{vals}
 
 Després de netejar, llargada esperada 0, real: \pxListLen{LCLR}{vals}.\\
-Es pot tornar a omplir:
+Es pot tornar a omplir:\\
 \pxListPutRight{LCLR}{vals}{x,y}
-; valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.
-
+valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.\\
+\pxSETlst LCLR.vals={z,a}
+valors actuals (esperat z,a): \pxListAll{LCLR}{vals}.\\
+\pxSET LCLR.vals=A
+valors actuals (esperat A): \pxGETtl(LCLR.vals).\\
+\pxPUT LCLR.vals+=B
+valors actuals (esperat AB): \pxPRINTlst LCLR.vals()\\
+valors actuals (esperat A $\pi$ B): \pxPRINTlst LCLR.vals(~$\pi$~)\\
 \end{document}
