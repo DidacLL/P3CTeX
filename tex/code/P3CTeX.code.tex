@@ -36,15 +36,11 @@
 {
 	P3CTeX main P3CTeX.cls expl3 code file
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--	OTHER PCKG IMPORT		--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ENDFOLD%%%%%
-%%%    	--	CLASS KEYS DEFINITION	--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bool_new:N \l_pxdoc_language_bool
 \bool_set_false:N \l_pxdoc_language_bool
+%% =================================
+%% ===== P3CTeX KEYS DEFINITION ====
+%% =================================
 \keys_define:nn {P3CTeX}
 {
 	cover 			.bool_set:N 	=		\l_pxdoc_usecover_bool,
@@ -90,6 +86,9 @@
 	print-doc			.default:n 		= 		true,
 	unknown 			.tl_set:N	 		= 	\l__pxdoc_unknown_tl
 }
+%% =================================
+%% == P3CTeX/data KEYS DEFINITION ==
+%% =================================
 \keys_define:nn { P3CTeX / data}
 {
 	student				.tl_set:N 		=		\l__pxdata_student_tl,
@@ -130,8 +129,19 @@
 	},
 	load-data		.code:n	={
 	}
-
 }
+\cs_new:Nn \__ifcover:nn {
+	\bool_if:NTF  \l_pxdoc_usecover_bool {#1}{#2}
+}
+\cs_new:Nn \__iftoc:nn {
+	\bool_if:NTF  \l_pxdoc_usetoc_bool {#1}{#2}
+}
+\cs_new:Nn \__ifplagi:nn {
+	\bool_if:NTF  \l_pxdoc_useplagi_bool {#1}{#2}
+}
+%% =================================
+%% ======= LOAD P3CTeX DATA ========
+%% =================================
 \file_input:n {pxTXT.code.tex}
 \ProcessKeysOptions{P3CTeX}
 \bool_if:NF  \l_pxdoc_language_bool {
@@ -160,16 +170,4 @@
 	}
 }
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
-\cs_new:Nn \__ifcover:nn {
-	\bool_if:NTF  \l_pxdoc_usecover_bool {#1}{#2}
-}
-\cs_new:Nn \__iftoc:nn {
-	\bool_if:NTF  \l_pxdoc_usetoc_bool {#1}{#2}
-}
-\cs_new:Nn \__ifplagi:nn {
-	\bool_if:NTF  \l_pxdoc_useplagi_bool {#1}{#2}
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%END_FOLD%%%
-
-
 \endinput

@@ -8,7 +8,7 @@
 %%
 %%  Author: Scvria
 %%  File: pxGDX.code.tex
-%%  Version: v0.3 (02/2025)
+%%  Version: v0.3 (02/2026)
 %%  Description:
 %%    Graphic designs module: cover page, page style (header/footer),
 %%    and PDF metadata helpers for P3CTeX.
@@ -21,15 +21,9 @@
 %%   See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%  TODO:
-%%    - Replace hard-coded logo names with key values.
-%%    - Provide an explicit standalone wrapper package if needed.
 %% =======================================================
 \RequirePackage{color,l3keys2e,xparse}
-\ProvidesExplFile{pxGDX.code.tex}{2025/02/21}{v0.3}{P3CTeX Graphic Designs Module}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--	OTHER PCKG IMPORT		--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ProvidesExplFile{pxGDX.code.tex}{2026/02/25}{v0.3}{P3CTeX Graphic Designs Module}
 % Page dimensions
 \RequirePackage[a4paper]{geometry}
 % Header/footer customization
@@ -44,225 +38,177 @@
 \RequirePackage{cleveref}
 %allow ref to total pages and link to last page
 \RequirePackage{lastpage}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%END_FOLD%%%%%
-
 \newgeometry{hmargin=1in,vmargin=1.2in}
-% COLORS
+% TODO ADD ACCESS TO CHANGE COLORS THROUGH CLASS KEYS
 \definecolor{primaryColor}{rgb}{0,0,.47}
 \definecolor{secondaryColor}{rgb}{.45,.93,1}
 \definecolor{neutralColor}{cmyk}{0.5,0.14, 0.16, 0}
 \definecolor{darkColor}{rgb}{.1,.25,.5}
 \definecolor{lightColor}{cmyk}{0,0,0,0.3}
 \definecolor{lighterColor}{rgb}{1,1,1}
-
-\cs_generate_variant:Nn \tl_set:Nn { Ne }
-
-%  RULES  %%%%%%%%%%%%%%%%%%%%%%%%%
+%\cs_generate_variant:Nn \tl_set:Nn { Ne }
+%  RULES
 \cs_new:Nn  \__pxDEV_HRule: { \noindent \rule{\linewidth}{1.5pt} }
 \cs_new:Nn  \__pxDEV_HRule:n { \noindent \rule{#1}{1.5pt} }
 \cs_new:Nn  \__pxDEV_Hrule: { \noindent \rule{\linewidth}{0.75pt} }
 \cs_new:Nn  \__pxDEV_Hrule:n { \noindent \rule{#1}{0.75pt} }
-%%END_FOLD%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--		gdxSTYLE		--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% =================================
+%% ==== gdxSTYLE KEYS DEFINITION ===
+%% =================================
 \keys_define:nn { gdxSTYLE }
 {	%% TEXTVALUES
-	author-name				.tl_set:N		=		\l__gdx_layout_author_tl,
-		author-name			.initial:n		=		{Author},
-	doc-name				.tl_set:N		=		\l__gdx_layout_docnm_tl,
-		doc-name			.initial:n		=		{DcNm},
-	subj-name				.tl_set:N		=		\l__gdx_layout_subjnm_tl,
-		subj-name			.initial:n		=		{SubjNm},
-	refcode					.tl_set:N		=		\l__gdx_layout_refcode_tl,
-		refcode				.initial:n		=		{rfCODE},
-	course-name				.tl_set:N		=		\l__gdx_layout_coursenm_tl,
-		course-name			.initial:n		=		{Course~or~Degree~Full~Name},
-
+	author-name		.tl_set:N		=	\l__gdx_layout_author_tl,
+		author-name		.initial:n	=	{Author},
+	doc-name		.tl_set:N		=	\l__gdx_layout_docnm_tl,
+		doc-name		.initial:n	=	{DcNm},
+	subj-name		.tl_set:N		=	\l__gdx_layout_subjnm_tl,
+		subj-name		.initial:n	=	{SubjNm},
+	refcode			.tl_set:N		=	\l__gdx_layout_refcode_tl,
+		refcode			.initial:n	=	{rfCODE},
+	course-name		.tl_set:N		=	\l__gdx_layout_coursenm_tl,
+		course-name		.initial:n	=	{Course~or~Degree~Full~Name},
 		% ------------- LAYOUT: CABECERA Y PIE -------------
-		header-left         .tl_set:N		=		{	\l__gdx_header_left_tl },
-		header-left         .initial:n	=		{	 %TODO quit hardcoded logo name
-													\raisebox{0.075truecm}
-													{
-														\includegraphics[height=1cm]
-														{
-															img/pxhlogo.png
-														}
-													}
-												},
-	header-center       .tl_set:N		=		\l__gdx_header_center_tl,
-		header-center       .initial:n	=		{\mdseries \tl_use:N \l__gdx_layout_docnm_tl	\par\noindent 	\bfseries \tl_use:N \l__gdx_layout_author_tl },%todo
-	header-right        .tl_set:N		=		\l__gdx_header_right_tl,
-	header-right        .initial:n	=		{
-		\parbox[c][1cm][t]{.45\linewidth}
-		{
-			\raggedleft
-			\mdseries
-			\l__gdx_layout_subjnm_tl
-			\par
-			\noindent
-			\bfseries
-			\l__gdx_layout_refcode_tl
-		}
-	},%todo
-	footer-left         .tl_set:N		=		\l__gdx_footer_left_tl ,
-	footer-left         .initial:n	=		{	},
-	footer-center       .tl_set:N		=		\l__gdx_footer_center_tl,
-	footer-center       .initial:n	=		{
+	header-left		.tl_set:N		=	{	\l__gdx_header_left_tl },
+		header-left		.initial:n	=	{\raisebox{0.075truecm}{\includegraphics[height=1cm]{img/pxhlogo.png}}},
+	header-center	.tl_set:N		=	\l__gdx_header_center_tl,
+		header-center	.initial:n	=	{\mdseries \tl_use:N \l__gdx_layout_docnm_tl	\par\noindent 	\bfseries \tl_use:N \l__gdx_layout_author_tl },
+	header-right	.tl_set:N		=	\l__gdx_header_right_tl,
+		header-right	.initial:n	=	{\parbox[c][1cm][t]{.45\linewidth}{\raggedleft\mdseries\l__gdx_layout_subjnm_tl\par\noindent\bfseries\l__gdx_layout_refcode_tl}},
+	footer-left		.tl_set:N		=	\l__gdx_footer_left_tl ,
+		footer-left		.initial:n	=	{},
+	footer-center	.tl_set:N		=	\l__gdx_footer_center_tl,
+		footer-center	.initial:n	=	{
 		\vspace{\fill}
-		\parbox[b][1cm][c]{.3\linewidth}
-		{
-			\centering
-			\par\vspace{.2ex}
-			\noindent
-			Pàg.~ %TODO
-			\thepage
-			\hspace{1ex}
+		\parbox[b][1cm][c]{.3\linewidth}{
+			\centering\par\vspace{.2ex}\noindent
+			Pàg.~ %TODO CHANGE WITH LANGUAGE
+			\thepage\hspace{1ex}
 			~de~%TODO
-			\hspace{1ex}
-			\pageref*{LastPage}
+			\hspace{1ex}\pageref*{LastPage}
 		}
 	},
-	footer-right        .tl_set:N		=		\l__gdx_footer_right_tl ,
-	footer-right        .initial:n	=		{
-		\vspace{\fill}
-		\parbox[b][1cm][c]{.25\linewidth}
-		{
-			\raggedleft
-			\includegraphics[height=.3cm, keepaspectratio] %TODO IMAGE INDEPENDANT
-			{
-				img/pxflogo.png
-			}
-%			\par\vspace{1ex}
-%			\noindent
-%			{\footnotesize{\l__gdx_layout_coursenm_tl}
-%			}
-		}
-	},
+	footer-right        .tl_set:N	=	\l__gdx_footer_right_tl ,
+	footer-right        .initial:n	=	{ \vspace{\fill}\parbox[b][1cm][c]{.25\linewidth}{\raggedleft\includegraphics[height=.3cm, keepaspectratio]{img/pxflogo.png}}},
 	unknown .code:n ={ }
-}%%END_FOLD%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--		gdxCOVER		--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+}
+%% =================================
+%% ==== gdxCOVER KEYS DEFINITION ===
+%% =================================
 \keys_define:nn { gdxCOVER }
 { 		% --- Dimensions ---
-	cover-header-height			.dim_set:N 		=	\l__gdx_cover_header_height,
-		cover-header-height 		.initial:n	= 								{ 0.25\textheight },
-	cover-subheader-height 		.dim_set:N 		=	\l__gdx_cover_subheader_height,
-		cover-subheader-height 		.initial:n 	= 								{ 0.20\textheight },
-	cover-body-height 			.dim_set:N 		=	\l__gdx_cover_body_height,
-		cover-body-height 			.initial:n 	= 								{ 0.75\textheight },
-	cover-square-size 			.dim_set:N 		=	\l__gdx_cover_square_size,
-		cover-square-size 			.initial:n 	= 								{ 0.48\textwidth },
-	cover-em 					.dim_set:N 		=	\l__gdx_em,
-		cover-em 					.initial:n 	=								{ 0.08\textwidth },
-	cover-font-max 				.dim_set:N 		= 	\l__gdx_cover_fontmax,
-		cover-font-max 				.initial:n 	= 								{ 42pt },
+	cover-header-height		.dim_set:N 		=	\l__gdx_cover_header_height,
+		cover-header-height 	.initial:n	= 								{ 0.25\textheight },
+	cover-subheader-height 	.dim_set:N 		=	\l__gdx_cover_subheader_height,
+		cover-subheader-height 	.initial:n 	= 								{ 0.20\textheight },
+	cover-body-height 		.dim_set:N 		=	\l__gdx_cover_body_height,
+		cover-body-height 		.initial:n 	= 								{ 0.75\textheight },
+	cover-square-size 		.dim_set:N 		=	\l__gdx_cover_square_size,
+		cover-square-size 		.initial:n 	= 								{ 0.48\textwidth },
+	cover-em 				.dim_set:N 		=	\l__gdx_em,
+		cover-em 				.initial:n 	=								{ 0.08\textwidth },
+	cover-font-max 			.dim_set:N 		= 	\l__gdx_cover_fontmax,
+		cover-font-max 			.initial:n 	= 								{ 42pt },
 	% --- Elementos opcionales de la portada ---
-	uppertitle 				.bool_set:N			=	\l__gdx_cover_upper_title_bool,
-		uppertitle				.initial:n		=			false,
-		uppertitle				.default:n		=			true,
-	subtitle 				.bool_set:N			=	\l__gdx_cover_subtitle_bool,
-		subtitle				.initial:n		=			false,
-		subtitle				.default:n		=			true,
-	subsubtitle 			.bool_set:N			=	\l__gdx_cover_subsubtitle_bool,
-		subsubtitle 			.initial:n		=			false,
-		subsubtitle 			.default:n		=			true,
-	add-picture				.bool_set:N			=	\l__gdx_cover_image_bool,
-		add-picture				.initial:n		=			false,
-		add-picture				.default:n		=			true,
-	outter-backtitle		.bool_set:N			=	\l__gdx_cover_out_backtitle_bool,
-		outter-backtitle		.initial:n		=			false,
-		outter-backtitle		.default:n		=			true,
-	inner-backtitle 		.bool_set:N			=	\l__gdx_cover_white_backtitle_bool,
-		inner-backtitle			.initial:n		=			false,
-		inner-backtitle			.default:n		=			true,
-	noplagi				.bool_set:N				=	\l__gdx_cover_noplagi_bool,
-		noplagi					.initial:n		=			false,
-		noplagi					.default:n		=			true,
-	offset 				.bool_set:N				=	\l__gdx_cover_offset_bool,
-		offset					.initial:n		=			false,
-		offset					.default:n		=			true,
-	clip-author				.bool_set:N			=	\l__gdx_cover_clip_author_bool,
-		clip-author				.initial:n		=			false,
-		clip-author				.default:n		=			true,
-	unlink					.bool_set:N			=		\l__gdx_cover_unlink_bool,
-		unlink					.initial:n		=			false,
-		unlink					.default:n		=			true,
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%  T E X T V A L U E S %%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	text-backtitle				.tl_set:N		=	\l__gdx_cover_backtitle_tl,
-		text-backtitle				.initial:n 	=				{Course~or~Degree~name},
-	text-uppertitle 			.tl_set:N		=	\l__gdx_cover_uppertitle_tl,
-		text-uppertitle 			.initial:n	=				{Document~Name},
-	text-title		 			.tl_set:N		=	\l__gdx_cover_title_tl,
-		text-title					.initial:n 	=				{Subject~Name},
-	text-minititle				.tl_set:N		=	\l__gdx_cover_minititle_tl,
-		text-minititle				.initial:n 	=				{DocNm},
-	text-subtitle 				.tl_set:N		=	\l__gdx_cover_subtitle_tl,
-		text-subtitle				.initial:n 	=				{Document~Name},
-	text-subsubtitle			.tl_set:N		=	\l__gdx_cover_subsubtitle_tl,
-		text-subsubtitle			.initial:n 	=		{refCode},
-	text-author					.tl_set:N		=	\l__gdx_cover_author_tl,
-		text-author					.initial:n 	=		{Author},
-	text-date 					.tl_set:N		=	\l__gdx_cover_date_tl,
-		text-date					.initial:n 	=		{\today},
-	text-auxtext 				.tl_set:N		=	\l__gdx_cover_aux_tl,
-	text-auxtext					.initial:n 	=	{ Document~done~using~P3C.TeX~LaTeX~repository.},
+	uppertitle 			.bool_set:N		=	\l__gdx_cover_upper_title_bool,
+		uppertitle			.initial:n	=			false,
+		uppertitle			.default:n	=			true,
+	subtitle 			.bool_set:N		=	\l__gdx_cover_subtitle_bool,
+		subtitle			.initial:n	=			false,
+		subtitle			.default:n	=			true,
+	subsubtitle 		.bool_set:N		=	\l__gdx_cover_subsubtitle_bool,
+		subsubtitle 		.initial:n	=			false,
+		subsubtitle 		.default:n	=			true,
+	add-picture			.bool_set:N		=	\l__gdx_cover_image_bool,
+		add-picture			.initial:n	=			false,
+		add-picture			.default:n	=			true,
+	outter-backtitle	.bool_set:N		=	\l__gdx_cover_out_backtitle_bool,
+		outter-backtitle	.initial:n	=			false,
+		outter-backtitle	.default:n	=			true,
+	inner-backtitle 	.bool_set:N		=	\l__gdx_cover_white_backtitle_bool,
+		inner-backtitle		.initial:n	=			false,
+		inner-backtitle		.default:n	=			true,
+	noplagi				.bool_set:N		=	\l__gdx_cover_noplagi_bool,
+		noplagi				.initial:n	=			false,
+		noplagi				.default:n	=			true,
+	offset 				.bool_set:N		=	\l__gdx_cover_offset_bool,
+		offset				.initial:n	=			false,
+		offset				.default:n	=			true,
+	clip-author			.bool_set:N		=	\l__gdx_cover_clip_author_bool,
+		clip-author			.initial:n	=			false,
+		clip-author			.default:n	=			true,
+	unlink				.bool_set:N		=		\l__gdx_cover_unlink_bool,
+		unlink				.initial:n	=			false,
+		unlink				.default:n	=			true,
+	%% TEXTVALUES
+	text-backtitle			.tl_set:N		=	\l__gdx_cover_backtitle_tl,
+		text-backtitle			.initial:n 	=				{Course~or~Degree~name},
+	text-uppertitle 		.tl_set:N		=	\l__gdx_cover_uppertitle_tl,
+		text-uppertitle 		.initial:n	=				{Document~Name},
+	text-title		 		.tl_set:N		=	\l__gdx_cover_title_tl,
+		text-title				.initial:n 	=				{Subject~Name},
+	text-minititle			.tl_set:N		=	\l__gdx_cover_minititle_tl,
+		text-minititle			.initial:n 	=				{DocNm},
+	text-subtitle 			.tl_set:N		=	\l__gdx_cover_subtitle_tl,
+		text-subtitle			.initial:n 	=				{Document~Name},
+	text-subsubtitle		.tl_set:N		=	\l__gdx_cover_subsubtitle_tl,
+		text-subsubtitle		.initial:n 	=		{refCode},
+	text-author				.tl_set:N		=	\l__gdx_cover_author_tl,
+		text-author				.initial:n 	=		{Author},
+	text-date 				.tl_set:N		=	\l__gdx_cover_date_tl,
+		text-date				.initial:n 	=		{\today},
+	text-auxtext 			.tl_set:N		=	\l__gdx_cover_aux_tl,
+	text-auxtext				.initial:n 	=	{ Document~done~using~P3C.TeX~LaTeX~repository.},
 	% --- Imágenes en la portada ---
-	set-mainpicture				.tl_set:N		=	\l__gdx_cover_image_long_tl,
-		set-mainpicture			.initial:n 		=								pxlngcover,
-	set-auxpicture				.tl_set:N		=	\l__gdx_cover_image_square_tl,
-		set-auxpicture			.initial:n 		=								pxsqrcover,
+	set-mainpicture			.tl_set:N		=	\l__gdx_cover_image_long_tl,
+		set-mainpicture			.initial:n 	=								pxlngcover,
+	set-auxpicture			.tl_set:N		=	\l__gdx_cover_image_square_tl,
+		set-auxpicture			.initial:n 	=								pxsqrcover,
 	% --- Estilo de la portada ---
-	maincolor	 				.tl_set:N		=	\l__gdx_cover_color_tl,
-		maincolor	 			.initial:n		=								secondaryColor,
-	auxcolor	 				.tl_set:N		=	\l__gdx_cover_aux_color_tl,
-		auxcolor	 			.initial:n		=								lightColor,
-	textcolor					.tl_set:N		=	\l__gdx_cover_text_color_tl,
-		textcolor 				.initial:n		=								primaryColor,
-	textcolor-aux 				.tl_set:N		=	\l__gdx_cover_text_aux_color_tl,
-		textcolor-aux			.initial:n		=								lighterColor,
-	bg-color 					.tl_set:N		=	\l__gdx_cover_img_bg_tl,
-		bg-color 				.initial:n		=								lighterColor,
+	maincolor	 			.tl_set:N		=	\l__gdx_cover_color_tl,
+		maincolor	 			.initial:n	=								secondaryColor,
+	auxcolor	 			.tl_set:N		=	\l__gdx_cover_aux_color_tl,
+		auxcolor	 			.initial:n	=								lightColor,
+	textcolor				.tl_set:N		=	\l__gdx_cover_text_color_tl,
+		textcolor 				.initial:n	=								primaryColor,
+	textcolor-aux 			.tl_set:N		=	\l__gdx_cover_text_aux_color_tl,
+		textcolor-aux			.initial:n	=								lighterColor,
+	bg-color 				.tl_set:N		=	\l__gdx_cover_img_bg_tl,
+		bg-color 				.initial:n	=								lighterColor,
 	% --- Tamaños de fuente ---
-	title-size 					.tl_set:N		=	\l__gdx_cover_title_size_tl,
-		title-size 				.initial:n		=								\Huge,
-	subtitle-size 				.tl_set:N		=	\l__gdx_cover_subtitle_size_tl,
-		subtitle-size 			.initial:n		=								\large,
+	title-size 				.tl_set:N		=	\l__gdx_cover_title_size_tl,
+		title-size 				.initial:n	=								\Huge,
+	subtitle-size 			.tl_set:N		=	\l__gdx_cover_subtitle_size_tl,
+		subtitle-size 			.initial:n	=								\large,
 	% --- Márgenes de la portada ---
-	margin-h					.dim_set:N		=	\l__gdx_cover_margin_h_tl,
-		margin-h 				.initial:n		=								{24pt},
-	margin-v 					.dim_set:N		=	\l__gdx_cover_margin_v_tl ,
-		margin-v 				.initial:n		=								{36pt},
+	margin-h				.dim_set:N		=	\l__gdx_cover_margin_h_tl,
+		margin-h 				.initial:n	=								{24pt},
+	margin-v 				.dim_set:N		=	\l__gdx_cover_margin_v_tl ,
+		margin-v 				.initial:n	=								{36pt},
 	unknown .code:n ={ },
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%  S W I T C H E R S %%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% SWITCHERS
 	fullcover				.meta:n = {
-		uppertitle 						=		true,
-		subtitle 						=		true,
-		subsubtitle 					=		true,
-		add-picture						=		true,
-		outter-backtitle				=		true,
-		inner-backtitle 				=		false,
-		noplagi							=		true,
-		offset 							=		true,
-		clip-author						=		true,
-		unlink							= 		true
+		uppertitle 			=	true,
+		subtitle 			=	true,
+		subsubtitle 		=	true,
+		add-picture			=	true,
+		outter-backtitle	=	true,
+		inner-backtitle 	=	false,
+		noplagi				=	true,
+		offset 				=	true,
+		unlink				=	true
+		clip-author			=	true,
 	},
 	print-placeholders		.meta:n = 	{
-		uppertitle 			=		true,
-		subtitle 			=		true,
-		subsubtitle 		=		true,
-		add-picture			=		true,
-		outter-backtitle	=		false,
-		inner-backtitle 	=		true,
-		noplagi				=		true,
-		offset 				=		true,
-		clip-author			=		false,
-		unlink				= 		false,
+		uppertitle 			=	true,
+		subtitle 			=	true,
+		subsubtitle 		=	true,
+		add-picture			=	true,
+		outter-backtitle	=	false,
+		inner-backtitle 	=	true,
+		noplagi				=	true,
+		offset 				=	true,
+		clip-author			=	false,
+		unlink				=	false,
 		text-backtitle		=	backtitle,
 		text-uppertitle 	=	uppertitle,
 		text-title		 	=	title,
@@ -273,46 +219,45 @@
 		text-date 			=	date,
 		text-auxtext 		=	auxtext
 	}
-}%%END_FOLD%%
+}
 \keys_define:nn { pxGDX }
 {
-	cover-config			.code:n			=	{	\keys_set:nn { gdxCOVER } {#1}	},
-	page-config				.code:n			=	{	\keys_set:nn { gdxSTYLE } {#1}	},
-	pdf-config				.code:n			=	{	\keys_set:nn { gdxPDF } {#1}	},
-	src-path				.tl_set_x:N		=	 \l__gdx_src_path_tl,
-		src-path			.initial:n		=	 { } ,
-	unknown					.code:n		=	 { 	\keys_set:nn { gdxCOVER } {#1}}
+	cover-config	.code:n			=	{	\keys_set:nn { gdxCOVER } {#1}	},
+	page-config		.code:n			=	{	\keys_set:nn { gdxSTYLE } {#1}	},
+	pdf-config		.code:n			=	{	\keys_set:nn { gdxPDF } {#1}	},
+	src-path		.tl_set_x:N		=	\l__gdx_src_path_tl,
+		src-path		.initial:n	=	{ } ,
+	unknown			.code:n			=	{ 	\keys_set:nn { gdxCOVER } {#1}}
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% -------- P3C.TeX KEY SET: gdxPDF ---------- %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% =================================
+%% ===== gdxPDF KEYS DEFINITION ====
+%% =================================
 \keys_define:nn { gdxPDF }
 {
-	pdf-title     		.tl_set:N 			=	\l__px_pdf_title_tl,
-		pdf-title   	.initial:n 			= {	not set},
-	pdf-author    		.tl_set:N 			= 	\l__px_pdf_author_tl,
-		pdf-author		   .initial:n 		= 		\l__gdx_layout_author_tl,
-	pdfsubject    		.tl_set:N 			= 	\l__px_pdf_subject_tl,
-		pdfsubject   		.initial:n 		= 		{	not set},
-	pdfkeywords  		.tl_set:N 			= 	\l__px_pdf_keywords_tl,
-		pdfkeywords  		.initial:n 		= 	{	},
-	pdf-creator    		.tl_set:N 			= 	\l__px_pdf_creator_tl,
-	pdf-creator   			.initial:n 		= 		{	not set},
-	pdf-producer 		.tl_set:N 			= 	\l__px_pdf_producer_tl,
-	pdf-producer  		.initial:n 		= 		{P3C.TeX v.3}, %TODO SET TO A CONSTANT WITH PACKAGE VERSION
-	linkcolor    		.tl_set:N 			= 	\l__px_linkcolor_tl,
-		linkcolor    		.initial:n 		= 		{darkColor},
-		linkcolor    		.default:n 		= 		{darkColor},
-	citecolor    		.tl_set:N 			= 	\l__px_citecolor_tl,
-		citecolor    		.initial:n 		= 		{neutralColor},
-	urlcolor      		.tl_set:N 			= 	\l__px_urlcolor_tl,
-		urlcolor     		.initial:n 		= 		{darkColor},
-	filecolor     		.tl_set:N 			= 	\l__px_filecolor_tl,
-		filecolor    		.initial:n 		= 		{secondaryColor},
-	bookmarks     		.bool_set:N 		= 	\l__px_bookmarks_bool,
-		bookmarks   		.initial:n 		= 		true,
-	unknown 			.code:n ={ }
-
+	pdf-title     	.tl_set:N 		=	\l__px_pdf_title_tl,
+		pdf-title   	.initial:n 	= {	not set},
+	pdf-author    	.tl_set:N 		= 	\l__px_pdf_author_tl,
+		pdf-author	   .initial:n 	= 		\l__gdx_layout_author_tl,
+	pdfsubject    	.tl_set:N 		= 	\l__px_pdf_subject_tl,
+		pdfsubject 		.initial:n 	= 		{	not set},
+	pdfkeywords  	.tl_set:N 		= 	\l__px_pdf_keywords_tl,
+		pdfkeywords		.initial:n 	= 	{	},
+	pdf-creator    	.tl_set:N 		= 	\l__px_pdf_creator_tl,
+	pdf-creator   		.initial:n 	= 		{	not set},
+	pdf-producer 	.tl_set:N 		= 	\l__px_pdf_producer_tl,
+	pdf-producer 		.initial:n 	= 		{P3C.TeX v0.5}, %TODO SET TO A CONSTANT WITH PACKAGE VERSION
+	linkcolor    	.tl_set:N 		= 	\l__px_linkcolor_tl,
+		linkcolor  		.initial:n 	= 		{darkColor},
+		linkcolor  		.default:n 	= 		{darkColor},
+	citecolor    	.tl_set:N 		= 	\l__px_citecolor_tl,
+		citecolor  		.initial:n 	= 		{neutralColor},
+	urlcolor     	.tl_set:N 		= 	\l__px_urlcolor_tl,
+		urlcolor   		.initial:n 	= 		{darkColor},
+	filecolor    	.tl_set:N 		= 	\l__px_filecolor_tl,
+		filecolor  		.initial:n 	= 		{secondaryColor},
+	bookmarks    	.bool_set:N 	= 	\l__px_bookmarks_bool,
+		bookmarks  		.initial:n 	= 		true,
+	unknown 		.code:n ={ }
 }
 \cs_new_protected_nopar:Nn \__px_apply_pdf:
 {
@@ -333,37 +278,26 @@
 		colorlinks  =  true,
 		breaklinks  = true,
 		linktoc     = {all},
-		hyperfootnotes = true,
+		hyperfootnotes = true
 	}
 }
-
-%%END_FOLD%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%  	--	PCKG PRIVATE FUNCTIONS	--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Functions intended to be used only on this package
-\cs_new:Nn 	\__gdx_apply_offset:nnn {
-	\hspace*{ #1 }
-	\raisebox{ #2 }{ #3 }
-}
-\cs_new:Nn 	\__ifoffset:nn {
-	\bool_if:NTF 	\l__gdx_cover_offset_bool 	{ #1 } { #2 }
-}
-\cs_new:Nn 	\__ifoffset:n {
-	\bool_if:NT 	\l__gdx_cover_offset_bool 	{ #1 }
-}
-\cs_new:Nn \__ifnoplagi:n {
-	\bool_if:NT \l__gdx_cover_noplagi_bool {#1}
-}
-\cs_new:Nn \__ifdebug:n {
-	\bool_if:NT \l__gdx_debug_values_bool {#1}
-}
+%% =================================
+%% ==== Package Private Functions ==
+%% =================================
+\cs_new:Nn 	\__gdx_apply_offset:nnn {\hspace*{ #1 }\raisebox{ #2 }{ #3 }}
+\cs_new:Nn 	\__ifoffset:nn {\bool_if:NTF 	\l__gdx_cover_offset_bool 	{ #1 } { #2 }}
+\cs_new:Nn 	\__ifoffset:n {\bool_if:NT 	\l__gdx_cover_offset_bool 	{ #1 }}
+\cs_new:Nn \__ifnoplagi:n {\bool_if:NT \l__gdx_cover_noplagi_bool {#1}}
+\cs_new:Nn \__ifdebug:n {\bool_if:NT \l__gdx_debug_values_bool {#1}}
+%% =================================
+%% ==== API Protected Functions ====
+%% =================================
+\cs_new_protected_nopar:Nn \__pxgdx_hfill: { \hspace*{\fill} }
+%% #1 align right #2(scalar \linewidth) #3(content) #4(max size)
 \cs_new:Nn  \__pxgdx_grow:nnnn {
-	\IfBlankTF{#3}{
-		\resizebox*{!}{#4}{	NOT SET }
-	}{
+	\IfBlankTF{#3}{\resizebox*{!}{#4}{	NOT SET }}{
 		\sbox0{\resizebox{#2\linewidth}{!}{#3}}
-		\bool_if:NF {#1}{ \hspace*{\fill} }
+		\bool_if:NF {#1}{ \__pxgdx_hfill: }
 		\ifdim \ht0 > #4
 		\resizebox*{!}{#4}{#3}
 		\else
@@ -371,15 +305,10 @@
 		\fi
 	}
 }
-
-\cs_new_protected_nopar:Nn \__pxgdx_hfill: { \hspace*{\fill} }
 \cs_new:Nn \__px_sectionuoc:n {\newpage\section{\textcolor{primaryColor}{#1}}}
 \cs_new:Nn \__px_subsectionuoc:n {\subsection{\textcolor{lightColor}{#1}}}
 \cs_new:Nn \__px_subsubsectionuoc:n {\subsubsection{\textcolor{secondaryColor}{#1}}}
-\cs_new:Nn \__gdx_def_styles: { % TODO FIX RAW COPY
-	% ---------------------------
-	% Fancyhdr: Header & Footer
-	% ---------------------------
+\cs_new:Nn \__gdx_def_styles: {
 	\fancypagestyle{uocstyle}{
 		\fancyhf{}
 		\setlength\headheight{42pt}
@@ -391,9 +320,6 @@
 		\fancyfoot[C]{ \l__gdx_footer_center_tl}
 		\fancyfoot[R]{ \l__gdx_footer_right_tl}
 	}
-	% ---------------------------
-	% Fancyhdr: Header & Footer for index pages
-	% ---------------------------
 	\fancypagestyle{plain}{
 		\fancyhf{}
 		\setlength\headheight{42pt}
@@ -406,66 +332,33 @@
 		\fancyfoot[R]{ \l__gdx_footer_right_tl}
 	}
 }
-%%END_FOLD%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--	PCKG EXPL3 AUTHORS API	--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Functions intended to be used by LaTeX3 AUTHORS OUTSIDE this package
 % COVER
-\cs_new:Nn \pxGDX_print_cover:
-{
+\cs_new:Nn \pxGDX_print_cover:{
 	\thispagestyle{empty}
 	\newgeometry{
 		left		=	\l__gdx_cover_margin_h_tl,
 		right		=	\l__gdx_cover_margin_h_tl,
 		top			=	\l__gdx_cover_margin_v_tl,
 		bottom		=	\l__gdx_cover_margin_v_tl
-	}
-	% ----------------------- PORTADA -----------------------
+	}% ---- PORTADA ----
 	\setlength{\fboxrule}{0pt}
 	\color{\l__gdx_cover_text_color_tl}
 	\noindent
-	\begin{center}
-		% --- BLUE BACKTITLE ---
-		\bool_if:NT \l__gdx_cover_out_backtitle_bool { %TODO use \__gdx_apply_offset:nnn
-			\__ifoffset:nn	{
-%				\vspace*{-\l__gdx_em}
-				\vspace*{-1.2\l__gdx_em}
-				\par
-				\noindent
-			}{
-			\vspace*{-.6\l__gdx_em}
-			\par
-			\noindent
-			}
+	\begin{center}% --- BLUE BACKTITLE ---
+		\bool_if:NT \l__gdx_cover_out_backtitle_bool {
+			\__ifoffset:nn	{\vspace*{-1.2\l__gdx_em}\par\noindent}
+			{\vspace*{-.6\l__gdx_em}\par\noindent}
 			\begin{minipage}[t][1cm][b]{.85\textwidth}
 				\textcolor{\l__gdx_cover_color_tl}{
-					\__ifoffset:nn	{
-						\hspace{.5\l__gdx_em}
-					}{
-						\hspace{\l__gdx_em}
-					}
-					\pxGrow*[0.8]{
-						\textbf{
-							\text_uppercase:n {
-								\l__gdx_cover_backtitle_tl
-							}
-						}
-					}[1cm]
+					\__ifoffset:nn	{\hspace{.5\l__gdx_em}}{\hspace{\l__gdx_em}}
+					\pxGrow*[0.8]{\textbf{\text_uppercase:n {\l__gdx_cover_backtitle_tl}}}[1cm]
 				}
 			\end{minipage}
-			\__pxgdx_hfill:
-			\par
-			\vspace*{-.2cm}
-			\noindent
-		}
-		% --- HEADER BOX ---
+			\__pxgdx_hfill:	\par\vspace*{-.2cm}\noindent
+		}% --- HEADER BOX ---
 		\fcolorbox{\l__gdx_cover_text_aux_color_tl}{\l__gdx_cover_color_tl}{
 			\begin{minipage}[b][\l__gdx_cover_header_height][t]{.9\textwidth}
-				\bool_if:NT 	\l__gdx_cover_out_backtitle_bool
-				{
-					\par\vspace*{\baselineskip}
-				}
+				\bool_if:NT \l__gdx_cover_out_backtitle_bool{\par\vspace*{\baselineskip}}
 				% --- WHITE BACKTITLE ---
 				\bool_if:NT		\l__gdx_cover_white_backtitle_bool
 				{
@@ -473,140 +366,63 @@
 					\begin{minipage}[t][\l__gdx_cover_fontmax][t]{1.02\linewidth}
 						\__pxgdx_hfill:\__gdx_apply_offset:nnn {1em} {2em} {
 							\textcolor{\l__gdx_cover_text_aux_color_tl}{
-								\pxGrow[0.75]{
-									\textbf{
-										\text_uppercase:n {
-											\l__gdx_cover_backtitle_tl
-										}
-									}
-								}[\l__gdx_cover_fontmax]
+								\pxGrow[0.75]{\textbf{\text_uppercase:n {\l__gdx_cover_backtitle_tl}}}[\l__gdx_cover_fontmax]
 							}
 						}
 					\end{minipage}
-					\par \vspace{-.6\l__gdx_cover_fontmax}
+					\par\vspace{-.6\l__gdx_cover_fontmax}
 				}
-				\par
-				\vspace{-.5\l__gdx_cover_fontmax}
-				% --- SHORT TITLE ---
+				\par\vspace{-.5\l__gdx_cover_fontmax}% --- SHORT TITLE ---
 				\begin{minipage}[b][\l__gdx_cover_header_height][b]{.3\textwidth}
-					% --- TÍTULO SUPERIOR (Opcional) ---
-					\centering
+					\centering	% --- TÍTULO SUPERIOR (Opcional) ---
 					\bool_if:NT \l__gdx_cover_upper_title_bool
-					{
-						\par\vspace*{\fill}
-						\hspace*{\baselineskip}
-						\parbox[b][\height][t]{.85\textwidth}{
-							\raggedright\large
-							\l__gdx_cover_uppertitle_tl
-						}
-						\hspace*{\baselineskip}
-						\par
+					{	\par\vspace*{\fill}\hspace*{\baselineskip}
+						\parbox[b][\height][t]{.85\textwidth}{\raggedright\large\l__gdx_cover_uppertitle_tl}
+						\hspace*{\baselineskip}\par
 					}
-					\vspace*{\fill}
-					\scalebox{1.3}[1.8]{
-						\pxGrow*[0.7]{
-							\bfseries
-							\l__gdx_cover_minititle_tl
-						}
-					}
-					\vspace{\baselineskip}
-					\bool_if:NT 		\l__gdx_cover_subsubtitle_bool {
-						\vspace*{1cm}
-					}
+					\vspace*{\fill}\scalebox{1.3}[1.8]{\pxGrow*[0.7]{\bfseries\l__gdx_cover_minititle_tl}}
+					\vspace{\baselineskip}\bool_if:NT\l__gdx_cover_subsubtitle_bool {\vspace*{1cm}}
 				\end{minipage}
-
 				\begin{minipage}[b][\l__gdx_cover_subheader_height][b]{.7\textwidth}
 					% --- TÍTULO PRINCIPAL Y SUBTÍTULO ---
 					\parbox[b][\l__gdx_cover_subheader_height][t]{\linewidth} {
-						\centering\Huge\bfseries
-						\l__gdx_cover_title_tl
-						\par
-						\bool_if:NT 		\l__gdx_cover_subtitle_bool
-						{
-							\parbox[c][\height][b]{\linewidth}{
-								\centering\large  \l__gdx_cover_subtitle_tl
-								\par
-							}
+						\centering\Huge\bfseries\l__gdx_cover_title_tl\par
+						\bool_if:NT\l__gdx_cover_subtitle_bool{
+							\parbox[c][\height][b]{\linewidth}{\centering\large\l__gdx_cover_subtitle_tl\par}
 						}
 					}
 				\end{minipage}
-				\par
-				\bool_if:NT 		\l__gdx_cover_subsubtitle_bool
-				{
-					\vspace{-1cm}
-					\bool_if:NTF 	\l__gdx_cover_out_backtitle_bool {
-						\__pxgdx_hfill:
-					}{
-
-						\__ifoffset:nn{
-							\par\vspace*{-.4\l__gdx_cover_fontmax}
-						}{
-							\par\vspace*{-.4\l__gdx_cover_fontmax}
-						}
+				\par\bool_if:NT\l__gdx_cover_subsubtitle_bool{
+					\vspace{-1cm}\bool_if:NTF\l__gdx_cover_out_backtitle_bool{\__pxgdx_hfill:}{
+						\__ifoffset:nn{\par\vspace*{-.4\l__gdx_cover_fontmax}}{\par\vspace*{-.4\l__gdx_cover_fontmax}}
 					}
 					\begin{minipage}[t][1cm][b]{.85\textwidth}
-						\bool_if:NTF \l__gdx_cover_out_backtitle_bool {\raggedleft}{
-
-						}
-						\pxGrow*{
-							\bfseries\textcolor{
-								\l__gdx_cover_text_aux_color_tl
-							}{
-								\l__gdx_cover_subsubtitle_tl}
-						}[1cm]
-						\vspace*{-.2cm}
-						\par
-						\noindent
+						\bool_if:NTF \l__gdx_cover_out_backtitle_bool {\raggedleft}{}
+						\pxGrow*{\bfseries\textcolor{\l__gdx_cover_text_aux_color_tl}{\l__gdx_cover_subsubtitle_tl}}[1cm]
+						\vspace*{-.2cm}\par\noindent
 					\end{minipage}
 				}
 			\end{minipage}
 		}
-		\__ifoffset:nn{
-
-			\vspace*{1.2\l__gdx_em}\par
-		}{
-
-			\vspace*{0.8\l__gdx_em}\par
-		}
+		\__ifoffset:nn{\vspace*{1.2\l__gdx_em}\par}{\vspace*{0.8\l__gdx_em}\par	}
 		% ---------------------- MAIN BODY ----------------------
 		\begin{minipage}[t][\fill][t]{.9\textwidth}
-		\par\vspace*{\fill}
-			%% OFFSET = FALSE
-			\vspace*{\fill}
-			\__ifoffset:n	{
-				%				\vspace*{-\l__gdx_cover_margin_h_tl}
-			}
-			% --- RIGHT LONG PICTURE ---
+		\par\vspace*{\fill} % OFFSET = FALSE
+			\vspace*{\fill}	\__ifoffset:n	{
+				%\vspace*{-\l__gdx_cover_margin_h_tl}
+			} % --- RIGHT LONG PICTURE ---
 			\begin{minipage}[c][\l__gdx_cover_body_height][t]{.35\textwidth}
-				\__ifoffset:n	{
-					\vspace*{-.5\l__gdx_em}
-					\par
-					\hspace*{-.5\l__gdx_em}
-				}
-				\includegraphics[keepaspectratio=true, height=\l__gdx_cover_body_height]
-				{
-					img/\l__gdx_cover_image_long_tl
-				}
+				\__ifoffset:n{\vspace*{-.5\l__gdx_em}\par\hspace*{-.5\l__gdx_em}}
+				\includegraphics[keepaspectratio=true, height=\l__gdx_cover_body_height]{img/\l__gdx_cover_image_long_tl}
 			\end{minipage}
-			\hspace*{\fill}
-			% --- RIGHT BODY  ---
+			\__pxgdx_hfill:% --- RIGHT BODY  ---
 			\begin{minipage}[c][\l__gdx_cover_body_height][t]{.6\textwidth}
-				\__ifoffset:nn {
-					\hspace*{.5\l__gdx_em}
-				}{
-					\__pxgdx_hfill:
-				}
+				\__ifoffset:nn {\hspace*{.5\l__gdx_em}}{\__pxgdx_hfill:	}
 				\fcolorbox{\l__gdx_cover_aux_color_tl}{\l__gdx_cover_aux_color_tl}
 				{% --- RIGHT BODY UPPER BOX ---
 					\begin{minipage}[t][\l__gdx_cover_body_height][t]{.94\textwidth}
 						\centering
-						\__ifoffset:nn {
-							\vspace{-2em}
-							\par \hspace*{2em}
-						}{
-							\par \hspace*{-2em}
-						}
-
+						\__ifoffset:nn {\vspace{-2em}\par\hspace*{2em}}{\par \hspace*{-2em}}
 						\bool_if:NTF \l__gdx_cover_image_bool {
 							\tcolorbox[
 							boxsep			=		0ex,
@@ -617,73 +433,32 @@
 							colback			=		\l__gdx_cover_img_bg_tl,
 							opacityframe	=		0
 							]
-								\begin{minipage}[b][\l__gdx_cover_square_size][c]{\l__gdx_cover_square_size}
-
+							\begin{minipage}[b][\l__gdx_cover_square_size][c]{\l__gdx_cover_square_size}
 									\__ifoffset:n {\par\vspace*{-10pt}}
-									\includegraphics[
-									keepaspectratio		=	true,
-									width				=	\l__gdx_cover_square_size,
-									]{
-										img/\l__gdx_cover_image_square_tl
-									}
+									\includegraphics[keepaspectratio=true,width=\l__gdx_cover_square_size,]{img/\l__gdx_cover_image_square_tl}
 								\end{minipage}
-							\endtcolorbox
-							\par
-							\parbox[t][\height][c]{\linewidth}
-							{
-								\centering
-								\small
-								\l__gdx_cover_aux_tl
-								\hspace*{\l__gdx_cover_margin_h_tl}
-							}
-
-						}{
-							\parbox[t][\l__gdx_cover_square_size][c]{\l__gdx_cover_square_size}
-							{
-								\centering
-								\Large
-								\l__gdx_cover_aux_tl
-							}
-						}
-						\par
-						\vspace*{\fill}
-						% --- SECCIÓN INFERIOR (Autor, Fecha y Plagio) ---
+							\endtcolorbox\par
+							\parbox[t][\height][c]{\linewidth}{\centering\small\l__gdx_cover_aux_tl\hspace*{\l__gdx_cover_margin_h_tl}}
+						}{\parbox[t][\l__gdx_cover_square_size][c]{\l__gdx_cover_square_size}{\centering\Large\l__gdx_cover_aux_tl}}
+						\par\vspace*{\fill} % --- SECCIÓN INFERIOR (Autor, Fecha y Plagio) ---
 						\begin{minipage}[t][\height][b]{\linewidth}
 							\__pxgdx_hfill:
-							\pxGrow[.75]{
-								\bool_if:NTF		\l__gdx_cover_clip_author_bool
-								{
-									\textcolor{\l__gdx_cover_text_aux_color_tl}{
-										\textbf{
-											\l__gdx_cover_author_tl
-										}~
-									}
-								}{
-									\textbf{
-										\l__gdx_cover_author_tl
-									}~
-								}
+							\pxGrow[.75]{\bool_if:NTF\l__gdx_cover_clip_author_bool{
+									\textcolor{\l__gdx_cover_text_aux_color_tl}{\textbf{\l__gdx_cover_author_tl}~}
+								}{\textbf{\l__gdx_cover_author_tl}~}
 							}
-							\par
-							\vspace{1em}
-							\__ifnoplagi:n{
-								\centering
-								\parbox[t][\height][b]{.8\textwidth}
+							\par\vspace{1em}
+							\__ifnoplagi:n{\centering\parbox[t][\height][b]{.8\textwidth}
 								{
 									\par\noindent
 									\normalsize \pxDEFnoplagi{\tl_use:N \l__gdx_cover_author_tl}\\
 									\par \__pxDEV_HRule:
 								}
-								\vspace{\l__gdx_em}	\par
+								\vspace{\l__gdx_em}\par
 							}
-							\hspace*{\fill}	\Large
-							\textcolor{white}{\textbf{	\l__gdx_cover_date_tl	}}
-							\hspace{1em}
-							\vspace{1em}
-							\par
+							\__pxgdx_hfill:\Large\textcolor{white}{\textbf{	\l__gdx_cover_date_tl	}}\hspace{1em}\vspace{1em}\par
 						\end{minipage}
 					\end{minipage}
-
 				}
 			\end{minipage}
 		\end{minipage}
@@ -699,7 +474,7 @@
 	\color{primaryColor}
 	\__px_apply_pdf:
 }
-
+%% Configuration Wrappers
 \cs_gset:Nn \pxGDX_config:n {
 	\keys_set:nn { pxGDX } { #1 }
 	\pxGDX_process:
@@ -710,12 +485,4 @@
 \cs_gset:Nn \pxGDX_page_config:n {
 	\keys_set:nn { gdxSTYLE } { #1 }
 }
-%%END_FOLD%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--	PCKG PUBLIC LaTeX2e API	--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Wrapper Commands in CamelCase syntax for Latex2e documents use
-
-%%END_FOLD%%
 \endinput

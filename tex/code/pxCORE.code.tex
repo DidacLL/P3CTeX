@@ -24,21 +24,12 @@
 %%    - Consider exposing more introspection helpers for library state.
 %% =======================================================
 \ProvidesExplFile{pxCORE.code.tex}{2026/02/26}{v0.2}
-  {P3CTeX core key definitions and library activation}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--	PCKG KEYS DEFINITION	--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\bool_if_exist:NF \l_pxcore_debug_bool      { \bool_new:N \l_pxcore_debug_bool }
-\bool_if_exist:NF \l_pxcore_pxdoc_use_bool  { \bool_new:N \l_pxcore_pxdoc_use_bool }
-\bool_if_exist:NF \l_pxcore_prp_use_bool    { \bool_new:N \l_pxcore_prp_use_bool }
-\bool_if_exist:NF \l_pxcore_uml_use_bool    { \bool_new:N \l_pxcore_uml_use_bool }
-\bool_if_exist:NF \l_pxcore_src_use_bool    { \bool_new:N \l_pxcore_src_use_bool }
-
-\tl_if_exist:NF \l_pxcore_uml_config_tl     { \tl_new:N  \l_pxcore_uml_config_tl }
-
+	{P3CTeX core key definitions and library activation}
+%% =================================
+%% ===== pxCORE KEYS DEFINITION ====
+%% =================================
 \keys_define:nn { pxCORE }
-  {
+{
     debug       .bool_set:N = \l_pxcore_debug_bool,
     debug       .initial:n  = false,
     debug       .default:n  = true,
@@ -61,10 +52,11 @@
     SRC         .bool_set:N = \l_pxcore_src_use_bool,
     SRC         .initial:n  = false,
     SRC         .default:n  = true,
-  }
-
+}
 \ProcessKeysOptions{ pxCORE }
-
+%% =================================
+%% ===== LOAD SELECTED MODULES =====
+%% =================================
 \bool_if:NT \l_pxcore_uml_use_bool
   {
     \tl_if_blank:VTF \l_pxcore_uml_config_tl

@@ -8,7 +8,7 @@
 %%
 %%  Author: Scvria
 %%  File: P3CTeX.cls
-%%  Version: v0.5 (03/2025)
+%%  Version: v0.5 (02/2026)
 %%  Description:
 %%    Main document class for UOC assignments and projects.
 %%    - Owns page layout, typography and global document behaviour.
@@ -34,16 +34,18 @@
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplClass{P3CTeX}{2025/03/07}{v0.5}{Ultimate LaTeX Package for UOC students by Scvria (LaTeX3 refactor)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    	--	OTHER PCKG IMPORT		--		%%%
-%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\LoadClass{article}
+\ProvidesExplClass{P3CTeX}{2026/02/25}{v0.5}
+{
+	Ultimate Open Source LaTeX repository based on official LaTeX styles defined by UOC
+	Provides a professional and convenient environment for UOC students. By Scvria Sofware
+}
 
-% Fonts
-\RequirePackage{arev}
-\file_input:n {P3CTeX.code.tex}
-%  	--	PCKG PUBLIC LaTeX2e API	-
+\LoadClass{article} % Base class
+\RequirePackage{arev} % Fonts
+\file_input:n {P3CTeX.code.tex} % Input expl3 code
+%% =================================
+%% ===== PCKG PUBLIC LaTeX2e API ===
+%% =================================
 \NewDocumentCommand{\PECTeXconfig}{+m}{
 	\pxGDX_config:n {#1}
 }
@@ -65,11 +67,19 @@
 	\clearpage
 }
 \DeclareDocumentCommand\pxGDXconfig{ +m } {\pxGDX_config:n{ #1 }}
+% pxGrow: Resizes content to fit especified width
+% #1[*] align left
+% #2[]box width
+% #3 text content
+% #4 max text width
 \NewDocumentCommand{\pxGrow}{ s O{1} m O{42pt} }{\__pxgdx_grow:nnnn {#1}{#2}{#3}{#4}}
+% pxFill: Fills Horizontal space
 \NewDocumentCommand{\pxFill}{}{	\__pxgdx_hfill:	}
+% legacy uoc sections comands
 \NewDocumentCommand{\sectionuoc}{ m }{\__px_sectionuoc:n {#1}}
 \NewDocumentCommand{\subsectionuoc}{ m }{\__px_subsectionuoc:n {#1}}
 \NewDocumentCommand{\subsubsectionuoc}{ m }{\__px_subsubsectionuoc:n {#1}}
+% Horizontal rules
 \NewDocumentCommand{\pxHRule}{s o}{
 	\IfNoValueTF{#2}{
 		\IfBooleanTF{#1}{	\__pxDEV_HRule: }{	\__pxDEV_Hrule:}
@@ -79,11 +89,12 @@
 }
 \NewDocumentCommand{\pxPageRule}{s}{
 	\IfBooleanTF{#1}{
-		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
+		\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\
 	}{
-		\hspace*{.1\textwidth} \pxHRule[.6\textwidth]\\
+		\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\
 	}
 }
+%% AUTO LOAD COVER AND TOC
 \AfterBeginDocument{
 	\__ifcover:nn{
 		\__ifplagi:nn{\PECTeXprintCover*}{\PECTeXprintCover}
@@ -99,4 +110,3 @@
 	}
 
 }
-%%END_FOLD%%
