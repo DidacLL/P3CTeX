@@ -1,0 +1,75 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxCORE.code.tex
+%%	Version: v0.2 (02/2026)
+%%	Description:
+%%		Core key definitions and library activation for pxCORE.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+%%	TODO:
+%%		- Consider exposing more introspection helpers for library state.
+%% =======================================================
+\ProvidesExplFile{pxCORE.code.tex}{2026/02/26}{v0.2}
+	{P3CTeX core key definitions and library activation}
+%% =================================
+%% ===== pxCORE KEYS DEFINITION ====
+%% =================================
+\keys_define:nn { pxCORE }
+{
+	debug		.bool_set:N 	= \l_pxcore_debug_bool,
+		debug		.initial:n	= false,
+		debug		.default:n	= true,
+	print-doc	.bool_set:N 	= \l_pxcore_pxdoc_use_bool,
+		print-doc	.initial:n	= false,
+		print-doc	.default:n	= true,
+	PRP			.bool_set:N 	= \l_pxcore_prp_use_bool,
+		PRP			.initial:n	= false,
+		PRP			.default:n	= true,
+	UML			.bool_set:N 	= \l_pxcore_uml_use_bool,
+		UML			.initial:n	= false,
+		UML			.default:n	= true,
+	UMLconfig	.tl_set_x:N 	= \l_pxcore_uml_config_tl,
+		UMLconfig	.initial:n	= {},
+	SRC			.bool_set:N 	= \l_pxcore_src_use_bool,
+		SRC			.initial:n	= false,
+		SRC			.default:n	= true,
+	SRCconfig	.tl_set_x:N 	= \l_pxcore_src_config_tl,
+		SRCconfig	.initial:n	= {},
+	default		.meta:n	=	{
+		PRP		=	true,
+		UML		=	true,
+		SRC 	=	true
+	},
+	unknown		.code:n ={}
+}
+\ProcessKeysOptions{ pxCORE }
+%% =================================
+%% ===== LOAD SELECTED MODULES =====
+%% =================================
+\bool_if:NT \l_pxcore_uml_use_bool
+	{
+		\tl_if_blank:VTF \l_pxcore_uml_config_tl
+			{ \RequirePackage{pxUML} }
+			{ \RequirePackage[\l_pxcore_uml_config_tl]{pxUML} }
+	}
+\bool_if:NT \l_pxcore_prp_use_bool { \RequirePackage{pxPRP} }
+\bool_if:NT \l_pxcore_src_use_bool {
+	\tl_if_blank:VTF \l_pxcore_src_config_tl
+	{ \RequirePackage{pxSRC} }
+	{ \RequirePackage[\l_pxcore_src_config_tl]{pxSRC} }
+}
+\endinput

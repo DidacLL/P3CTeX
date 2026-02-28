@@ -1,0 +1,450 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the package P3C.TeX
+%%
+%%	Author's name: Scvria
+%%	File: pxUML.code.tex
+%% 	Version: v0.1 (02/2026)
+%%	Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+%%	TODO:	- User level API
+%%			- Add more features to the UML class diagram implementation
+%% =======================================================
+
+\documentclass[fake,cover-config=offset,default]{P3CTeX}
+%\PECTeXconfig{cover-config={fullcover}}
+%\documentclass{article}
+%\usepackage[UML]{pxCORE}
+\begin{document}
+
+	\section{Proves bàsiques de pxPRP}
+
+
+	% --- Prova 1: smoke test, creació i accés bàsic --------------------------------
+
+	\subsection{Prova 1: Creació i accés bàsic}
+	\verb*|\pxNewObject{PATATA}|\\
+	\pxNewObject{PATATA}
+
+	\verb*|\pxSetValue{PATATA}{k1}{v1,v2}|\\
+	\pxSetValue{PATATA}{k1}{v1,v2}
+
+	\verb*|\pxSetValue{PATATA}{k2}{vA,vB,vC}|\\
+	\pxSetValue{PATATA}{k2}{vA,vB,vC}
+
+	\verb*|\pxGET PATATA.k1[2]| $\to$ \pxGET PATATA.k1[2]\\
+
+	\verb*|\pxPRINTF PATATA.k2[2]|$\to$ \pxPRINTF PATATA.k2[2]
+
+	\bigskip
+
+	\subsection{Prova 2: Múltiples objectes i claus aïllades}
+
+	\pxNewObject{OBJAA}
+	\pxNewObject{OBJBB}
+
+	\pxSetValue{OBJAA}{key}{AA1,AA2}
+	\pxSetValue{OBJBB}{key}{BB1,BB2}
+
+	En pantalla: OBJAA.key[1] = \pxGET OBJAA.key[1],\quad
+	OBJBB.key[1] = \pxGET OBJBB.key[1].
+
+	\bigskip
+
+	\subsection{Prova 3: Sobreescriptura amb \texttt{\textbackslash pxSet}}
+
+	\pxNewObject{OVER}
+	\pxSetValue{OVER}{state}{old}
+
+	Abans de sobreescriure: OVER.state[1] = \pxGET OVER.state[1].
+
+	\pxSetValue{OVER}{state}{newA,newB}
+
+	Després de sobreescriure: OVER.state[1] = \pxGET OVER.state[1],\quad
+	OVER.state[2] = \pxGET OVER.state[2].
+
+	\bigskip
+
+	\subsection{Prova 4: Acumulació de llistes amb \texttt{\textbackslash pxPutValue}}
+
+	\pxNewObject{LST}
+
+	\pxPutValue{LST}{items}{a}
+	\pxPutValue{LST}{items}{b}
+	\pxPutValue{LST}{items}{c}
+
+	Resultat esperat: LST.items = (\pxGET LST.items[1], \pxGET LST.items[2], \pxGET LST.items[3]).
+
+	\bigskip
+	%
+	\subsection{Prova 5: Esborrar claus i objectes}
+
+	\pxNewObject{TEMP}
+	\pxSetValue{TEMP}{k}{X,Y}
+
+	Abans d'esborrar: TEMP.k[1] = \pxGET TEMP.k[1].
+
+	\pxClearKey{TEMP}{k}
+
+	Després d'esborrar la clau, podem tornar a definir-la:
+
+	\pxSetValue{TEMP}{k}{Z}
+
+	Ara: TEMP.k[1] = \pxGET TEMP.k[1].
+
+	\pxClearObject{TEMP}
+
+	\pxNewObject{TEMP}
+	\pxSetValue{TEMP}{k}{P,P}
+	Ara: TEMP.k[1] = \pxGET TEMP.k[1].
+	\bigskip
+
+	\subsection{Prova 6: Flags booleans}
+
+	\pxNewObject{FLAGS}
+
+	\pxSetValue{FLAGS}{featureA}{true}
+	\pxSetValue{FLAGS}{featureB}{{false}}
+
+	\pxIfTrueTF{FLAGS}{featureA}{ACTIVA}{INACTIVA}
+
+	\par
+
+	\pxIfTrueTF{FLAGS}{featureB}
+	{featureB és ACTIVA.}
+	{featureB és INACTIVA.}
+
+	\bigskip
+
+	\subsection{Prova 7 (mínima): Llistes i impressió completa}
+
+	\pxNewObject{OBJL}
+	\pxListSet{OBJL}{nums}{1,2,3}
+
+	Tots els valors de OBJL.nums (esperat 1--3): \pxListAll{OBJL}{nums}[ -- ].
+
+	\bigskip
+
+	\pxNewObject{OBJS}
+	\pxListPutRight{OBJS}{vals}{a}
+	\pxListPutRight{OBJS}{vals}{b,c}
+
+	Tots els valors de OBJS.vals (esperat a,b,c): \pxListAll{OBJS}{vals}.
+
+	\bigskip
+
+	\subsection{Prova 8 (mínima): Predicats d'existència i llargada}
+
+	\pxIfObjectExistsTF{NOEXISTEIX}
+	{OBJECTE NOEXISTEIX (no hauria de passar).}
+	{OBJECTE NOEXISTEIX no és present, com esperat.}
+
+	\pxNewObject{CHK}
+	\pxSetValue{CHK}{nums}{1,2,3}
+
+	\pxIfObjectExistsTF{CHK}
+	{CHK existeix.}
+	{CHK \emph{no} existeix (error).}
+
+	\pxIfKeyExistsTF{CHK}{nums}
+	{nums existeix a CHK.}
+	{nums \emph{no} existeix a CHK (error).}
+
+	Llargada esperada de CHK.nums: 3.\quad
+	Llargada real: \pxListLen{CHK}{nums}.
+
+	\bigskip
+
+	\subsection{Prova 9: Accés escalar directe amb \texttt{\textbackslash pxGetScalar}}
+
+	\pxNewObject{SCALAR}
+	\pxSetValue{SCALAR}{flag}{true}
+	\pxSetValue{SCALAR}{text}{Hola, món}
+
+	Valor escalar de SCALAR.flag (esperat \texttt{true}): \pxGetScalar{SCALAR}{flag}.\\
+	Valor escalar de SCALAR.text (esperat ``Hola, món''): \pxGetScalar{SCALAR}{text}.\\
+	Valor escalar per a clau inexistent (esperat buit): [\pxGetScalar{SCALAR}{noexisteix}].
+
+	\bigskip
+
+	\subsection{Prova 10: Neteja de llistes amb \texttt{\textbackslash pxListClear}}
+
+	\pxNewObject{LCLR}
+	\pxListSet{LCLR}{vals}{a,b,c}
+
+	Abans de netejar, llargada esperada 3, real: \pxListLen{LCLR}{vals}.\\
+	\pxListClear{LCLR}{vals}
+
+	Després de netejar, llargada esperada 0, real: \pxListLen{LCLR}{vals}.\\
+	Es pot tornar a omplir:
+	\pxListPutRight{LCLR}{vals}{x,y}
+	; valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.
+	\section{Proves de la API pxUML}
+
+	En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet.
+
+	% Classe simple amb atributs i operacions modificats posteriorment
+	\pxUMLClass{Person}
+	{
+		- name : String
+	}
+	[+ getName() : String]
+
+	\addAttribute{Person}{- age : Integer}
+	\addOperation{Person}{+ setName(newName : String) : void}
+
+	% Classe base i derivada per provar la herència
+	\pxUMLClass{BaseClass}
+	{
+		- id : Integer
+	}
+
+	\pxUMLClass{DerivedClass}
+	{
+		- extra : String
+	}
+
+	\addInheritance{DerivedClass}{BaseClass}
+
+	% Classe utilitzada per instàncies
+	\pxUMLClass{Service}
+	{
+		- name : String
+	}
+	[+ run() : void]
+
+	\pxUMLDiagram{
+		% dibuix complet
+		\drawclass[text width=14em]{Person}[0,0]
+		% dibuix simplificat
+		\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
+		\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
+		%	% instància d'una classe amb atributs i operacions
+		\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{
+			- name : String
+		}{
+			+ run() : void
+		}
+	}[0.9\linewidth]
+	% prova que \PXshowclass no produeix cap error en accedir al registre
+	\PXshowclass{Person}
+	\PXshowclass{Service}
+
+	% inspecció bàsica: accessos de lectura no haurien de fallar
+	Class Person attributes: [\pxUMLAttributes{Person}].\\
+	Class Service operations: [\pxUMLOperations{Service}].\\
+	Parents of DerivedClass: [\pxUMLParents{DerivedClass}].\\
+
+	% cas negatiu: classe inexistent no ha de provocar error ni produir sortida
+	\PXshowclass{NoExisteix}
+	Class NoExisteix attributes (hauria de ser buit): [\pxUMLAttributes{NoExisteix}].
+
+	\subsection{Diagrama UML}
+	Disseny inicial del sistema, tal com s'indica a l'enunciat:
+
+	\pxUMLClass[enumclass]{Role}
+	{
+		DEVELOPER,
+		COMMUNITYMANAGER
+	}
+	\pxUMLClass[enumclass]{AICategory}
+	{
+		CHAT,
+		CODEGENERATOR,
+		POSTGENERATOR
+	}
+
+	\pxUMLClass{Employee}
+	{
+		- role : Role,
+		- email : String
+	}[+ monthlyConsumptionCost(month : DateTime) : real]
+
+	\pxUMLClass{TokenConsumption}
+	{
+		- timeStamp : DateTime,
+		- numTokens : UnlimitedNatural
+	}
+
+	\pxUMLClass{AIAgent}
+	{
+		- name : String,
+		- description : String,
+		- tokenPrice : Real,
+		- aiCategory : AICategory
+	}[+ process(prompt : String) : String, + calculateCost(numTokens : UnlimitedNatural):Real	]
+
+	\pxUMLClass{Company}
+	{
+		- name : String,
+		- address : String,
+		- tel : String,
+		- web : String
+	}
+
+	\pxUMLDiagram{
+		\drawclass*[text width=15em]{Role}[2,0]
+		\drawclass*[text width=14em]{AICategory}[16,0]
+		\drawclass[text width=16em]{TokenConsumption}[9,-5]
+		\drawclass[text width=16em]{AIAgent}[18,-5]
+		\drawclass[text width=16em]{Employee}[0,-5]
+		\drawclass[text width=16em]{Company}[0,-10]
+		\association{Employee}{0..*}{ }{Company}{}{1}
+		\association{Employee}{1}{ }{TokenConsumption}{}{0..*}
+		\association{TokenConsumption}{0..*}{}{AIAgent}{}{1}
+	}[1.1\linewidth]
+	\subsection{Proves de la API pxUML}
+
+	En aquesta secció es comprova l'ús de totes les ordres d'alt nivell del paquet.
+
+	% Classe simple amb atributs i operacions modificats posteriorment
+	\pxUMLClass{Person}
+	{
+		- name : String
+	}
+	[+ getName() : String]
+
+	\addAttribute{Person}{- age : Integer}
+	\addOperation{Person}{+ setName(newName : String) : void}
+
+	% Classe base i derivada per provar la herència
+	\pxUMLClass{BaseClass}
+	{
+		- id : Integer
+	}
+
+	\pxUMLClass{DerivedClass}
+	{
+		- extra : String
+	}
+
+	\addInheritance{DerivedClass}{BaseClass}
+
+	% Classe utilitzada per instàncies
+	\pxUMLClass{Service}
+	{
+		- name : String
+	}
+	[+ run() : void]
+
+	\pxUMLDiagram{
+		% dibuix complet
+		\drawclass[text width=14em]{Person}[0,0]
+		% dibuix simplificat
+		\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
+		\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
+		%	% instància d'una classe amb atributs i operacions
+		\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{
+			- name : String
+		}{
+			+ run() : void
+		}
+	}[0.9\linewidth]
+	% prova que \PXshowclass no produeix cap error en accedir al registre
+	\PXshowclass{Person}
+	\PXshowclass{Service}
+
+	% inspecció bàsica: accessos de lectura no haurien de fallar
+	Class Person attributes: [\pxUMLAttributes{Person}].\\
+	Class Service operations: [\pxUMLOperations{Service}].\\
+	Parents of DerivedClass: [\pxUMLParents{DerivedClass}].\\
+
+	% cas negatiu: classe inexistent no ha de provocar error ni produir sortida
+	\PXshowclass{NoExisteix}
+	Class NoExisteix attributes (hauria de ser buit): [\pxUMLAttributes{NoExisteix}].
+
+	\subsection{Diagrama UML}
+	Disseny inicial del sistema, tal com s'indica a l'enunciat:
+
+	\pxUMLClass[enumclass]{Role}
+	{
+		DEVELOPER,
+		COMMUNITYMANAGER
+	}
+	\pxUMLClass[enumclass]{AICategory}
+	{
+		CHAT,
+		CODEGENERATOR,
+		POSTGENERATOR
+	}
+
+	\pxUMLClass{Employee}
+	{
+		- role : Role,
+		- email : String
+	}[+ monthlyConsumptionCost(month : DateTime) : real]
+
+	\pxUMLClass{TokenConsumption}
+	{
+		- timeStamp : DateTime,
+		- numTokens : UnlimitedNatural
+	}
+
+	\pxUMLClass{AIAgent}
+	{
+		- name : String,
+		- description : String,
+		- tokenPrice : Real,
+		- aiCategory : AICategory
+	}[+ process(prompt : String) : String, + calculateCost(numTokens : UnlimitedNatural):Real	]
+
+	\pxUMLClass{Company}
+	{
+		- name : String,
+		- address : String,
+		- tel : String,
+		- web : String
+	}
+
+	\pxUMLDiagram{
+		\drawclass*[text width=15em]{Role}[2,0]
+		\drawclass*[text width=14em]{AICategory}[16,0]
+		\drawclass[text width=16em]{TokenConsumption}[9,-5]
+		\drawclass[text width=16em]{AIAgent}[18,-5]
+		\drawclass[text width=16em]{Employee}[0,-5]
+		\drawclass[text width=16em]{Company}[0,-10]
+		\association{Employee}{0..*}{ }{Company}{}{1}
+		\association{Employee}{1}{ }{TokenConsumption}{}{0..*}
+		\association{TokenConsumption}{0..*}{}{AIAgent}{}{1}
+	}[1.1\linewidth]
+	\section{Proves bàsiques de pxGDX}
+
+	Configuració bàsica de la portada i el layout mitjançant \texttt{\textbackslash PECTeXconfig}:
+
+
+
+
+	\sectionuoc{Primera secció UOC}
+	Text d'exemple dins de la secció amb estil UOC.
+
+	\subsectionuoc{Subsecció UOC}
+	Més text amb l'estil de subsecció UOC.
+
+	Una regla horitzontal fina:\\
+	\pxHRule
+
+	Una regla horitzontal gruixuda centrada a la pàgina:\\
+	\pxPageRule*
+
+	\pxIMG[.2\linewidth]{img/testimage}[primarycolor]{Patatas patatodos}[TestPicture]
+
+	\pxIMG[.2\linewidth]{testimage}{Patatas patatodos}[TestPicture2]
+	\pxIMG[.6\linewidth]{wrongimage}[primaryColor]{Patatas patatodos}[TestPicture2]
+
+	\pxIMGpair{img/testimage}{img/testimage}[primarycolor]{Patatas patatodos}[TestPicture3]
+	\pxIMGList{testimage}{ITERATION 1,ITERATION 2,ITERATION 3,ITERATION 4}
+
+	\pxGrow{Patata}[\linewidth]
+\end{document}

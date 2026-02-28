@@ -193,6 +193,25 @@ effectively empty; no error is raised.
 \PXshowclass{<ClassName>}
 \end{verbatim}
 
+\DescribeMacro{\pxUMLAttributes}
+Expands to the raw attribute list stored for the class, as passed to
+\verb|\pxUMLClass| and subsequent \verb|\addAttribute| calls.
+\begin{verbatim}
+\pxUMLAttributes{<ClassName>}
+\end{verbatim}
+
+\DescribeMacro{\pxUMLOperations}
+Expands to the operation list stored for the class.
+\begin{verbatim}
+\pxUMLOperations{<ClassName>}
+\end{verbatim}
+
+\DescribeMacro{\pxUMLParents}
+Expands to the inheritance information (parent classes) stored for the class.
+\begin{verbatim}
+\pxUMLParents{<ClassName>}
+\end{verbatim}
+
 \section{Minimal example}
 \label{sec:example}
 

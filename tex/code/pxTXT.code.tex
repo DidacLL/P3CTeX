@@ -1,0 +1,73 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the package P3C.TeX
+%%
+%%	Author's name: Scvria
+%%	File: pxUML.code.tex
+%% 	Version: v0.1 (02/2026)
+%%	Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+%%	TODO:	- User level API
+%%			- Add more features to the UML class diagram implementation
+%% =======================================================
+\RequirePackage{expl3}
+\RequirePackage{color,l3keys2e,xparse}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesExplFile{p3xlang}{2025}{0.1}{P3C.TeX LANGUAGE RELATED DEFINITIONS}
+% Define supported languages
+
+\newcommand{\pxDEFtocname}{Índex}
+\newcommand{\pxDEFnoplagi}[1]{	Jo~	\textbf{ #1 } \label{{alumne}}
+,~declaro~que~ostento~l'autoria~total~i~plena~de~totes~les~tasques~que~es~duen~a~terme~al~present~document.~
+Sóc~l'única~persona~que~ha~fet~cada~exercici.~
+No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~través~de~l'aula~de~la~UOC~i~el~seu~professorat.~
+}
+\newcommand{\pxDEFpximgname}{Imatge}
+\newcommand{\pxDEFpximglistname}{Imatges}
+\newcommand{\pxDEFpxshotname}{Captura}
+\newcommand{\pxDEFpxshotlistname}{Captures~de~pantalla}
+\newcommand{\pxDEFpxcodename}{Fragment~de~Codi}
+\newcommand{\pxDEFpxcodelistname}{Codi~font}
+\newcommand{\pxDEFpxcmdname}{Comanda}
+\newcommand{\pxDEFpxcmdlistname}{Comandes~de~Consola}
+\newcommand{\_pxcore_set_language_spanish}{
+	\renewcommand{\pxDEFtocname}{Índice}
+	\renewcommand{\pxDEFnoplagi}[1]{ Yo~	\textbf{ ##1 } \label{{alumne}}
+		,~declaro~que~ostento~la~autoría~total~y~plena~de~todas~las~tareas~que~se~llevan~a~cabo~en~el~presente~documento.~
+		Soy~la~única~persona~que~ha~elaborado~cada~ejercicio.~
+		No~he~compartido~los~enunciados~con~nadie~y~la~única~ayuda~que~he~recibido~ha~sido~a~través~del~aula~de~la~UOC~y~su~profesorado.~
+	}
+	\renewcommand{\pxDEFpximgname}{Imagen}
+	\renewcommand{\pxDEFpximglistname}{Imágenes}
+	\renewcommand{\pxDEFpxshotname}{Captura}
+	\renewcommand{\pxDEFpxshotlistname}{Capturas~de~pantalla}
+	\renewcommand{\pxDEFpxcodename}{Fragmento~de~Código}
+	\renewcommand{\pxDEFpxcodelistname}{Código~fuente}
+	\renewcommand{\pxDEFpxcmdname}{Comando}
+	\renewcommand{\pxDEFpxcmdlistname}{Comandos~de~Consola}
+}
+\newcommand{\_pxcore_set_language_english}{
+	\renewcommand{\pxDEFtocname}{Table~of~Contents}
+	\renewcommand{\pxDEFnoplagi}[1]{I,~\textbf{ ##1 }	\label{alumne},~declare~that~I~hold~the~total~and~full~authorship~of~all~the~tasks~that~are~carried~out~in~this~document.~I~am~the~only~one~who~has~elaborated~each~exercise.~I~have~not~shared~the~statements~with~anyone~and~the~only~help~I~have~received~has~been~through~the~UOC~classroom~and~teachers~there.}
+	\renewcommand{\pxDEFpximgname}{Picture}
+	\renewcommand{\pxDEFpximglistname}{Pictures}
+	\renewcommand{\pxDEFpxshotname}{Screenshot}
+	\renewcommand{\pxDEFpxshotlistname}{Screenshots}
+	\renewcommand{\pxDEFpxcodename}{Code~chunk}
+	\renewcommand{\pxDEFpxcodelistname}{Source~Code}
+	\renewcommand{\pxDEFpxcmdname}{Prompt}
+	\renewcommand{\pxDEFpxcmdlistname}{Console~Prompts}
+}
+\endinput

@@ -1,0 +1,86 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%  	P3C.TeX  			v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%  This file is part of the P3CTeX project.
+%%
+%%  Author: Scvria
+%%  File: pxCORE.sty
+%%  Version: v0.2 (02/2026)
+%%  Description:
+%%    Core aggregation package for P3CTeX.
+%%    - Centralises third-party package loading and layout utilities
+%%      that are shared across P3CTeX documents.
+%%    - Owns the `pxCORE` key family, which controls activation and
+%%      configuration of standalone libraries (pxUML, pxPRP, ...).
+%%    - Does not define document-class–specific user commands; those
+%%      belong in `P3CTeX.cls` or in standalone libraries.
+%%
+%%  Architectural role:
+%%    - pxCORE is the single integration point for standalone libraries.
+%%      Document classes (such as P3CTeX.cls) load `pxCORE` and pass
+%%      options down; they never talk to pxUML/pxPRP directly.
+%%    - Standalone libraries (pxUML, pxPRP, pxSRC) only
+%%      expose their own public LaTeX2e API and expl3 internals; they
+%%      have no knowledge of document classes.
+%%    - All expl3 implementation for pxCORE lives in `pxCORE.code.tex`.
+%%
+%%  This file may be distributed and/or modified:
+%%
+%%   1. under the LaTeX Project Public License and/or
+%%   2. under the GNU Public License.
+%%
+%%   See the file doc/LICENSE for more details.
+%% =======================================================
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{expl3}
+\RequirePackage{color,l3keys2e,xparse}
+\ProvidesExplPackage{pxCORE}{2026/02/26}{v0.2}
+  {P3CTeX core aggregation and key management}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	OTHER PCKG IMPORT		--		%%%
+%%BEGIN_FOLD%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\RequirePackage{fp}
+%\RequirePackage{graphicx}   		% Graphics
+%\RequirePackage[a4paper]{geometry}  % Page dimensions
+%\RequirePackage{amsmath}   			% Mathematical support
+%\RequirePackage{arev}       		% Fonts
+%\RequirePackage{fancyhdr}   		% Header/footer customization
+%\RequirePackage{array}      		% Table formatting
+%\RequirePackage{colortbl}   		% Color tables
+%\RequirePackage{longtable}
+%\RequirePackage{tikz}       	    % Drawing figures with TikZ
+%\usetikzlibrary{positioning,arrows.meta,shadows,graphs,math,automata,calligraphy,decorations.shapes,fit,shapes.geometric,shapes}
+%\RequirePackage{url}        	 	% URL formatting
+%\RequirePackage{float}				% Handling floats
+%\RequirePackage{pdfpages}			% Including PDFs
+%\RequirePackage{pgf} 				% Graphics (PGF/TikZ)
+%\RequirePackage{caption}    	    % Custom captions
+%\RequirePackage{tocloft}    	    % Table of contents formatting
+%\RequirePackage{hyperref} 			% Configuration setup triggered by P3CTeX / pdf
+%\RequirePackage{cleveref}			% FIX - Package cleveref Error: cleveref must be loaded after hyperref
+%\RequirePackage{lastpage}
+%\RequirePackage{cite} 				%% -> allows cite soft line wrap
+%\file_input:n {p3xlang.tex}
+%\RequirePackage{p3xGDX}
+%\RequirePackage{p3xSRC}
+%%END_FOLD%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PCKG KEYS DEFINITION	--		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\file_input:n {pxCORE.code.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PUBLIC LaTeX2e API	--		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Configure pxCORE keys after package loading.
+%   \pxCOREsetup{<key>=<value>,...}
+\NewDocumentCommand{\pxCOREsetup}{m}
+  { \keys_set:nn { pxCORE } { #1 } }
+
+% Branch on pxCORE debug flag (set via [debug] or \pxCOREsetup{debug=<bool>}).
+\NewDocumentCommand{\pxCOREIfDebugTF}{+m +m}
+  { \bool_if:NTF \l_pxcore_debug_bool { #1 } { #2 } }

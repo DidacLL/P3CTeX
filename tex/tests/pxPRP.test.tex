@@ -22,7 +22,7 @@
 
 \verb*|\pxGET PATATA.k1[2]| $\to$ \pxGET PATATA.k1[2]\\
 
-\verb*|\pxPRINT PATATA.k2[2]|$\to$ \pxPRINT PATATA.k2[2]
+\verb*|\pxPRINTF PATATA.k2[2]|$\to$ \pxPRINTF PATATA.k2[2]
 
 \bigskip
 
@@ -99,8 +99,8 @@ Ara: TEMP.k[1] = \pxGET TEMP.k[1].
 \par
 
 \pxIfTrueTF{FLAGS}{featureB}
-  {featureB és ACTIVA.}
-  {featureB és INACTIVA.}
+	{featureB és ACTIVA.}
+	{featureB és INACTIVA.}
 
 \bigskip
 
@@ -124,19 +124,19 @@ Tots els valors de OBJS.vals (esperat a,b,c): \pxListAll{OBJS}{vals}.
 \subsection*{Prova 8 (mínima): Predicats d'existència i llargada}
 
 \pxIfObjectExistsTF{NOEXISTEIX}
-  {OBJECTE NOEXISTEIX (no hauria de passar).}
-  {OBJECTE NOEXISTEIX no és present, com esperat.}
+	{OBJECTE NOEXISTEIX (no hauria de passar).}
+	{OBJECTE NOEXISTEIX no és present, com esperat.}
 
 \pxNewObject{CHK}
 \pxSetValue{CHK}{nums}{1,2,3}
 
 \pxIfObjectExistsTF{CHK}
-  {CHK existeix.}
-  {CHK \emph{no} existeix (error).}
+	{CHK existeix.}
+	{CHK \emph{no} existeix (error).}
 
 \pxIfKeyExistsTF{CHK}{nums}
-  {nums existeix a CHK.}
-  {nums \emph{no} existeix a CHK (error).}
+	{nums existeix a CHK.}
+	{nums \emph{no} existeix a CHK (error).}
 
 Llargada esperada de CHK.nums: 3.\quad
 Llargada real: \pxListLen{CHK}{nums}.
@@ -164,8 +164,14 @@ Abans de netejar, llargada esperada 3, real: \pxListLen{LCLR}{vals}.\\
 \pxListClear{LCLR}{vals}
 
 Després de netejar, llargada esperada 0, real: \pxListLen{LCLR}{vals}.\\
-Es pot tornar a omplir:
+Es pot tornar a omplir:\\
 \pxListPutRight{LCLR}{vals}{x,y}
-; valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.
-
+valors actuals (esperat x,y): \pxListAll{LCLR}{vals}.\\
+\pxSETlst LCLR.vals={z,a}
+valors actuals (esperat z,a): \pxListAll{LCLR}{vals}.\\
+\pxSET LCLR.vals=A
+valors actuals (esperat A): \pxGETtl(LCLR.vals).\\
+\pxPUT LCLR.vals+=B
+valors actuals (esperat AB): \pxPRINTlst LCLR.vals()\\
+valors actuals (esperat A $\pi$ B): \pxPRINTlst LCLR.vals(~$\pi$~)\\
 \end{document}

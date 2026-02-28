@@ -1,0 +1,526 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% P3CTeX -- Manual d'usuari de la classe
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so class and packages are found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/P3CTeX.tex
+%-----------------------------------------------------------------------------
+\documentclass[CAT]{P3CTeX}
+
+\begin{document}
+
+\title{La classe \texttt{P3CTeX}\\
+  \large Plantilla per a PAC, PEC i projectes UOC}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{Versió 0.5 -- 2026/02}
+\maketitle
+
+\tableofcontents
+
+\section{Introducció}
+
+La classe \texttt{P3CTeX} proporciona una plantilla cohesionada per a
+treballs de l'estudiantat de la UOC (PAC, PEC, pràctiques de projectes,
+etc.). La classe:
+\begin{itemize}
+  \item configura el format de pàgina, tipografia i encapçalaments
+        d'acord amb l'estil UOC;
+  \item integra les biblioteques del projecte P3CTeX
+        (\texttt{pxCORE}, \texttt{pxPRP}, \texttt{pxUML},
+        \texttt{pxSRC}, \texttt{pxGDX}, \dots);
+  \item ofereix una interfície d'usuari \LaTeX2e senzilla basada en
+        opcions de classe i unes poques macros d'alt nivell.
+\end{itemize}
+
+Aquest document descriu:
+\begin{itemize}
+  \item les opcions de classe (família de claus \texttt{P3CTeX});
+  \item les claus de metadades acadèmiques (\texttt{P3CTeX/data});
+  \item la relació amb el paquet \texttt{pxCORE} i com passar opcions
+        a les biblioteques independents;
+  \item les macros principals per treballar amb la portada i el sumari.
+\end{itemize}
+
+\section{Carregar la classe}
+
+L'ús bàsic és:
+\begin{verbatim}
+\documentclass[<opcions>]{P3CTeX}
+\end{verbatim}
+
+On \verb|<opcions>| és una llista separada per comes d'opcions de la
+família de claus \texttt{P3CTeX} (vegeu la Secció~\ref{sec:class-opts}),
+possiblement combinades amb opcions de \texttt{pxCORE} (Secció
+\ref{sec:pxcore-bridge}).
+
+Per defecte, si no s'indica cap idioma, la classe treballa en català.
+
+\section{Opcions de classe P3CTeX}\label{sec:class-opts}
+
+Les opcions de classe es defineixen internament a la família de claus
+\verb|P3CTeX|. Es poden passar directament a \verb|\documentclass| com
+en l'exemple següent:
+\begin{verbatim}
+\documentclass[PR,EN]{P3CTeX}
+\end{verbatim}
+
+\subsection*{Control de portada, sumari i declaració de plagi}
+
+\begin{description}
+  \item[\texttt{cover} (bool)] controla si s'imprimeix la portada
+    institucional. Per defecte la clau existeix amb valor inicial
+    \texttt{false}, però el valor per defecte quan no s'especifica és
+    \texttt{true} (és a dir, \texttt{cover} està pensat per ser activat per
+    les meta-claus com \texttt{PR}).
+  \item[\texttt{no-cover}] meta-clau equivalent a \texttt{cover=\{false\}}.
+  \item[\texttt{toc} (bool)] controla si es genera el sumari (\emph{table
+    of contents}). Per defecte inicialment \texttt{false}, però amb
+    valor per defecte \texttt{true}.
+  \item[\texttt{no-toc}] meta-clau equivalent a \texttt{toc=\{false\}}.
+  \item[\texttt{no-plagi} (bool)] controla si es mostra la declaració de
+    no plagi a la portada o a l'inici del sumari. El valor inicial és
+    \texttt{false} i el valor per defecte \texttt{true}; les meta-claus
+    definides més avall l'activen automàticament.
+\end{description}
+
+\subsection*{Meta-profils per a tipus de lliurament}
+
+Per comoditat, la classe ofereix diverses meta-claus que combinen
+opcions de portada, sumari, declaració de plagi i idioma:
+
+\begin{description}
+  \item[\texttt{CA}] perfil per a \emph{Control d'Avaluació} en anglès:
+    desactiva la portada, activa sumari i declaració de no plagi, i
+    selecciona idioma anglès (equivalent a
+    \verb|cover=false,toc=true,no-plagi=true,en|).
+  \item[\texttt{PAC}] perfil per a \emph{Prova d'Avaluació Contínua} en
+    català (usa \verb|cat| com a idioma).
+  \item[\texttt{PEC}] perfil per a \emph{Prova d'Avaluació
+    Continuada/avaluació} en castellà (usa \verb|es| com a idioma).
+  \item[\texttt{PR}] perfil per a memòries o projectes amb portada
+    completa i sumari activat (equivalent a
+    \verb|cover=true,toc=true|).
+  \item[\texttt{help}] perfil de ``guia'': activa portada, sumari,
+    declaració de no plagi i idioma anglès, i carrega dades d'exemple
+    (vegeu la família \verb|P3CTeX/data|).
+  \item[\texttt{fake}] perfil de demostració amb dades d'exemple
+    (nom d'estudiant, assignatura, etc.) i idioma anglès; útil per
+    generar plantilles o exemples sense dades reals.
+\end{description}
+
+\subsection*{Selecció d'idioma}
+
+La classe ofereix tres idiomes principals, implementats via
+\texttt{babel} i una configuració interna de \texttt{pxCORE}:
+
+\begin{description}
+  \item[\texttt{EN} / \texttt{en}] carrega \verb|\usepackage[english]{babel}|
+    i activa la configuració interna en anglès.
+  \item[\texttt{ES} / \texttt{es}] carrega \verb|\usepackage[spanish]{babel}|.
+  \item[\texttt{CAT} / \texttt{cat}] carrega \verb|\usepackage[catalan]{babel}|. Si cap
+    opció d'idioma no s'especifica, aquest és l'efecte per defecte.
+\end{description}
+
+Les formes en majúscules (\verb|EN|, \verb|ES|, \verb|CAT|) són
+meta-claus que simplement apliquen la clau corresponent en minúscula.
+
+\subsection*{Altres opcions}
+
+\begin{description}
+  \item[\texttt{data}] permet passar un conjunt de claus de la família
+    \texttt{P3CTeX/data} (vegeu la Secció~\ref{sec:data}). Exemple:
+\begin{verbatim}
+\documentclass[
+  PR,
+  data = {
+    student       = {Nom Cognom},
+    subj-fullname = {Nom complet de l'assignatura},
+    ca-fullname   = {PAC 1: Títol},
+  }
+]{P3CTeX}
+\end{verbatim}
+  \item[\texttt{debug} (bool)] activa la traça de depuració compartida
+    amb \texttt{pxCORE} (vegeu \ref{sec:pxcore-bridge}); pensat per a
+    desenvolupament de la plantilla.
+  \item[\texttt{print-doc} (bool)] reserva un indicador per a futurs
+    fluxos de ``documentació impresa''; actualment s'emmagatzema però
+    no canvia el comportament.
+\end{description}
+
+\section{Metadades acadèmiques}\label{sec:data}
+
+A més de les opcions de comportament, la classe manté una petita
+estructura de dades amb la informació acadèmica bàsica. Aquestes dades
+s'utilitzen per omplir la portada, encapçalaments i alguns textos
+interns.
+
+Les claus de \verb|P3CTeX/data| es passen mitjançant l'opció de classe
+\verb|data={...}|:
+
+\begin{description}
+  \item[\texttt{student}] nom complet de l'estudiant.
+        Valor per defecte: \texttt{Nom\textasciitilde Alumne}.
+  \item[\texttt{grade}] nom del grau o màster
+        (per exemple, \texttt{Enginyeria\textasciitilde Informàtica}).
+  \item[\texttt{subj-fullname}] nom complet de l'assignatura.
+  \item[\texttt{subj-shortname}] nom curt de l'assignatura (per a
+        encapçalaments).
+  \item[\texttt{subj-code}] codi de l'assignatura (per exemple, \texttt{01312}).
+  \item[\texttt{ca-fullname}] nom complet de l'activitat (PAC, PEC,
+        pràctica, projecte, \dots).
+  \item[\texttt{ca-shortname}] nom curt de l'activitat (PAC1, PR, etc.).
+  \item[\texttt{date}] data de lliurament; per defecte \verb|\today|.
+\end{description}
+
+Addicionalment hi ha dues meta-claus útils per a proves:
+
+\begin{description}
+  \item[\texttt{example}] emplena totes les claus anteriors amb dades
+    d'exemple realistes (nom de l'estudiant, codi d'assignatura, etc.).
+  \item[\texttt{help}] estableix cada clau amb el seu propi nom (per
+    exemple, \texttt{student=student}) per visualitzar fàcilment on es
+    fa servir cada dada a la portada i encapçalaments.
+\end{description}
+
+\section{Passar opcions a pxCORE}\label{sec:pxcore-bridge}
+
+La classe \texttt{P3CTeX} no carrega directament les biblioteques
+independents (\texttt{pxUML}, \texttt{pxSRC}, \dots); en lloc d'això,
+carrega el paquet d'agregació \texttt{pxCORE} amb una cadena
+d'opcions.
+
+Tota opció de classe que \texttt{P3CTeX} no reconeix explícitament es
+rea\-grupa en una llista interna i es passa a \texttt{pxCORE} com a
+opcions de paquet. Això permet escriure:
+\begin{verbatim}
+\documentclass[
+  PR,
+  UML,
+  SRC,
+  UMLconfig = {maincolor=blue!70!black}
+]{P3CTeX}
+\end{verbatim}
+
+On:
+\begin{itemize}
+  \item \verb|UML| i \verb|SRC| són claus de la família \texttt{pxCORE}
+        que activen respectivament les biblioteques \texttt{pxUML} i
+        \texttt{pxSRC};
+  \item \verb|UMLconfig| és una clau de \texttt{pxCORE} que passa
+        opcions directament a \texttt{pxUML}.
+\end{itemize}
+
+Per a una descripció completa de les claus de \texttt{pxCORE}, vegeu el
+manual \verb|pxCORE.tex|.
+
+\section{Macros d'alt nivell de P3CTeX}
+
+Un cop carregada la classe, algunes macros d'alt nivell simplifiquen el
+treball amb la portada i el sumari (\texttt{pxGDX}) i amb l'estil UOC.
+En aquesta secció es recull la seva sintaxi bàsica, l'ús típic i un
+exemple curt.
+
+\subsection{PECTeXconfig}
+
+\paragraph*{Sinopsi}
+\begin{verbatim}
+\PECTeXconfig{<opcions>}
+\end{verbatim}
+
+\paragraph*{Ús típic}
+Aplica un conjunt d'opcions de configuració al mòdul gràfic intern
+\texttt{pxGDX}. Les opcions es reparteixen habitualment entre tres blocs:
+\begin{itemize}
+  \item \texttt{cover-config}: claus de \texttt{gdxCOVER} per a la portada;
+  \item \texttt{page-config}: claus de \texttt{gdxSTYLE} per a pàgina;
+  \item \texttt{pdf-config}: claus de \texttt{gdxPDF} per a metadades.
+\end{itemize}
+Per al catàleg complet de claus, vegeu el manual \texttt{pxGDX.tex}.
+
+\paragraph*{Exemple}
+\begin{verbatim}
+\PECTeXconfig{
+  cover-config = {
+    text-backtitle = {Grau en Enginyeria Informàtica},
+    text-title     = {Nom de l'assignatura},
+    text-minititle = {PAC1},
+    text-author    = {Nom Cognom}
+  },
+  page-config = {
+    author-name = {Nom Cognom},
+    doc-name    = {PAC 1},
+    subj-name   = {Nom Curt},
+    refcode     = {01312}
+  }
+}
+\end{verbatim}
+
+\subsection{PECTeXprintCover}
+
+\paragraph*{Sinopsi}
+\begin{verbatim}
+\PECTeXprintCover[*]
+\end{verbatim}
+
+\paragraph*{Ús típic}
+Imprimeix la portada configurada a través de \texttt{pxGDX}. Sense
+estrella, utilitza les opcions de portada vigents. La forma amb estrella
+(\texttt{*}) força determinades opcions internes (com ara \texttt{noplagi})
+per tal que la declaració de no plagi es gestioni des de la portada.
+
+En fluxos normals no cal cridar-la manualment: la classe la invoca al
+començament del document segons l'estat de les opcions \texttt{cover} i
+\texttt{no-plagi}.
+
+\paragraph*{Exemple}
+\begin{verbatim}
+% Forçar la impressió explícita de la portada
+\PECTeXprintCover*
+\end{verbatim}
+
+\subsection{PECTeXprintTOC}
+
+\paragraph*{Sinopsi}
+\begin{verbatim}
+\PECTeXprintTOC[*]
+\end{verbatim}
+
+\paragraph*{Ús típic}
+Imprimeix el sumari del document. Sense estrella, mostra un sumari
+estàndard. Amb estrella (\texttt{*}), afegeix abans del sumari la
+declaració de no plagi quan aquesta no s'ha imprès a la portada.
+
+També en aquest cas, la macro es crida automàticament si l'opció
+\texttt{toc} és activa, de manera que la majoria de documents no la
+necessiten en el cos principal.
+
+\paragraph*{Exemple}
+\begin{verbatim}
+% Imprimir només el sumari, amb declaració de no plagi prèvia
+\PECTeXprintTOC*
+\end{verbatim}
+
+\subsection{Macros d'estil per al cos del document}
+
+Les macros següents, definides per la classe sobre el mòdul
+\texttt{pxGDX}, ajuden a mantenir una aparença coherent en el cos del
+document.
+
+\subsubsection{sectionuoc i variants}
+
+\paragraph*{Sinopsi}
+\begin{verbatim}
+\sectionuoc{<títol>}
+\subsectionuoc{<títol>}
+\subsubsectionuoc{<títol>}
+\end{verbatim}
+
+\paragraph*{Ús típic}
+Aquestes macros creen seccions, subseccions i subsubseccions amb la
+paleta de colors corporatius definida per \texttt{pxGDX}, mantenint
+coherent l'estil visual dels enunciats i seccions principals.
+
+\paragraph*{Exemple}
+\begin{verbatim}
+\sectionuoc{Introducció}
+Text de la secció introductòria.
+\end{verbatim}
+
+\subsubsection{pxHRule}
+
+\paragraph*{Sinopsi}
+\begin{verbatim}
+\pxHRule
+\pxHRule*
+\pxHRule[<amplada>]
+\pxHRule*[<amplada>]
+\end{verbatim}
+
+\paragraph*{Ús típic}
+Traça una línia horitzontal utilitzada com a separador. La forma amb
+estrella pot variar lleugerament el gruix o estil intern; l'argument
+opcional permet limitar l'amplada de la línia.
+
+\paragraph*{Exemple}
+\begin{verbatim}
+Enunciat de l'exercici.
+\pxHRule[0.5\linewidth]
+Text de la resposta...
+\end{verbatim}
+
+\subsubsection{pxPageRule}
+
+\paragraph*{Sinopsi}
+\begin{verbatim}
+\pxPageRule
+\pxPageRule*
+\end{verbatim}
+
+\paragraph*{Ús típic}
+Dibuixa una línia horitzontal centrada a la pàgina, pensada per separar
+blocs dins d'enunciats llargs o entre seccions d'un mateix exercici.
+
+\paragraph*{Exemple}
+\begin{verbatim}
+Apartat A ...
+
+\pxPageRule*
+
+Apartat B ...
+\end{verbatim}
+
+\section{Patrons d'ús recomanats}
+
+Tot i que les opcions de \texttt{P3CTeX} es poden combinar de moltes
+maneres, en la pràctica hi ha alguns patrons que es repeteixen sovint.
+En aquesta secció se'n presenten dos: una PAC típica i una memòria de
+projecte (perfil \texttt{PR}).
+
+\subsection{PAC típica}
+
+Per a una PAC estàndard en català és habitual:
+\begin{itemize}
+  \item utilitzar el perfil \texttt{PAC} com a base (\texttt{cover} desactivat,
+        sumari i declaració de no plagi activats, idioma català);
+  \item omplir totes les dades acadèmiques via \texttt{data=\{\dots\}};
+  \item ajustar la configuració de \texttt{pxGDX} mínimament (títol curt,
+        nom de l'estudiant i codi d'assignatura).
+\end{itemize}
+
+Un esquelet típic seria:
+\begin{verbatim}
+\documentclass[
+  PAC,
+  data = {
+    student       = {Nom Cognom},
+    grade         = {Enginyeria Informàtica},
+    subj-fullname = {Nom complet de l'assignatura},
+    subj-shortname= {NCA},
+    subj-code     = {01312},
+    ca-fullname   = {PAC 1: Títol},
+    ca-shortname  = {PAC1}
+  }
+]{P3CTeX}
+
+\begin{document}
+
+\PECTeXconfig{
+  page-config = {
+    author-name = {Nom Cognom},
+    doc-name    = {PAC 1},
+    subj-name   = {NCA},
+    refcode     = {01312}
+  }
+}
+
+% Portada desactivada; sumari i declaració de no plagi segons perfil PAC.
+
+\sectionuoc{Introducció}
+Text de la PAC...
+
+\end{document}
+\end{verbatim}
+
+\subsection{Memòria de projecte (PR)}
+
+Per a una memòria de projecte (treball més extens) acostuma a ser
+convenient:
+\begin{itemize}
+  \item utilitzar el perfil \texttt{PR} (portada completa i sumari);
+  \item personalitzar amb més cura la portada (grau, títol de la memòria,
+        codi d'assignatura, etc.);
+  \item establir de manera explícita les metadades PDF.
+\end{itemize}
+
+Un pont de partida podria ser:
+\begin{verbatim}
+\documentclass[
+  PR,
+  data = {
+    student       = {Nom Cognom},
+    grade         = {Grau en Enginyeria Informàtica},
+    subj-fullname = {Nom complet de l'assignatura},
+    subj-shortname= {NCA},
+    subj-code     = {01312},
+    ca-fullname   = {Memòria de Projecte},
+    ca-shortname  = {PR}
+  }
+]{P3CTeX}
+
+\begin{document}
+
+\PECTeXconfig{
+  cover-config = {
+    text-backtitle = {Grau en Enginyeria Informàtica},
+    text-title     = {Memòria de Projecte},
+    text-minititle = {PR},
+    text-author    = {Nom Cognom}
+  },
+  page-config = {
+    author-name = {Nom Cognom},
+    doc-name    = {Memòria PR},
+    subj-name   = {NCA},
+    refcode     = {01312}
+  },
+  pdf-config = {
+    pdf-title  = {Memòria de Projecte - Nom de l'assignatura},
+    pdf-author = {Nom Cognom}
+  }
+}
+
+% Portada i sumari impresos automàticament en iniciar el document.
+
+\sectionuoc{Introducció}
+Text de la memòria...
+
+\end{document}
+\end{verbatim}
+
+\section{Exemple complet}
+
+L'exemple següent il·lustra un ús típic per a una PAC en català:
+
+\begin{verbatim}
+\documentclass[
+  PAC,
+  data = {
+    student       = {Nom Cognom},
+    grade         = {Enginyeria Informàtica},
+    subj-fullname = {Nom complet de l'assignatura},
+    subj-shortname= {NCA},
+    subj-code     = {01312},
+    ca-fullname   = {PAC 1: Introducció a P3CTeX},
+    ca-shortname  = {PAC1}
+  }
+]{P3CTeX}
+
+\begin{document}
+
+\PECTeXconfig{
+  cover-config = {
+    text-minititle = {PAC1},
+    text-author    = {Nom Cognom}
+  },
+  page-config = {
+    doc-name   = {PAC 1},
+    subj-name  = {NCA},
+    refcode    = {01312}
+  },
+  pdf-config = {
+    pdf-title  = {PAC 1 - Introducció a P3CTeX},
+    pdf-author = {Nom Cognom}
+  }
+}
+
+% Portada i sumari s'imprimeixen automàticament segons les opcions.
+
+\sectionuoc{Introducció}
+Text d'exemple...
+
+\end{document}
+\end{verbatim}
+
+\end{document}
+
