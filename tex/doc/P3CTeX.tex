@@ -7,8 +7,19 @@
 %   set TEXINPUTS=.;./latex;./code;
 %   pdflatex -interaction=nonstopmode doc/P3CTeX.tex
 %-----------------------------------------------------------------------------
-\documentclass[CAT]{P3CTeX}
-
+\documentclass{P3CTeX}
+\PECTeXcover{defaultcover}
+\PECTeXconfig{
+	cover,
+	toc,
+	no-plagi,
+	default,
+	data=documentation}
+\renewcommand{\pxDEFnoplagi}[1]
+{ P3CTeX by~	\textbf{ #1 } \label{alumne} is a \LaTeX repository created during my
+		 software engineering studies at UOC. It is based on the official
+		 \LaTeX template provided by the university,
+		 all the images used are public and available at \url{http://www.uoc.edu/portal/ca/llibre-estil}.}
 \begin{document}
 
 \title{La classe \texttt{P3CTeX}\\

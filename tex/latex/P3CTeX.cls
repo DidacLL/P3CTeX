@@ -46,7 +46,7 @@
 %% =================================
 %% ===== PCKG PUBLIC LaTeX2e API ===
 %% =================================
-\NewDocumentCommand{\PECTeXconfig}{+m}{\pxGDX_config:n {#1}}
+\NewDocumentCommand{\PECTeXconfig}{+m}{\keys_set:nn {P3CTeX}{#1}}
 \NewDocumentCommand{\PECTeXprintCover}{s}{
 	\setcounter{page}{0}
 	\IfBooleanT{#1}{\pxGDX_cover_config:n{noplagi}}
@@ -57,6 +57,9 @@
 	\tableofcontents\clearpage
 }
 \DeclareDocumentCommand\pxGDXconfig{ +m } {\pxGDX_config:n{ #1 }}
+\DeclareDocumentCommand\PECTeXcover{ +m } {\pxGDX_config:n{ cover-config={ #1 }}}
+\DeclareDocumentCommand\PECTeXpage{ +m } {\pxGDX_config:n{ page-config={ #1 }}}
+\DeclareDocumentCommand\PECTeXpdf{ +m } {\pxGDX_config:n{ pdf-config={ #1 }}}
 % pxGrow: Resizes content to fit especified width
 % #1[*] align left
 % #2[]box width

@@ -195,7 +195,19 @@
 		inner-backtitle 	=	false,
 		noplagi				=	true,
 		offset 				=	true,
-		unlink				=	true
+		unlink				=	true,
+		clip-author			=	true,
+	},
+	defaultcover				.meta:n = {
+		uppertitle 			=	false,
+		subtitle 			=	true,
+		subsubtitle 		=	true,
+		add-picture			=	false,
+		outter-backtitle	=	true,
+		inner-backtitle 	=	false,
+		noplagi				=	true,
+		offset 				=	false,
+		unlink				=	false,
 		clip-author			=	true,
 	},
 	print-placeholders		.meta:n = 	{
@@ -306,8 +318,8 @@
 	}
 }
 \cs_new:Nn \__px_sectionuoc:n {\newpage\section{\textcolor{primaryColor}{#1}}}
-\cs_new:Nn \__px_subsectionuoc:n {\subsection{\textcolor{lightColor}{#1}}}
-\cs_new:Nn \__px_subsubsectionuoc:n {\subsubsection{\textcolor{secondaryColor}{#1}}}
+\cs_new:Nn \__px_subsectionuoc:n {\subsection{\textcolor{black!20!primaryColor!80!}{#1}}}
+\cs_new:Nn \__px_subsubsectionuoc:n {\subsubsection{\textcolor{black!20!primaryColor!70!}{#1}}}
 \cs_new:Nn \__gdx_def_styles: {
 	\fancypagestyle{uocstyle}{
 		\fancyhf{}
