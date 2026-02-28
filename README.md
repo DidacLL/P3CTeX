@@ -24,7 +24,7 @@ Recommended configuration: **MiKTeX** (LaTeX distribution) + **IDE** (VS Code / 
 #### 2. Clone the P3CTeX repository
 
 ```powershell
-git clone https://github.com/SCVRI/P3CTeX.git
+git clone https://github.com/DidacLL/P3CTeX.git
 cd P3CTeX
 ```
 
@@ -67,11 +67,13 @@ pdflatex your-document.tex
 
 #### 4. IDE configuration
 
-| IDE        | Setup                                                                 |
-|------------|-----------------------------------------------------------------------|
-| **VS Code** | Install the *LaTeX Workshop* extension; add the repo paths to `latex-workshop.latex.search.rootFiles` / custom build recipe with `--include-directory` if needed. |
+
+| IDE           | Setup                                                                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **VS Code**   | Install the *LaTeX Workshop* extension; add the repo paths to `latex-workshop.latex.search.rootFiles` / custom build recipe with `--include-directory` if needed.                     |
 | **TeXstudio** | **Options → Configure TeXstudio → Build** → add `--include-directory="C:\path\to\P3CTeX\tex\latex"` and `--include-directory="C:\path\to\P3CTeX\tex\code"` to the `pdflatex` command. |
-| **TeXworks** | Configure via the command-line options above or a custom build script. |
+| **TeXworks**  | Configure via the command-line options above or a custom build script.                                                                                                                |
+
 
 #### 5. Verify the installation
 
@@ -100,18 +102,16 @@ If the PDF is generated without errors, the setup is correct.
 ### Arquitectura bàsica
 
 - **Classe de document `P3CTeX.cls`**: defineix el comportament global del
-  document (format, metadades de l'estudiant/assignatura, idiomes) i
-  proporciona la interfície d'usuari principal per als estudiants de la UOC.
-
+document (format, metadades de l'estudiant/assignatura, idiomes) i
+proporciona la interfície d'usuari principal per als estudiants de la UOC.
 - **Paquet nucli `pxCORE.sty`**: centralitza el càrrega de paquets externs
-  i l'activació de biblioteques independents mitjançant la família de claus
-  `pxCORE` (per exemple, `UML`, `PRP`, ...). Les classes de document només
-  parlen amb les biblioteques a través de `pxCORE`.
-
+i l'activació de biblioteques independents mitjançant la família de claus
+`pxCORE` (per exemple, `UML`, `PRP`, ...). Les classes de document només
+parlen amb les biblioteques a través de `pxCORE`.
 - **Biblioteques independents `px*.sty`** (com `pxPRP`, `pxUML`, `pxSRC`):
-  ofereixen funcionalitats específiques (mapes de propietats, UML, sources,
-  etc.) amb una API pública \LaTeX2e i, quan cal, una implementació interna
-  basada en `expl3` als fitxers `*.code.tex`.
+ofereixen funcionalitats específiques (mapes de propietats, UML, sources,
+etc.) amb una API pública \LaTeX2e i, quan cal, una implementació interna
+basada en `expl3` als fitxers `*.code.tex`.
 
 ### Documentació dels paquets
 
@@ -122,3 +122,4 @@ Els manuals (font \LaTeX) viuen a `tex/doc/`:
 - `tex/doc/pxUML.tex`
 - `tex/doc/pxSRC.tex`
 - `tex/doc/P3CTeX-architecture.tex`
+
