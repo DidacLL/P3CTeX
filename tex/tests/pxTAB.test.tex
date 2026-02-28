@@ -1,0 +1,67 @@
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+\begin{document}
+
+\section*{pxTAB tests}
+
+\subsection*{1. Plain style (no outer borders)}
+\verb|\pxTable{A, B, C}{1, 2, 3}{4, 5, 6}|\\
+\pxTable{A, B, C}{1, 2, 3}{4, 5, 6}
+\subsection*{2. Header style (first row with coloured background)}
+\verb|\pxTable[style=header]{Name, Age, City}{Alice, 20, Barcelona}{Bob, 22, Madrid}|\\
+\pxTable[style=header]{Name, Age, City}{Alice, 20, Barcelona}{Bob, 22, Madrid}
+\bigskip
+\subsection*{3. Striped style (alternating row colour)}
+\verb|\pxTable[style=striped]{H1, H2}{a, b}{c, d}{e, f}|\\
+\pxTable[style=striped]{H1, H2}{a, b}{c, d}{e, f}
+\bigskip
+\subsection*{4. Boxed style (outer border)}
+\verb|\pxTable[style=boxed]{X, Y}{1, 2}{3, 4}|\\
+\pxTable[style=boxed]{X, Y}{1, 2}{3, 4}
+\bigskip
+\subsection*{5. Grid style (full grid)}
+\verb|\pxTable[style=grid]{A, B}{1, 2}{3, 4}|\\
+\pxTable[style=grid]{A, B}{1, 2}{3, 4}
+\bigskip
+\subsection*{6. \texttt{\textbackslash pxTableFromList} (semicolon-separated rows)}
+\verb|\pxTableFromList[style=header]{ID, Name; 1, Alice; 2, Bob}|\\
+\pxTableFromList[style=header]{ID, Name; 1, Alice; 2, Bob}
+
+\bigskip
+\subsection*{7. Single row (\texttt{\textbackslash pxTableRow})}
+\verb|\pxTableRow{Only, one, row}|\\
+\pxTableRow{Only, one, row}
+
+\bigskip
+\subsection*{8. Custom header colour}
+\verb|\pxTABsetup{headerbgcolor=blue!20}\pxTable[style=header]{A, B}{1, 2}|\\
+\pxTABsetup{headerbgcolor=blue!20}\pxTable[style=header]{A, B}{1, 2}
+
+\bigskip
+\subsection*{9. Single column}
+\verb|\pxTable{One}{Two}{Three}|\\
+\pxTable{One}{Two}{Three}
+
+\bigskip
+\subsection*{10. Row length mismatch (3 cols; second row padded)}
+\verb|\pxTable{A, B, C}{1, 2}|\\
+\pxTable{A, B, C}{1, 2}
+
+\bigskip
+\subsection*{11. Row length mismatch (2 cols; second row truncated)}
+\verb|\pxTable{A, B}{1, 2, 3}|\\
+\pxTable{A, B}{1, 2, 3}
+
+\bigskip
+\subsection*{12. Custom row separator for \texttt{\textbackslash pxTableFromList}}
+\texttt{\textbackslash pxTABsetup\{rowsep=|\}\textbackslash pxTableFromList\{A, B|1, 2|3, 4\}}\\
+\pxTABsetup{rowsep=|}\pxTableFromList{A, B|1, 2|3, 4}
+
+\bigskip
+\subsection*{13. Cell with comma (braced clist item)}
+\verb|\pxTable{{Smith, John}, Age}{20, Student}|\\
+\pxTable{{Smith, John}, Age}{20, Student}
+
+\end{document}

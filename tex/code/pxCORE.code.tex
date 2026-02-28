@@ -49,10 +49,14 @@
 		SRC			.default:n	= true,
 	SRCconfig	.tl_set_x:N 	= \l_pxcore_src_config_tl,
 		SRCconfig	.initial:n	= {},
+	TAB			.bool_set:N 	= \l_pxcore_tab_use_bool,
+		TAB			.initial:n	= false,
+		TAB			.default:n	= true,
 	default		.meta:n	=	{
 		PRP		=	true,
 		UML		=	true,
-		SRC 	=	true
+		SRC 	=	true,
+		TAB 	=	true
 	},
 	unknown		.code:n ={}
 }
@@ -72,4 +76,5 @@
 	{ \RequirePackage{pxSRC} }
 	{ \RequirePackage[\l_pxcore_src_config_tl]{pxSRC} }
 }
+\bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \endinput

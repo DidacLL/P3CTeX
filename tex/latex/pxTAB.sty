@@ -1,0 +1,87 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxTAB.sty
+%%	Version: v0.1 (02/2026)
+%%	Description:
+%%		Predefined table styles and list-driven table generation for
+%%		students: build tables from comma-separated rows/columns
+%%		without writing raw tabular syntax. Styles: plain (no outer
+%%		borders), header (colored first row), striped, boxed, grid.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+\RequirePackage{expl3}
+\RequirePackage{xparse,l3keys2e}
+\RequirePackage{array}
+\RequirePackage{colortbl}
+\RequirePackage{xcolor}
+\ProvidesExplPackage{pxTAB}{2026/02/26}{v0.1}
+{P3CTeX predefined tables from comma-separated rows and columns}
+\file_input:n {pxTAB.code.tex}
+\ProcessKeysOptions{ pxTAB }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PUBLIC LaTeX2e API		--		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package configuration (pxTAB key family).
+%%   \pxTABsetup{<key>=<value>,...}
+\NewDocumentCommand{\pxTABsetup}{m}
+  { \keys_set:nn { pxTAB } { #1 } }
+%% -----------------------------------------------------------------------
+%% \pxTable[<options>]{<row1>}{<row2>}...{<rowN>}
+%%   Each <row> is a comma-separated list of cell contents.
+%%   Options: style=plain|header|striped|boxed|grid, headerbgcolor=..., etc.
+\NewDocumentCommand{\pxTable}{ O{} m }
+{
+	\seq_clear:N \l__pxtab_rows_seq
+	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
+	\__pxtab_collect_rows:nn
+		{ #1 }
+		{ \int_eval:n { \clist_count:n { #2 } } }
+}
+%% Internal: collect further braced row arguments, then render table.
+\cs_new:Npn \__pxtab_collect_rows:nn #1#2
+{
+	\@ifnextchar\bgroup
+		{ \__pxtab_collect_rows_aux:nnn { #1 } { #2 } }
+		{ \__pxtab_finish_table:nn { #1 } { #2 } }
+}
+\cs_new:Npn \__pxtab_collect_rows_aux:nnn #1#2#3
+{
+	\seq_put_right:Nn \l__pxtab_rows_seq { #3 }
+	\@ifnextchar\bgroup
+		{ \__pxtab_collect_rows_aux:nnn { #1 } { #2 } }
+		{ \__pxtab_finish_table:nn { #1 } { #2 } }
+}
+\cs_new:Npn \__pxtab_finish_table:nn #1#2
+{
+	\int_compare:nNnTF { #2 } = { 0 }
+		{ \msg_warning:nn { pxTAB } { empty-first-row } }
+		{ \pxTAB_table_from_seq:nn { #1 } { #2 } }
+}
+%% -----------------------------------------------------------------------
+%% \pxTableFromList[<options>]{<data>}
+%%   <data> = rows separated by semicolon (;), cells within a row by comma.
+%%   Example: {Name, Age, City; Alice, 20, Barcelona; Bob, 22, Madrid}
+\NewDocumentCommand{\pxTableFromList}{ O{} m }
+{
+	\pxTAB_table_from_list:nn { #1 } { #2 }
+}
+%% -----------------------------------------------------------------------
+%% Convenience: one-row table (e.g. a single header or data row).
+\NewDocumentCommand{\pxTableRow}{ O{} m }
+{
+	\pxTable[#1]{#2}
+}

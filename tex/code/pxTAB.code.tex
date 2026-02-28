@@ -1,0 +1,270 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxTAB.code.tex
+%%	Version: v0.1 (02/2026)
+%%	Description:
+%%		Expl3 internals for pxTAB: predefined table styles and
+%%		list-driven table generation (rows/columns as comma-separated
+%%		lists). All user-facing commands are in pxTAB.sty.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+\ProvidesExplFile{pxTAB.code.tex}{2026/02/26}{v0.1}
+{P3CTeX predefined tables from comma-separated rows and columns}
+%% =================================
+%% ===== MODULE VARIABLES ==========
+%% =================================
+\seq_new:N \l__pxtab_rows_seq
+\tl_new:N   \l__pxtab_style_tl
+\tl_new:N   \l__pxtab_header_bg_tl
+\tl_new:N   \l__pxtab_alt_row_tl
+\tl_new:N   \l__pxtab_colspec_tl
+\tl_new:N   \l__pxtab_row_sep_tl
+\tl_new:N   \l__pxtab_tmp_tl
+\int_new:N  \l__pxtab_row_index_int
+\int_new:N  \l__pxtab_ncols_int
+\str_new:N  \l__pxtab_style_str
+\clist_new:N \l__pxtab_cells_clist
+%% =================================
+%% ===== KEY DEFINITIONS (pxTAB) ====
+%% =================================
+\keys_define:nn { pxTAB }
+{
+	style          .choices:nn = { plain, header, striped, boxed, grid }
+		{ \tl_set:Nn \l__pxtab_style_tl { #1 } },
+	style          .initial:n  = plain,
+	headerbgcolor  .tl_set:N   = \l__pxtab_header_bg_tl,
+	headerbgcolor  .initial:n  = { gray!25 },
+	altrowcolor    .tl_set:N   = \l__pxtab_alt_row_tl,
+	altrowcolor    .initial:n  = { gray!10 },
+	colspec        .tl_set:N   = \l__pxtab_colspec_tl,
+	colspec        .initial:n  = {},
+	rowsep         .tl_set:N   = \l__pxtab_row_sep_tl,
+	rowsep         .initial:n  = { ; },
+	unknown        .code:n     = { }
+}
+\cs_generate_variant:Nn \clist_count:n { V }
+%% =================================
+%% ===== ROW/CELL EMISSION =========
+%% =================================
+%% Build an explicit alignment-tab token with category code 4.
+\group_begin:
+	\char_set_catcode_alignment:N \&
+	\cs_new:Npn \__pxtab_alignment_tab: { & }
+\group_end:
+%% Append one alignment-tab token directly into a tl.
+\group_begin:
+	\char_set_catcode_alignment:N \&
+	\cs_new_protected:Npn \__pxtab_tl_put_alignment:N #1
+	{
+		\tl_put_right:Nn #1 { & }
+	}
+\group_end:
+%% Emit one normalized row (exactly ncols cells; pad/truncate as needed).
+\cs_new_protected:Npn \__pxtab_emit_row:nn #1#2
+{
+	\clist_set:Nn \l__pxtab_cells_clist { #1 }
+	\tl_clear:N \l__pxtab_tmp_tl
+	\int_step_inline:nnnn { 1 } { 1 } { #2 }
+	{
+		\int_compare:nNnT { ##1 } > { 1 }
+			{ \__pxtab_tl_put_alignment:N \l__pxtab_tmp_tl }
+		\tl_put_right:Nx \l__pxtab_tmp_tl
+			{ \clist_item:Nn \l__pxtab_cells_clist { ##1 } }
+	}
+	\tl_use:N \l__pxtab_tmp_tl
+	\tabularnewline
+}
+%% Shared row-loop utility (keeps renderers concise and symmetric).
+\cs_new_protected:Npn \__pxtab_emit_all_rows:n #1
+{
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+		{ \__pxtab_emit_row:nn { ##1 } { #1 } }
+}
+%% =================================
+%% ===== COLUMN SPEC HELPERS =======
+%% =================================
+%% Build column spec with vertical rules: "ccc" -> "|c|c|c|".
+\cs_new_protected:Npn \__pxtab_build_colspec_with_vrule:NN #1#2
+{
+	\tl_clear:N #1
+	\tl_put_right:Nn #1 { | }
+	\tl_map_inline:Nn #2
+		{ \tl_put_right:Nn #1 { ##1 | } }
+}
+%% =================================
+%% ===== MAIN TABLE RENDERER =======
+%% =================================
+%% Open/close helpers keep environment emission explicit and symmetric.
+%% Use x-expansion to materialize expl3 tl variables into plain preamble chars.
+\cs_new_protected:Npn \__pxtab_begin_tabular_from_tl:N #1
+{
+	\use:x
+		{ \exp_not:N \begin{tabular}{ \tl_use:N #1 } }
+}
+\cs_new_protected:Npn \__pxtab_end_tabular:
+{
+	\end{tabular}
+}
+%% \__pxtab_table_from_seq:nn { <options> } { <ncols> }
+%% Assumes \l__pxtab_rows_seq is already filled.
+\cs_new_protected:Npn \__pxtab_table_from_seq:nn #1#2
+{
+	\group_begin:
+	\keys_set:nn { pxTAB } { #1 }
+	\__pxtab_table_from_seq_aux:n { #2 }
+	\group_end:
+}
+%% Validate colspec, dispatch style.
+\cs_new_protected:Npn \__pxtab_table_from_seq_aux:n #1
+{
+	\tl_if_empty:NF \l__pxtab_colspec_tl
+	{
+		\int_compare:nNnF { \tl_count:N \l__pxtab_colspec_tl } = { #1 }
+		{
+			\msg_warning:nn { pxTAB } { colspec-mismatch }
+			\tl_clear:N \l__pxtab_colspec_tl
+		}
+	}
+	\tl_if_empty:NT \l__pxtab_colspec_tl
+		{ \tl_set:Nx \l__pxtab_colspec_tl { \prg_replicate:nn { #1 } { c } } }
+	\str_set:Nx \l__pxtab_style_str { \tl_use:N \l__pxtab_style_tl }
+	\str_case:nnF { \str_use:N \l__pxtab_style_str }
+	{
+		{ plain }   { \__pxtab_render_table_plain:n { #1 } }
+		{ header }  { \__pxtab_render_table_header:n { #1 } }
+		{ striped } { \__pxtab_render_table_striped:n { #1 } }
+		{ boxed }   { \__pxtab_render_table_boxed:n { #1 } }
+		{ grid }    { \__pxtab_render_table_grid:n { #1 } }
+	}
+	{ \__pxtab_render_table_plain:n { #1 } }
+}
+%% Plain: no outer rules.
+\cs_new_protected:Npn \__pxtab_render_table_plain:n #1
+{
+	\__pxtab_begin_tabular_from_tl:N \l__pxtab_colspec_tl
+	\__pxtab_emit_all_rows:n { #1 }
+	\__pxtab_end_tabular:
+}
+%% Header: first row with background color.
+\cs_new_protected:Npn \__pxtab_render_table_header:n #1
+{
+	\__pxtab_begin_tabular_from_tl:N \l__pxtab_colspec_tl
+	\int_set:Nn \l__pxtab_row_index_int { 0 }
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_compare:nNnT { \l__pxtab_row_index_int } = { 1 }
+			{ \rowcolor{ \l__pxtab_header_bg_tl } }
+		\__pxtab_emit_row:nn { ##1 } { #1 }
+	}
+	\__pxtab_end_tabular:
+}
+%% Striped: even rows with background color.
+\cs_new_protected:Npn \__pxtab_render_table_striped:n #1
+{
+	\__pxtab_begin_tabular_from_tl:N \l__pxtab_colspec_tl
+	\int_set:Nn \l__pxtab_row_index_int { 0 }
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_if_even:nT { \l__pxtab_row_index_int }
+			{ \rowcolor{ \l__pxtab_alt_row_tl } }
+		\__pxtab_emit_row:nn { ##1 } { #1 }
+	}
+	\__pxtab_end_tabular:
+}
+%% Boxed: vertical rules plus top/bottom hline.
+\cs_new_protected:Npn \__pxtab_render_table_boxed:n #1
+{
+	\__pxtab_build_colspec_with_vrule:NN \l__pxtab_tmp_tl \l__pxtab_colspec_tl
+	\__pxtab_begin_tabular_from_tl:N \l__pxtab_tmp_tl
+	\hline
+	\__pxtab_emit_all_rows:n { #1 }
+	\hline
+	\__pxtab_end_tabular:
+}
+%% Grid: vertical rules plus hline before/after every row.
+\cs_new_protected:Npn \__pxtab_render_table_grid:n #1
+{
+	\__pxtab_build_colspec_with_vrule:NN \l__pxtab_tmp_tl \l__pxtab_colspec_tl
+	\__pxtab_begin_tabular_from_tl:N \l__pxtab_tmp_tl
+	\hline
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\__pxtab_emit_row:nn { ##1 } { #1 }
+		\hline
+	}
+	\__pxtab_end_tabular:
+}
+%% =================================
+%% ===== ROW PARSING (list form) ====
+%% =================================
+%% \__pxtab_parse_rows:n { <data> }
+%% Splits #1 by row separator (\l__pxtab_row_sep_tl, default ";") and fills \l__pxtab_rows_seq.
+%% Example: "A,B;C,D" -> rows [A,B] [C,D] (cells within a row are comma-separated).
+\cs_generate_variant:Nn \seq_set_split:Nnn { NVV }
+\cs_new:Npn \__pxtab_parse_rows:n #1
+{
+	\seq_clear:N \l__pxtab_rows_seq
+	\tl_set:Nn \l__pxtab_tmp_tl { #1 }
+	\seq_set_split:NVV \l__pxtab_rows_seq \l__pxtab_row_sep_tl \l__pxtab_tmp_tl
+}
+%% =================================
+%% ===== COLUMN COUNT ===============
+%% =================================
+\cs_new:Npn \__pxtab_count_columns:n #1
+{
+	\clist_count:n { #1 }
+}
+%% =================================
+%% ===== ENTRY: FROM SEQUENCE =======
+%% =================================
+%% \pxTAB_table_from_seq:nn { <options> } { <ncols> }
+%% Called from .sty after rows are in \l__pxtab_rows_seq. Options are key=value list.
+\cs_new_protected:Npn \pxTAB_table_from_seq:nn #1#2
+{
+	\__pxtab_table_from_seq:nn { #1 } { #2 }
+}
+%% \pxTAB_table_from_list:nn { <options> } { <data> }
+%% Parses #2 as rows separated by ";" (cells within row by comma), fills seq, then renders.
+\cs_new_protected:Npn \pxTAB_table_from_list:nn #1#2
+{
+	\__pxtab_parse_rows:n { #2 }
+	\seq_if_empty:NTF \l__pxtab_rows_seq
+		{ \__pxtab_warn_empty_table: }
+		{
+			\seq_get_left:NN \l__pxtab_rows_seq \l__pxtab_tmp_tl
+			\int_set:Nn \l__pxtab_ncols_int { \clist_count:V \l__pxtab_tmp_tl }
+			\int_compare:nNnTF { \l__pxtab_ncols_int } = { 0 }
+				{ \__pxtab_warn_empty_row: }
+				{
+					\pxTAB_table_from_seq:nn
+						{ #1 }
+						{ \int_use:N \l__pxtab_ncols_int }
+				}
+		}
+}
+%% Guard: no table when empty or zero columns (avoids broken tabular).
+\msg_new:nnnn { pxTAB } { empty-table } { pxTAB: empty table (no rows), skipping. } { }
+\msg_new:nnnn { pxTAB } { empty-first-row } { pxTAB: first row has no columns, skipping table. } { }
+\msg_new:nnnn { pxTAB } { colspec-mismatch }
+	{ pxTAB: colspec~length~does~not~match~column~count,~using~auto~colspec. } { }
+\cs_new:Npn \__pxtab_warn_empty_table:
+	{ \msg_warning:nn { pxTAB } { empty-table } }
+\cs_new:Npn \__pxtab_warn_empty_row:
+	{ \msg_warning:nn { pxTAB } { empty-first-row } }
+\endinput
