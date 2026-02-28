@@ -9,13 +9,10 @@
 %%  and run from tex/tests/ (or adjust image paths).
 %% =======================================================
 
-\documentclass[fake,cover-config=offset,default]{P3CTeX}
+\documentclass[fake,,default]{P3CTeX}
 
 \PECTeXconfig{
-	cover-config={
-		text-minititle = {P3CTeX API Example},
-		text-author    = {Author Name}
-	},
+	cover-config={offset,defaultcover},
 	page-config={
 		doc-name  = {P3CTeX Example},
 		subj-name = {Software Engineering},
@@ -33,14 +30,13 @@
 
 \pxSRCsetup{placeholder-color=blue}
 \begin{document}
-
 % ========== Cover and TOC (pxGDX) ==========
 %\PECTeXprintCover
 %\PECTeXprintTOC*
 
 % ========== 1. pxGDX — Sections and rules ==========
 \sectionuoc{First UOC section}
-Sample text with UOC section style.
+\PECTeX~Sample text with UOC section style.
 
 \subsectionuoc{UOC subsection}
 \subsubsectionuoc{UOC subsubsection}

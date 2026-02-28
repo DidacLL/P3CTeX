@@ -92,3 +92,5 @@
 		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
 }
+
+\newcommand\PECTeX{P\kern-.05ex$^3$\kern-.5ex\raise-0.5ex\hbox{C}\kern-.2ex\TeX~}
