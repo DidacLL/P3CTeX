@@ -1,0 +1,206 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%  P3CTeX — Example document (LaTeX2e API showcase)
+%%  Build from tex/tests/ so that img/ finds tex/tests/img/:
+%%    set TEXINPUTS=.;../latex;../code
+%%    pdflatex P3CTeX-example.tex
+%%  Or from repo root with --include-directory for tex/latex and tex/code,
+%%  and run from tex/tests/ (or adjust image paths).
+%% =======================================================
+
+\documentclass[fake,cover-config=offset,default]{P3CTeX}
+
+\PECTeXconfig{
+	cover-config={
+		text-minititle = {P3CTeX API Example},
+		text-author    = {Author Name}
+	},
+	page-config={
+		doc-name  = {P3CTeX Example},
+		subj-name = {Software Engineering},
+		refcode   = {EXAMPLE-001}
+	},
+	pdf-config={
+		pdf-title  = {P3CTeX LaTeX2e API Example},
+		pdf-author = {P3CTeX User}
+	},
+	cover,
+	toc,
+	default
+}
+
+
+\pxSRCsetup{placeholder-color=blue}
+\begin{document}
+
+% ========== Cover and TOC (pxGDX) ==========
+%\PECTeXprintCover
+%\PECTeXprintTOC*
+
+% ========== 1. pxGDX — Sections and rules ==========
+\sectionuoc{First UOC section}
+Sample text with UOC section style.
+
+\subsectionuoc{UOC subsection}
+\subsubsectionuoc{UOC subsubsection}
+More text with UOC subsection style.
+
+Thin horizontal rule:\\
+\pxHRule
+
+Thick horizontal rule (centered):\\
+\pxPageRule*
+
+% ========== 2. pxPRP — Property maps ==========
+\section{pxPRP: property maps and lists}
+
+\subsection{Objects, keys, and access}
+\pxNewObject{DEMO}
+\pxSetValue{DEMO}{k1}{v1,v2}
+\pxSetValue{DEMO}{k2}{vA,vB,vC}
+
+\verb*|\pxGET DEMO.k1[2]| $\to$ \pxGET DEMO.k1[2].\\
+\verb*|\pxPRINTF DEMO.k2[2]| $\to$ \pxPRINTF DEMO.k2[2].
+
+\subsection{Overwrite and append}
+\pxNewObject{OVER}
+\pxSetValue{OVER}{state}{old}
+Before overwrite: OVER.state[1] = \pxGET OVER.state[1].
+\pxSetValue{OVER}{state}{newA,newB}
+After: OVER.state[1] = \pxGET OVER.state[1],\quad
+OVER.state[2] = \pxGET OVER.state[2].
+
+\subsection{Lists: \texttt{\textbackslash pxPutValue}, \texttt{\textbackslash pxListSet}, \texttt{\textbackslash pxListAll}}
+\pxNewObject{LST}
+\pxPutValue{LST}{items}{a}
+\pxPutValue{LST}{items}{b,c}
+LST.items = (\pxGET LST.items[1], \pxGET LST.items[2], \pxGET LST.items[3]).
+
+\pxNewObject{OBJL}
+\pxListSet{OBJL}{nums}{1,2,3}
+All values (expected 1--3): \pxListAll{OBJL}{nums}[ -- ].
+
+\subsection{Clear key/object and predicates}
+\pxNewObject{TMP}
+\pxSetValue{TMP}{k}{X,Y}
+Before clear: TMP.k[1] = \pxGET TMP.k[1].
+\pxClearKey{TMP}{k}
+\pxSetValue{TMP}{k}{Z}
+After: TMP.k[1] = \pxGET TMP.k[1].
+\pxClearObject{TMP}
+\pxNewObject{TMP}
+\pxSetValue{TMP}{k}{P,Q}
+Now: TMP.k[1] = \pxGET TMP.k[1].
+
+\pxIfObjectExistsTF{MISSING}
+	{Object exists.}
+	{Object MISSING is not present, as expected.}
+
+\pxNewObject{CHK}
+\pxSetValue{CHK}{nums}{1,2,3}
+\pxIfObjectExistsTF{CHK}{CHK exists.}{CHK does not exist.}
+\pxIfKeyExistsTF{CHK}{nums}{Key \texttt{nums} exists in CHK.}{Key missing.}
+Length of CHK.nums: \pxListLen{CHK}{nums}.
+
+\subsection{Boolean flags and scalar access}
+\pxNewObject{FLAGS}
+\pxSetValue{FLAGS}{on}{true}
+\pxSetValue{FLAGS}{off}{{false}}
+\pxIfTrueTF{FLAGS}{on}{ON}{OFF},\quad
+\pxIfTrueTF{FLAGS}{off}{ON}{OFF}.
+
+\pxNewObject{SCALAR}
+\pxSetValue{SCALAR}{flag}{true}
+\pxSetValue{SCALAR}{text}{Hello, world.}
+Scalar SCALAR.flag: \pxGetScalar{SCALAR}{flag}.\\
+Scalar SCALAR.text: \pxGetScalar{SCALAR}{text}.\\
+Missing key: [\pxGetScalar{SCALAR}{none}].
+
+\subsection{List clear and compact API}
+\pxNewObject{LCLR}
+\pxListSet{LCLR}{vals}{a,b,c}
+Length before clear: \pxListLen{LCLR}{vals}.
+\pxListClear{LCLR}{vals}
+Length after clear: \pxListLen{LCLR}{vals}.
+\pxListPutRight{LCLR}{vals}{x,y}
+Values: \pxListAll{LCLR}{vals}.
+
+\pxSETlst LCLR.vals={z,a}
+After \verb|\pxSETlst|: \pxListAll{LCLR}{vals}.
+\pxSET LCLR.vals=A
+After \verb|\pxSET|: \pxGETtl(LCLR.vals).
+\pxPUT LCLR.vals+=B
+After \verb|\pxPUT|: \pxPRINTlst LCLR.vals().
+With separator: \pxPRINTlst LCLR.vals(, ).
+
+% ========== 3. pxUML — Class diagrams ==========
+\section{pxUML: class diagrams}
+
+\subsection{Classes and diagram}
+\pxUMLClass{Person}
+	{- name : String}
+	[+ getName() : String]
+
+\addAttribute{Person}{- age : Integer}
+\addOperation{Person}{+ setName(newName : String) : void}
+
+\pxUMLClass{BaseClass}{- id : Integer}
+\pxUMLClass{DerivedClass}{- extra : String}
+\addInheritance{DerivedClass}{BaseClass}
+
+\pxUMLClass{Service}{- name : String}[+ run() : void]
+
+\pxUMLDiagram{
+	\drawclass[text width=14em]{Person}[0,0]
+	\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
+	\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
+	\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{- name : String}{+ run() : void}
+}[0.9\linewidth]
+
+\PXshowclass{Person}
+\PXshowclass{Service}
+
+Inspection: Person attributes: [\pxUMLAttributes{Person}].\\
+Service operations: [\pxUMLOperations{Service}].\\
+Parents of DerivedClass: [\pxUMLParents{DerivedClass}].\\
+Non-existent class: [\pxUMLAttributes{NoExisteix}].
+
+\subsection{Enums and associations}
+\pxUMLClass[enumclass]{Role}{DEVELOPER, MANAGER}
+\pxUMLClass[enumclass]{Kind}{A, B, C}
+
+\pxUMLClass{Entity}{- role : Role, - name : String}[+ doIt() : void]
+\pxUMLClass{Container}{- id : Integer}
+
+\pxUMLDiagram{
+	\drawclass*[text width=12em]{Role}[0,0]
+	\drawclass*[text width=12em]{Kind}[10,0]
+	\drawclass[text width=14em]{Entity}[0,-4]
+	\drawclass[text width=14em]{Container}[10,-4]
+	\association{Entity}{0..*}{}{Container}{}{1}
+}[0.85\linewidth]
+
+% ========== 4. pxSRC — Images ==========
+\section{pxSRC: safe images}
+
+\pxIMG[.2\linewidth]{img/testimage}[primarycolor]{Single image caption}[fig:one]
+
+\pxIMG[.2\linewidth]{img/testimage}{Caption (optional width; color uses default)}[fig:two]
+
+\pxIMGpair{img/testimage}{img/testimage}[primarycolor]{Pair caption}[fig:pair]
+
+\pxIMGList{testimage}{Step one, Step two, Step three, Step four}
+
+% ========== 5. pxCORE — Debug (optional) ==========
+\section{pxCORE: setup and debug}
+
+\pxCOREsetup{debug=false}
+Debug state: \pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}.
+
+% ========== 6. pxGDX — Layout ==========
+\section{pxGDX: layout helpers}
+
+\pxGrow{Example title text}[\linewidth]
+
+\end{document}
