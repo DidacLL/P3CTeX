@@ -1,34 +1,34 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_EN-EnglishUnitedKingdom
 %% =======================================================
-%%  	P3C.TeX  			v0.3
+%%		P3C.TeX				v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the package P3C.TeX
+%%	This file is part of the package P3C.TeX
 %%
-%%  Author's name: Scvria
-%%  File: P3CTeX.code.tex
-%%  Version: v0.5 (02/2026)
-%%  Description:
-%%    Main document class for UOC assignments and projects.
-%%    - Owns page layout, typography and global document behaviour.
-%%    - Owns student / subject / activity metadata and language selection.
-%%    - Delegates feature libraries (UML, property maps, etc.) to pxCORE.
+%%	Author's name: Scvria
+%%	File: P3CTeX.code.tex
+%%	Version: v0.5 (02/2026)
+%%	Description:
+%%		Main document class for UOC assignments and projects.
+%%		- Owns page layout, typography and global document behaviour.
+%%		- Owns student / subject / activity metadata and language selection.
+%%		- Delegates feature libraries (UML, property maps, etc.) to pxCORE.
 %%
-%%  Architectural role:
-%%    - P3CTeX.cls never loads standalone libraries (pxUML, pxPRP, ...) directly.
-%%      It only talks to the aggregation package `pxCORE` via package options.
-%%    - All user-level interfaces that are document-wide (covers, TOC, metadata)
-%%      are defined here as LaTeX2e commands.
-%%    - expl3 implementation details live in dedicated *.code.tex files or
-%%      in library packages; this class only orchestrates them.
+%%	Architectural role:
+%%		- P3CTeX.cls never loads standalone libraries (pxUML, pxPRP, ...) directly.
+%%			It only talks to the aggregation package `pxCORE` via package options.
+%%		- All user-level interfaces that are document-wide (covers, TOC, metadata)
+%%			are defined here as LaTeX2e commands.
+%%		- expl3 implementation details live in dedicated *.code.tex files or
+%%			in library packages; this class only orchestrates them.
 %%
-%%  This file may be distributed and/or modified:
+%%	This file may be distributed and/or modified:
 %%
-%%   1. under the LaTeX Project Public License and/or
-%%   2. under the GNU Public License.
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
 %%
-%%   See the file doc/LICENSE for more details.
+%%	 See the file doc/LICENSE for more details.
 %% =======================================================
 %%	TODO:	- User level API
 %% =======================================================
@@ -129,15 +129,15 @@
 	},
 	load-data		.code:n	={}
 }
-\cs_new:Nn \__ifcover:nn {\bool_if:NTF  \l_pxdoc_usecover_bool{#1}{#2}}
-\cs_new:Nn \__iftoc:nn   {\bool_if:NTF  \l_pxdoc_usetoc_bool  {#1}{#2}}
-\cs_new:Nn \__ifplagi:nn {\bool_if:NTF  \l_pxdoc_useplagi_bool{#1}{#2}}
+\cs_new:Nn \__ifcover:nn {\bool_if:NTF	\l_pxdoc_usecover_bool{#1}{#2}}
+\cs_new:Nn \__iftoc:nn	 {\bool_if:NTF	\l_pxdoc_usetoc_bool	{#1}{#2}}
+\cs_new:Nn \__ifplagi:nn {\bool_if:NTF	\l_pxdoc_useplagi_bool{#1}{#2}}
 %% =================================
 %% ======= LOAD P3CTeX DATA ========
 %% =================================
 \file_input:n {pxTXT.code.tex}%% Load multilanguage text comands
 \ProcessKeysOptions{P3CTeX}
-\bool_if:NF  \l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
+\bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
 \pxGDX_config:n { %% Pass P3CTeX / data keys to pxCORE

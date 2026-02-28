@@ -1,24 +1,24 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_EN-EnglishUnitedKingdom
 %% =======================================================
-%%  	P3C.TeX  			v0.3
+%%		P3C.TeX				v0.3
 %%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
 %% =======================================================
-%%  This file is part of the P3CTeX project.
+%%	This file is part of the P3CTeX project.
 %%
-%%  Author: Scvria
-%%  File: pxGDX.code.tex
-%%  Version: v0.3 (02/2026)
-%%  Description:
-%%    Graphic designs module: cover page, page style (header/footer),
-%%    and PDF metadata helpers for P3CTeX.
+%%	Author: Scvria
+%%	File: pxGDX.code.tex
+%%	Version: v0.3 (02/2026)
+%%	Description:
+%%		Graphic designs module: cover page, page style (header/footer),
+%%		and PDF metadata helpers for P3CTeX.
 %%
-%%  This file may be distributed and/or modified:
+%%	This file may be distributed and/or modified:
 %%
-%%   1. under the LaTeX Project Public License and/or
-%%   2. under the GNU Public License.
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
 %%
-%%   See the file doc/LICENSE for more details.
+%%	 See the file doc/LICENSE for more details.
 %%
 %% =======================================================
 %% =======================================================
@@ -47,11 +47,11 @@
 \definecolor{lightColor}{cmyk}{0,0,0,0.3}
 \definecolor{lighterColor}{rgb}{1,1,1}
 %\cs_generate_variant:Nn \tl_set:Nn { Ne }
-%  RULES
-\cs_new:Nn  \__pxDEV_HRule: { \noindent \rule{\linewidth}{1.5pt} }
-\cs_new:Nn  \__pxDEV_HRule:n { \noindent \rule{#1}{1.5pt} }
-\cs_new:Nn  \__pxDEV_Hrule: { \noindent \rule{\linewidth}{0.75pt} }
-\cs_new:Nn  \__pxDEV_Hrule:n { \noindent \rule{#1}{0.75pt} }
+%	RULES
+\cs_new:Nn	\__pxDEV_HRule: { \noindent \rule{\linewidth}{1.5pt} }
+\cs_new:Nn	\__pxDEV_HRule:n { \noindent \rule{#1}{1.5pt} }
+\cs_new:Nn	\__pxDEV_Hrule: { \noindent \rule{\linewidth}{0.75pt} }
+\cs_new:Nn	\__pxDEV_Hrule:n { \noindent \rule{#1}{0.75pt} }
 %% =================================
 %% ==== gdxSTYLE KEYS DEFINITION ===
 %% =================================
@@ -87,8 +87,8 @@
 			\hspace{1ex}\pageref*{LastPage}
 		}
 	},
-	footer-right        .tl_set:N	=	\l__gdx_footer_right_tl ,
-	footer-right        .initial:n	=	{ \vspace{\fill}\parbox[b][1cm][c]{.25\linewidth}{\raggedleft\includegraphics[height=.3cm, keepaspectratio]{img/pxflogo.png}}},
+	footer-right				.tl_set:N	=	\l__gdx_footer_right_tl ,
+	footer-right				.initial:n	=	{ \vspace{\fill}\parbox[b][1cm][c]{.25\linewidth}{\raggedleft\includegraphics[height=.3cm, keepaspectratio]{img/pxflogo.png}}},
 	unknown .code:n ={ }
 }
 %% =================================
@@ -234,50 +234,50 @@
 %% =================================
 \keys_define:nn { gdxPDF }
 {
-	pdf-title     	.tl_set:N 		=	\l__px_pdf_title_tl,
-		pdf-title   	.initial:n 	= {	not set},
-	pdf-author    	.tl_set:N 		= 	\l__px_pdf_author_tl,
-		pdf-author	   .initial:n 	= 		\l__gdx_layout_author_tl,
-	pdfsubject    	.tl_set:N 		= 	\l__px_pdf_subject_tl,
+	pdf-title		 	.tl_set:N 		=	\l__px_pdf_title_tl,
+		pdf-title	 	.initial:n 	= {	not set},
+	pdf-author			.tl_set:N 		= 	\l__px_pdf_author_tl,
+		pdf-author		 .initial:n 	= 		\l__gdx_layout_author_tl,
+	pdfsubject			.tl_set:N 		= 	\l__px_pdf_subject_tl,
 		pdfsubject 		.initial:n 	= 		{	not set},
-	pdfkeywords  	.tl_set:N 		= 	\l__px_pdf_keywords_tl,
+	pdfkeywords		.tl_set:N 		= 	\l__px_pdf_keywords_tl,
 		pdfkeywords		.initial:n 	= 	{	},
-	pdf-creator    	.tl_set:N 		= 	\l__px_pdf_creator_tl,
-	pdf-creator   		.initial:n 	= 		{	not set},
+	pdf-creator			.tl_set:N 		= 	\l__px_pdf_creator_tl,
+	pdf-creator	 		.initial:n 	= 		{	not set},
 	pdf-producer 	.tl_set:N 		= 	\l__px_pdf_producer_tl,
 	pdf-producer 		.initial:n 	= 		{P3C.TeX v0.5}, %TODO SET TO A CONSTANT WITH PACKAGE VERSION
-	linkcolor    	.tl_set:N 		= 	\l__px_linkcolor_tl,
-		linkcolor  		.initial:n 	= 		{darkColor},
-		linkcolor  		.default:n 	= 		{darkColor},
-	citecolor    	.tl_set:N 		= 	\l__px_citecolor_tl,
-		citecolor  		.initial:n 	= 		{neutralColor},
-	urlcolor     	.tl_set:N 		= 	\l__px_urlcolor_tl,
-		urlcolor   		.initial:n 	= 		{darkColor},
-	filecolor    	.tl_set:N 		= 	\l__px_filecolor_tl,
-		filecolor  		.initial:n 	= 		{secondaryColor},
-	bookmarks    	.bool_set:N 	= 	\l__px_bookmarks_bool,
-		bookmarks  		.initial:n 	= 		true,
+	linkcolor			.tl_set:N 		= 	\l__px_linkcolor_tl,
+		linkcolor			.initial:n 	= 		{darkColor},
+		linkcolor			.default:n 	= 		{darkColor},
+	citecolor			.tl_set:N 		= 	\l__px_citecolor_tl,
+		citecolor			.initial:n 	= 		{neutralColor},
+	urlcolor		 	.tl_set:N 		= 	\l__px_urlcolor_tl,
+		urlcolor	 		.initial:n 	= 		{darkColor},
+	filecolor			.tl_set:N 		= 	\l__px_filecolor_tl,
+		filecolor			.initial:n 	= 		{secondaryColor},
+	bookmarks			.bool_set:N 	= 	\l__px_bookmarks_bool,
+		bookmarks			.initial:n 	= 		true,
 	unknown 		.code:n ={ }
 }
 \cs_new_protected_nopar:Nn \__px_apply_pdf:
 {
 	\keys_set:nn { gdxPDF} {colorlinks}
 	\hypersetup{
-		pdftitle    = {\l__px_pdf_title_tl},
-		pdfauthor   = {\l__px_pdf_author_tl},
-		pdfsubject  = {\l__px_pdf_subject_tl},
+		pdftitle		= {\l__px_pdf_title_tl},
+		pdfauthor	 = {\l__px_pdf_author_tl},
+		pdfsubject	= {\l__px_pdf_subject_tl},
 		pdfkeywords = {\l__px_pdf_keywords_tl},
-		pdfcreator  = {\l__px_pdf_creator_tl},
+		pdfcreator	= {\l__px_pdf_creator_tl},
 		pdfproducer = {\l__px_pdf_producer_tl},
-		linkcolor   = {\l__px_linkcolor_tl},
-		citecolor   = {\l__px_citecolor_tl},
-		urlcolor    = {\l__px_urlcolor_tl},
-		filecolor   = {\l__px_filecolor_tl},
-		bookmarks   = {\l__px_bookmarks_bool},
+		linkcolor	 = {\l__px_linkcolor_tl},
+		citecolor	 = {\l__px_citecolor_tl},
+		urlcolor		= {\l__px_urlcolor_tl},
+		filecolor	 = {\l__px_filecolor_tl},
+		bookmarks	 = {\l__px_bookmarks_bool},
 		bookmarkstype = toc,
-		colorlinks  =  true,
-		breaklinks  = true,
-		linktoc     = {all},
+		colorlinks	=	true,
+		breaklinks	= true,
+		linktoc		 = {all},
 		hyperfootnotes = true
 	}
 }
@@ -294,7 +294,7 @@
 %% =================================
 \cs_new_protected_nopar:Nn \__pxgdx_hfill: { \hspace*{\fill} }
 %% #1 align right #2(scalar \linewidth) #3(content) #4(max size)
-\cs_new:Nn  \__pxgdx_grow:nnnn {
+\cs_new:Nn	\__pxgdx_grow:nnnn {
 	\IfBlankTF{#3}{\resizebox*{!}{#4}{	NOT SET }}{
 		\sbox0{\resizebox{#2\linewidth}{!}{#3}}
 		\bool_if:NF {#1}{ \__pxgdx_hfill: }
@@ -415,7 +415,7 @@
 				\__ifoffset:n{\vspace*{-.5\l__gdx_em}\par\hspace*{-.5\l__gdx_em}}
 				\includegraphics[keepaspectratio=true, height=\l__gdx_cover_body_height]{img/\l__gdx_cover_image_long_tl}
 			\end{minipage}
-			\__pxgdx_hfill:% --- RIGHT BODY  ---
+			\__pxgdx_hfill:% --- RIGHT BODY	---
 			\begin{minipage}[c][\l__gdx_cover_body_height][t]{.6\textwidth}
 				\__ifoffset:nn {\hspace*{.5\l__gdx_em}}{\__pxgdx_hfill:	}
 				\fcolorbox{\l__gdx_cover_aux_color_tl}{\l__gdx_cover_aux_color_tl}

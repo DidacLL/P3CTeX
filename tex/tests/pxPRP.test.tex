@@ -99,8 +99,8 @@ Ara: TEMP.k[1] = \pxGET TEMP.k[1].
 \par
 
 \pxIfTrueTF{FLAGS}{featureB}
-  {featureB és ACTIVA.}
-  {featureB és INACTIVA.}
+	{featureB és ACTIVA.}
+	{featureB és INACTIVA.}
 
 \bigskip
 
@@ -124,19 +124,19 @@ Tots els valors de OBJS.vals (esperat a,b,c): \pxListAll{OBJS}{vals}.
 \subsection*{Prova 8 (mínima): Predicats d'existència i llargada}
 
 \pxIfObjectExistsTF{NOEXISTEIX}
-  {OBJECTE NOEXISTEIX (no hauria de passar).}
-  {OBJECTE NOEXISTEIX no és present, com esperat.}
+	{OBJECTE NOEXISTEIX (no hauria de passar).}
+	{OBJECTE NOEXISTEIX no és present, com esperat.}
 
 \pxNewObject{CHK}
 \pxSetValue{CHK}{nums}{1,2,3}
 
 \pxIfObjectExistsTF{CHK}
-  {CHK existeix.}
-  {CHK \emph{no} existeix (error).}
+	{CHK existeix.}
+	{CHK \emph{no} existeix (error).}
 
 \pxIfKeyExistsTF{CHK}{nums}
-  {nums existeix a CHK.}
-  {nums \emph{no} existeix a CHK (error).}
+	{nums existeix a CHK.}
+	{nums \emph{no} existeix a CHK (error).}
 
 Llargada esperada de CHK.nums: 3.\quad
 Llargada real: \pxListLen{CHK}{nums}.
