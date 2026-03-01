@@ -28,16 +28,24 @@
 %% ===== MODULE VARIABLES ==========
 %% =================================
 \seq_new:N \l__pxtab_rows_seq
-\tl_new:N   \l__pxtab_style_tl
-\tl_new:N   \l__pxtab_header_bg_tl
-\tl_new:N   \l__pxtab_alt_row_tl
-\tl_new:N   \l__pxtab_colspec_tl
-\tl_new:N   \l__pxtab_row_sep_tl
-\tl_new:N   \l__pxtab_tmp_tl
-\int_new:N  \l__pxtab_row_index_int
-\int_new:N  \l__pxtab_ncols_int
-\str_new:N  \l__pxtab_style_str
-\clist_new:N \l__pxtab_cells_clist
+\seq_new:N \l__pxtab_cells_seq
+\tl_new:N  \l__pxtab_style_tl
+\tl_new:N  \l__pxtab_header_bg_tl
+\tl_new:N  \l__pxtab_header_text_tl
+\tl_new:N  \l__pxtab_alt_row_bg_tl
+\tl_new:N  \l__pxtab_alt_row_text_tl
+\tl_new:N  \l__pxtab_colspec_tl
+\tl_new:N  \l__pxtab_row_sep_tl
+\tl_new:N  \l__pxtab_cell_sep_tl
+\tl_new:N  \l__pxtab_tmpa_tl
+\tl_new:N  \l__pxtab_tmpb_tl
+\tl_new:N  \l__pxtab_body_tl
+\int_new:N \l__pxtab_ncols_int
+\int_new:N \l__pxtab_row_index_int
+\int_new:N \l__pxtab_tmpa_int
+\int_new:N \l__pxtab_colspec_count_int
+\str_new:N \l__pxtab_style_str
+\bool_new:N \l__pxtab_simple_colspec_bool
 %% =================================
 %% ===== KEY DEFINITIONS (pxTAB) ====
 %% =================================
@@ -48,99 +56,255 @@
 	style          .initial:n  = plain,
 	headerbgcolor  .tl_set:N   = \l__pxtab_header_bg_tl,
 	headerbgcolor  .initial:n  = { gray!25 },
-	altrowcolor    .tl_set:N   = \l__pxtab_alt_row_tl,
-	altrowcolor    .initial:n  = { gray!10 },
+	headertextcolor .tl_set:N  = \l__pxtab_header_text_tl,
+	headertextcolor .initial:n = { black },
+	altrowbgcolor  .tl_set:N   = \l__pxtab_alt_row_bg_tl,
+	altrowbgcolor  .initial:n  = { gray!10 },
+	altrowcolor    .meta:n     = { altrowbgcolor = {#1} },
+	altrowtextcolor .tl_set:N  = \l__pxtab_alt_row_text_tl,
+	altrowtextcolor .initial:n = {},
 	colspec        .tl_set:N   = \l__pxtab_colspec_tl,
 	colspec        .initial:n  = {},
 	rowsep         .tl_set:N   = \l__pxtab_row_sep_tl,
-	rowsep         .initial:n  = { ; },
+	rowsep         .initial:n  = {;},
+	cellsep        .tl_set:N   = \l__pxtab_cell_sep_tl,
+	cellsep        .initial:n  = {,},
 	unknown        .code:n     = { }
 }
-\cs_generate_variant:Nn \clist_count:n { V }
 %% =================================
-%% ===== ROW/CELL EMISSION =========
+%% ===== WARNINGS ===================
 %% =================================
-%% Build an explicit alignment-tab token with category code 4.
+\msg_new:nnnn { pxTAB } { empty-table }
+	{ pxTAB:~empty~table~(no~rows),~skipping. } { }
+\msg_new:nnnn { pxTAB } { empty-first-row }
+	{ pxTAB:~first~row~has~no~columns,~skipping~table. } { }
+\msg_new:nnnn { pxTAB } { colspec-mismatch }
+	{ pxTAB:~colspec~length~does~not~match~column~count,~using~auto~colspec. } { }
+\cs_new_protected:Npn \__pxtab_warn_empty_table:
+	{ \msg_warning:nn { pxTAB } { empty-table } }
+\cs_new_protected:Npn \__pxtab_warn_empty_row:
+	{ \msg_warning:nn { pxTAB } { empty-first-row } }
+%% Explicit alignment-tab token producer.
 \group_begin:
 	\char_set_catcode_alignment:N \&
 	\cs_new:Npn \__pxtab_alignment_tab: { & }
 \group_end:
-%% Append one alignment-tab token directly into a tl.
-\group_begin:
-	\char_set_catcode_alignment:N \&
-	\cs_new_protected:Npn \__pxtab_tl_put_alignment:N #1
-	{
-		\tl_put_right:Nn #1 { & }
-	}
-\group_end:
-%% Emit one normalized row (exactly ncols cells; pad/truncate as needed).
-\cs_new_protected:Npn \__pxtab_emit_row:nn #1#2
+%% =================================
+%% ===== PARSING HELPERS ============
+%% =================================
+\cs_generate_variant:Nn \seq_set_split:Nnn { NVV }
+\cs_new_protected:Npn \__pxtab_row_to_cells_seq:VN #1#2
 {
-	\clist_set:Nn \l__pxtab_cells_clist { #1 }
-	\tl_clear:N \l__pxtab_tmp_tl
-	\int_step_inline:nnnn { 1 } { 1 } { #2 }
+	\seq_set_split:NVV #2 \l__pxtab_cell_sep_tl #1
+}
+\cs_new_protected:Npn \__pxtab_row_to_cells_seq:nN #1#2
+{
+	\tl_set:Nn \l__pxtab_tmpa_tl { #1 }
+	\__pxtab_row_to_cells_seq:VN \l__pxtab_tmpa_tl #2
+}
+\cs_new_protected:Npn \__pxtab_parse_rows_from_list:n #1
+{
+	\seq_clear:N \l__pxtab_rows_seq
+	\tl_set:Nn \l__pxtab_tmpa_tl { #1 }
+	\seq_set_split:NVV \l__pxtab_rows_seq \l__pxtab_row_sep_tl \l__pxtab_tmpa_tl
+}
+\prg_new_conditional:Npnn \__pxtab_prepare_ncols: { TF }
+{
+	\seq_if_empty:NTF \l__pxtab_rows_seq
+		{
+			\__pxtab_warn_empty_table:
+			\prg_return_false:
+		}
+		{
+			\seq_get_left:NN \l__pxtab_rows_seq \l__pxtab_tmpa_tl
+			\__pxtab_row_to_cells_seq:VN \l__pxtab_tmpa_tl \l__pxtab_cells_seq
+			\int_set:Nn \l__pxtab_ncols_int { \seq_count:N \l__pxtab_cells_seq }
+			\int_compare:nNnTF { \l__pxtab_ncols_int } = { 0 }
+				{
+					\__pxtab_warn_empty_row:
+					\prg_return_false:
+				}
+				{ \prg_return_true: }
+		}
+}
+%% =================================
+%% ===== ROW EMISSION ===============
+%% =================================
+\cs_new:Npn \__pxtab_emit_cell:nn #1#2
+{
+	\tl_if_blank:nTF { #2 }
+		{ #1 }
+		{ \textcolor{#2}{#1} }
+}
+\cs_new_protected:Npn \__pxtab_append_row_to_body:nnn #1#2#3
+{
+	\__pxtab_row_to_cells_seq:nN { #1 } \l__pxtab_cells_seq
+	\tl_clear:N \l__pxtab_tmpa_tl
+	\int_set:Nn \l__pxtab_tmpa_int { \seq_count:N \l__pxtab_cells_seq }
+	\int_step_inline:nn { #2 }
 	{
 		\int_compare:nNnT { ##1 } > { 1 }
-			{ \__pxtab_tl_put_alignment:N \l__pxtab_tmp_tl }
-		\tl_put_right:Nx \l__pxtab_tmp_tl
-			{ \clist_item:Nn \l__pxtab_cells_clist { ##1 } }
+			{ \tl_put_right:Nx \l__pxtab_tmpa_tl { \__pxtab_alignment_tab: } }
+		\int_compare:nNnTF { ##1 } > { \l__pxtab_tmpa_int }
+			{ }
+			{
+				\tl_put_right:Nx \l__pxtab_tmpa_tl
+					{
+						\__pxtab_emit_cell:nn
+							{ \seq_item:Nn \l__pxtab_cells_seq { ##1 } }
+							{ #3 }
+					}
+			}
 	}
-	\tl_use:N \l__pxtab_tmp_tl
-	\tabularnewline
+	\tl_put_right:Nx \l__pxtab_body_tl { \tl_use:N \l__pxtab_tmpa_tl }
+	\tl_put_right:Nn \l__pxtab_body_tl { \\ }
 }
-%% Shared row-loop utility (keeps renderers concise and symmetric).
-\cs_new_protected:Npn \__pxtab_emit_all_rows:n #1
+\cs_new_protected:Npn \__pxtab_append_row_styled_to_body:nnnn #1#2#3#4
 {
-	\seq_map_inline:Nn \l__pxtab_rows_seq
-		{ \__pxtab_emit_row:nn { ##1 } { #1 } }
+	\tl_if_blank:nF { #3 } { \tl_put_right:Nx \l__pxtab_body_tl { \exp_not:N \rowcolor { #3 } } }
+	\__pxtab_append_row_to_body:nnn { #1 } { #2 } { #4 }
 }
 %% =================================
 %% ===== COLUMN SPEC HELPERS =======
 %% =================================
-%% Build column spec with vertical rules: "ccc" -> "|c|c|c|".
-\cs_new_protected:Npn \__pxtab_build_colspec_with_vrule:NN #1#2
+\cs_new_protected:Npn \__pxtab_count_simple_colspec:
 {
-	\tl_clear:N #1
-	\tl_put_right:Nn #1 { | }
-	\tl_map_inline:Nn #2
-		{ \tl_put_right:Nn #1 { ##1 | } }
+	\int_zero:N \l__pxtab_colspec_count_int
+	\tl_set:Nx \l__pxtab_tmpa_tl { \tl_remove_all_spaces:n { \l__pxtab_colspec_tl } }
+	\bool_set_true:N \l__pxtab_simple_colspec_bool
+	\tl_map_inline:Nn \l__pxtab_tmpa_tl
+	{
+		\str_case:nnF { ##1 }
+		{
+			{ c } { \int_incr:N \l__pxtab_colspec_count_int }
+			{ l } { \int_incr:N \l__pxtab_colspec_count_int }
+			{ r } { \int_incr:N \l__pxtab_colspec_count_int }
+		}
+		{ \bool_set_false:N \l__pxtab_simple_colspec_bool }
+	}
 }
-%% =================================
-%% ===== MAIN TABLE RENDERER =======
-%% =================================
-%% Open/close helpers keep environment emission explicit and symmetric.
-%% Use x-expansion to materialize expl3 tl variables into plain preamble chars.
-\cs_new_protected:Npn \__pxtab_begin_tabular_from_tl:N #1
-{
-	\use:x
-		{ \exp_not:N \begin{tabular}{ \tl_use:N #1 } }
-}
-\cs_new_protected:Npn \__pxtab_end_tabular:
-{
-	\end{tabular}
-}
-%% \__pxtab_table_from_seq:nn { <options> } { <ncols> }
-%% Assumes \l__pxtab_rows_seq is already filled.
-\cs_new_protected:Npn \__pxtab_table_from_seq:nn #1#2
-{
-	\group_begin:
-	\keys_set:nn { pxTAB } { #1 }
-	\__pxtab_table_from_seq_aux:n { #2 }
-	\group_end:
-}
-%% Validate colspec, dispatch style.
-\cs_new_protected:Npn \__pxtab_table_from_seq_aux:n #1
+\cs_new_protected:Npn \__pxtab_validate_or_build_colspec:n #1
 {
 	\tl_if_empty:NF \l__pxtab_colspec_tl
 	{
-		\int_compare:nNnF { \tl_count:N \l__pxtab_colspec_tl } = { #1 }
+		\__pxtab_count_simple_colspec:
+		\bool_if:NT \l__pxtab_simple_colspec_bool
 		{
-			\msg_warning:nn { pxTAB } { colspec-mismatch }
-			\tl_clear:N \l__pxtab_colspec_tl
+			\int_compare:nNnF { \l__pxtab_colspec_count_int } = { #1 }
+			{
+				\msg_warning:nn { pxTAB } { colspec-mismatch }
+				\tl_clear:N \l__pxtab_colspec_tl
+			}
 		}
 	}
 	\tl_if_empty:NT \l__pxtab_colspec_tl
 		{ \tl_set:Nx \l__pxtab_colspec_tl { \prg_replicate:nn { #1 } { c } } }
+}
+\cs_new_protected:Npn \__pxtab_build_box_colspec:NN #1#2
+{
+	\tl_set:Nx \l__pxtab_tmpa_tl { \tl_remove_all_spaces:n { \tl_use:N #2 } }
+	\bool_set_true:N \l__pxtab_simple_colspec_bool
+	\tl_map_inline:Nn \l__pxtab_tmpa_tl
+	{
+		\str_case:nnF { ##1 }
+		{ { c } { } { l } { } { r } { } }
+		{ \bool_set_false:N \l__pxtab_simple_colspec_bool }
+	}
+	\bool_if:NTF \l__pxtab_simple_colspec_bool
+	{
+		\tl_clear:N #1
+		\tl_put_right:Nn #1 { | }
+		\tl_map_inline:Nn \l__pxtab_tmpa_tl
+			{ \tl_put_right:Nn #1 { ##1| } }
+	}
+	{ \tl_set:Nx #1 { | \tl_use:N #2 | } }
+}
+\cs_new_protected:Npn \__pxtab_begin_tabular_from_tl:N #1
+{
+	\use:x { \exp_not:N \begin{tabular}{ \tl_use:N #1 } }
+}
+\cs_new_protected:Npn \__pxtab_end_tabular:
+	{ \end{tabular} }
+\cs_new_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+{
+	\__pxtab_begin_tabular_from_tl:N #1
+	\tl_use:N \l__pxtab_body_tl
+	\__pxtab_end_tabular:
+}
+%% =================================
+%% ===== STYLE RENDERERS ============
+%% =================================
+\cs_new_protected:Npn \__pxtab_render_table_plain:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+		{ \__pxtab_append_row_to_body:nnn { ##1 } { #1 } { } }
+	\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+}
+\cs_new_protected:Npn \__pxtab_render_table_header:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\int_zero:N \l__pxtab_row_index_int
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_compare:nNnTF { \l__pxtab_row_index_int } = { 1 }
+			{
+				\__pxtab_append_row_styled_to_body:nnnn
+					{ ##1 } { #1 }
+					{ \l__pxtab_header_bg_tl }
+					{ \l__pxtab_header_text_tl }
+			}
+			{ \__pxtab_append_row_to_body:nnn { ##1 } { #1 } { } }
+	}
+	\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+}
+\cs_new_protected:Npn \__pxtab_render_table_striped:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\int_zero:N \l__pxtab_row_index_int
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_if_odd:nTF { \l__pxtab_row_index_int }
+			{
+				\__pxtab_append_row_styled_to_body:nnnn
+					{ ##1 } { #1 }
+					{ \l__pxtab_alt_row_bg_tl }
+					{ \l__pxtab_alt_row_text_tl }
+			}
+			{ \__pxtab_append_row_to_body:nnn { ##1 } { #1 } { } }
+	}
+	\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+}
+\cs_new_protected:Npn \__pxtab_render_table_boxed:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+		{ \__pxtab_append_row_to_body:nnn { ##1 } { #1 } { } }
+	\tl_put_left:Nn \l__pxtab_body_tl { \hline }
+	\tl_put_right:Nn \l__pxtab_body_tl { \hline }
+	\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+}
+\cs_new_protected:Npn \__pxtab_render_table_grid:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl
+	\tl_put_right:Nn \l__pxtab_body_tl { \hline }
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\__pxtab_append_row_to_body:nnn { ##1 } { #1 } { }
+		\tl_put_right:Nn \l__pxtab_body_tl { \hline }
+	}
+	\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+}
+%% =================================
+%% ===== MAIN RENDER ENTRY ==========
+%% =================================
+\cs_new_protected:Npn \__pxtab_table_from_seq:n #1
+{
+	\__pxtab_validate_or_build_colspec:n { #1 }
 	\str_set:Nx \l__pxtab_style_str { \tl_use:N \l__pxtab_style_tl }
 	\str_case:nnF { \str_use:N \l__pxtab_style_str }
 	{
@@ -152,119 +316,70 @@
 	}
 	{ \__pxtab_render_table_plain:n { #1 } }
 }
-%% Plain: no outer rules.
-\cs_new_protected:Npn \__pxtab_render_table_plain:n #1
-{
-	\__pxtab_begin_tabular_from_tl:N \l__pxtab_colspec_tl
-	\__pxtab_emit_all_rows:n { #1 }
-	\__pxtab_end_tabular:
-}
-%% Header: first row with background color.
-\cs_new_protected:Npn \__pxtab_render_table_header:n #1
-{
-	\__pxtab_begin_tabular_from_tl:N \l__pxtab_colspec_tl
-	\int_set:Nn \l__pxtab_row_index_int { 0 }
-	\seq_map_inline:Nn \l__pxtab_rows_seq
-	{
-		\int_incr:N \l__pxtab_row_index_int
-		\int_compare:nNnT { \l__pxtab_row_index_int } = { 1 }
-			{ \rowcolor{ \l__pxtab_header_bg_tl } }
-		\__pxtab_emit_row:nn { ##1 } { #1 }
-	}
-	\__pxtab_end_tabular:
-}
-%% Striped: even rows with background color.
-\cs_new_protected:Npn \__pxtab_render_table_striped:n #1
-{
-	\__pxtab_begin_tabular_from_tl:N \l__pxtab_colspec_tl
-	\int_set:Nn \l__pxtab_row_index_int { 0 }
-	\seq_map_inline:Nn \l__pxtab_rows_seq
-	{
-		\int_incr:N \l__pxtab_row_index_int
-		\int_if_even:nT { \l__pxtab_row_index_int }
-			{ \rowcolor{ \l__pxtab_alt_row_tl } }
-		\__pxtab_emit_row:nn { ##1 } { #1 }
-	}
-	\__pxtab_end_tabular:
-}
-%% Boxed: vertical rules plus top/bottom hline.
-\cs_new_protected:Npn \__pxtab_render_table_boxed:n #1
-{
-	\__pxtab_build_colspec_with_vrule:NN \l__pxtab_tmp_tl \l__pxtab_colspec_tl
-	\__pxtab_begin_tabular_from_tl:N \l__pxtab_tmp_tl
-	\hline
-	\__pxtab_emit_all_rows:n { #1 }
-	\hline
-	\__pxtab_end_tabular:
-}
-%% Grid: vertical rules plus hline before/after every row.
-\cs_new_protected:Npn \__pxtab_render_table_grid:n #1
-{
-	\__pxtab_build_colspec_with_vrule:NN \l__pxtab_tmp_tl \l__pxtab_colspec_tl
-	\__pxtab_begin_tabular_from_tl:N \l__pxtab_tmp_tl
-	\hline
-	\seq_map_inline:Nn \l__pxtab_rows_seq
-	{
-		\__pxtab_emit_row:nn { ##1 } { #1 }
-		\hline
-	}
-	\__pxtab_end_tabular:
-}
 %% =================================
-%% ===== ROW PARSING (list form) ====
+%% ===== .sty FACING INTERNAL API ===
 %% =================================
-%% \__pxtab_parse_rows:n { <data> }
-%% Splits #1 by row separator (\l__pxtab_row_sep_tl, default ";") and fills \l__pxtab_rows_seq.
-%% Example: "A,B;C,D" -> rows [A,B] [C,D] (cells within a row are comma-separated).
-\cs_generate_variant:Nn \seq_set_split:Nnn { NVV }
-\cs_new:Npn \__pxtab_parse_rows:n #1
-{
-	\seq_clear:N \l__pxtab_rows_seq
-	\tl_set:Nn \l__pxtab_tmp_tl { #1 }
-	\seq_set_split:NVV \l__pxtab_rows_seq \l__pxtab_row_sep_tl \l__pxtab_tmp_tl
-}
-%% =================================
-%% ===== COLUMN COUNT ===============
-%% =================================
-\cs_new:Npn \__pxtab_count_columns:n #1
-{
-	\clist_count:n { #1 }
-}
-%% =================================
-%% ===== ENTRY: FROM SEQUENCE =======
-%% =================================
-%% \pxTAB_table_from_seq:nn { <options> } { <ncols> }
-%% Called from .sty after rows are in \l__pxtab_rows_seq. Options are key=value list.
+\cs_new_protected:Npn \pxTAB_set_options:n #1
+	{ \keys_set:nn { pxTAB } { #1 } }
+\cs_new_protected:Npn \pxTAB_table_from_seq:n #1
+	{ \__pxtab_table_from_seq:n { #1 } }
 \cs_new_protected:Npn \pxTAB_table_from_seq:nn #1#2
 {
-	\__pxtab_table_from_seq:nn { #1 } { #2 }
+	\keys_set:nn { pxTAB } { #1 }
+	\__pxtab_table_from_seq:n { #2 }
 }
-%% \pxTAB_table_from_list:nn { <options> } { <data> }
-%% Parses #2 as rows separated by ";" (cells within row by comma), fills seq, then renders.
+\cs_new_protected:Npn \pxTAB_rows_from_list:n #1
+	{ \__pxtab_parse_rows_from_list:n { #1 } }
+\cs_new_protected:Npn \pxTAB_rows_prepend:n #1
+	{ \seq_put_left:Nn \l__pxtab_rows_seq { #1 } }
+\cs_new_protected:Npn \pxTAB_prepare_table_from_current_rows:
+{
+	\__pxtab_prepare_ncols:TF
+		{ \__pxtab_table_from_seq:n { \l__pxtab_ncols_int } }
+		{ }
+}
+\cs_new_protected:Npn \pxTAB_table_from_list:n #1
+{
+	\__pxtab_parse_rows_from_list:n { #1 }
+	\pxTAB_prepare_table_from_current_rows:
+}
 \cs_new_protected:Npn \pxTAB_table_from_list:nn #1#2
 {
-	\__pxtab_parse_rows:n { #2 }
-	\seq_if_empty:NTF \l__pxtab_rows_seq
-		{ \__pxtab_warn_empty_table: }
-		{
-			\seq_get_left:NN \l__pxtab_rows_seq \l__pxtab_tmp_tl
-			\int_set:Nn \l__pxtab_ncols_int { \clist_count:V \l__pxtab_tmp_tl }
-			\int_compare:nNnTF { \l__pxtab_ncols_int } = { 0 }
-				{ \__pxtab_warn_empty_row: }
-				{
-					\pxTAB_table_from_seq:nn
-						{ #1 }
-						{ \int_use:N \l__pxtab_ncols_int }
-				}
-		}
+	\keys_set:nn { pxTAB } { #1 }
+	\pxTAB_table_from_list:n { #2 }
 }
-%% Guard: no table when empty or zero columns (avoids broken tabular).
-\msg_new:nnnn { pxTAB } { empty-table } { pxTAB: empty table (no rows), skipping. } { }
-\msg_new:nnnn { pxTAB } { empty-first-row } { pxTAB: first row has no columns, skipping table. } { }
-\msg_new:nnnn { pxTAB } { colspec-mismatch }
-	{ pxTAB: colspec~length~does~not~match~column~count,~using~auto~colspec. } { }
-\cs_new:Npn \__pxtab_warn_empty_table:
-	{ \msg_warning:nn { pxTAB } { empty-table } }
-\cs_new:Npn \__pxtab_warn_empty_row:
-	{ \msg_warning:nn { pxTAB } { empty-first-row } }
+\cs_new_protected:Npn \pxTAB_table_matrix:nnn #1#2#3
+{
+	\int_compare:nNnTF { #1 } > { 0 }
+	{
+		\int_compare:nNnTF { #2 } > { 0 }
+		{
+			\tl_set:Nn \l__pxtab_tmpa_tl { #3 }
+			\seq_set_split:NVV \l__pxtab_cells_seq \l__pxtab_cell_sep_tl \l__pxtab_tmpa_tl
+			\seq_clear:N \l__pxtab_rows_seq
+			\int_step_inline:nn { #1 }
+			{
+				\tl_clear:N \l__pxtab_tmpa_tl
+				\int_step_inline:nn { #2 }
+				{
+					\int_compare:nNnT { ####1 } > { 1 }
+						{ \tl_put_right:NV \l__pxtab_tmpa_tl \l__pxtab_cell_sep_tl }
+					\int_set:Nn \l__pxtab_tmpa_int
+						{ ( ##1 - 1 ) * #2 + ####1 }
+					\int_compare:nNnTF
+						{ \l__pxtab_tmpa_int } > { \seq_count:N \l__pxtab_cells_seq }
+						{ }
+						{
+							\tl_put_right:Nx \l__pxtab_tmpa_tl
+								{ \seq_item:Nn \l__pxtab_cells_seq { \l__pxtab_tmpa_int } }
+						}
+				}
+				\seq_put_right:NV \l__pxtab_rows_seq \l__pxtab_tmpa_tl
+			}
+			\__pxtab_table_from_seq:n { #2 }
+		}
+		{ \__pxtab_warn_empty_row: }
+	}
+	{ \__pxtab_warn_empty_table: }
+}
 \endinput

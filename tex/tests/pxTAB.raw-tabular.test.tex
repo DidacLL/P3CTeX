@@ -1,0 +1,26 @@
+% Minimal test: raw tabular and red header WITHOUT pxTAB.
+% Validates toolchain and that xcolor/colortbl work for red in tabular.
+\documentclass{article}
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{array}
+
+\begin{document}
+\section*{Raw tabular (no pxTAB)}
+
+\subsection*{1. Plain 3-column table}
+\begin{tabular}{ccc}
+  A & B & C \\
+  \hline
+  1 & 2 & 3
+\end{tabular}
+
+\bigskip
+\subsection*{2. Red header row (textcolor)}
+\begin{tabular}{ccc}
+  \textcolor{red}{H1} & \textcolor{red}{H2} & \textcolor{red}{H3} \\
+  a & b & c \\
+  d & e & f
+\end{tabular}
+
+\end{document}

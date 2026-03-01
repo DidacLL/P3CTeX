@@ -26,8 +26,8 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse,l3keys2e}
 \RequirePackage{array}
+\RequirePackage[table]{xcolor}
 \RequirePackage{colortbl}
-\RequirePackage{xcolor}
 \ProvidesExplPackage{pxTAB}{2026/02/26}{v0.1}
 {P3CTeX predefined tables from comma-separated rows and columns}
 \file_input:n {pxTAB.code.tex}
@@ -36,9 +36,16 @@
 %%%    	--	PUBLIC LaTeX2e API		--		%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package configuration (pxTAB key family).
-%%   \pxTABsetup{<key>=<value>,...}
+%%   Options are only processed at load time via \usepackage[options]{pxTAB}.
+%%   \pxTABsetup sets package keys (global in document scope, local in TeX groups).
 \NewDocumentCommand{\pxTABsetup}{m}
-  { \keys_set:nn { pxTAB } { #1 } }
+  { \pxTAB_set_options:n { #1 } }
+%% Shared helper: apply table-local options.
+\cs_new_protected:Npn \__pxtab_apply_local_options:n #1
+{
+	\tl_if_blank:nF { #1 }
+		{ \pxTAB_set_options:n { #1 } }
+}
 %% -----------------------------------------------------------------------
 %% \pxTable[<options>]{<row1>}{<row2>}...{<rowN>}
 %%   Each <row> is a comma-separated list of cell contents.
@@ -47,29 +54,28 @@
 {
 	\seq_clear:N \l__pxtab_rows_seq
 	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
-	\__pxtab_collect_rows:nn
-		{ #1 }
-		{ \int_eval:n { \clist_count:n { #2 } } }
+	\__pxtab_collect_rows:n { #1 }
 }
 %% Internal: collect further braced row arguments, then render table.
-\cs_new:Npn \__pxtab_collect_rows:nn #1#2
+\cs_new:Npn \__pxtab_collect_rows:n #1
 {
 	\@ifnextchar\bgroup
-		{ \__pxtab_collect_rows_aux:nnn { #1 } { #2 } }
-		{ \__pxtab_finish_table:nn { #1 } { #2 } }
+		{ \__pxtab_collect_rows_aux:n { #1 } }
+		{ \__pxtab_finish_table:n { #1 } }
 }
-\cs_new:Npn \__pxtab_collect_rows_aux:nnn #1#2#3
+\cs_new:Npn \__pxtab_collect_rows_aux:n #1#2
 {
-	\seq_put_right:Nn \l__pxtab_rows_seq { #3 }
+	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
 	\@ifnextchar\bgroup
-		{ \__pxtab_collect_rows_aux:nnn { #1 } { #2 } }
-		{ \__pxtab_finish_table:nn { #1 } { #2 } }
+		{ \__pxtab_collect_rows_aux:n { #1 } }
+		{ \__pxtab_finish_table:n { #1 } }
 }
-\cs_new:Npn \__pxtab_finish_table:nn #1#2
+\cs_new_protected:Npn \__pxtab_finish_table:n #1
 {
-	\int_compare:nNnTF { #2 } = { 0 }
-		{ \msg_warning:nn { pxTAB } { empty-first-row } }
-		{ \pxTAB_table_from_seq:nn { #1 } { #2 } }
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_prepare_table_from_current_rows:
+	\group_end:
 }
 %% -----------------------------------------------------------------------
 %% \pxTableFromList[<options>]{<data>}
@@ -77,11 +83,41 @@
 %%   Example: {Name, Age, City; Alice, 20, Barcelona; Bob, 22, Madrid}
 \NewDocumentCommand{\pxTableFromList}{ O{} m }
 {
-	\pxTAB_table_from_list:nn { #1 } { #2 }
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_table_from_list:n { #2 }
+	\group_end:
 }
 %% -----------------------------------------------------------------------
 %% Convenience: one-row table (e.g. a single header or data row).
 \NewDocumentCommand{\pxTableRow}{ O{} m }
 {
 	\pxTable[#1]{#2}
+}
+%% -----------------------------------------------------------------------
+%% Header/body split with body as flat list.
+\NewDocumentCommand{\pxTableHeadBody}{ O{} m m }
+{
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_rows_from_list:n { #3 }
+		\pxTAB_rows_prepend:n { #2 }
+		\pxTAB_prepare_table_from_current_rows:
+	\group_end:
+}
+%% Header/body split with body as row arguments.
+\NewDocumentCommand{\pxTableHeadBodyRows}{ O{} m m }
+{
+	\seq_clear:N \l__pxtab_rows_seq
+	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
+	\seq_put_right:Nn \l__pxtab_rows_seq { #3 }
+	\__pxtab_collect_rows:n { #1 }
+}
+%% Matrix helper from flat cell list.
+\NewDocumentCommand{\pxTableMatrix}{ O{} m m m }
+{
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_table_matrix:nnn { #2 } { #3 } { #4 }
+	\group_end:
 }

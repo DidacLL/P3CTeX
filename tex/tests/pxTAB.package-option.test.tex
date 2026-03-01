@@ -1,14 +1,14 @@
 \documentclass{article}
 
-\usepackage[style=boxed]{pxTAB}
+% Options only at load time.
+\usepackage[style=header,headerbgcolor=red!20,headertextcolor=red!70!black]{pxTAB}
 
 \begin{document}
 
 \section*{pxTAB package option test}
 
-\subsection*{Default style from package option}
-\verb|\usepackage[style=striped]{pxTAB}|\\
-\verb|\pxTable{H1, H2}{a, b}{c, d}|\\
-\pxTable{H1, H2}{a, b}{c, d}
+\subsection*{Style and header colors from \texttt{\textbackslash usepackage}}
+\verb|\usepackage[style=header,headerbgcolor=red!20,headertextcolor=red!70!black]{pxTAB}|\\
+\pxTable{H1, H2, H3}{a, b, c}{d, e, f}
 
 \end{document}
