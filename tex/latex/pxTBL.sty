@@ -1,0 +1,64 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxTAB.sty
+%%	Version: v0.1 (02/2026)
+%%	Description:
+%%		Predefined table styles and list-driven table generation for
+%%		students: build tables from comma-separated rows/columns
+%%		without writing raw tabular syntax. Styles: plain (no outer
+%%		borders), header (colored first row), striped, boxed, grid.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+\RequirePackage{expl3}
+\RequirePackage{xparse,l3keys2e}
+\RequirePackage{array}
+\RequirePackage[table]{xcolor}
+\RequirePackage{colortbl}
+\RequirePackage{pgffor}
+\RequirePackage{tabularx}
+\ProvidesExplPackage{pxTBL}{2026/02/26}{v0.1}
+{P3CTeX predefined tables from comma-separated rows and columns}
+\file_input:n {pxTBL.code.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PUBLIC LaTeX2e API		--		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package configuration (pxTAB key family).
+%%   Options are only processed at load time via \usepackage[options]{pxTAB}.
+%%   \pxTABsetup sets keys for current scope only (e.g. for compatibility); do not call \ProcessKeysOptions in document.
+\NewDocumentCommand{\pxTABsetup}{m}{
+	\keys_set:nn { pxTBL } { #1 }
+	\ProcessKeysOptions{ pxTBL }
+}
+%% \pxTBLtop[maxwidth]{numcols}[gap]{headers}[rows prefix]{rows}
+\NewDocumentCommand{\pxTBLtop}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\IfBooleanTF{#1}
+	{\_pxtable_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+	{\_pxtable_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+}
+\NewDocumentCommand{\pxTBL}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\IfBooleanTF{#1}
+	{\_pxtable_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+	{\_pxtable_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+}
+\NewDocumentCommand{\pxTBLlong}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\IfBooleanTF{#1}
+	{\_pxtable_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+	{\_pxtable_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+}

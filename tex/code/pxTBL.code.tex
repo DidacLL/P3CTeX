@@ -1,0 +1,97 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxTBL.code.tex
+%%	Version: v0.1 (02/2026)
+%%	Description:
+%%		Expl3 internals for pxTAB: predefined table styles and
+%%		list-driven table generation (rows/columns as comma-separated
+%%		lists). All user-facing commands are in pxTAB.sty.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+\RequirePackage{expl3}
+\RequirePackage{xparse,l3keys2e}
+\RequirePackage{longtable}
+\ProvidesExplFile{pxTBL.code.tex}{2026/02/26}{v0.1}
+{P3CTeX predefined tables from comma-separated rows and columns}
+%% =================================
+%% ===== MODULE VARIABLES ==========
+%% =================================
+%% =================================
+%% ===== KEY DEFINITIONS (pxTAB) ====
+%% =================================
+\keys_define:nn { pxTBL }
+{
+	style          .choices:nn = { plain, header, striped, boxed, grid }
+		{ \tl_set:Nn \l__pxtab_style_tl { #1 } },
+	style          .initial:n  = plain,
+	headerbgcolor  .tl_set:N   = \l__pxtab_header_bg_tl,
+	headerbgcolor  .initial:n  = { gray!25 },
+	altrowcolor    .tl_set:N   = \l__pxtab_alt_row_tl,
+	altrowcolor    .initial:n  = { gray!10 },
+	colspec        .tl_set:N   = \l__pxtab_colspec_tl,
+	colspec        .initial:n  = {},
+	rowsep         .tl_set:N   = \l__pxtab_row_sep_tl,
+	rowsep         .initial:n  = { ; },
+	unknown        .code:n     = { }
+}
+\ProcessKeysOptions{ pxTBL }
+\int_new:N \l_tabletmpa_int
+\dim_new:N \l_pxtable_tophead_dim
+\dim_new:N \l_pxtable_tophead_aux_dim
+\dim_new:N \l_pxtable_toplong_dim
+\dim_new:N \l_pxtable_toplong_aux_dim
+
+%% \_pxtable_tophead:nnnn {headers}{rows}{numcols}{maxwidth}{cellprefix}{rowprefix}
+\cs_new:Npn \_pxtable_tophead:nnnnnnn #1#2#3#4#5#6#7 {
+	\dim_set:Nn \l_pxtable_tophead_dim {\dim_eval:n {#4/#3}}
+	\dim_set:Nn \l_pxtable_tophead_aux_dim {\dim_eval:n {(\l_pxtable_tophead_dim-#4)/10}}
+	\IfBlankF{#7}{\rowcolors*{1}{blue!25!}{}}
+	\begin{table}[h!]
+%		\begin{center}
+			\hspace*{\l_pxtable_tophead_aux_dim }
+			\begin{tabular}{>{}*{#3}{#6{\l_pxtable_tophead_dim}@{#5}}}
+				#1\\\IfBlankT{#7}{\hline}\noalign{\smallskip}
+				\hiderowcolors#2
+			\end{tabular}\\[1em]
+%		\end{center}
+	\end{table}
+}
+\cs_new:Npn \_pxtable_toplong:nnnnnnn #1#2#3#4#5#6#7 {
+	\dim_set:Nn \l_pxtable_toplong_dim {\dim_eval:n {#4/#3}}
+	\dim_set:Nn \l_pxtable_toplong_aux_dim {\dim_eval:n {(\l_pxtable_toplong_dim-#4)/10}}
+	\IfBlankF{#7}{\rowcolors*{1}{blue!25!}{blue!25!}}
+	\begin{longtable}[c]{*{#3}{#6{\l_pxtable_toplong_dim}}}
+		#1\\\IfBlankT{#7}{\hline}
+		\noalign{\smallskip}
+		\endfirsthead
+		#1\\\IfBlankTF{#7}{\hline}{\showrowcolors}
+		\noalign{\smallskip}
+		\endhead
+		\hiderowcolors#2
+	\end{longtable}
+}
+\cs_new:Npn \_pxtable_list:nnnnnnn #1#2#3#4#5#6#7 {
+	\clist_gclear:N \l_pxtable_list_clist
+	\clist_gclear:N \l_pxtable_list_aux_clist
+	\clist_gset:Nn \l_pxtable_list_clist {#1}
+	\clist_gset:Nn \l_pxtable_list_aux_clist {#2}
+	\_pxtable_toplong:nnnnnnn
+	{\bfseries\clist_use:Nn \l_pxtable_list_clist {\centering&\bfseries}}
+	{\clist_use:Nn \l_pxtable_list_aux_clist {\\\hline\noalign{\smallskip}}\\}
+	{#3}{#4}{#5}{#6}{#7}
+}
+\endinput
