@@ -157,6 +157,18 @@
 \pxTABsetup{style=grid,rulecolor=green!50!black,rulewidth=1pt}
 \pxTable{G1, G2}{m, n}{o, p}
 
+\subsection*{22. Trailing separator regressions (no extra empty row)}
+\pxTABsetup{style=boxed}
+\pxTableFromList{L1, L2; a, b;}
+\pxTABsetup{style=grid}
+\pxTableFromList{G1, G2; x, y;}
+\pxTABsetup{style=boxed}
+\pxTableMatrix{3}{2}{m11,m12,m21,m22}
+
+\subsection*{23. Matrix empty-row regression}
+\pxTABsetup{style=plain}
+\pxTableMatrix{2}{2}{m11,m12,m21,m22}
+
 \ExplSyntaxOn\__pxtab_test_probe_off:\ExplSyntaxOff
 
 \end{document}
