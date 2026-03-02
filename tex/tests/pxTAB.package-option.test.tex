@@ -1,14 +1,28 @@
 \documentclass{article}
 
 % Options only at load time.
-\usepackage[style=header,headerbgcolor=red!20,headertextcolor=red!70!black]{pxTAB}
+\usepackage[
+  style=header,
+  headerbgcolor=red!20,
+  headertextcolor=red!70!black,
+  rowsep=|,
+  cellsep=/
+]{pxTAB}
 
 \begin{document}
 
 \section*{pxTAB package option test}
 
-\subsection*{Style and header colors from \texttt{\textbackslash usepackage}}
-\verb|\usepackage[style=header,headerbgcolor=red!20,headertextcolor=red!70!black]{pxTAB}|\\
+\subsection*{Style and header colors from package loading options}
+\texttt{style=header, headerbgcolor=red!20, headertextcolor=red!70!black}\par
 \pxTable{H1, H2, H3}{a, b, c}{d, e, f}
+
+\subsection*{Separators from package options}
+\texttt{rowsep=|, cellsep=/} at package load time\par
+\pxTableFromList{K1/K2|A/B|C/D}
+
+\subsection*{Runtime setup can still override package defaults}
+\pxTABsetup{style=grid}
+\pxTable{G1, G2}{x, y}{u, v}
 
 \end{document}

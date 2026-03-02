@@ -4,6 +4,55 @@
 
 \begin{document}
 
+\ExplSyntaxOn
+\bool_new:N \g__pxtab_test_probe_bool
+\tl_new:N \l__pxtab_test_colspec_tl
+\cs_new_eq:NN \__pxtab_test_emit_tabular_with_body_orig:N \__pxtab_emit_tabular_with_body:N
+\cs_new_eq:NN \__pxtab_test_emit_cell_orig:nnn \__pxtab_emit_cell:nnn
+\cs_new_protected:Npn \__pxtab_test_probe_on:
+  { \bool_gset_true:N \g__pxtab_test_probe_bool }
+\cs_new_protected:Npn \__pxtab_test_probe_off:
+  { \bool_gset_false:N \g__pxtab_test_probe_bool }
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+{
+  \bool_if:NT \g__pxtab_test_probe_bool
+  {
+    \iow_term:x { PXTAB_ASSERT:STYLE=\tl_use:N \l__pxtab_style_tl }
+    \iow_term:x { PXTAB_ASSERT:RULECOLOR=\tl_use:N \l__pxtab_rule_color_tl }
+    \iow_term:x { PXTAB_ASSERT:RULEWIDTH=\dim_use:N \l__pxtab_rule_width_dim }
+    \tl_if_in:NnT \l__pxtab_body_tl { \rowcolor }
+      { \iow_term:n { PXTAB_ASSERT:ROWCOLOR_TOKEN_EMITTED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \textcolor }
+      { \iow_term:n { PXTAB_ASSERT:TEXTCOLOR_TOKEN_EMITTED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \bfseries }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_BOLD_TOKEN_EMITTED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \l__pxtab_header_text_tl }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_TEXTCOLOR_ARG_PASSED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \l__pxtab_header_font_tl }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_FONT_ARG_PASSED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \l__pxtab_alt_row_text_tl }
+      { \iow_term:n { PXTAB_ASSERT:STRIPED_TEXTCOLOR_ARG_PASSED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \hline }
+      { \iow_term:n { PXTAB_ASSERT:HLINE_TOKEN_EMITTED } }
+    \tl_set:Nx \l__pxtab_test_colspec_tl { \tl_use:N #1 }
+    \tl_if_in:NnT \l__pxtab_test_colspec_tl { | }
+      { \iow_term:n { PXTAB_ASSERT:COLSPEC_VERTICAL_RULES_PRESENT } }
+  }
+  \__pxtab_test_emit_tabular_with_body_orig:N #1
+}
+\cs_set_protected:Npn \__pxtab_emit_cell:nnn #1#2#3
+{
+  \bool_if:NT \g__pxtab_test_probe_bool
+  {
+    \tl_if_blank:eF { #2 }
+      { \iow_term:n { PXTAB_ASSERT:TEXTCOLOR_PATH_USED } }
+    \tl_if_in:nnT { #3 } { \l__pxtab_header_font_tl }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_FONT_ARG_PASSED_TO_CELL } }
+  }
+  \__pxtab_test_emit_cell_orig:nnn { #1 } { #2 } { #3 }
+}
+\ExplSyntaxOff
+
 \section*{pxTAB redesign regression}
 
 \subsection*{1. Plain style}
@@ -53,5 +102,61 @@
 \subsection*{12. Matrix command}
 \pxTABsetup{style=grid}
 \pxTableMatrix{2}{3}{m11,m12,m13,m21,m22,m23}
+
+\subsection*{13. Local options do not leak globally}
+\pxTABsetup{style=plain}
+\pxTable[style=header,headerbgcolor=green!20,headertextcolor=green!50!black]{L1, L2}{v1, v2}
+\pxTable{P1, P2}{x1, x2}
+
+\subsection*{14. Matrix sizing with exact and short cell lists}
+\pxTABsetup{style=plain}
+\pxTableMatrix{2}{2}{n11,n12,n21,n22}
+\pxTableMatrix{2}{3}{s11,s12,s13,s21}
+
+\subsection*{15. Striped text color and alias key}
+\pxTABsetup{style=striped,altrowcolor=yellow!20,altrowtextcolor=purple}
+\pxTable{S1, S2}{aa, bb}{cc, dd}{ee, ff}
+
+\subsection*{16. Command-level options remain supported}
+\pxTableFromList[style=grid]{C1, C2; 1, 2; 3, 4}
+\pxTableHeadBodyRows[style=boxed]{H1, H2}{b1, b2}{b3, b4}
+\pxTableMatrix[style=plain,cellsep=/]{2}{2}{x1/x2/x3/x4}
+
+\subsection*{17. Unknown key is ignored}
+\pxTABsetup{style=plain,unknownkey=ignored}
+\pxTable{U1, U2}{ok, still works}
+
+\subsection*{18. Width control with auto columns}
+\pxTABsetup{style=plain,width=\linewidth,align=l}
+\pxTable{Long header A, Long header B, Long header C}
+        {This text should wrap in the first column,Data,123}
+        {Another long text cell to check width behavior,More data,456}
+
+\subsection*{19. Local font size + row stretch}
+\pxTable[fontsize=\small,rowstretch=1.05,style=header]
+        {Name, Notes}
+        {Alice, Compact rows with smaller text}
+        {Bob, This checks per-table sizing controls}
+
+\subsection*{20. Explicit colspec override with width}
+\pxTABsetup{style=plain,width=\linewidth,colspec=ll}
+\pxTable{Col 1, Col 2}{Width key remains active while explicit colspec is preserved}
+
+\subsection*{21. Runtime style probes (log assertions)}
+\ExplSyntaxOn\__pxtab_test_probe_on:\ExplSyntaxOff
+
+\pxTABsetup{style=header,headerbgcolor=cyan!20,headertextcolor=blue!70!black}
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxTABsetup{style=striped,altrowbgcolor=yellow!20,altrowtextcolor=purple}
+\pxTable{S1, S2}{r1, c2}{r2, c2}{r3, c3}
+
+\pxTABsetup{style=boxed,rulecolor=red!60!black,rulewidth=0.8pt}
+\pxTable{B1, B2}{x, y}{u, v}
+
+\pxTABsetup{style=grid,rulecolor=green!50!black,rulewidth=1pt}
+\pxTable{G1, G2}{m, n}{o, p}
+
+\ExplSyntaxOn\__pxtab_test_probe_off:\ExplSyntaxOff
 
 \end{document}

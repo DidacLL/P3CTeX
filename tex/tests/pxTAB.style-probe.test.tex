@@ -1,0 +1,67 @@
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+\ExplSyntaxOn
+
+\tl_new:N \g__pxtab_probe_scenario_tl
+\cs_new_protected:Npn \pxProbeScenario #1
+  {
+    \tl_gset:Nn \g__pxtab_probe_scenario_tl { #1 }
+    \iow_term:x { PXTAB_PROBE:SCENARIO-BEGIN=#1 }
+  }
+\cs_set_protected:Npn \__pxtab_probe_event:nn #1#2
+  { \iow_term:x { PXTAB_EVENT:#1 } }
+
+\cs_new_eq:NN \__pxtab_probe_emit_orig:N \__pxtab_emit_tabular_with_body:N
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+  {
+    \iow_term:x
+      {
+        PXTAB_PROBE:SCENARIO=\tl_use:N \g__pxtab_probe_scenario_tl ;
+        STYLE=\tl_use:N \l__pxtab_style_tl ;
+        RULECOLOR=\tl_use:N \l__pxtab_rule_color_tl ;
+        RULEWIDTH=\dim_use:N \l__pxtab_rule_width_dim ;
+        FONTSIZE=\tl_to_str:N \l__pxtab_font_size_tl ;
+        ARRAYSTRETCH=\tl_use:N \l__pxtab_arraystretch_tl ;
+        COLSPEC=\tl_to_str:n { \tl_use:N #1 } ;
+        BODY=\tl_to_str:N \l__pxtab_body_tl
+      }
+    \__pxtab_probe_emit_orig:N #1
+  }
+\ExplSyntaxOff
+
+\begin{document}
+
+\section*{pxTAB style probe harness}
+
+\pxProbeScenario{header}
+\pxTABsetup
+  {
+    style=header,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\itshape\bfseries,
+    bodyfont=\sffamily
+  }
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{striped}
+\pxTABsetup{style=striped,altrowbgcolor=gray!15,altrowtextcolor=purple}
+\pxTable{S1, S2}{r1, c1}{r2, c2}{r3, c3}
+
+\pxProbeScenario{boxed}
+\pxTABsetup{style=boxed,rulecolor=red!50!black,rulewidth=0.9pt}
+\pxTable{B1, B2}{x, y}
+
+\pxProbeScenario{grid}
+\pxTABsetup{style=grid,rulecolor=green!40!black,rulewidth=1.2pt}
+\pxTable{G1, G2}{x, y}{u, v}
+
+\pxProbeScenario{fontsize-key}
+\pxTable[style=plain,fontsize=\footnotesize,rowstretch=1.77]{K1, K2}{m, n}
+
+\pxProbeScenario{size-alias}
+\pxTable[style=plain,size=\scriptsize,rowstretch=1.11]{A1, A2}{p, q}
+
+\end{document}

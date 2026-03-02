@@ -1,0 +1,117 @@
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+\ExplSyntaxOn
+\box_new:N \l__pxtab_test_box_a
+\box_new:N \l__pxtab_test_box_b
+\dim_new:N \l__pxtab_test_dim_a
+\dim_new:N \l__pxtab_test_dim_b
+
+\cs_new_protected:Npn \__pxtab_test_pass:n #1
+  { \iow_term:x { PXTAB-CHECK~PASS:~#1 } }
+
+\cs_new_protected:Npn \__pxtab_test_fail:n #1
+  {
+    \iow_term:x { PXTAB-CHECK~FAIL:~#1 }
+    \PackageError { pxTAB-layout-test } { #1 } { Check~pxTAB~layout/style~runtime~application. }
+  }
+
+\cs_new_protected:Npn \__pxtab_test_assert_dim_gt:nnn #1#2#3
+  {
+    \dim_compare:nNnTF { #1 } > { #2 }
+      { \__pxtab_test_pass:n { #3 } }
+      { \__pxtab_test_fail:n { #3 } }
+  }
+
+\cs_new_protected:Npn \__pxtab_test_assert_dim_close:nnn #1#2#3
+  {
+    \dim_compare:nNnTF { \dim_abs:n { #1 - #2 } } < { 1pt }
+      { \__pxtab_test_pass:n { #3 } }
+      { \__pxtab_test_fail:n { #3 } }
+  }
+\ExplSyntaxOff
+
+\begin{document}
+
+\section*{pxTAB runtime size/layout/style checks}
+
+\ExplSyntaxOn
+% 1) Width mode: natural vs fixed.
+\hbox_set:Nn \l__pxtab_test_box_a
+  { \pxTable[style=plain,width=natural]{H1, H2}{a, b} }
+\hbox_set:Nn \l__pxtab_test_box_b
+  { \pxTable[style=plain,width=120pt]{H1, H2}{a, b} }
+\dim_set:Nn \l__pxtab_test_dim_a { \box_wd:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b { \box_wd:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_close:nnn { \l__pxtab_test_dim_b } { 120pt } { width-fixed-target }
+\__pxtab_test_assert_dim_gt:nnn
+  { \l__pxtab_test_dim_b }
+  { \l__pxtab_test_dim_a + 5pt }
+  { width-natural-vs-fixed }
+
+% 2) Font size key modifies rendered size.
+\hbox_set:Nn \l__pxtab_test_box_a
+  { \pxTable[style=plain]{AA, BB}{11, 22} }
+\hbox_set:Nn \l__pxtab_test_box_b
+  { \pxTable[style=plain,fontsize=\footnotesize]{AA, BB}{11, 22} }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn { \l__pxtab_test_dim_a } { \l__pxtab_test_dim_b } { fontsize-applied }
+
+% 3) Array stretch increases table height.
+\hbox_set:Nn \l__pxtab_test_box_a
+  { \pxTable[style=plain,arraystretch=1]{AA, BB}{11, 22} }
+\hbox_set:Nn \l__pxtab_test_box_b
+  { \pxTable[style=plain,arraystretch=1.8]{AA, BB}{11, 22} }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn { \l__pxtab_test_dim_b } { \l__pxtab_test_dim_a } { arraystretch-applied }
+
+% 4) Tabcolsep modifies table width.
+\hbox_set:Nn \l__pxtab_test_box_a
+  { \pxTable[style=plain,tabcolsep=2pt]{AA, BB}{11, 22} }
+\hbox_set:Nn \l__pxtab_test_box_b
+  { \pxTable[style=plain,tabcolsep=20pt]{AA, BB}{11, 22} }
+\dim_set:Nn \l__pxtab_test_dim_a { \box_wd:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b { \box_wd:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn { \l__pxtab_test_dim_b } { \l__pxtab_test_dim_a } { tabcolsep-applied }
+
+% 5) Style geometry still changes under active size/layout keys.
+\hbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[
+      style=plain,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\hbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[
+      style=boxed,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn
+  { \l__pxtab_test_dim_b }
+  { \l__pxtab_test_dim_a }
+  { style-remains-active-under-layout-keys }
+\ExplSyntaxOff
+
+Runtime checks complete. See log for \texttt{PXTAB-CHECK PASS} markers.
+
+\end{document}
