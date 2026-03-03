@@ -33,6 +33,12 @@
       { \__pxtab_probe_fail:n { body-contains-forbidden-token-\tl_to_str:n {#1} } }
       { \__pxtab_probe_pass:n { body-token-absent-\tl_to_str:n {#1} } }
   }
+\cs_new_protected:Npn \__pxtab_probe_assert_body_contains:n #1
+  {
+    \tl_if_in:NnTF \l__pxtab_body_tl { #1 }
+      { \__pxtab_probe_pass:n { body-token-present-\tl_to_str:n {#1} } }
+      { \__pxtab_probe_fail:n { body-missing-required-token-\tl_to_str:n {#1} } }
+  }
 \cs_new_protected:Npn \pxProbeScenario #1#2
   {
     \tl_gset:Nn \g__pxtab_probe_scenario_tl { #1 }
@@ -92,6 +98,18 @@
           { \g__pxtab_probe_seen_rows_int }
           { \g__pxtab_probe_expected_rows_int }
           { header-grid-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { striped }
+      {
+        \__pxtab_probe_assert_body_contains:n { \rowcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \cellcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { header-striped }
+      {
+        \__pxtab_probe_assert_body_contains:n { \rowcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \cellcolor }
         \__pxtab_probe_assert_body_not_contains:n { \crcr }
       }
     \iow_term:x

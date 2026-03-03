@@ -312,4 +312,21 @@ Table~\ref{tab:pxtab-float-narrative-b}.
   {Tests, Extended}
   {Docs, Updated}
 
+\subsection*{33. Striped background visual regression (T2)}
+% Minimal reproduction extracted from P3CTeX-example:
+% in some builds, the striped row background only appears behind text
+% instead of filling each full cell area.
+\pxTABsetup
+  {
+    style=header-striped,
+    cellmode=inline,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black,
+    tabwidth=.9\linewidth
+  }
+\pxTable{Student, PEC 1, PEC 2, Final}
+        {Alice, 8.0, 9.0, 8.5}
+        {Bruno, 7.5, 8.0, 7.8}
+        {Carla, 9.0, 9.5, 9.3}
+
 \end{document}

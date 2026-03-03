@@ -51,18 +51,25 @@
 \tl_new:N  \l__pxtab_tmpb_tl
 \tl_new:N  \l__pxtab_cell_tmp_tl
 \tl_new:N  \l__pxtab_body_tl
+\tl_new:N  \l__pxtab_cellmode_tl
+\tl_new:N  \l__pxtab_paragraph_coltype_tl
+\tl_new:N  \l__pxtab_paragraph_align_spec_tl
 \int_new:N \l__pxtab_ncols_int
 \int_new:N \l__pxtab_row_index_int
 \int_new:N \l__pxtab_tmpa_int
 \int_new:N \l__pxtab_colspec_count_int
 \dim_new:N \l__pxtab_tabcolsep_dim
 \dim_new:N \l__pxtab_rule_width_dim
+\dim_new:N \l__pxtab_paragraph_colwidth_dim
 \str_new:N \l__pxtab_style_str
 \bool_new:N \l__pxtab_simple_colspec_bool
 \bool_new:N \l__pxtab_auto_colspec_bool
 \bool_new:N \l__pxtab_use_tabularx_bool
 \bool_new:N \l__pxtab_center_bool
 \bool_new:N \l__pxtab_probe_bool
+%% Defaults for paragraph-related state.
+\tl_set:Nn \l__pxtab_cellmode_tl { inline }
+\tl_set:Nn \l__pxtab_paragraph_coltype_tl { p }
 %% =================================
 %% ===== KEY DEFINITIONS (pxTAB) ====
 %% =================================
@@ -117,6 +124,24 @@
 		{ \tl_set:Nn \l__pxtab_auto_align_tl { #1 } },
 	align          .initial:n  = c,
 	alignment      .meta:n     = { align = {#1} },
+	cellmode       .choice:,
+	cellmode / inline .code:n =
+		{ \tl_set:Nn \l__pxtab_cellmode_tl { inline } },
+	cellmode / paragraph .code:n =
+		{ \tl_set:Nn \l__pxtab_cellmode_tl { paragraph } },
+	cellmode       .initial:n  = inline,
+	paragraphcells .choice:,
+	paragraphcells / true .code:n =
+		{ \tl_set:Nn \l__pxtab_cellmode_tl { paragraph } },
+	paragraphcells / false .code:n =
+		{ \tl_set:Nn \l__pxtab_cellmode_tl { inline } },
+	paragraphcells .default:n = true,
+	paragraphcoltype .choice:,
+	paragraphcoltype / p .code:n =
+		{ \tl_set:Nn \l__pxtab_paragraph_coltype_tl { p } },
+	paragraphcoltype / m .code:n =
+		{ \tl_set:Nn \l__pxtab_paragraph_coltype_tl { m } },
+	paragraphcoltype .initial:n = p,
 	rulecolor      .tl_set:N   = \l__pxtab_rule_color_tl,
 	rulecolor      .initial:n  = { black!55 },
 	rulewidth      .dim_set:N  = \l__pxtab_rule_width_dim,
@@ -269,7 +294,16 @@
 }
 \cs_new_protected:Npn \__pxtab_append_row_styled_to_body:nnnnn #1#2#3#4#5
 {
-	\tl_if_blank:eF { #3 } { \tl_put_right:Nx \l__pxtab_body_tl { \exp_not:N \rowcolor { #3 } } }
+	\tl_if_blank:eF { #3 }
+		{
+			% Keep background attachment at row scope so color spans
+			% the full row/cell area (not only individual cell content).
+			\tl_put_right:Nx \l__pxtab_body_tl
+				{
+					\exp_not:N \rowcolor { #3 }
+					\exp_not:N \ignorespaces
+				}
+		}
 	\__pxtab_probe_event:nn { styled-row-bg } { #3 }
 	\__pxtab_probe_event:nn { styled-row-text } { #4 }
 	\__pxtab_probe_event:nn { styled-row-font } { #5 }
@@ -324,6 +358,55 @@
 		{ \prg_return_false: }
 }
 \cs_generate_variant:Nn \str_case:nnF { xn }
+\cs_new_protected:Npn \__pxtab_prepare_paragraph_column_width:n #1
+{
+	\__pxtab_width_is_natural:TF
+		{
+			\dim_set:Nn \l__pxtab_paragraph_colwidth_dim
+				{ \dim_eval:n { \linewidth / #1 } }
+		}
+		{
+			\dim_set:Nn \l__pxtab_paragraph_colwidth_dim
+				{ \dim_eval:n { \l__pxtab_width_tl / #1 } }
+		}
+	\str_case:xnF { \tl_to_str:N \l__pxtab_auto_align_tl }
+		{
+			{ l } { \tl_set:Nn \l__pxtab_paragraph_align_spec_tl { \raggedright\arraybackslash } }
+			{ c } { \tl_set:Nn \l__pxtab_paragraph_align_spec_tl { \centering\arraybackslash } }
+			{ r } { \tl_set:Nn \l__pxtab_paragraph_align_spec_tl { \raggedleft\arraybackslash } }
+		}
+		{ \tl_set:Nn \l__pxtab_paragraph_align_spec_tl { \centering\arraybackslash } }
+}
+\cs_new_protected:Npn \__pxtab_build_paragraph_colspec:n #1
+{
+	\__pxtab_prepare_paragraph_column_width:n { #1 }
+	\tl_clear:N \l__pxtab_colspec_tl
+	\int_step_inline:nn { #1 }
+	{
+		\tl_put_right:Nx \l__pxtab_colspec_tl
+			{
+				>{ \exp_not:V \l__pxtab_paragraph_align_spec_tl }
+				\tl_use:N \l__pxtab_paragraph_coltype_tl
+				{ \dim_use:N \l__pxtab_paragraph_colwidth_dim }
+			}
+	}
+}
+\cs_new_protected:Npn \__pxtab_build_paragraph_box_colspec:nN #1#2
+{
+	\__pxtab_prepare_paragraph_column_width:n { #1 }
+	\tl_clear:N #2
+	\int_step_inline:nn { #1 }
+	{
+		\tl_put_right:Nn #2 { | }
+		\tl_put_right:Nx #2
+			{
+				>{ \exp_not:V \l__pxtab_paragraph_align_spec_tl }
+				\tl_use:N \l__pxtab_paragraph_coltype_tl
+				{ \dim_use:N \l__pxtab_paragraph_colwidth_dim }
+			}
+	}
+	\tl_put_right:Nn #2 { | }
+}
 \cs_new_protected:Npn \__pxtab_append_auto_column_to_tl:N #1
 {
 	\str_case:xnF { \tl_to_str:N \l__pxtab_auto_align_tl }
@@ -373,10 +456,12 @@
 		}
 	}
 	\tl_if_empty:NT \l__pxtab_colspec_tl
-		{
-			\bool_set_true:N \l__pxtab_auto_colspec_bool
-			\__pxtab_build_auto_colspec:n { #1 }
-		}
+	{
+		\bool_set_true:N \l__pxtab_auto_colspec_bool
+		\tl_if_eq:NnTF \l__pxtab_cellmode_tl { paragraph }
+			{ \__pxtab_build_paragraph_colspec:n { #1 } }
+			{ \__pxtab_build_auto_colspec:n { #1 } }
+	}
 }
 \cs_new_protected:Npn \__pxtab_build_box_colspec:NN #1#2
 {
@@ -568,6 +653,23 @@
 \cs_new_protected:Npn \__pxtab_render_table_striped:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
+	\tl_set_eq:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl
+	\bool_if:NT \l__pxtab_auto_colspec_bool
+		{
+			\tl_if_eq:NnT \l__pxtab_cellmode_tl { inline }
+				{
+					\__pxtab_width_is_natural:TF
+						{ }
+						{
+							% For explicit-width striped tables in inline mode,
+							% avoid inter-column stretch glue from tabular* so
+							% row background can fill full cell areas.
+							\__pxtab_build_paragraph_colspec:n { #1 }
+							\tl_set_eq:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl
+							\bool_set_false:N \l__pxtab_use_tabularx_bool
+						}
+				}
+		}
 	\int_set:Nn \l__pxtab_tmpa_int { \seq_count:N \l__pxtab_rows_seq }
 	\int_zero:N \l__pxtab_row_index_int
 	\seq_map_inline:Nn \l__pxtab_rows_seq
@@ -592,14 +694,18 @@
 		{ \tl_use:N \l__pxtab_caption_tl }
 		{ \tl_use:N \l__pxtab_label_tl }
 		{
-			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
 \cs_new_protected:Npn \__pxtab_render_table_boxed:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
 	\bool_if:NTF \l__pxtab_auto_colspec_bool
-		{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		{
+			\tl_if_eq:NnTF \l__pxtab_cellmode_tl { paragraph }
+				{ \__pxtab_build_paragraph_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+				{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		}
 		{ \__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl }
 	\__pxtab_probe_event:nn { boxed-colspec } { \tl_use:N \l__pxtab_tmpb_tl }
 	\int_zero:N \l__pxtab_row_index_int
@@ -624,7 +730,11 @@
 {
 	\tl_clear:N \l__pxtab_body_tl
 	\bool_if:NTF \l__pxtab_auto_colspec_bool
-		{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		{
+			\tl_if_eq:NnTF \l__pxtab_cellmode_tl { paragraph }
+				{ \__pxtab_build_paragraph_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+				{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		}
 		{ \__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl }
 	\__pxtab_probe_event:nn { grid-colspec } { \tl_use:N \l__pxtab_tmpb_tl }
 	\tl_put_right:Nn \l__pxtab_body_tl { \hline }
@@ -645,7 +755,11 @@
 {
 	\tl_clear:N \l__pxtab_body_tl
 	\bool_if:NTF \l__pxtab_auto_colspec_bool
-		{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		{
+			\tl_if_eq:NnTF \l__pxtab_cellmode_tl { paragraph }
+				{ \__pxtab_build_paragraph_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+				{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		}
 		{ \__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl }
 	\__pxtab_probe_event:nn { header-boxed-colspec } { \tl_use:N \l__pxtab_tmpb_tl }
 	\int_zero:N \l__pxtab_row_index_int
@@ -680,7 +794,22 @@
 {
 	\tl_clear:N \l__pxtab_body_tl
 	\bool_if:NTF \l__pxtab_auto_colspec_bool
-		{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		{
+			\tl_if_eq:NnTF \l__pxtab_cellmode_tl { paragraph }
+				{ \__pxtab_build_paragraph_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+				{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+			\tl_if_eq:NnT \l__pxtab_cellmode_tl { inline }
+				{
+					\__pxtab_width_is_natural:TF
+						{ }
+						{
+							% In explicit-width inline mode, avoid tabular* stretch
+							% gaps so header row background fills the full row area.
+							\__pxtab_build_paragraph_box_colspec:nN { #1 } \l__pxtab_tmpb_tl
+							\bool_set_false:N \l__pxtab_use_tabularx_bool
+						}
+				}
+		}
 		{ \__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl }
 	\__pxtab_probe_event:nn { header-grid-colspec } { \tl_use:N \l__pxtab_tmpb_tl }
 	\int_zero:N \l__pxtab_row_index_int
@@ -712,6 +841,22 @@
 \cs_new_protected:Npn \__pxtab_render_table_header_striped:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
+	\tl_set_eq:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl
+	\bool_if:NT \l__pxtab_auto_colspec_bool
+		{
+			\tl_if_eq:NnT \l__pxtab_cellmode_tl { inline }
+				{
+					\__pxtab_width_is_natural:TF
+						{ }
+						{
+							% Same rationale as striped: preserve full-row
+							% background coverage with explicit width.
+							\__pxtab_build_paragraph_colspec:n { #1 }
+							\tl_set_eq:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl
+							\bool_set_false:N \l__pxtab_use_tabularx_bool
+						}
+				}
+		}
 	\int_set:Nn \l__pxtab_tmpa_int { \seq_count:N \l__pxtab_rows_seq }
 	\int_zero:N \l__pxtab_row_index_int
 	\seq_map_inline:Nn \l__pxtab_rows_seq
@@ -748,7 +893,7 @@
 		{ \tl_use:N \l__pxtab_caption_tl }
 		{ \tl_use:N \l__pxtab_label_tl }
 		{
-			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
 %% =================================
@@ -850,7 +995,9 @@
 				}
 				\seq_put_right:NV \l__pxtab_rows_seq \l__pxtab_tmpa_tl
 			}
-			\__pxtab_table_from_seq:n { #2 }
+			% Route matrix tables through the same preparation pipeline
+			% used by the rest of the public API.
+			\pxTAB_prepare_table_from_current_rows:
 		}
 		{ \__pxtab_warn_empty_row: }
 	}
