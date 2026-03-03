@@ -98,6 +98,8 @@
           { \g__pxtab_probe_seen_rows_int }
           { \g__pxtab_probe_expected_rows_int }
           { header-grid-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_contains:n { \rowcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \cellcolor }
         \__pxtab_probe_assert_body_not_contains:n { \crcr }
       }
     \tl_if_eq:NnT \l__pxtab_style_tl { striped }

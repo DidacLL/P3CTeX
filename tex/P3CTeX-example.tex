@@ -193,8 +193,9 @@ Non-existent class: [\pxUMLAttributes{NoExisteix}].
 \pxTABsetup{style=header,headerbgcolor=blue!15,headertextcolor=blue!70!black}
 \pxTable{Name, Age, City}{Alice, 20, Barcelona}{Bob, 22, Madrid}
 
-%\pxTABsetup{style=striped,altrowbgcolor={black}}
-%\pxTable{Item, Quantity}{Apples, 3}{Oranges, 5}{Bananas, 2}
+% Striped style: alternating row backgrounds fill the full cell area.
+\pxTABsetup{style=striped,altrowbgcolor=gray!10,altrowtextcolor=black}
+\pxTable{Item, Quantity}{Apples, 3}{Oranges, 5}{Bananas, 2}
 
 \pxTABsetup{style=boxed}
 \pxTableFromList{Code, Description; PX1, First code; PX2, Second code}
@@ -227,6 +228,8 @@ Table~\ref{tab:pxTAB-example} shows a small pxTAB float that can be
 cross-referenced in the usual way.
 
 % Composed styles: rubric-style grid and striped dataset.
+% Row backgrounds fill the entire cell area for all striped-like styles,
+% including with explicit width/tabwidth settings.
 \pxTABsetup{
   style=header-grid,
   headerbgcolor=blue!15,
@@ -250,6 +253,31 @@ cross-referenced in the usual way.
   Bruno, 7.5, 8.0, 7.8}{
   Carla, 9.0, 9.5, 9.3}{
   Daniel, 6.5, 7.0, 6.8}
+
+% Paragraph-cell mode: multi-line wrapping in equal-width columns.
+\pxTABsetup{
+  style=header,
+  cellmode=paragraph,
+  paragraphcoltype=p,
+  headerbgcolor=blue!15,
+  headertextcolor=blue!70!black,
+  headerfont=\sffamily\bfseries,
+  width=.9\linewidth,
+  tabcolsep=2pt,
+  centering=true
+}
+\pxTable{Component, Weight, Description}{
+  Design, 30\%, Justify architectural decisions and document the
+  chosen patterns.  Include a class diagram and a brief rationale
+  for each design trade-off.}{
+  Implementation, 40\%, Deliver clean and well-structured source
+  code with meaningful variable names.  The build must succeed
+  without errors or critical warnings.}{
+  Testing, 20\%, Provide unit tests covering the main public API
+  and at least two edge cases per module.}{
+  Report, 10\%, Summarise the work in a concise document using the
+  P3CTeX template.  Include references and an appendix with test
+  logs.}
 
 % ========== 6. pxCORE — Debug (optional) ==========
 \section{pxCORE: setup and debug}

@@ -329,4 +329,54 @@ Table~\ref{tab:pxtab-float-narrative-b}.
         {Bruno, 7.5, 8.0, 7.8}
         {Carla, 9.0, 9.5, 9.3}
 
+\subsection*{34. Paragraph mode visual regression (\texttt{pxTable}, explicit and natural width)}
+\pxTABsetup
+  {
+    style=plain,
+    cellmode=paragraph,
+    paragraphcoltype=p,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Topic, Details}
+        {Design, This paragraph is intentionally long so the details cell wraps across multiple lines in an equal-width paragraph column layout.}
+        {Implementation, The wrapped content should remain stable and aligned while preserving paragraph-mode geometry.}
+\pxTABsetup{width=natural}
+\pxTable{Topic, Details}
+        {Design, In natural mode paragraph columns use linewidth as effective width so wrapping remains deterministic.}
+        {Verification, This row checks the natural-width path with the same paragraph semantics.}
+
+\subsection*{35. Paragraph mode in non-plain style (\texttt{header-striped}, \texttt{m} columns)}
+\pxTABsetup
+  {
+    style=header-striped,
+    paragraphcells=true,
+    paragraphcoltype=m,
+    width=.85\linewidth,
+    headerbgcolor=blue!12,
+    headertextcolor=blue!70!black,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Criterion, Comment}
+        {Readability, This is a long rubric comment that must wrap inside a paragraph cell while preserving striped full-cell backgrounds.}
+        {Correctness, Another long multi-line comment to exercise composed-style rendering with paragraph columns.}
+
+\subsection*{36. Paragraph mode through list/head-body/matrix commands}
+\pxTABsetup
+  {
+    style=header,
+    cellmode=paragraph,
+    paragraphcoltype=p,
+    width=.75\linewidth
+  }
+\pxTableFromList
+  {Item, Description; Alpha, Long description text that wraps to validate paragraph mode through pxTableFromList.; Beta, Another long paragraph description for regression coverage.}
+\pxTableHeadBodyRows
+  {Phase, Notes}
+  {T1, Paragraph mode should apply to head-body rows without fallback to inline cells.}
+  {T5, Regression coverage includes wrapped content and fixed-width paragraph columns.}
+\pxTABsetup{style=grid}
+\pxTableMatrix{2}{2}
+  {m11 long paragraph,m12 long paragraph,m21 long paragraph,m22 long paragraph}
+
 \end{document}

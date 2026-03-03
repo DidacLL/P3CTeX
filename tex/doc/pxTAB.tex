@@ -211,6 +211,75 @@ before the caption and the tabular body.
     extension).
 \end{itemize}
 
+\subsection*{Paragraph cells}
+
+By default \texttt{pxTAB} produces \emph{inline} columns
+(\texttt{l}/\texttt{c}/\texttt{r}), suitable for short labels and
+numbers.  Paragraph mode enables fixed-width columns that wrap
+multi-line content, mirroring the equal-width paragraph layout
+previously available through \texttt{pxTBL}.
+
+\begin{itemize}
+  \item \texttt{cellmode} (choice, default \texttt{inline})\\
+    Controls the column type used by the automatic colspec builder:
+    \begin{itemize}
+      \item \texttt{inline} --- standard behaviour;
+            columns are simple alignment columns derived from
+            \texttt{align} (\texttt{l}/\texttt{c}/\texttt{r}).
+      \item \texttt{paragraph} --- each column becomes a paragraph
+            column (\texttt{p\{...\}} or \texttt{m\{...\}}) with
+            equal width, so cell content wraps across multiple lines.
+    \end{itemize}
+    Paragraph mode is \emph{opt-in}; existing documents that do not
+    set this key are unaffected.
+
+  \item \texttt{paragraphcells} (boolean, default \texttt{true} when used)\\
+    Convenience alias:
+    \texttt{paragraphcells=true} is equivalent to
+    \texttt{cellmode=paragraph}, and
+    \texttt{paragraphcells=false} to \texttt{cellmode=inline}.
+    When used without an explicit value (bare
+    \verb|\pxTABsetup{paragraphcells}|) it defaults to \texttt{true}.
+
+  \item \texttt{paragraphcoltype} (choice, default \texttt{p})\\
+    Selects the underlying \LaTeX\ column type used in paragraph mode:
+    \begin{itemize}
+      \item \texttt{p} --- \texttt{p\{<width>\}} columns; cell content
+            is top-aligned within the cell box.
+      \item \texttt{m} --- \texttt{m\{<width>\}} columns (requires the
+            \texttt{array} package, loaded automatically by
+            \texttt{pxTAB}); cell content is vertically centred
+            within the cell box.
+    \end{itemize}
+    This key is ignored when \texttt{cellmode=inline}.
+\end{itemize}
+
+\paragraph{Effective width.}
+When paragraph mode is active the per-column width is computed as
+\[
+  w_{\text{col}} = \frac{W_{\text{eff}}}{n_{\text{cols}}}
+\]
+where $W_{\text{eff}}$ is the \emph{effective table width}:
+\begin{itemize}
+  \item If \texttt{width} (or \texttt{tabwidth}) is set to an explicit
+    dimension (e.g.\ \verb|0.8\linewidth|, \texttt{120pt}), that value
+    is used directly as $W_{\text{eff}}$.
+  \item If \texttt{width=natural} (the default), paragraph mode uses
+    \verb|\linewidth| as $W_{\text{eff}}$, since paragraph columns
+    require an explicit dimension.  The resulting table occupies the
+    full text width by default.
+\end{itemize}
+Horizontal alignment inside each paragraph cell is governed by the
+\texttt{align} key: \texttt{l}~maps to \verb|\raggedright|,
+\texttt{c}~to \verb|\centering|, and \texttt{r}~to \verb|\raggedleft|.
+
+\paragraph{Interaction with \texttt{colspec}.}
+When the user provides an explicit \texttt{colspec}, it is used as-is
+regardless of \texttt{cellmode}.  In other words, \texttt{cellmode=paragraph}
+only affects the \emph{automatic} colspec builder; advanced users who
+need heterogeneous column widths or mixed column types should set
+\texttt{colspec} directly.
+
 \section{Styles by example}
 
 This section illustrates the built-in styles using a small example
@@ -286,6 +355,13 @@ dataset.  In all cases we use:
         {Apples, 3}
         {Oranges, 5}
         {Bananas, 2}
+
+\noindent
+In the \texttt{striped}, \texttt{header-striped}, and
+\texttt{header-grid} styles, row backgrounds are applied with
+\verb|\rowcolor| so that the colour fills the \emph{entire cell area}
+across all columns---including any wrapped lines in paragraph mode.
+This holds for both natural-width and explicit-width tables.
 
 \subsection{Boxed}
 
@@ -413,6 +489,88 @@ dataset.
         {Alice, 20, Barcelona}
         {Bob, 22, Madrid}
         {Clara, 23, Girona}
+
+\subsection{Paragraph cells}
+
+Paragraph mode produces equal-width columns that wrap long text,
+suitable for rubrics, notes, and narrative content.  The following
+example uses three columns with \texttt{cellmode=paragraph} and a
+fixed table width:
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=plain,
+    cellmode=paragraph,
+    paragraphcoltype=p,
+    width=.8\linewidth
+  }
+\pxTable
+  {Topic, Description, Status}
+  {Design, The API was specified using key-value options
+   to keep the interface consistent with existing pxTAB
+   commands., Complete}
+  {Tests, Paragraph regression tests exercise multi-line
+   wrapping and interaction with all styles., Passed}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=plain,
+    cellmode=paragraph,
+    paragraphcoltype=p,
+    width=.8\linewidth
+  }
+\pxTable
+  {Topic, Description, Status}
+  {Design, The API was specified using key-value options
+   to keep the interface consistent with existing pxTAB
+   commands., Complete}
+  {Tests, Paragraph regression tests exercise multi-line
+   wrapping and interaction with all styles., Passed}
+
+Paragraph mode works with all styles.  The next example combines
+\texttt{header-striped} with vertically-centred \texttt{m} columns:
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=header-striped,
+    paragraphcells=true,
+    paragraphcoltype=m,
+    width=.85\linewidth,
+    headerbgcolor=blue!12,
+    headertextcolor=blue!70!black,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Criterion, Comment}
+  {Readability, This rubric comment wraps inside
+   a paragraph cell while striped backgrounds fill
+   the entire cell area across all wrapped lines.}
+  {Correctness, Another multi-line comment to show
+   that composed styles and paragraph columns work
+   together seamlessly.}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=header-striped,
+    paragraphcells=true,
+    paragraphcoltype=m,
+    width=.85\linewidth,
+    headerbgcolor=blue!12,
+    headertextcolor=blue!70!black,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Criterion, Comment}
+  {Readability, This rubric comment wraps inside
+   a paragraph cell while striped backgrounds fill
+   the entire cell area across all wrapped lines.}
+  {Correctness, Another multi-line comment to show
+   that composed styles and paragraph columns work
+   together seamlessly.}
 
 \subsection{Centered and floating tables}
 
@@ -645,6 +803,45 @@ argument.
     be referenced with \verb|\ref|.
 \end{itemize}
 
+\subsection{When to use paragraph mode}
+
+Paragraph mode (\texttt{cellmode=paragraph}) is designed for tables
+whose cells contain narrative text, rubric comments, or any content
+that benefits from line wrapping:
+
+\begin{itemize}
+  \item \textbf{Prefer paragraph mode} when one or more columns hold
+    multi-line descriptions, notes, or explanatory text.  Typical
+    examples include rubric tables, requirement matrices, and
+    coursework summary tables.
+  \item \textbf{Prefer inline mode} (the default) when all columns
+    contain short labels, numbers, or single-line entries.  Inline
+    columns produce tighter, more compact tables.
+  \item \textbf{Width interaction.}  Paragraph mode always requires an
+    effective width to compute per-column dimensions.  When
+    \texttt{width=natural} (the default), \verb|\linewidth| is used
+    automatically; for narrower tables set an explicit width such as
+    \verb|width=0.8\linewidth|.  The \texttt{centering} key works
+    identically in paragraph and inline mode---it controls horizontal
+    placement of the table block, not the column widths.
+  \item \textbf{Vertical alignment.}  Use \texttt{paragraphcoltype=p}
+    (default) for top-aligned cells or \texttt{paragraphcoltype=m}
+    when rows of unequal height should be vertically centred.
+\end{itemize}
+
+\paragraph{Known limitations.}
+\begin{itemize}
+  \item Paragraph mode produces \emph{equal-width} columns only;
+    heterogeneous widths require a manual \texttt{colspec}.
+  \item An explicit \texttt{colspec} overrides the automatic paragraph
+    layout entirely---users who set \texttt{colspec} are responsible
+    for choosing appropriate \texttt{p\{...\}} or \texttt{m\{...\}}
+    column types.
+  \item There is no \texttt{longtable} integration; page-breaking
+    paragraph tables remain the domain of \texttt{pxTBL}'s
+    \verb|\pxTBLlong| command or manual \texttt{longtable} usage.
+\end{itemize}
+
 \subsection{Explicit column specifications}
 
 When \texttt{colspec} is set, its value is used directly as the
@@ -775,6 +972,9 @@ Style-specific behaviour:
     \texttt{headertextcolor}, \texttt{headerfont}; body rows use body font.
   \item \texttt{striped}: odd rows plain; even rows get
     \texttt{altrowbgcolor} and \texttt{altrowtextcolor}.
+    Backgrounds are applied via \verb|\rowcolor| so they fill the
+    entire cell area (including wrapped lines in paragraph mode),
+    not just the text extent.
   \item \texttt{boxed}: colspec wrapped with \texttt{|}; \texttt{\textbackslash hline}
     before first row and after last row.
   \item \texttt{grid}: colspec wrapped with \texttt{|}; \texttt{\textbackslash hline}
@@ -782,10 +982,13 @@ Style-specific behaviour:
   \item \texttt{header-boxed}: header-style first row (colours and font)
     with boxed frame rules as in \texttt{boxed}.
   \item \texttt{header-grid}: header-style first row together with full
-    grid rules as in \texttt{grid}.
+    grid rules as in \texttt{grid}.  The header row background
+    uses \verb|\rowcolor|, filling the entire cell area.
   \item \texttt{header-striped}: header-style first row; subsequent body
     rows alternate plain and striped colours like \texttt{striped}, with
-    the striping parity starting at the first body row.
+    the striping parity starting at the first body row.  As with
+    \texttt{striped}, row backgrounds fill the full cell width across
+    all columns and wrapped lines.
 \end{itemize}
 
 \section{Integration with P3CTeX}
