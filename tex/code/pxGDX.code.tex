@@ -41,6 +41,7 @@
 \newgeometry{hmargin=1in,vmargin=1.2in}
 % TODO ADD ACCESS TO CHANGE COLORS THROUGH CLASS KEYS
 \definecolor{primaryColor}{rgb}{0,0,.47}
+\colorlet{primarycolor}{primaryColor}
 \definecolor{secondaryColor}{rgb}{.45,.93,1}
 \definecolor{neutralColor}{cmyk}{0.5,0.14, 0.16, 0}
 \definecolor{darkColor}{rgb}{.1,.25,.5}
@@ -354,7 +355,8 @@
 		bottom	=	\l__gdx_cover_margin_v_tl
 	}% ---- PORTADA ----
 	\setlength{\fboxrule}{0pt}
-	\color{\l__gdx_cover_text_color_tl}
+	\tl_if_blank:VF \l__gdx_cover_text_color_tl
+		{ \color{\l__gdx_cover_text_color_tl} }
 	\noindent
 	\begin{center}% --- BLUE BACKTITLE ---
 		\bool_if:NT \l__gdx_cover_out_backtitle_bool {

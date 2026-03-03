@@ -117,6 +117,67 @@
   { \l__pxtab_test_dim_a }
   { style-remains-active-under-layout-keys }
 
+% 5a) Composed styles honour size/layout keys and keep boxed/grid geometry.
+\hbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[
+      style=header-boxed,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\hbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[
+      style=boxed,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_delta_lt:nnnn
+  { \l__pxtab_test_dim_a }
+  { \l__pxtab_test_dim_b }
+  { 2pt }
+  { header-boxed-layout-compatible-with-boxed }
+
+\hbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[
+      style=header-grid,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\hbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[
+      style=grid,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_delta_lt:nnnn
+  { \l__pxtab_test_dim_a }
+  { \l__pxtab_test_dim_b }
+  { 2pt }
+  { header-grid-layout-compatible-with-grid }
+
 % 6) Regression: no trailing empty row from row terminators.
 \hbox_set:Nn \l__pxtab_test_box_a
   { \pxTable[style=plain,arraystretch=1]{A, B}{1, 2} }
@@ -331,6 +392,46 @@
   { \l__pxtab_test_dim_a }
   { \l__pxtab_test_dim_b }
   { matrix-underfilled-no-extra-row-grid }
+
+% 11) Centering key preserves natural width.
+\hbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[style=plain,width=natural,centering=false]
+      {N1, N2}
+      {a, b}
+  }
+\hbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[style=plain,width=natural,centering=true]
+      {N1, N2}
+      {a, b}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a { \box_wd:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b { \box_wd:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_close:nnn
+  { \l__pxtab_test_dim_a }
+  { \l__pxtab_test_dim_b }
+  { centering-natural-width-unchanged }
+
+% 12) Centering key preserves fixed/linewidth-based width.
+\hbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[style=plain,width=120pt,centering=false]
+      {F1, F2}
+      {1, 2}
+  }
+\hbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[style=plain,width=120pt,centering=true]
+      {F1, F2}
+      {1, 2}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a { \box_wd:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b { \box_wd:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_close:nnn
+  { \l__pxtab_test_dim_a }
+  { \l__pxtab_test_dim_b }
+  { centering-fixed-width-unchanged }
 
 \ExplSyntaxOff
 

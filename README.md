@@ -1,6 +1,12 @@
-## P3CTeX
-
-Ultimate LaTeX repository for PEC solving at UOC.
+# P3CTeX
+       --   ULTIMATE UOC Template Generator   --  
+      PEC.TeX is an Open Source LaTeX repository        
+      based on official LaTeX styles defined by UOC.    
+      Designed for fastest and convenient lastminute    
+      performance on PAC or PR overkilling.             
+                                           PEC.TeX v0.3 
+  ____________________________________________By ScVr!a_
+  /// PROCRASTRINAR ES LA UNICA ESPERANZA ///
 
 ---
 

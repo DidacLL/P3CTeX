@@ -9,7 +9,7 @@
 %%  and run from tex/tests/ (or adjust image paths).
 %% =======================================================
 
-\documentclass[fake,,default]{P3CTeX}
+\documentclass[fake,default]{P3CTeX}
 
 \PECTeXconfig{
 	cover-config={offset,defaultcover},
@@ -26,7 +26,6 @@
 	toc,
 	default
 }
-
 
 \pxSRCsetup{placeholder-color=blue}
 \begin{document}
@@ -180,21 +179,85 @@ Non-existent class: [\pxUMLAttributes{NoExisteix}].
 % ========== 4. pxSRC — Images ==========
 \section{pxSRC: safe images}
 
-\pxIMG[.2\linewidth]{img/testimage}[primarycolor]{Single image caption}[fig:one]
+\pxIMG[.2\linewidth]{img/testimage}[primaryColor]{Single image caption}[fig:one]
 
 \pxIMG[.2\linewidth]{img/testimage}{Caption (optional width; color uses default)}[fig:two]
 
-\pxIMGpair{img/testimage}{img/testimage}[primarycolor]{Pair caption}[fig:pair]
+\pxIMGpair{img/testimage}{img/testimage}[primaryColor]{Pair caption}[fig:pair]
 
 \pxIMGList{testimage}{Step one, Step two, Step three, Step four}
 
-% ========== 5. pxCORE — Debug (optional) ==========
+% ========== 5. pxTAB — Tables ==========
+\section{pxTAB: predefined tables}
+
+\pxTABsetup{style=header,headerbgcolor=blue!15,headertextcolor=blue!70!black}
+\pxTable{Name, Age, City}{Alice, 20, Barcelona}{Bob, 22, Madrid}
+
+%\pxTABsetup{style=striped,altrowbgcolor={black}}
+%\pxTable{Item, Quantity}{Apples, 3}{Oranges, 5}{Bananas, 2}
+
+\pxTABsetup{style=boxed}
+\pxTableFromList{Code, Description; PX1, First code; PX2, Second code}
+
+\pxTABsetup{style=grid}
+\pxTableMatrix{2}{3}{m11,m12,m13,m21,m22,m23}
+
+% Centered header-style table using the new key.
+\pxTABsetup{
+  style=header,
+  headerbgcolor=blue!15,
+  headertextcolor=blue!70!black,
+  centering=true,
+}
+\pxTable{Language, Users}{
+  LaTeX, Many}{
+  P3CTeX, Felizment cada cop m\'es}
+
+% Float table with caption, label, and explicit placement.
+\pxTable[
+  style=header,
+  caption={Sample pxTAB float table},
+  label=tab:pxTAB-example,
+  float=htbp
+]{Module, Feature}{
+  pxSRC, Safe image inclusion}{
+  pxTAB, Predefined table styles}
+%\vspace{1em}
+Table~\ref{tab:pxTAB-example} shows a small pxTAB float that can be
+cross-referenced in the usual way.
+
+% Composed styles: rubric-style grid and striped dataset.
+\pxTABsetup{
+  style=header-grid,
+  headerbgcolor=blue!15,
+  headertextcolor=blue!70!black,
+  headerfont=\sffamily\bfseries,
+  tabwidth=\linewidth
+}
+\pxTable{Criterion, Weight, Notes}{
+  Design, 40\%, Structure and clarity}{
+  Implementation, 40\%, Correctness and style}{
+  Testing, 20\%, Coverage and edge cases}
+
+\pxTABsetup{
+  style=header-striped,
+  altrowbgcolor=gray!10,
+  altrowtextcolor=black,
+  tabwidth=.9\linewidth
+}
+\pxTable{Student, PEC 1, PEC 2, Final}{
+  Alice, 8.0, 9.0, 8.5}{
+  Bruno, 7.5, 8.0, 7.8}{
+  Carla, 9.0, 9.5, 9.3}{
+  Daniel, 6.5, 7.0, 6.8}
+
+% ========== 6. pxCORE — Debug (optional) ==========
 \section{pxCORE: setup and debug}
 
 \pxCOREsetup{debug=false}
 Debug state: \pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}.
 
-% ========== 6. pxGDX — Layout ==========
+% ========== 7. pxGDX — Layout ==========
 \section{pxGDX: layout helpers}
 
 \pxGrow{Example title text}[\linewidth]

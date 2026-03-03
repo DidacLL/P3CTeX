@@ -1,0 +1,50 @@
+% !TeX encoding = UTF-8
+% !TeX program = pdflatex
+%% pxTAB align regression test
+%% Assert: align=l -> colspec contains l; align=r -> colspec contains r.
+%% If the align key is broken, the assertion fails at compile time.
+
+\documentclass{article}
+\usepackage{pxTAB}
+
+\ExplSyntaxOn
+\tl_new:N \g__pxtab_align_expected_tl
+\cs_new_eq:NN \__pxtab_emit_tabular_orig:N \__pxtab_emit_tabular_with_body:N
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+  {
+    \tl_if_empty:NF \g__pxtab_align_expected_tl
+      {
+        \tl_if_in:NVTF #1 \g__pxtab_align_expected_tl
+          { \iow_term:n { PXTAB_ALIGN_ASSERT:PASS } }
+          {
+            \PackageError { pxTAB-align-test }
+              { align~key~broken:~expected~colspec~to~contain~\g__pxtab_align_expected_tl,~got~\tl_to_str:N #1 }
+              { The~align~option~is~not~being~applied~correctly. }
+          }
+        \tl_gclear:N \g__pxtab_align_expected_tl
+      }
+    \__pxtab_emit_tabular_orig:N #1
+  }
+\ExplSyntaxOff
+
+\begin{document}
+
+\section*{pxTAB align regression test}
+
+\ExplSyntaxOn
+\tl_gset:Nn \g__pxtab_align_expected_tl { l }
+\ExplSyntaxOff
+
+\subsection*{1. \texttt{align=l}}
+\pxTABsetup{style=plain,align=l}
+\pxTable{Col A, Col B, Col C}{1, 22, 333}{a, bb, ccc}
+
+\ExplSyntaxOn
+\tl_gset:Nn \g__pxtab_align_expected_tl { r }
+\ExplSyntaxOff
+
+\subsection*{2. \texttt{align=r}}
+\pxTABsetup{style=plain,align=r}
+\pxTable{Col A, Col B, Col C}{1, 22, 333}{a, bb, ccc}
+
+\end{document}

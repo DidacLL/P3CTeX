@@ -78,6 +78,22 @@
           { grid-terminal-rowcount-clean }
         \__pxtab_probe_assert_body_not_contains:n { \crcr }
       }
+    \tl_if_eq:NnT \l__pxtab_style_tl { header-boxed }
+      {
+        \__pxtab_probe_assert_eq:nnn
+          { \g__pxtab_probe_seen_rows_int }
+          { \g__pxtab_probe_expected_rows_int }
+          { header-boxed-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { header-grid }
+      {
+        \__pxtab_probe_assert_eq:nnn
+          { \g__pxtab_probe_seen_rows_int }
+          { \g__pxtab_probe_expected_rows_int }
+          { header-grid-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
     \iow_term:x
       {
         PXTAB_PROBE:SCENARIO=\tl_use:N \g__pxtab_probe_scenario_tl ;
@@ -107,6 +123,10 @@
     bodyfont=\sffamily
   }
 \pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{plain}{3}
+\pxTABsetup{style=plain}
+\pxTable{P1, P2}{r1, c1}{r2, c2}
 
 \pxProbeScenario{striped}{4}
 \pxTABsetup{style=striped,altrowbgcolor=gray!15,altrowtextcolor=purple}
@@ -141,5 +161,60 @@
 \pxProbeScenario{fromlist-grid-trailing}{2}
 \pxTABsetup{style=grid}
 \pxTableFromList{G1, G2; x, y;}
+
+\pxProbeScenario{boxed-float-wrapper}{3}
+\pxTABsetup{style=boxed,rulecolor=red!50!black,rulewidth=0.9pt}
+\pxTable
+  [
+    caption={Probe: boxed float wrapper},
+    label=tab:pxtab-probe-boxed-float,
+    float=htbp
+  ]
+  {H1, H2}
+  {a, b}
+  {c, d}
+
+\pxProbeScenario{grid-float-wrapper}{3}
+\pxTABsetup{style=grid,rulecolor=green!40!black,rulewidth=1.2pt}
+\pxTable
+  [
+    caption={Probe: grid float wrapper},
+    label=tab:pxtab-probe-grid-float
+  ]
+  {G1, G2}
+  {x, y}
+  {u, v}
+
+\pxProbeScenario{header-boxed}{3}
+\pxTABsetup
+  {
+    style=header-boxed,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries
+  }
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{header-grid}{3}
+\pxTABsetup
+  {
+    style=header-grid,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries
+  }
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{header-striped}{4}
+\pxTABsetup
+  {
+    style=header-striped,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Item, Qty}{Apples, 3}{Oranges, 5}{Pears, 2}
 
 \end{document}

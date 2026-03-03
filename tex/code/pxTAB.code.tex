@@ -44,6 +44,9 @@
 \tl_new:N  \l__pxtab_colspec_tl
 \tl_new:N  \l__pxtab_row_sep_tl
 \tl_new:N  \l__pxtab_cell_sep_tl
+\tl_new:N  \l__pxtab_caption_tl
+\tl_new:N  \l__pxtab_label_tl
+\tl_new:N  \l__pxtab_float_tl
 \tl_new:N  \l__pxtab_tmpa_tl
 \tl_new:N  \l__pxtab_tmpb_tl
 \tl_new:N  \l__pxtab_cell_tmp_tl
@@ -58,6 +61,8 @@
 \bool_new:N \l__pxtab_simple_colspec_bool
 \bool_new:N \l__pxtab_auto_colspec_bool
 \bool_new:N \l__pxtab_use_tabularx_bool
+\bool_new:N \l__pxtab_center_bool
+\bool_new:N \l__pxtab_probe_bool
 %% =================================
 %% ===== KEY DEFINITIONS (pxTAB) ====
 %% =================================
@@ -69,13 +74,19 @@
 	style / striped .code:n    = { \tl_set:Nn \l__pxtab_style_tl {striped} },
 	style / boxed  .code:n     = { \tl_set:Nn \l__pxtab_style_tl {boxed} },
 	style / grid   .code:n     = { \tl_set:Nn \l__pxtab_style_tl {grid} },
+	style / header-boxed .code:n
+		= { \tl_set:Nn \l__pxtab_style_tl {header-boxed} },
+	style / header-grid  .code:n
+		= { \tl_set:Nn \l__pxtab_style_tl {header-grid} },
+	style / header-striped .code:n
+		= { \tl_set:Nn \l__pxtab_style_tl {header-striped} },
 	style          .initial:n  = plain,
 	headerbgcolor  .tl_set:N   = \l__pxtab_header_bg_tl,
-	headerbgcolor  .initial:n  = { gray!25 },
+	headerbgcolor  .initial:n  = { blue!15 },
 	headertextcolor .tl_set:N  = \l__pxtab_header_text_tl,
-	headertextcolor .initial:n = { black },
+	headertextcolor .initial:n = { blue!70!black },
 	altrowbgcolor  .tl_set:N   = \l__pxtab_alt_row_bg_tl,
-	altrowbgcolor  .initial:n  = { gray!10 },
+	altrowbgcolor  .initial:n  = { blue!15gray },
 	altrowcolor    .meta:n     = { altrowbgcolor = {#1} },
 	altrowtextcolor .tl_set:N  = \l__pxtab_alt_row_text_tl,
 	altrowtextcolor .initial:n = {},
@@ -116,6 +127,16 @@
 	rowsep         .initial:n  = {;},
 	cellsep        .tl_set:N   = \l__pxtab_cell_sep_tl,
 	cellsep        .initial:n  = {,},
+	caption        .tl_set:N   = \l__pxtab_caption_tl,
+	caption        .initial:n  = {},
+	label          .tl_set:N   = \l__pxtab_label_tl,
+	label          .initial:n  = {},
+	float          .tl_set:N   = \l__pxtab_float_tl,
+	float          .initial:n  = {H},
+	probe          .bool_set:N = \l__pxtab_probe_bool,
+	probe          .default:n  = false,
+	centering      .bool_set:N = \l__pxtab_center_bool,
+	centering      .default:n  = false,
 	unknown        .code:n     = { }
 }
 %% =================================
@@ -133,7 +154,12 @@
 	{ \msg_warning:nn { pxTAB } { empty-first-row } }
 %% Test probe hook (no-op by default).
 %% Dedicated QA harnesses can temporarily redefine this macro.
-\cs_new_protected:Npn \__pxtab_probe_event:nn #1#2 { }
+%% When probe=true, logs event name and value to the log file for diagnostics.
+\cs_new_protected:Npn \__pxtab_probe_event:nn #1#2
+{
+	\bool_if:NT \l__pxtab_probe_bool
+		{ \iow_log:x { pxTAB~probe:~#1~=~\tl_to_str:n { #2 } } }
+}
 %% Explicit alignment-tab token producer.
 \group_begin:
 	\char_set_catcode_alignment:N \&
@@ -297,15 +323,16 @@
 		{ \prg_return_true: }
 		{ \prg_return_false: }
 }
+\cs_generate_variant:Nn \str_case:nnF { xn }
 \cs_new_protected:Npn \__pxtab_append_auto_column_to_tl:N #1
 {
-	\str_case:nnF { \l__pxtab_auto_align_tl }
-	{
-		{ l } { \tl_put_right:Nn #1 { l } }
-		{ c } { \tl_put_right:Nn #1 { c } }
-		{ r } { \tl_put_right:Nn #1 { r } }
-	}
-	{ \tl_put_right:Nn #1 { c } }
+	\str_case:xnF { \tl_to_str:N \l__pxtab_auto_align_tl }
+		{
+			{ l } { \tl_put_right:Nn #1 { l } }
+			{ c } { \tl_put_right:Nn #1 { c } }
+			{ r } { \tl_put_right:Nn #1 { r } }
+		}
+		{ \tl_put_right:Nn #1 { c } }
 }
 \cs_new_protected:Npn \__pxtab_build_auto_colspec:n #1
 {
@@ -430,11 +457,60 @@
 	\renewcommand{\arraystretch}{\l__pxtab_arraystretch_tl}
 	\arrayrulecolor{\l__pxtab_rule_color_tl}
 	\dim_set:Nn \arrayrulewidth { \l__pxtab_rule_width_dim }
+	\bool_if:NT \l__pxtab_center_bool { \centering }
 	\__pxtab_probe_event:nn { visual-style } { \l__pxtab_style_tl }
 	\__pxtab_probe_event:nn { visual-fontsize } { \l__pxtab_font_size_tl }
 	\__pxtab_probe_event:nn { visual-rowstretch } { \l__pxtab_arraystretch_tl }
 	\__pxtab_probe_event:nn { visual-rulecolor } { \l__pxtab_rule_color_tl }
 	\__pxtab_probe_event:nn { visual-rulewidth } { \dim_use:N \l__pxtab_rule_width_dim }
+}
+%% =================================
+%% ===== FLOAT WRAPPER ==============
+%% =================================
+\cs_new_protected:Npn \__pxtab_begin_table_env:
+{
+	\tl_if_blank:VTF \l__pxtab_float_tl
+		{ \begin{table} }
+		{
+			\use:x
+				{
+					\exp_not:N \begin{table}[\tl_use:N \l__pxtab_float_tl]
+				}
+		}
+	\bool_if:NT \l__pxtab_center_bool { \centering }
+}
+\cs_new_protected:Npn \__pxtab_end_table_env:
+{
+	\end{table}
+}
+\cs_new_protected:Npn \__pxtab_wrap_in_table:nnn #1#2#3
+{
+	\tl_if_blank:VTF \l__pxtab_caption_tl
+		{
+			\tl_if_blank:VTF \l__pxtab_label_tl
+				{
+					\tl_if_blank:VTF \l__pxtab_float_tl
+						{ #3 }
+						{
+							\__pxtab_begin_table_env:
+							#3
+							\__pxtab_end_table_env:
+						}
+				}
+				{
+					\__pxtab_begin_table_env:
+					\label{\l__pxtab_label_tl}
+					#3
+					\__pxtab_end_table_env:
+				}
+		}
+		{
+			\__pxtab_begin_table_env:
+			\caption{\l__pxtab_caption_tl}
+			\tl_if_blank:VF \l__pxtab_label_tl { \label{\l__pxtab_label_tl} }
+			#3
+			\__pxtab_end_table_env:
+		}
 }
 %% =================================
 %% ===== STYLE RENDERERS ============
@@ -452,7 +528,12 @@
 			\__pxtab_append_row_to_body:nnnn
 				{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
 		}
-	\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+		}
 }
 \cs_new_protected:Npn \__pxtab_render_table_header:n #1
 {
@@ -477,7 +558,12 @@
 					{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
 			}
 	}
-	\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+		}
 }
 \cs_new_protected:Npn \__pxtab_render_table_striped:n #1
 {
@@ -502,7 +588,12 @@
 					{ \l__pxtab_body_font_tl }
 			}
 	}
-	\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+		}
 }
 \cs_new_protected:Npn \__pxtab_render_table_boxed:n #1
 {
@@ -522,7 +613,12 @@
 			{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
 	}
 	\tl_put_right:Nn \l__pxtab_body_tl {\\\hline}
-	\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+		}
 }
 \cs_new_protected:Npn \__pxtab_render_table_grid:n #1
 {
@@ -538,7 +634,122 @@
 			{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
 		\tl_put_right:Nn \l__pxtab_body_tl {\\\hline}
 	}
-	\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+		}
+}
+\cs_new_protected:Npn \__pxtab_render_table_header_boxed:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\bool_if:NTF \l__pxtab_auto_colspec_bool
+		{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		{ \__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl }
+	\__pxtab_probe_event:nn { header-boxed-colspec } { \tl_use:N \l__pxtab_tmpb_tl }
+	\int_zero:N \l__pxtab_row_index_int
+	\tl_put_right:Nn \l__pxtab_body_tl { \hline }
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_compare:nNnT { \l__pxtab_row_index_int } > { 1 }
+			{ \tl_put_right:Nn \l__pxtab_body_tl { \\ } }
+		\int_compare:nNnTF { \l__pxtab_row_index_int } = { 1 }
+			{
+				\__pxtab_append_row_styled_to_body:nnnnn
+					{ ##1 } { #1 }
+					{ \l__pxtab_header_bg_tl }
+					{ \l__pxtab_header_text_tl }
+					{ \l__pxtab_header_font_tl }
+			}
+			{
+				\__pxtab_append_row_to_body:nnnn
+					{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
+			}
+	}
+	\tl_put_right:Nn \l__pxtab_body_tl {\\\hline}
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+		}
+}
+\cs_new_protected:Npn \__pxtab_render_table_header_grid:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\bool_if:NTF \l__pxtab_auto_colspec_bool
+		{ \__pxtab_build_auto_box_colspec:nN { #1 } \l__pxtab_tmpb_tl }
+		{ \__pxtab_build_box_colspec:NN \l__pxtab_tmpb_tl \l__pxtab_colspec_tl }
+	\__pxtab_probe_event:nn { header-grid-colspec } { \tl_use:N \l__pxtab_tmpb_tl }
+	\int_zero:N \l__pxtab_row_index_int
+	\tl_put_right:Nn \l__pxtab_body_tl { \hline }
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_compare:nNnTF { \l__pxtab_row_index_int } = { 1 }
+			{
+				\__pxtab_append_row_styled_to_body:nnnnn
+					{ ##1 } { #1 }
+					{ \l__pxtab_header_bg_tl }
+					{ \l__pxtab_header_text_tl }
+					{ \l__pxtab_header_font_tl }
+			}
+			{
+				\__pxtab_append_row_to_body:nnnn
+					{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
+			}
+		\tl_put_right:Nn \l__pxtab_body_tl {\\\hline}
+	}
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
+		}
+}
+\cs_new_protected:Npn \__pxtab_render_table_header_striped:n #1
+{
+	\tl_clear:N \l__pxtab_body_tl
+	\int_set:Nn \l__pxtab_tmpa_int { \seq_count:N \l__pxtab_rows_seq }
+	\int_zero:N \l__pxtab_row_index_int
+	\seq_map_inline:Nn \l__pxtab_rows_seq
+	{
+		\int_incr:N \l__pxtab_row_index_int
+		\int_compare:nNnT { \l__pxtab_row_index_int } > { 1 }
+			{ \tl_put_right:Nn \l__pxtab_body_tl {\\} }
+		\int_compare:nNnTF { \l__pxtab_row_index_int } = { 1 }
+			{
+				\__pxtab_append_row_styled_to_body:nnnnn
+					{ ##1 } { #1 }
+					{ \l__pxtab_header_bg_tl }
+					{ \l__pxtab_header_text_tl }
+					{ \l__pxtab_header_font_tl }
+			}
+			{
+				\int_set:Nn \l__pxtab_tmpa_int
+					{ \l__pxtab_row_index_int - 1 }
+				\int_if_odd:nTF { \l__pxtab_tmpa_int }
+					{
+						\__pxtab_append_row_to_body:nnnn
+							{ ##1 } { #1 } { } { \l__pxtab_body_font_tl }
+					}
+					{
+						\__pxtab_append_row_styled_to_body:nnnnn
+							{ ##1 } { #1 }
+							{ \l__pxtab_alt_row_bg_tl }
+							{ \l__pxtab_alt_row_text_tl }
+							{ \l__pxtab_body_font_tl }
+					}
+			}
+	}
+	\__pxtab_wrap_in_table:nnn
+		{ \tl_use:N \l__pxtab_caption_tl }
+		{ \tl_use:N \l__pxtab_label_tl }
+		{
+			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
+		}
 }
 %% =================================
 %% ===== MAIN RENDER ENTRY ==========
@@ -561,7 +772,19 @@
 								{
 									\tl_if_eq:NnTF \l__pxtab_style_tl {grid}
 										{ \__pxtab_render_table_grid:n { #1 } }
-										{ \__pxtab_render_table_plain:n { #1 } }
+										{
+											\tl_if_eq:NnTF \l__pxtab_style_tl {header-boxed}
+												{ \__pxtab_render_table_header_boxed:n { #1 } }
+												{
+													\tl_if_eq:NnTF \l__pxtab_style_tl {header-grid}
+														{ \__pxtab_render_table_header_grid:n { #1 } }
+														{
+															\tl_if_eq:NnTF \l__pxtab_style_tl {header-striped}
+																{ \__pxtab_render_table_header_striped:n { #1 } }
+																{ \__pxtab_render_table_plain:n { #1 } }
+														}
+												}
+										}
 								}
 						}
 				}

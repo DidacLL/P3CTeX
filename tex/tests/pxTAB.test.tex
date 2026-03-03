@@ -2,6 +2,15 @@
 
 \usepackage{pxTAB}
 
+% Ensure a minimal aux file exists so that first runs from a clean tree do not
+% fail due to strict file-not-found handling for \jobname.aux. This is local to
+% this test document and does not change pxTAB's runtime behaviour.
+\makeatletter
+\newwrite\pxtab@aux
+\immediate\openout\pxtab@aux=\jobname.aux\relax
+\immediate\closeout\pxtab@aux
+\makeatother
+
 \begin{document}
 
 \ExplSyntaxOn
@@ -166,9 +175,141 @@
 \pxTableMatrix{3}{2}{m11,m12,m21,m22}
 
 \subsection*{23. Matrix empty-row regression}
-\pxTABsetup{style=plain}
+\pxTABsetup{style=plain,tabwidth=1cm}
 \pxTableMatrix{2}{2}{m11,m12,m21,m22}
 
 \ExplSyntaxOn\__pxtab_test_probe_off:\ExplSyntaxOff
+
+\subsection*{24. \texttt{tabwidth} alias key}
+\pxTABsetup{style=plain,tabwidth=0.1\linewidth}
+\pxTable{T1, T2}{short, row}
+
+\subsection*{25. \texttt{align=r} explicit}
+\pxTABsetup{style=plain,width=.2\linewidth,align=r}
+\pxTable{Right, Aligned, Columns}{1, 2, 3}{4, 5, 6}
+
+\subsection*{26. Warning paths for empty input and colspec mismatch}
+% Empty table from list (no rows) -> empty-table warning.
+\pxTABsetup{style=plain}
+\pxTableFromList{}
+%
+% Empty first row (no columns) -> empty-first-row warning.
+\pxTable{}{1, 2}
+%
+% Colspec length mismatch -> colspec-mismatch warning.
+\pxTABsetup{style=plain,colspec=l}
+\pxTable{X, Y}{1, 2}
+
+\subsection*{27. Matrix zero-dimension edge cases}
+\pxTABsetup{style=plain}
+% rows=0 triggers empty-table warning
+\pxTableMatrix{0}{2}{m11,m12}
+% cols=0 triggers empty-first-row warning
+\pxTableMatrix{2}{0}{m11,m12}
+
+\subsection*{28. Probe key (diagnostic logging, no output change)}
+% probe=true writes to the log file; table output is unchanged.
+\pxTABsetup{style=header,probe=true}
+\pxTable{P1, P2}{a, b}{c, d}
+\pxTABsetup{probe=false}
+\pxTable{Q1, Q2}{x, y}
+
+\subsection*{29. Centering key (plain and header styles)}
+% Global centering for plain style.
+\pxTABsetup{style=plain,centering=true}
+\pxTable{C1, C2}{x1, y1}{x2, y2}
+%
+% Global centering for header style.
+\pxTABsetup
+  {
+    style=header,
+    centering=true,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black
+  }
+\pxTable{Name, Age}{Alice, 20}{Bob, 22}
+%
+% Table-local centering override remains supported.
+\pxTABsetup{style=plain,centering=false}
+\pxTable[centering=true]{L1, L2}{v1, v2}
+
+\subsection*{30. Float wrapper (caption, label, float)}
+% Header-style table wrapped in a table float with caption and label (no float key).
+\pxTABsetup{style=header}
+\pxTable
+  [
+    caption={Float wrapper: header table},
+    label=tab:pxtab-float-header
+  ]
+  {Name, Score}
+  {Anna, 8}
+  {Marc, 9}
+
+% Explicit float placement with caption, label, and float key.
+\pxTABsetup{style=plain}
+\pxTable
+  [
+    style=header,
+    caption={Float wrapper with placement},
+    label=tab:pxtab-float-placement,
+    float=htbp
+  ]
+  {Col 1, Col 2}
+  {x, y}
+  {u, v}
+
+\subsection*{31. Centering key -- multiple tables and styles}
+% Multiple centred tables using the centering key across header and striped styles.
+\pxTABsetup
+  {
+    style=header,
+    centering=true,
+    headerbgcolor=blue!10,
+    headertextcolor=blue!70!black
+  }
+\pxTable{Name, Score}{Anna, 8}{Marc, 9}
+\pxTable{Project, Status}{pxTAB, Stable}{P3CTeX, Green}
+%
+\pxTABsetup
+  {
+    style=striped,
+    centering=true,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Item, Qty}{Apples, 3}{Oranges, 5}{Pears, 2}
+\pxTable{Phase, Done?}{Design, Yes}{Tests, Yes}{Docs, Yes}
+
+\subsection*{32. Float wrapper -- narrative with cross-references}
+This paragraph introduces Table~\ref{tab:pxtab-float-narrative-a} and
+Table~\ref{tab:pxtab-float-narrative-b} as examples of pxTAB floats used
+in running text.
+
+\pxTABsetup{style=header}
+\pxTable
+  [
+    caption={Narrative float: header table},
+    label=tab:pxtab-float-narrative-a
+  ]
+  {Name, Role}
+  {Alice, Author}
+  {Bruno, Reviewer}
+
+As explained in Table~\ref{tab:pxtab-float-narrative-a}, roles are listed
+before the detailed discussion. A second summary appears in
+Table~\ref{tab:pxtab-float-narrative-b}.
+
+\pxTABsetup{style=plain}
+\pxTable
+  [
+    style=striped,
+    caption={Narrative float: striped summary},
+    label=tab:pxtab-float-narrative-b,
+    float=htbp
+  ]
+  {Section, Status}
+  {API, Complete}
+  {Tests, Extended}
+  {Docs, Updated}
 
 \end{document}

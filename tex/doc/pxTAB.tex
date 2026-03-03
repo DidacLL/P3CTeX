@@ -1,0 +1,801 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxTAB -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxTAB.tex
+%   makeindex -s gind.ist -o pxTAB.ind pxTAB.idx
+%   pdflatex -interaction=nonstopmode doc/pxTAB.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue,hyperindex}{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{pxTAB}
+
+\title{The \texttt{pxTAB} package\\
+  \large Predefined table styles and list-driven tables for \LaTeX2e}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/03/02 -- Version 0.1}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxTAB} provides a small \LaTeX2e\ API to build tables from
+  comma-separated rows or list-style data without writing raw
+  \texttt{tabular} environments.  It offers a handful of predefined
+  visual styles (plain, header, striped, boxed, grid) and a set of
+  composed header styles (header-boxed, header-grid, header-striped),
+  together with key--value options for consistent layout control.
+\end{abstract}
+
+\tableofcontents
+
+\section{Loading the package}
+
+\begin{verbatim}
+\usepackage{pxTAB}
+\end{verbatim}
+
+Package options are forwarded to the internal key family \texttt{pxTAB}
+and are equivalent to calling \verb|\pxTABsetup| in the preamble:
+
+\begin{verbatim}
+\usepackage[style=header,headerbgcolor=blue!15]{pxTAB}
+\end{verbatim}
+
+\section{Configuration (keys)}
+
+The \texttt{pxTAB} key family controls both visual style and parsing
+behaviour.  Keys can be set at load time or via:
+
+\begin{verbatim}
+\pxTABsetup{<key>=<value>,...}
+\end{verbatim}
+
+Defaults are chosen to be reasonable for course work and reports.
+All keys affect subsequent tables until changed again (usual \LaTeX\
+scoping rules apply).
+
+\subsection*{Style and colours}
+
+\begin{itemize}
+  \item \texttt{style} (choice, default \texttt{plain})\\
+    Selects the high-level style:
+    \texttt{plain}, \texttt{header}, \texttt{striped},
+    \texttt{boxed}, \texttt{grid}, or one of the composed
+    header styles \texttt{header-boxed}, \texttt{header-grid},
+    \texttt{header-striped}.  The composed styles behave like
+    the corresponding base style (boxed, grid, striped) with
+    an additional coloured header row.
+
+  \item \texttt{headerbgcolor} (token list, default \texttt{gray!25})\\
+    Background colour of the header row in \texttt{header} style.
+
+  \item \texttt{headertextcolor} (token list, default \texttt{black})\\
+    Text colour used in the header row.
+
+  \item \texttt{altrowbgcolor} (token list, default \texttt{gray!10})\\
+    Background colour for alternating rows in \texttt{striped} style.
+
+  \item \texttt{altrowcolor} (meta)\\
+    Alias for \texttt{altrowbgcolor}.
+
+  \item \texttt{altrowtextcolor} (token list, default empty)\\
+    Text colour used on alternating rows in \texttt{striped} style.
+
+  \item \texttt{headerfont} (token list, default \verb|\bfseries|)\\
+    Font-switch applied to the header row (e.g.\ \verb|\sffamily\bfseries|).
+
+  \item \texttt{bodyfont} (token list, default empty)\\
+    Font-switch applied to body rows.
+
+  \item \texttt{rulecolor} (token list, default \texttt{black!55})\\
+    Colour used for horizontal and vertical rules
+    (applied via \verb|\arrayrulecolor|).
+
+  \item \texttt{rulewidth} (dimension, default \texttt{0.4pt})\\
+    Thickness of rules (applied via \verb|\arrayrulewidth|).
+\end{itemize}
+
+\subsection*{Geometry and layout}
+
+\begin{itemize}
+  \item \texttt{tabcolsep} (dimension, default \texttt{6pt})\\
+    Column separation (mirrors the standard \verb|\tabcolsep| parameter).
+
+  \item \texttt{arraystretch} (token list, default \texttt{1.2})\\
+    Row stretch applied via \verb|\arraystretch|.
+
+  \item \texttt{rowstretch} (meta)\\
+    Alias for \texttt{arraystretch}.
+
+  \item \texttt{width} (code, default \texttt{natural})\\
+    Width of the table.  The default \texttt{natural} keeps the table
+    at its natural (fit-content) width; tables are \emph{not} stretched
+    to page width unless you explicitly set \texttt{width} or
+    \texttt{tabwidth}.  The special values \texttt{linewidth} and
+    \texttt{line-width} are treated as \verb|\linewidth|; any other
+    value is used as-is (e.g.\ \verb|.8\linewidth| or \verb|120pt|).
+
+  \item \texttt{tabwidth} (meta)\\
+    Alias for \texttt{width}.
+
+  \item \texttt{centering} (boolean, default \texttt{false})\\
+    When \texttt{true}, inserts a \verb|\centering| before the internal
+    \texttt{tabular} or \texttt{tabular*}.  This only changes the
+    horizontal alignment of the table block (in a paragraph or inside a
+    \texttt{table} float); it does not modify the computed width.  In
+    particular, \verb|width=\linewidth| still produces a full-width
+    table, but the block is explicitly centred.  The key can be set
+    globally with \verb|\pxTABsetup| or per table in the optional
+    \verb|[<options>]| argument of the commands below.
+
+  \item \texttt{fontsize} (token list, default empty)\\
+    Optional font-size command (such as \verb|\small| or \verb|\footnotesize|)
+    applied to the table.
+
+  \item \texttt{size} (meta)\\
+    Alias for \texttt{fontsize}.
+
+  \item \texttt{align} (choice, default \texttt{c})\\
+    When \texttt{colspec} is not provided, controls automatic column
+    alignment: \texttt{l}, \texttt{c}, or \texttt{r}.
+
+  \item \texttt{alignment} (meta)\\
+    Alias for \texttt{align}.
+
+  \item \texttt{colspec} (token list, default empty)\\
+    Explicit \texttt{tabular} column specification (e.g.\ \texttt{ll},
+    \texttt{|c|c|}).  When omitted, \texttt{pxTAB} builds one
+    automatically from \texttt{align}.  Simple \texttt{l}/\texttt{c}/\texttt{r}
+    specifications are checked against the inferred column count; on
+    mismatch a warning is issued and an automatic specification is used.
+
+\end{itemize}
+
+\subsection*{Floats and captions}
+
+The following keys enable a lightweight float wrapper around any
+\texttt{pxTAB} table command.  They can be set at package level or
+passed in the per-table options:
+
+\begin{itemize}
+  \item \texttt{caption} (token list, default empty)\\
+    When non-empty, the table body is wrapped in a \texttt{table}
+    environment and \verb|\caption{<caption>}| is emitted above the
+    tabular.
+
+  \item \texttt{label} (token list, default empty)\\
+    Optional label placed immediately after the caption (or, if there is
+    no caption, at the top of the float body).  A recommended convention
+    is to use prefixes such as \texttt{tab:grades} so that
+    \verb|\ref{tab:grades}| yields the table number in the usual way.
+
+  \item \texttt{float} (token list, default empty)\\
+    Placement specifier forwarded to the \texttt{table} environment
+    (e.g.\ \texttt{htbp}).  When empty, \LaTeX\ uses its default float
+    placement rules.
+\end{itemize}
+
+Any non-empty combination of \texttt{caption}, \texttt{label}, or
+\texttt{float} activates the float wrapper; otherwise tables are
+generated in-place without a surrounding \texttt{table} environment.
+When both \texttt{centering=true} and float keys are used, the
+\verb|\centering| is inserted inside the \texttt{table} environment,
+before the caption and the tabular body.
+
+\subsection*{Parsing}
+
+\begin{itemize}
+  \item \texttt{rowsep} (token list, default \texttt{;})\\
+    Separator between rows when using list-style data.
+
+  \item \texttt{cellsep} (token list, default \texttt{,})\\
+    Separator between cells inside each row.
+
+  \item \texttt{probe} (boolean, default \texttt{false})\\
+    When \texttt{true}, writes diagnostic information to the \LaTeX\ log
+    file during table rendering (style name, colspec, visual settings,
+    etc.).  Intended for debugging and development; no effect on
+    output.  QA harnesses may override the internal probe hook for
+    automated assertions.
+
+  \item \texttt{unknown} (code)\\
+    Unknown keys are currently ignored silently (reserved for future
+    extension).
+\end{itemize}
+
+\section{Styles by example}
+
+This section illustrates the built-in styles using a small example
+dataset.  In all cases we use:
+
+\begin{verbatim}
+\pxTABsetup{tabwidth=.8\linewidth}
+\end{verbatim}
+
+\subsection{Plain}
+
+\begin{verbatim}
+\pxTABsetup{style=plain,tabwidth=.8\linewidth}
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+\end{verbatim}
+
+\pxTABsetup{style=plain,tabwidth=.8\linewidth}
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+
+\subsection{Header}
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=header,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=header,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+
+\subsection{Striped}
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=striped,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Item, Quantity}
+        {Apples, 3}
+        {Oranges, 5}
+        {Bananas, 2}
+
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=striped,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Item, Quantity}
+        {Apples, 3}
+        {Oranges, 5}
+        {Bananas, 2}
+
+\subsection{Boxed}
+
+\begin{verbatim}
+\pxTABsetup{style=boxed}
+\pxTableFromList
+  {Code, Description;
+   PX1, First code;
+   PX2, Second code}
+\end{verbatim}
+
+\pxTABsetup{style=boxed}
+\pxTableFromList
+  {Code, Description;
+   PX1, First code;
+   PX2, Second code}
+
+\subsection{Grid}
+
+\begin{verbatim}
+\pxTABsetup{style=grid}
+\pxTableMatrix{2}{3}
+  {m11,m12,m13,
+   m21,m22,m23}
+\end{verbatim}
+
+\pxTABsetup{style=grid}
+\pxTableMatrix{2}{3}
+  {m11,m12,m13,
+   m21,m22,m23}
+
+\subsection{Composed header styles}
+
+The composed styles combine the header row styling with the boxed,
+grid, or striped variants so that common table layouts can be selected
+with a single option.  The following examples use the same small
+dataset.
+
+\subsubsection*{\texttt{style=header-boxed}}
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=header-boxed,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=header-boxed,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+
+\subsubsection*{\texttt{style=header-grid}}
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=header-grid,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=header-grid,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+
+\subsubsection*{\texttt{style=header-striped}}
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=header-striped,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+        {Clara, 23, Girona}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=header-striped,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+        {Clara, 23, Girona}
+
+\subsection{Centered and floating tables}
+
+The new \texttt{centering} and float-related keys can be combined with
+any of the predefined styles.  The following example uses
+\texttt{style=header} with global centering:
+
+\begin{verbatim}
+\pxTABsetup
+  {
+    style=header,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    centering=true
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+\end{verbatim}
+
+\pxTABsetup
+  {
+    style=header,
+    headerbgcolor=blue!15,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    centering=true
+  }
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+
+A float table with caption and label can be created by passing the new
+keys in the options argument:
+
+\begin{verbatim}
+\pxTable[
+  style=header,
+  caption={Sample grades},
+  label=tab:grades,
+  float=htbp
+]{Name, Grade}
+ {Alice, 9}
+ {Bob, 7}
+\end{verbatim}
+
+\pxTable[
+  style=header,
+  caption={Sample grades},
+  label=tab:grades,
+  float=htbp
+]{Name, Grade}
+ {Alice, 9}
+ {Bob, 7}
+
+As usual, the table can later be referenced with
+\verb|Table~\ref{tab:grades}| in the surrounding text.
+
+\section{Command reference}
+
+This section summarises the user-facing commands provided by
+\texttt{pxTAB}.  All commands respect the key settings described
+above.
+
+\subsection{\texttt{\textbackslash pxTABsetup}}
+
+\begin{verbatim}
+\pxTABsetup{<key>=<value>,...}
+\end{verbatim}
+
+Sets package-wide defaults in the \texttt{pxTAB} key family.
+Usual \LaTeX\ scoping rules apply, so placing a setup call inside a
+group affects only the tables in that group.
+
+\subsection{\texttt{\textbackslash pxTable}}
+
+\begin{verbatim}
+\pxTable[<options>]{<row1>}{<row2>}...{<rowN>}
+\end{verbatim}
+
+Builds a table from braced row arguments.  Each \verb|<row>| is a
+comma-separated list of cell contents.  A typical example is:
+
+\begin{verbatim}
+\pxTABsetup{style=header}
+\pxTable{Name, Age, City}
+        {Alice, 20, Barcelona}
+        {Bob, 22, Madrid}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxTableFromList}}
+
+\begin{verbatim}
+\pxTableFromList[<options>]{<data>}
+\end{verbatim}
+
+Builds a table from a single list-style string.  By default rows are
+separated by semicolons (\verb|;|) and cells by commas (\verb|,|):
+
+\begin{verbatim}
+\pxTableFromList
+  {Name, Age, City;
+   Alice, 20, Barcelona;
+   Bob, 22, Madrid}
+\end{verbatim}
+
+The separators can be customised with the \texttt{rowsep} and
+\texttt{cellsep} keys.
+
+\subsection{\texttt{\textbackslash pxTableRow}}
+
+\begin{verbatim}
+\pxTableRow[<options>]{<row>}
+\end{verbatim}
+
+Convenience wrapper for single-row tables (headers or small data
+rows).  It behaves as:
+
+\begin{verbatim}
+\pxTableRow[<opts>]{<row>} == \pxTable[<opts>]{<row>}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxTableHeadBody}}
+
+\begin{verbatim}
+\pxTableHeadBody[<options>]{<header>}{<body-list>}
+\end{verbatim}
+
+The header row is given explicitly as a comma-separated list, while
+the body is provided as list-style data using the current separators:
+
+\begin{verbatim}
+\pxTableHeadBody
+  {Name, Role}
+  {Alice, Dev; Bob, QA; Carol, PO}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxTableHeadBodyRows}}
+
+\begin{verbatim}
+\pxTableHeadBodyRows[<options>]
+  {<header>}{<row1>}{<row2>}...
+\end{verbatim}
+
+Variant of the previous command where both header and body rows are
+given as separate braced arguments:
+
+\begin{verbatim}
+\pxTableHeadBodyRows
+  {Name, Score}
+  {Anna, 8}
+  {Marc, 9}
+  {Joan, 10}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxTableMatrix}}
+
+\begin{verbatim}
+\pxTableMatrix[<options>]{<rows>}{<cols>}{<flat-cells>}
+\end{verbatim}
+
+Builds a table from a flat list of cells, filled row by row.  Missing
+cells are left blank:
+
+\begin{verbatim}
+\pxTableMatrix{2}{3}
+  {m11,m12,m13,
+   m21,m22,m23}
+\end{verbatim}
+
+\subsection{Quick reference}
+
+The following table summarises the most common commands and their
+arguments; all of them honour the global and per-table keys described in
+the configuration section.
+
+\begin{center}
+\begin{tabular}{llp{.45\linewidth}}
+\textbf{Command} & \textbf{Arguments} & \textbf{Typical use}\\\hline
+\verb|\pxTABsetup| & \verb|{<key>=<value>,...}| &
+  Set global defaults (style, width, centering, colours, float keys).\\
+\verb|\pxTable| &
+  \verb|[<options>]{<row1>}{...}{<rowN>}| &
+  Small to medium tables entered as explicit rows.  Supports
+  \texttt{centering}, \texttt{caption}, \texttt{label}, \texttt{float}.\\
+\verb|\pxTableFromList| &
+  \verb|[<options>]{<data>}| &
+  Tables given as a single list string separated by \texttt{rowsep} and
+  \texttt{cellsep}.\\
+\verb|\pxTableRow| &
+  \verb|[<options>]{<row>}| &
+  Single-row tables (headers or quick inline tables).\\
+\verb|\pxTableHeadBody| &
+  \verb|[<options>]{<header>}{<body-list>}| &
+  Head/body split with the body given as list-style data.\\
+\verb|\pxTableHeadBodyRows| &
+  \verb|[<options>]{<header>}{<row1>}{...}| &
+  Head/body split where both header and body rows are given explicitly.\\
+\verb|\pxTableMatrix| &
+  \verb|[<options>]{<rows>}{<cols>}{<flat-cells>}| &
+  Matrix-style data where a flat cell list is reshaped into a grid.\\
+\end{tabular}
+\end{center}
+
+The float-related keys \texttt{caption}, \texttt{label}, and
+\texttt{float}, together with \texttt{centering}, can be provided either
+globally via \verb|\pxTABsetup| or per table in the \verb|[<options>]|
+argument.
+
+\section{Advanced usage}
+
+\subsection{Best practices}
+
+\begin{itemize}
+  \item Use \texttt{style=plain} for compact, in-text tables where visual
+    emphasis is not required; \texttt{style=header} works well for small
+    datasets with a clear header row.
+  \item For longer datasets, \texttt{style=striped} improves readability,
+    while \texttt{boxed} and \texttt{grid} are suitable when a strong
+    tabular structure is desired (summaries, rubrics, code lists).
+  \item Prefer the natural-width default together with
+    \texttt{centering=true} when the table is narrower than the text
+    block; this keeps columns tight while visually centring the table.
+  \item Use \verb|width=\linewidth| (or a fraction thereof) when the
+    table should align with surrounding paragraphs; in this case
+    \texttt{centering} is optional but harmless.
+  \item When using floats, set both \texttt{caption} and \texttt{label}
+    so that tables integrate with the document’s list of tables and can
+    be referenced with \verb|\ref|.
+\end{itemize}
+
+\subsection{Explicit column specifications}
+
+When \texttt{colspec} is set, its value is used directly as the
+\texttt{tabular} column specification:
+
+\begin{verbatim}
+\pxTABsetup{style=plain,colspec=ll}
+\pxTable{Col 1, Col 2}
+        {Left, also left}
+\end{verbatim}
+
+Simple \texttt{l}/\texttt{c}/\texttt{r} specifications are checked
+against the inferred column count; on mismatch a warning is issued
+and an automatic specification is used.
+
+\subsection{Width control}
+
+The \texttt{width}/\texttt{tabwidth} keys allow fixed-width tables:
+
+\begin{verbatim}
+\pxTABsetup{style=plain,width=\linewidth,align=l}
+\pxTable{A, B, C}{1, 2, 3}{4, 5, 6}
+\end{verbatim}
+
+Non-\texttt{natural} widths use a \texttt{tabular*} layout with
+automatic extra column separation so that the table fits the requested
+width.
+
+\subsection{Font size and row spacing}
+
+\begin{verbatim}
+\pxTable[fontsize=\small,rowstretch=1.05,style=header]
+        {Name, Notes}
+        {Alice, Compact rows with smaller text}
+        {Bob, This checks per-table sizing controls}
+\end{verbatim}
+
+The \texttt{fontsize}/\texttt{size} and \texttt{arraystretch}/%
+\texttt{rowstretch} keys apply only to the current table.
+
+\subsection{Troubleshooting}
+
+\begin{itemize}
+  \item \emph{Empty or missing tables.}  If the first row has no cells,
+    \texttt{pxTAB} skips the table and issues a warning.  Check that
+    your header row is non-empty and that the separators
+    (\texttt{rowsep}, \texttt{cellsep}) are correct.
+  \item \emph{Column specification mismatch.}  When \texttt{colspec} is
+    given but its length does not match the inferred column count, an
+    automatic specification is used instead and a warning is written to
+    the log.  Adjust \texttt{colspec} or let \texttt{pxTAB} derive it
+    from \texttt{align}.
+  \item \emph{Float placement warnings.}  The \texttt{float} key is
+    passed directly to \verb|\begin{table}[...]|.  If you use an
+    unsupported placement specifier, \LaTeX\ may report an ``Unknown
+    float option'' warning; choose a standard value such as
+    \texttt{h}, \texttt{t}, or \texttt{htbp}.
+  \item \emph{Missing caption or label.}  A float without \texttt{label}
+    still typesets correctly but cannot be referenced with
+    \verb|\ref|.  Conversely, a \texttt{label} without \texttt{caption}
+    is allowed; the table is still wrapped in a \texttt{table}
+    environment so that the label has a proper float context.
+\end{itemize}
+
+\section{Implementation notes}
+
+This subsection describes, at a high level, how \texttt{pxTAB} processes
+table data and renders it.  It is intended for maintainers and advanced
+users who need to understand the internal pipeline.
+
+\subsection*{Row parsing and trailing empty trimming}
+
+Input data (from \verb|\pxTable|, \verb|\pxTableFromList|, or the
+head/body helpers) is stored as a sequence of rows in
+\verb|\l__pxtab_rows_seq|.  For list-style input, rows are split using
+the \texttt{rowsep} separator (default \texttt{;}), and cells within each
+row using \texttt{cellsep} (default \texttt{,}).
+
+Before rendering, \verb|\__pxtab_trim_trailing_empty_rows:| recursively
+removes trailing rows that have no non-blank cells.  A row is considered
+empty if every cell, after splitting by \texttt{cellsep}, is blank.
+This ensures that trailing semicolons (e.g.\ \texttt{A,B;C,D;}) do not
+produce extra blank rows in the output.
+
+\subsection*{Column count and colspec derivation}
+
+The column count is taken from the \emph{first} row only: it is the
+number of cells after splitting by \texttt{cellsep}.  If the first row
+is empty, a warning is emitted and the table is skipped.
+
+The column specification (\texttt{colspec}) is determined as follows:
+\begin{itemize}
+  \item If the user provided \texttt{colspec} and it is a simple
+    \texttt{l}/\texttt{c}/\texttt{r} string whose length matches the
+    inferred column count, it is used as-is.
+  \item If the provided \texttt{colspec} length does not match, a
+    \texttt{colspec-mismatch} warning is issued and an automatic
+    colspec is built from the \texttt{align} key.
+  \item If no \texttt{colspec} was given, one is built automatically
+    by repeating the \texttt{align} character (default \texttt{c}) for
+    each column.
+\end{itemize}
+
+For \texttt{boxed} and \texttt{grid} styles, vertical rules are added
+around the colspec (e.g.\ \texttt{|c|c|c|}).
+
+\subsection*{Style renderers and shared helpers}
+
+Each style has a dedicated renderer
+(\verb|\__pxtab_render_table_plain:n|, \verb|header:n|,
+\verb|striped:n|, \verb|boxed:n|, \verb|grid:n|).  All renderers share:
+
+\begin{itemize}
+  \item \verb|\__pxtab_append_row_to_body:nnnn| --- appends a row of
+    cells to the body token list, with optional text colour and font.
+  \item \verb|\__pxtab_append_row_styled_to_body:nnnnn| --- same, plus
+    optional \verb|\rowcolor| for background.
+  \item \verb|\__pxtab_emit_tabular_with_body:N| --- applies visual
+    setup (\texttt{tabcolsep}, \texttt{arraystretch}, \texttt{rulecolor},
+    etc.) and emits the \texttt{tabular} or \texttt{tabular*} with the
+    accumulated body.
+\end{itemize}
+
+Style-specific behaviour:
+\begin{itemize}
+  \item \texttt{plain}: all rows use body font; no row colours or rules.
+  \item \texttt{header}: first row gets \texttt{headerbgcolor},
+    \texttt{headertextcolor}, \texttt{headerfont}; body rows use body font.
+  \item \texttt{striped}: odd rows plain; even rows get
+    \texttt{altrowbgcolor} and \texttt{altrowtextcolor}.
+  \item \texttt{boxed}: colspec wrapped with \texttt{|}; \texttt{\textbackslash hline}
+    before first row and after last row.
+  \item \texttt{grid}: colspec wrapped with \texttt{|}; \texttt{\textbackslash hline}
+    before and after every row.
+  \item \texttt{header-boxed}: header-style first row (colours and font)
+    with boxed frame rules as in \texttt{boxed}.
+  \item \texttt{header-grid}: header-style first row together with full
+    grid rules as in \texttt{grid}.
+  \item \texttt{header-striped}: header-style first row; subsequent body
+    rows alternate plain and striped colours like \texttt{striped}, with
+    the striping parity starting at the first body row.
+\end{itemize}
+
+\section{Integration with P3CTeX}
+
+When using the \texttt{P3CTeX} document class and its core package
+\texttt{pxCORE}, the \texttt{pxTAB} package is loaded as part of the
+default configuration so that table commands are available without
+extra setup.  The example document \texttt{P3CTeX-example.tex} in the
+repository includes several small \texttt{pxTAB} tables alongside the
+other P3CTeX modules.
+
+\end{document}
+
