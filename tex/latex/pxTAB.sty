@@ -1,0 +1,200 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxTAB.sty
+%%	Version: v0.1 (02/2026)
+%%	Description:
+%%		Predefined table styles and list-driven table generation for
+%%		students: build tables from comma-separated rows/columns
+%%		without writing raw tabular syntax. Styles: plain (no outer
+%%		borders), header (colored first row), striped, boxed, grid.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+\RequirePackage{expl3}
+\RequirePackage{xparse,l3keys2e}
+\RequirePackage{array}
+\RequirePackage[table]{xcolor}
+\RequirePackage{colortbl}
+\RequirePackage{float}
+\RequirePackage{longtable}
+\ProvidesExplPackage{pxTAB}{2026/02/26}{v0.1}
+{P3CTeX predefined tables from comma-separated rows and columns}
+\file_input:n {pxTAB.code.tex}
+%%% P3CTeX branded presets (registered before option processing
+%%% so that \usepackage[preset=p3c-header]{pxTAB} works).
+\@ifclassloaded{P3CTeX}
+{
+	\pxTAB_save_preset:nn { p3c-header }
+	{
+		style=header, headerbgcolor=primaryColor,
+		headertextcolor=lighterColor,
+		headerfont=\sffamily\bfseries,
+		rulecolor=darkColor, arraystretch=1.3, centering=true
+	}
+	\pxTAB_save_preset:nn { p3c-data }
+	{
+		style=header-striped, headerbgcolor=primaryColor,
+		headertextcolor=lighterColor,
+		altrowbgcolor=secondaryColor!15,
+		headerfont=\sffamily\bfseries,
+		rulecolor=neutralColor, arraystretch=1.25, centering=true
+	}
+	\pxTAB_save_preset:nn { p3c-rubric }
+	{
+		style=header-grid, headerbgcolor=darkColor,
+		headertextcolor=lighterColor,
+		headerfont=\sffamily\bfseries,
+		cellmode=paragraph, rulecolor=darkColor!50,
+		arraystretch=1.4, centering=true
+	}
+	\pxTAB_save_preset:nn { p3c-minimal }
+	{
+		style=plain, rulecolor=neutralColor,
+		arraystretch=1.15, tabcolsep=4pt
+	}
+	\pxTAB_save_preset:nn { p3c-exam }
+	{
+		style=header-striped, headerbgcolor=darkColor,
+		headertextcolor=lighterColor,
+		altrowbgcolor=lightColor!30,
+		headerfont=\bfseries,
+		rulecolor=darkColor!50, arraystretch=1.35, centering=true
+	}
+}{}
+\ProcessKeysOptions{ pxTAB }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    	--	PUBLIC LaTeX2e API		--		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package configuration (pxTAB key family).
+%%   Options are only processed at load time via \usepackage[options]{pxTAB}.
+%%   \pxTABsetup sets package keys (global in document scope, local in TeX groups).
+\NewDocumentCommand{\pxTABsetup}{m}
+  { \pxTAB_set_options:n { #1 } }
+%% Preset management.
+\NewDocumentCommand{\pxTABsavepreset}{mm}
+    { \pxTAB_save_preset:nn { #1 } { #2 } }
+\NewDocumentCommand{\pxTABusepreset}{m}
+    { \pxTAB_use_preset:n { #1 } }
+%% Shared helper: apply table-local options.
+\cs_new_protected:Npn \__pxtab_apply_local_options:n #1
+{
+	\tl_if_blank:nF { #1 }
+		{ \pxTAB_set_options:n { #1 } }
+}
+%% -----------------------------------------------------------------------
+%% \pxTable[<options>]{<row1>}{<row2>}...{<rowN>}
+%%   Each <row> is a comma-separated list of cell contents.
+%%   Options: style=plain|header|striped|boxed|grid, headerbgcolor=...,
+%%   headerfont=..., bodyfont=..., tabcolsep=..., arraystretch=..., etc.
+\NewDocumentCommand{\pxTable}{ O{} m }
+{
+	\seq_clear:N \l__pxtab_rows_seq
+	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
+	\__pxtab_collect_rows:n { #1 }
+}
+%% Internal: collect further braced row arguments, then render table.
+\cs_new:Npn \__pxtab_collect_rows:n #1
+{
+	\@ifnextchar\bgroup
+		{ \__pxtab_collect_rows_aux:n { #1 } }
+		{ \__pxtab_finish_table:n { #1 } }
+}
+\cs_new:Npn \__pxtab_collect_rows_aux:n #1#2
+{
+	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
+	\@ifnextchar\bgroup
+		{ \__pxtab_collect_rows_aux:n { #1 } }
+		{ \__pxtab_finish_table:n { #1 } }
+}
+\cs_new_protected:Npn \__pxtab_finish_table:n #1
+{
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_prepare_table_from_current_rows:
+	\group_end:
+}
+%% -----------------------------------------------------------------------
+%% \pxTableFromList[<options>]{<data>}
+%%   <data> = rows separated by semicolon (;), cells within a row by comma.
+%%   Example: {Name, Age, City; Alice, 20, Barcelona; Bob, 22, Madrid}
+\NewDocumentCommand{\pxTableFromList}{ O{} m }
+{
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_table_from_list:n { #2 }
+	\group_end:
+}
+%% -----------------------------------------------------------------------
+%% Convenience: one-row table (e.g. a single header or data row).
+\NewDocumentCommand{\pxTableRow}{ O{} m }
+{
+	\pxTable[#1]{#2}
+}
+%% -----------------------------------------------------------------------
+%% Header/body split with body as flat list.
+\NewDocumentCommand{\pxTableHeadBody}{ O{} m m }
+{
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_rows_from_list:n { #3 }
+		\pxTAB_rows_prepend:n { #2 }
+		\pxTAB_prepare_table_from_current_rows:
+	\group_end:
+}
+%% Header/body split with body as row arguments.
+\NewDocumentCommand{\pxTableHeadBodyRows}{ O{} m m }
+{
+	\seq_clear:N \l__pxtab_rows_seq
+	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
+	\seq_put_right:Nn \l__pxtab_rows_seq { #3 }
+	\__pxtab_collect_rows:n { #1 }
+}
+%% Matrix helper from flat cell list.
+\NewDocumentCommand{\pxTableMatrix}{ O{} m m m }
+{
+	\group_begin:
+		\__pxtab_apply_local_options:n { #1 }
+		\pxTAB_table_matrix:nnn { #2 } { #3 } { #4 }
+	\group_end:
+}
+
+%% \pxTBLtop[maxwidth]{numcols}[gap]{headers}[rows prefix]{rows}
+\NewDocumentCommand{\pxTBLtop}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\group_begin:
+		\pxTAB_set_options:n { float=h!, centering=true, caption={}, label={} }
+		\tl_set:Nn \l__pxtab_paragraph_coltype_tl { #6 }
+		\IfBooleanTF{#1}
+		{\__pxtab_pxtbl_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+		{\__pxtab_pxtbl_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_end:
+}
+\NewDocumentCommand{\pxTBL}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\group_begin:
+		\IfBooleanTF{#1}
+		{\__pxtab_pxtbl_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+		{\__pxtab_pxtbl_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_end:
+}
+\NewDocumentCommand{\pxTBLlong}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\group_begin:
+		\IfBooleanTF{#1}
+		{\__pxtab_pxtbl_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+		{\__pxtab_pxtbl_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_end:
+}

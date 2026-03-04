@@ -1,0 +1,476 @@
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+\ExplSyntaxOn
+\box_new:N \l__pxtab_test_box_a
+\box_new:N \l__pxtab_test_box_b
+\dim_new:N \l__pxtab_test_dim_a
+\dim_new:N \l__pxtab_test_dim_b
+\dim_new:N \g__pxtab_test_last_width_dim
+\dim_new:N \g__pxtab_test_last_par_colwidth_dim
+\dim_new:N \g__pxtab_test_last_tabcolsep_dim
+\int_new:N \g__pxtab_test_seen_rows_int
+\bool_new:N \g__pxtab_test_capture_emit_bool
+\bool_new:N \g__pxtab_test_last_use_tabularx_bool
+\bool_new:N \g__pxtab_test_last_center_bool
+\tl_new:N \g__pxtab_test_last_width_tl
+\tl_new:N \g__pxtab_test_last_colspec_tl
+
+\cs_new_protected:Npn \__pxtab_test_pass:n #1
+  { \iow_term:x { PXTAB-CHECK~PASS:~#1 } }
+
+\cs_new_protected:Npn \__pxtab_test_fail:n #1
+  {
+    \iow_term:x { PXTAB-CHECK~FAIL:~#1 }
+    \PackageError { pxTAB-layout-test } { #1 } { Check~pxTAB~layout/style~runtime~application. }
+  }
+
+\cs_new_protected:Npn \__pxtab_test_assert_dim_gt:nnn #1#2#3
+  {
+    \dim_compare:nNnTF { #1 } > { #2 }
+      { \__pxtab_test_pass:n { #3 } }
+      { \__pxtab_test_fail:n { #3 } }
+  }
+
+\cs_new_protected:Npn \__pxtab_test_assert_dim_close:nnn #1#2#3
+  {
+    \dim_compare:nNnTF { \dim_abs:n { #1 - #2 } } < { 2pt }
+      { \__pxtab_test_pass:n { #3 } }
+      { \__pxtab_test_fail:n { #3 } }
+  }
+\cs_new_protected:Npn \__pxtab_test_assert_dim_delta_lt:nnnn #1#2#3#4
+  {
+    \dim_compare:nNnTF { \dim_abs:n { #1 - #2 } } < { #3 }
+      { \__pxtab_test_pass:n { #4 } }
+      { \__pxtab_test_fail:n { #4 } }
+  }
+\cs_new_protected:Npn \__pxtab_test_assert_bool_true:nN #1#2
+  {
+    \bool_if:NTF #2
+      { \__pxtab_test_pass:n { #1 } }
+      { \__pxtab_test_fail:n { #1 } }
+  }
+\cs_new_protected:Npn \__pxtab_test_assert_bool_false:nN #1#2
+  {
+    \bool_if:NTF #2
+      { \__pxtab_test_fail:n { #1 } }
+      { \__pxtab_test_pass:n { #1 } }
+  }
+\cs_new_protected:Npn \__pxtab_test_assert_int_eq:nnn #1#2#3
+  {
+    \int_compare:nNnTF { #1 } = { #2 }
+      { \__pxtab_test_pass:n { #3 } }
+      { \__pxtab_test_fail:n { #3 } }
+  }
+\cs_new_protected:Npn \__pxtab_test_assert_tl_eq:nnn #1#2#3
+  {
+    \tl_if_eq:nnTF { #1 } { #2 }
+      { \__pxtab_test_pass:n { #3 } }
+      { \__pxtab_test_fail:n { #3 } }
+  }
+\cs_new_eq:NN \__pxtab_test_append_row_orig:nnnn \__pxtab_append_row_to_body:nnnn
+\cs_set_protected:Npn \__pxtab_append_row_to_body:nnnn #1#2#3#4
+  {
+    \bool_if:NT \g__pxtab_test_capture_emit_bool
+      { \int_gincr:N \g__pxtab_test_seen_rows_int }
+    \__pxtab_test_append_row_orig:nnnn { #1 } { #2 } { #3 } { #4 }
+  }
+\cs_new_eq:NN \__pxtab_test_emit_tabular_with_body_orig:N \__pxtab_emit_tabular_with_body:N
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+  {
+    \bool_if:NT \g__pxtab_test_capture_emit_bool
+      {
+        \bool_if:NTF \l__pxtab_use_tabularx_bool
+          {
+            \bool_gset_true:N \g__pxtab_test_last_use_tabularx_bool
+          }
+          {
+            \bool_gset_false:N \g__pxtab_test_last_use_tabularx_bool
+          }
+        \tl_gset_eq:NN \g__pxtab_test_last_width_tl \l__pxtab_width_tl
+        \bool_if:NTF \l__pxtab_center_bool
+          { \bool_gset_true:N \g__pxtab_test_last_center_bool }
+          { \bool_gset_false:N \g__pxtab_test_last_center_bool }
+        \dim_gset:Nn \g__pxtab_test_last_par_colwidth_dim { \l__pxtab_paragraph_colwidth_dim }
+        \dim_gset:Nn \g__pxtab_test_last_tabcolsep_dim { \l__pxtab_tabcolsep_dim }
+        \tl_gset:Nx \g__pxtab_test_last_colspec_tl { \tl_to_str:n { \tl_use:N #1 } }
+      }
+    \__pxtab_test_emit_tabular_with_body_orig:N #1
+  }
+\ExplSyntaxOff
+
+\begin{document}
+
+\section*{pxTAB runtime size/layout/style checks}
+
+\ExplSyntaxOn
+% 1) Width mode: natural vs fixed.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\pxTable[style=plain,width=natural]{H1, H2}{a, b}
+\__pxtab_test_assert_bool_false:nN
+  { width-natural-uses-tabular-not-tabular-star }
+  \g__pxtab_test_last_use_tabularx_bool
+\pxTable[style=plain,width=120pt]{H1, H2}{a, b}
+\__pxtab_test_assert_bool_true:nN
+  { width-fixed-uses-tabular-star }
+  \g__pxtab_test_last_use_tabularx_bool
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 2) Font size key modifies rendered size.
+\vbox_set:Nn \l__pxtab_test_box_a
+  { \pxTable[style=plain]{AA, BB}{11, 22} }
+\vbox_set:Nn \l__pxtab_test_box_b
+  { \pxTable[style=plain,fontsize=\footnotesize]{AA, BB}{11, 22} }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn { \l__pxtab_test_dim_a } { \l__pxtab_test_dim_b } { fontsize-applied }
+
+% 3) Array stretch increases table height.
+\vbox_set:Nn \l__pxtab_test_box_a
+  { \pxTable[style=plain,arraystretch=1]{AA, BB}{11, 22} }
+\vbox_set:Nn \l__pxtab_test_box_b
+  { \pxTable[style=plain,arraystretch=1.8]{AA, BB}{11, 22} }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn { \l__pxtab_test_dim_b } { \l__pxtab_test_dim_a } { arraystretch-applied }
+
+% 4) Tabcolsep modifies table width.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\pxTable[style=plain,tabcolsep=2pt]{AA, BB}{11, 22}
+\dim_set:Nn \l__pxtab_test_dim_a { \g__pxtab_test_last_tabcolsep_dim }
+\pxTable[style=plain,tabcolsep=20pt]{AA, BB}{11, 22}
+\dim_set:Nn \l__pxtab_test_dim_b { \g__pxtab_test_last_tabcolsep_dim }
+\__pxtab_test_assert_dim_gt:nnn
+  { \l__pxtab_test_dim_b }
+  { \l__pxtab_test_dim_a }
+  { tabcolsep-applied }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 5) Style geometry still changes under active size/layout keys.
+\vbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[
+      style=plain,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\vbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[
+      style=boxed,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_gt:nnn
+  { \l__pxtab_test_dim_b }
+  { \l__pxtab_test_dim_a }
+  { style-remains-active-under-layout-keys }
+
+% 5a) Composed styles honour size/layout keys and keep boxed/grid geometry.
+\vbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[
+      style=header-boxed,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\vbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[
+      style=boxed,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_delta_lt:nnnn
+  { \l__pxtab_test_dim_a }
+  { \l__pxtab_test_dim_b }
+  { 2pt }
+  { header-boxed-layout-compatible-with-boxed }
+
+\vbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTable[
+      style=header-grid,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\vbox_set:Nn \l__pxtab_test_box_b
+  {
+    \pxTable[
+      style=grid,
+      width=140pt,
+      fontsize=\small,
+      arraystretch=1.25,
+      tabcolsep=8pt
+    ]{A, B, C}{1, 2, 3}
+  }
+\dim_set:Nn \l__pxtab_test_dim_a
+  { \box_ht:N \l__pxtab_test_box_a + \box_dp:N \l__pxtab_test_box_a }
+\dim_set:Nn \l__pxtab_test_dim_b
+  { \box_ht:N \l__pxtab_test_box_b + \box_dp:N \l__pxtab_test_box_b }
+\__pxtab_test_assert_dim_delta_lt:nnnn
+  { \l__pxtab_test_dim_a }
+  { \l__pxtab_test_dim_b }
+  { 2pt }
+  { header-grid-layout-compatible-with-grid }
+
+% 6) Regression: no trailing empty row from row terminators.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTable[style=plain,arraystretch=1]{A, B}{1, 2}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { no-trailing-empty-row-plain }
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTable[style=boxed,arraystretch=1]{A, B}{1, 2}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { no-trailing-empty-row-boxed }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 7) Regression: grid terminal rules do not add a terminal spacer row.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTable[style=grid,arraystretch=1]{A, B}{1, 2}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { no-terminal-spacing-artifact-grid }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 8) Regression: trailing separators in \pxTableFromList do not create an extra row
+%     for boxed and grid styles.
+
+% Boxed: with vs without trailing row separator
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableFromList[style=boxed,arraystretch=1]
+  {H1, H2; 1, 2}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { fromlist-boxed-no-trailing-empty-row }
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableFromList[style=boxed,arraystretch=1]
+  {H1, H2; 1, 2;}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { fromlist-boxed-trailing-empty-row-trimmed }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% Grid: with vs without trailing row separator
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableFromList[style=grid,arraystretch=1]
+  {G1, G2; x, y}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { fromlist-grid-no-trailing-empty-row }
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableFromList[style=grid,arraystretch=1]
+  {G1, G2; x, y;}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { fromlist-grid-trailing-empty-row-trimmed }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% Plain: repeated separators and whitespace-only trailing rows are ignored.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableFromList[style=plain,arraystretch=1]
+  {P1, P2; a, b}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { fromlist-plain-no-trailing-empty-row }
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableFromList[style=plain,arraystretch=1]
+  {P1, P2; a, b; ;   ;}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { fromlist-plain-whitespace-trailing-rows-ignored }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 9) Regression: \pxTableMatrix does not introduce a hidden empty row.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableMatrix[style=plain,arraystretch=1]
+  {2}{2}{a,b,c,d}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { matrix-no-hidden-empty-row-plain }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 10) Regression: underfilled matrix payload keeps row count stable in boxed/grid.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableMatrix[style=boxed,arraystretch=1]
+  {3}{2}{m11,m12,m21,m22}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 3 }
+  { matrix-underfilled-no-extra-row-boxed }
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\pxTableMatrix[style=grid,arraystretch=1]
+  {3}{2}{g11,g12,g21,g22}
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 3 }
+  { matrix-underfilled-no-extra-row-grid }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 11) Centering key preserves natural width.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\pxTable[style=plain,width=natural,centering=false]
+  {N1, N2}
+  {a, b}
+\__pxtab_test_assert_bool_false:nN
+  { centering-natural-no-tabular-star-false }
+  \g__pxtab_test_last_use_tabularx_bool
+\__pxtab_test_assert_bool_false:nN
+  { centering-false-recorded }
+  \g__pxtab_test_last_center_bool
+\pxTable[style=plain,width=natural,centering=true]
+  {N1, N2}
+  {a, b}
+\__pxtab_test_assert_bool_false:nN
+  { centering-natural-no-tabular-star-true }
+  \g__pxtab_test_last_use_tabularx_bool
+\__pxtab_test_assert_bool_true:nN
+  { centering-true-recorded }
+  \g__pxtab_test_last_center_bool
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 12) Centering key preserves fixed/linewidth-based width.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\pxTable[style=plain,width=120pt,centering=false]
+  {F1, F2}
+  {1, 2}
+\__pxtab_test_assert_bool_true:nN
+  { centering-fixed-uses-tabular-star-false }
+  \g__pxtab_test_last_use_tabularx_bool
+\pxTable[style=plain,width=120pt,centering=true]
+  {F1, F2}
+  {1, 2}
+\__pxtab_test_assert_bool_true:nN
+  { centering-fixed-uses-tabular-star-true }
+  \g__pxtab_test_last_use_tabularx_bool
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 13) Paragraph mode: explicit width is honored, and paragraph layout wraps.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\pxTable[
+  style=plain,
+  cellmode=paragraph,
+  paragraphcoltype=p,
+  width=.8\linewidth
+]
+  {Topic, Notes}
+  {A, This is a long paragraph cell that should wrap over multiple lines in a fixed-width paragraph column.}
+  {B, Another long paragraph entry to verify paragraph wrapping and equal-width paragraph columns.}
+\__pxtab_test_assert_dim_close:nnn
+  { \g__pxtab_test_last_par_colwidth_dim }
+  { .4\linewidth }
+  { paragraph-explicit-equal-colwidth-two-cols-p }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 14) Paragraph mode: natural width path uses linewidth as effective width.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\pxTable[
+  style=plain,
+  cellmode=paragraph,
+  paragraphcoltype=p,
+  width=natural
+]
+  {Topic, Notes}
+  {A, This is a long paragraph cell that should wrap over multiple lines in a fixed-width paragraph column.}
+  {B, Another long paragraph entry to verify paragraph wrapping and equal-width paragraph columns.}
+\__pxtab_test_assert_bool_false:nN
+  { paragraph-natural-tabular-star-disabled }
+  \g__pxtab_test_last_use_tabularx_bool
+\__pxtab_test_assert_dim_close:nnn
+  { \g__pxtab_test_last_par_colwidth_dim }
+  { .5\linewidth }
+  { paragraph-natural-effective-colwidth-linewidth-half }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+% 15) Paragraph mode with m-columns in non-plain style still honors width.
+\pxTable[
+  style=header-striped,
+  paragraphcells=true,
+  paragraphcoltype=m,
+  width=.85\linewidth,
+  headerbgcolor=blue!12,
+  headertextcolor=blue!70!black,
+  altrowbgcolor=gray!10,
+  altrowtextcolor=black
+]
+  {Criterion, Description}
+  {Clarity, The rubric text is deliberately long to trigger multi-line wrapping in paragraph columns under a composed style.}
+  {Correctness, Another long paragraph text to validate header and stripe rendering with paragraph columns.}
+
+% 16) Paragraph mode matrix path: explicit width still applies and no extra row.
+\bool_gset_true:N \g__pxtab_test_capture_emit_bool
+\int_gzero:N \g__pxtab_test_seen_rows_int
+\vbox_set:Nn \l__pxtab_test_box_a
+  {
+    \pxTableMatrix[
+      style=grid,
+      cellmode=paragraph,
+      paragraphcoltype=p,
+      width=120pt,
+      arraystretch=1
+    ]
+      {2}{2}
+      {m11 long content,m12 long content,m21 long content,m22 long content}
+  }
+\__pxtab_test_assert_dim_close:nnn
+  { \g__pxtab_test_last_par_colwidth_dim }
+  { 60pt }
+  { matrix-paragraph-equal-colwidth-two-cols }
+\__pxtab_test_assert_int_eq:nnn
+  { \g__pxtab_test_seen_rows_int }
+  { 2 }
+  { matrix-paragraph-no-hidden-empty-row-grid }
+\bool_gset_false:N \g__pxtab_test_capture_emit_bool
+
+\ExplSyntaxOff
+
+Runtime checks complete. See log for \texttt{PXTAB-CHECK PASS} markers.
+
+\end{document}

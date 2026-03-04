@@ -1,0 +1,240 @@
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+\ExplSyntaxOn
+
+\tl_new:N \g__pxtab_probe_scenario_tl
+\int_new:N \g__pxtab_probe_expected_rows_int
+\int_new:N \g__pxtab_probe_seen_rows_int
+\bool_new:N \g__pxtab_probe_blank_row_seen_bool
+\cs_new_protected:Npn \__pxtab_probe_pass:n #1
+  { \iow_term:x { PXTAB_ASSERT~PASS:~#1 } }
+\cs_new_protected:Npn \__pxtab_probe_fail:n #1
+  {
+    \iow_term:x { PXTAB_ASSERT~FAIL:~#1 }
+    \PackageError { pxTAB-style-probe } { #1 } { Check~pxTAB~row/style~token~emission. }
+  }
+\cs_new_protected:Npn \__pxtab_probe_assert_eq:nnn #1#2#3
+  {
+    \int_compare:nNnTF { #1 } = { #2 }
+      { \__pxtab_probe_pass:n { #3 } }
+      { \__pxtab_probe_fail:n { #3 } }
+  }
+\cs_new_protected:Npn \__pxtab_probe_assert_false:Nn #1#2
+  {
+    \bool_if:NTF #1
+      { \__pxtab_probe_fail:n { #2 } }
+      { \__pxtab_probe_pass:n { #2 } }
+  }
+\cs_new_protected:Npn \__pxtab_probe_assert_body_not_contains:n #1
+  {
+    \tl_if_in:NnTF \l__pxtab_body_tl { #1 }
+      { \__pxtab_probe_fail:n { body-contains-forbidden-token-\tl_to_str:n {#1} } }
+      { \__pxtab_probe_pass:n { body-token-absent-\tl_to_str:n {#1} } }
+  }
+\cs_new_protected:Npn \__pxtab_probe_assert_body_contains:n #1
+  {
+    \tl_if_in:NnTF \l__pxtab_body_tl { #1 }
+      { \__pxtab_probe_pass:n { body-token-present-\tl_to_str:n {#1} } }
+      { \__pxtab_probe_fail:n { body-missing-required-token-\tl_to_str:n {#1} } }
+  }
+\cs_new_protected:Npn \pxProbeScenario #1#2
+  {
+    \tl_gset:Nn \g__pxtab_probe_scenario_tl { #1 }
+    \int_gset:Nn \g__pxtab_probe_expected_rows_int { #2 }
+    \int_gzero:N \g__pxtab_probe_seen_rows_int
+    \bool_gset_false:N \g__pxtab_probe_blank_row_seen_bool
+    \iow_term:x { PXTAB_PROBE:SCENARIO-BEGIN=#1 }
+  }
+\cs_set_protected:Npn \__pxtab_probe_event:nn #1#2
+  { \iow_term:x { PXTAB_EVENT:#1 } }
+
+\cs_new_eq:NN \__pxtab_probe_append_row_orig:nnnn \__pxtab_append_row_to_body:nnnn
+\cs_set_protected:Npn \__pxtab_append_row_to_body:nnnn #1#2#3#4
+  {
+    \int_gincr:N \g__pxtab_probe_seen_rows_int
+    \tl_if_blank:nT { #1 } { \bool_gset_true:N \g__pxtab_probe_blank_row_seen_bool }
+    \__pxtab_probe_append_row_orig:nnnn { #1 } { #2 } { #3 } { #4 }
+  }
+
+\cs_new_eq:NN \__pxtab_probe_emit_orig:N \__pxtab_emit_tabular_with_body:N
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+  {
+    \__pxtab_probe_assert_eq:nnn
+      { \g__pxtab_probe_seen_rows_int }
+      { \g__pxtab_probe_expected_rows_int }
+      { no-trailing-empty-row }
+    \__pxtab_probe_assert_false:Nn
+      \g__pxtab_probe_blank_row_seen_bool
+      { no-blank-row-emitted }
+    \tl_if_eq:NnT \l__pxtab_style_tl { boxed }
+      {
+        \__pxtab_probe_assert_eq:nnn
+          { \g__pxtab_probe_seen_rows_int }
+          { \g__pxtab_probe_expected_rows_int }
+          { boxed-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { grid }
+      {
+        \__pxtab_probe_assert_eq:nnn
+          { \g__pxtab_probe_seen_rows_int }
+          { \g__pxtab_probe_expected_rows_int }
+          { grid-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { header-boxed }
+      {
+        \__pxtab_probe_assert_eq:nnn
+          { \g__pxtab_probe_seen_rows_int }
+          { \g__pxtab_probe_expected_rows_int }
+          { header-boxed-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { header-grid }
+      {
+        \__pxtab_probe_assert_eq:nnn
+          { \g__pxtab_probe_seen_rows_int }
+          { \g__pxtab_probe_expected_rows_int }
+          { header-grid-terminal-rowcount-clean }
+        \__pxtab_probe_assert_body_contains:n { \rowcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \cellcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { striped }
+      {
+        \__pxtab_probe_assert_body_contains:n { \rowcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \cellcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \tl_if_eq:NnT \l__pxtab_style_tl { header-striped }
+      {
+        \__pxtab_probe_assert_body_contains:n { \rowcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \cellcolor }
+        \__pxtab_probe_assert_body_not_contains:n { \crcr }
+      }
+    \iow_term:x
+      {
+        PXTAB_PROBE:SCENARIO=\tl_use:N \g__pxtab_probe_scenario_tl ;
+        STYLE=\tl_use:N \l__pxtab_style_tl ;
+        RULECOLOR=\tl_use:N \l__pxtab_rule_color_tl ;
+        RULEWIDTH=\dim_use:N \l__pxtab_rule_width_dim ;
+        FONTSIZE=\tl_to_str:N \l__pxtab_font_size_tl ;
+        ARRAYSTRETCH=\tl_use:N \l__pxtab_arraystretch_tl ;
+        COLSPEC=\tl_to_str:n { \tl_use:N #1 } ;
+        BODY=\tl_to_str:N \l__pxtab_body_tl
+      }
+    \__pxtab_probe_emit_orig:N #1
+  }
+\ExplSyntaxOff
+
+\begin{document}
+
+\section*{pxTAB style probe harness}
+
+\pxProbeScenario{header}{3}
+\pxTABsetup
+  {
+    style=header,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\itshape\bfseries,
+    bodyfont=\sffamily
+  }
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{plain}{3}
+\pxTABsetup{style=plain}
+\pxTable{P1, P2}{r1, c1}{r2, c2}
+
+\pxProbeScenario{striped}{4}
+\pxTABsetup{style=striped,altrowbgcolor=gray!15,altrowtextcolor=purple}
+\pxTable{S1, S2}{r1, c1}{r2, c2}{r3, c3}
+
+\pxProbeScenario{boxed}{2}
+\pxTABsetup{style=boxed,rulecolor=red!50!black,rulewidth=0.9pt}
+\pxTable{B1, B2}{x, y}
+
+\pxProbeScenario{boxed-matrix}{4}
+\pxTABsetup{style=boxed,rulecolor=red!50!black,rulewidth=0.9pt}
+\pxTable{M1, M2, M3}{1, 0, 0}{0, 1, 0}{0, 0, 1}
+
+\pxProbeScenario{grid}{3}
+\pxTABsetup{style=grid,rulecolor=green!40!black,rulewidth=1.2pt}
+\pxTable{G1, G2}{x, y}{u, v}
+
+\pxProbeScenario{fontsize-key}{2}
+\pxTable[style=plain,fontsize=\footnotesize,rowstretch=1.77]{K1, K2}{m, n}
+
+\pxProbeScenario{size-alias}{2}
+\pxTable[style=plain,size=\scriptsize,rowstretch=1.11]{A1, A2}{p, q}
+
+\pxProbeScenario{fromlist-boxed-no-trailing}{2}
+\pxTABsetup{style=boxed}
+\pxTableFromList{H1, H2; 1, 2}
+
+\pxProbeScenario{fromlist-boxed-trailing}{2}
+\pxTABsetup{style=boxed}
+\pxTableFromList{H1, H2; 1, 2;}
+
+\pxProbeScenario{fromlist-grid-trailing}{2}
+\pxTABsetup{style=grid}
+\pxTableFromList{G1, G2; x, y;}
+
+\pxProbeScenario{boxed-float-wrapper}{3}
+\pxTABsetup{style=boxed,rulecolor=red!50!black,rulewidth=0.9pt}
+\pxTable
+  [
+    caption={Probe: boxed float wrapper},
+    label=tab:pxtab-probe-boxed-float,
+    float=htbp
+  ]
+  {H1, H2}
+  {a, b}
+  {c, d}
+
+\pxProbeScenario{grid-float-wrapper}{3}
+\pxTABsetup{style=grid,rulecolor=green!40!black,rulewidth=1.2pt}
+\pxTable
+  [
+    caption={Probe: grid float wrapper},
+    label=tab:pxtab-probe-grid-float
+  ]
+  {G1, G2}
+  {x, y}
+  {u, v}
+
+\pxProbeScenario{header-boxed}{3}
+\pxTABsetup
+  {
+    style=header-boxed,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries
+  }
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{header-grid}{3}
+\pxTABsetup
+  {
+    style=header-grid,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries
+  }
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxProbeScenario{header-striped}{4}
+\pxTABsetup
+  {
+    style=header-striped,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black,
+    headerfont=\sffamily\bfseries,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Item, Qty}{Apples, 3}{Oranges, 5}{Pears, 2}
+
+\end{document}

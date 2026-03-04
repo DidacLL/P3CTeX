@@ -6,7 +6,7 @@ setlocal
 cd /d "%~dp0.."
 
 :: Llista d'extensions auxiliars a eliminar de manera recursiva
-for %%x in (aux log toc out synctex.gz hd lof lot fls fdb_latexmk bbl blg nav snm) do (
+for %%x in (aux log toc out synctex.gz hd lof lot fls fdb_latexmk bbl blg nav snm test.pdf) do (
     del /S /Q "*.%%x" 2>nul
 )
 

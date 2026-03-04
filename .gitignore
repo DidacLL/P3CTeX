@@ -19,7 +19,7 @@
 # these rules might exclude image files for figures etc.
 # *.ps
 # *.eps
-# *.pdf
+# *test.pdf
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
@@ -312,3 +312,4 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 /.cursor
+*.test.pdf

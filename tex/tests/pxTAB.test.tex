@@ -1,0 +1,382 @@
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+% Ensure a minimal aux file exists so that first runs from a clean tree do not
+% fail due to strict file-not-found handling for \jobname.aux. This is local to
+% this test document and does not change pxTAB's runtime behaviour.
+\makeatletter
+\newwrite\pxtab@aux
+\immediate\openout\pxtab@aux=\jobname.aux\relax
+\immediate\closeout\pxtab@aux
+\makeatother
+
+\begin{document}
+
+\ExplSyntaxOn
+\bool_new:N \g__pxtab_test_probe_bool
+\tl_new:N \l__pxtab_test_colspec_tl
+\cs_new_eq:NN \__pxtab_test_emit_tabular_with_body_orig:N \__pxtab_emit_tabular_with_body:N
+\cs_new_eq:NN \__pxtab_test_emit_cell_orig:nnn \__pxtab_emit_cell:nnn
+\cs_new_protected:Npn \__pxtab_test_probe_on:
+  { \bool_gset_true:N \g__pxtab_test_probe_bool }
+\cs_new_protected:Npn \__pxtab_test_probe_off:
+  { \bool_gset_false:N \g__pxtab_test_probe_bool }
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+{
+  \bool_if:NT \g__pxtab_test_probe_bool
+  {
+    \iow_term:x { PXTAB_ASSERT:STYLE=\tl_use:N \l__pxtab_style_tl }
+    \iow_term:x { PXTAB_ASSERT:RULECOLOR=\tl_use:N \l__pxtab_rule_color_tl }
+    \iow_term:x { PXTAB_ASSERT:RULEWIDTH=\dim_use:N \l__pxtab_rule_width_dim }
+    \tl_if_in:NnT \l__pxtab_body_tl { \rowcolor }
+      { \iow_term:n { PXTAB_ASSERT:ROWCOLOR_TOKEN_EMITTED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \textcolor }
+      { \iow_term:n { PXTAB_ASSERT:TEXTCOLOR_TOKEN_EMITTED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \bfseries }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_BOLD_TOKEN_EMITTED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \l__pxtab_header_text_tl }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_TEXTCOLOR_ARG_PASSED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \l__pxtab_header_font_tl }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_FONT_ARG_PASSED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \l__pxtab_alt_row_text_tl }
+      { \iow_term:n { PXTAB_ASSERT:STRIPED_TEXTCOLOR_ARG_PASSED } }
+    \tl_if_in:NnT \l__pxtab_body_tl { \hline }
+      { \iow_term:n { PXTAB_ASSERT:HLINE_TOKEN_EMITTED } }
+    \tl_set:Nx \l__pxtab_test_colspec_tl { \tl_use:N #1 }
+    \tl_if_in:NnT \l__pxtab_test_colspec_tl { | }
+      { \iow_term:n { PXTAB_ASSERT:COLSPEC_VERTICAL_RULES_PRESENT } }
+  }
+  \__pxtab_test_emit_tabular_with_body_orig:N #1
+}
+\cs_set_protected:Npn \__pxtab_emit_cell:nnn #1#2#3
+{
+  \bool_if:NT \g__pxtab_test_probe_bool
+  {
+    \tl_if_blank:eF { #2 }
+      { \iow_term:n { PXTAB_ASSERT:TEXTCOLOR_PATH_USED } }
+    \tl_if_in:nnT { #3 } { \l__pxtab_header_font_tl }
+      { \iow_term:n { PXTAB_ASSERT:HEADER_FONT_ARG_PASSED_TO_CELL } }
+  }
+  \__pxtab_test_emit_cell_orig:nnn { #1 } { #2 } { #3 }
+}
+\ExplSyntaxOff
+
+\section*{pxTAB redesign regression}
+
+\subsection*{1. Plain style}
+\pxTABsetup{style=plain}
+\pxTable{A, B, C}{1, 2, 3}{4, 5, 6}
+
+\subsection*{2. Header style (background + text color)}
+\pxTABsetup{style=header,headerbgcolor=blue!20,headertextcolor=blue!70!black}
+\pxTable{Name, Age, City}{Alice, 20, Barcelona}{Bob, 22, Madrid}
+
+\subsection*{3. Striped style}
+\pxTABsetup{style=striped,altrowbgcolor=gray!15}
+\pxTable{R1C1, R1C2}{R2C1, R2C2}{R3C1, R3C2}{R4C1, R4C2}
+
+\subsection*{4. Boxed style}
+\pxTABsetup{style=boxed}
+\pxTable{H1, H2, H3}{a, b, c}{d, e, f}
+
+\subsection*{5. Grid style}
+\pxTABsetup{style=grid}
+\pxTable{G1, G2}{x, y}{u, v}
+
+\subsection*{6. From list}
+\pxTABsetup{style=plain}
+\pxTableFromList{ID, Name; 1, Alice; 2, Bob}
+
+\subsection*{7. From list with custom separators}
+\pxTABsetup{style=plain,rowsep=|,cellsep=/}
+\pxTableFromList{K1/K2|A/B|C/D}
+
+\subsection*{8. Single row and single column}
+\pxTABsetup{style=plain,rowsep={;},cellsep={,}}
+\pxTableRow{Only, one, row}
+\pxTable{One}{Two}{Three}
+
+\subsection*{9. Row length mismatch (pad/truncate)}
+\pxTable{A, B, C}{1, 2}{x, y, z, overflow}
+
+\subsection*{10. Cell with comma}
+\pxTable{{Smith, John}, Age}{20, Student}
+
+\subsection*{11. Head/body commands}
+\pxTABsetup{style=header,headerbgcolor=red!15,headertextcolor=red!60!black}
+\pxTableHeadBody{Name, Role}{Alice, Dev; Bob, QA}
+\pxTableHeadBodyRows{Name, Score}{Anna, 8}{Marc, 9}{Joan, 10}
+
+\subsection*{12. Matrix command}
+\pxTABsetup{style=grid}
+\pxTableMatrix{2}{3}{m11,m12,m13,m21,m22,m23}
+
+\subsection*{13. Local options do not leak globally}
+\pxTABsetup{style=plain}
+\pxTable[style=header,headerbgcolor=green!20,headertextcolor=green!50!black]{L1, L2}{v1, v2}
+\pxTable{P1, P2}{x1, x2}
+
+\subsection*{14. Matrix sizing with exact and short cell lists}
+\pxTABsetup{style=plain}
+\pxTableMatrix{2}{2}{n11,n12,n21,n22}
+\pxTableMatrix{2}{3}{s11,s12,s13,s21}
+
+\subsection*{15. Striped text color and alias key}
+\pxTABsetup{style=striped,altrowcolor=yellow!20,altrowtextcolor=purple}
+\pxTable{S1, S2}{aa, bb}{cc, dd}{ee, ff}
+
+\subsection*{16. Command-level options remain supported}
+\pxTableFromList[style=grid]{C1, C2; 1, 2; 3, 4}
+\pxTableHeadBodyRows[style=boxed]{H1, H2}{b1, b2}{b3, b4}
+\pxTableMatrix[style=plain,cellsep=/]{2}{2}{x1/x2/x3/x4}
+
+\subsection*{17. Unknown key is ignored}
+\pxTABsetup{style=plain,unknownkey=ignored}
+\pxTable{U1, U2}{ok, still works}
+
+\subsection*{18. Width control with auto columns}
+\pxTABsetup{style=plain,width=\linewidth,align=l}
+\pxTable{Long header A, Long header B, Long header C}
+        {This text should wrap in the first column,Data,123}
+        {Another long text cell to check width behavior,More data,456}
+
+\subsection*{19. Local font size + row stretch}
+\pxTable[fontsize=\small,rowstretch=1.05,style=header]
+        {Name, Notes}
+        {Alice, Compact rows with smaller text}
+        {Bob, This checks per-table sizing controls}
+
+\subsection*{20. Explicit colspec override with width}
+\pxTABsetup{style=plain,width=\linewidth,colspec=ll}
+\pxTable{Col 1, Col 2}{Width key remains active while explicit colspec is preserved}
+
+\subsection*{21. Runtime style probes (log assertions)}
+\ExplSyntaxOn\__pxtab_test_probe_on:\ExplSyntaxOff
+
+\pxTABsetup{style=header,headerbgcolor=cyan!20,headertextcolor=blue!70!black}
+\pxTable{Name, Role}{Alice, Dev}{Bob, QA}
+
+\pxTABsetup{style=striped,altrowbgcolor=yellow!20,altrowtextcolor=purple}
+\pxTable{S1, S2}{r1, c2}{r2, c2}{r3, c3}
+
+\pxTABsetup{style=boxed,rulecolor=red!60!black,rulewidth=0.8pt}
+\pxTable{B1, B2}{x, y}{u, v}
+
+\pxTABsetup{style=grid,rulecolor=green!50!black,rulewidth=1pt}
+\pxTable{G1, G2}{m, n}{o, p}
+
+\subsection*{22. Trailing separator regressions (no extra empty row)}
+\pxTABsetup{style=boxed}
+\pxTableFromList{L1, L2; a, b;}
+\pxTABsetup{style=grid}
+\pxTableFromList{G1, G2; x, y;}
+\pxTABsetup{style=boxed}
+\pxTableMatrix{3}{2}{m11,m12,m21,m22}
+
+\subsection*{23. Matrix empty-row regression}
+\pxTABsetup{style=plain,tabwidth=1cm}
+\pxTableMatrix{2}{2}{m11,m12,m21,m22}
+
+\ExplSyntaxOn\__pxtab_test_probe_off:\ExplSyntaxOff
+
+\subsection*{24. \texttt{tabwidth} alias key}
+\pxTABsetup{style=plain,tabwidth=0.1\linewidth}
+\pxTable{T1, T2}{short, row}
+
+\subsection*{25. \texttt{align=r} explicit}
+\pxTABsetup{style=plain,width=.2\linewidth,align=r}
+\pxTable{Right, Aligned, Columns}{1, 2, 3}{4, 5, 6}
+
+\subsection*{26. Warning paths for empty input and colspec mismatch}
+% Empty table from list (no rows) -> empty-table warning.
+\pxTABsetup{style=plain}
+\pxTableFromList{}
+%
+% Empty first row (no columns) -> empty-first-row warning.
+\pxTable{}{1, 2}
+%
+% Colspec length mismatch -> colspec-mismatch warning.
+\pxTABsetup{style=plain,colspec=l}
+\pxTable{X, Y}{1, 2}
+
+\subsection*{27. Matrix zero-dimension edge cases}
+\pxTABsetup{style=plain}
+% rows=0 triggers empty-table warning
+\pxTableMatrix{0}{2}{m11,m12}
+% cols=0 triggers empty-first-row warning
+\pxTableMatrix{2}{0}{m11,m12}
+
+\subsection*{28. Probe key (diagnostic logging, no output change)}
+% probe=true writes to the log file; table output is unchanged.
+\pxTABsetup{style=header,probe=true}
+\pxTable{P1, P2}{a, b}{c, d}
+\pxTABsetup{probe=false}
+\pxTable{Q1, Q2}{x, y}
+
+\subsection*{29. Centering key (plain and header styles)}
+% Global centering for plain style.
+\pxTABsetup{style=plain,centering=true}
+\pxTable{C1, C2}{x1, y1}{x2, y2}
+%
+% Global centering for header style.
+\pxTABsetup
+  {
+    style=header,
+    centering=true,
+    headerbgcolor=blue!20,
+    headertextcolor=blue!70!black
+  }
+\pxTable{Name, Age}{Alice, 20}{Bob, 22}
+%
+% Table-local centering override remains supported.
+\pxTABsetup{style=plain,centering=false}
+\pxTable[centering=true]{L1, L2}{v1, v2}
+
+\subsection*{30. Float wrapper (caption, label, float)}
+% Header-style table wrapped in a table float with caption and label (no float key).
+\pxTABsetup{style=header}
+\pxTable
+  [
+    caption={Float wrapper: header table},
+    label=tab:pxtab-float-header
+  ]
+  {Name, Score}
+  {Anna, 8}
+  {Marc, 9}
+
+% Explicit float placement with caption, label, and float key.
+\pxTABsetup{style=plain}
+\pxTable
+  [
+    style=header,
+    caption={Float wrapper with placement},
+    label=tab:pxtab-float-placement,
+    float=htbp
+  ]
+  {Col 1, Col 2}
+  {x, y}
+  {u, v}
+
+\subsection*{31. Centering key -- multiple tables and styles}
+% Multiple centred tables using the centering key across header and striped styles.
+\pxTABsetup
+  {
+    style=header,
+    centering=true,
+    headerbgcolor=blue!10,
+    headertextcolor=blue!70!black
+  }
+\pxTable{Name, Score}{Anna, 8}{Marc, 9}
+\pxTable{Project, Status}{pxTAB, Stable}{P3CTeX, Green}
+%
+\pxTABsetup
+  {
+    style=striped,
+    centering=true,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Item, Qty}{Apples, 3}{Oranges, 5}{Pears, 2}
+\pxTable{Phase, Done?}{Design, Yes}{Tests, Yes}{Docs, Yes}
+
+\subsection*{32. Float wrapper -- narrative with cross-references}
+This paragraph introduces Table~\ref{tab:pxtab-float-narrative-a} and
+Table~\ref{tab:pxtab-float-narrative-b} as examples of pxTAB floats used
+in running text.
+
+\pxTABsetup{style=header}
+\pxTable
+  [
+    caption={Narrative float: header table},
+    label=tab:pxtab-float-narrative-a
+  ]
+  {Name, Role}
+  {Alice, Author}
+  {Bruno, Reviewer}
+
+As explained in Table~\ref{tab:pxtab-float-narrative-a}, roles are listed
+before the detailed discussion. A second summary appears in
+Table~\ref{tab:pxtab-float-narrative-b}.
+
+\pxTABsetup{style=plain}
+\pxTable
+  [
+    style=striped,
+    caption={Narrative float: striped summary},
+    label=tab:pxtab-float-narrative-b,
+    float=htbp
+  ]
+  {Section, Status}
+  {API, Complete}
+  {Tests, Extended}
+  {Docs, Updated}
+
+\subsection*{33. Striped background visual regression (T2)}
+% Minimal reproduction extracted from P3CTeX-example:
+% in some builds, the striped row background only appears behind text
+% instead of filling each full cell area.
+\pxTABsetup
+  {
+    style=header-striped,
+    cellmode=inline,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black,
+    tabwidth=.9\linewidth
+  }
+\pxTable{Student, PEC 1, PEC 2, Final}
+        {Alice, 8.0, 9.0, 8.5}
+        {Bruno, 7.5, 8.0, 7.8}
+        {Carla, 9.0, 9.5, 9.3}
+
+\subsection*{34. Paragraph mode visual regression (\texttt{pxTable}, explicit and natural width)}
+\pxTABsetup
+  {
+    style=plain,
+    cellmode=paragraph,
+    paragraphcoltype=p,
+    tabwidth=.8\linewidth
+  }
+\pxTable{Topic, Details}
+        {Design, This paragraph is intentionally long so the details cell wraps across multiple lines in an equal-width paragraph column layout.}
+        {Implementation, The wrapped content should remain stable and aligned while preserving paragraph-mode geometry.}
+\pxTABsetup{width=natural}
+\pxTable{Topic, Details}
+        {Design, In natural mode paragraph columns use linewidth as effective width so wrapping remains deterministic.}
+        {Verification, This row checks the natural-width path with the same paragraph semantics.}
+
+\subsection*{35. Paragraph mode in non-plain style (\texttt{header-striped}, \texttt{m} columns)}
+\pxTABsetup
+  {
+    style=header-striped,
+    paragraphcells=true,
+    paragraphcoltype=m,
+    width=.85\linewidth,
+    headerbgcolor=blue!12,
+    headertextcolor=blue!70!black,
+    altrowbgcolor=gray!10,
+    altrowtextcolor=black
+  }
+\pxTable{Criterion, Comment}
+        {Readability, This is a long rubric comment that must wrap inside a paragraph cell while preserving striped full-cell backgrounds.}
+        {Correctness, Another long multi-line comment to exercise composed-style rendering with paragraph columns.}
+
+\subsection*{36. Paragraph mode through list/head-body/matrix commands}
+\pxTABsetup
+  {
+    style=header,
+    cellmode=paragraph,
+    paragraphcoltype=p,
+    width=.75\linewidth
+  }
+\pxTableFromList
+  {Item, Description; Alpha, Long description text that wraps to validate paragraph mode through pxTableFromList.; Beta, Another long paragraph description for regression coverage.}
+\pxTableHeadBodyRows
+  {Phase, Notes}
+  {T1, Paragraph mode should apply to head-body rows without fallback to inline cells.}
+  {T5, Regression coverage includes wrapped content and fixed-width paragraph columns.}
+\pxTABsetup{style=grid}
+\pxTableMatrix{2}{2}
+  {m11 long paragraph,m12 long paragraph,m21 long paragraph,m22 long paragraph}
+
+\end{document}
