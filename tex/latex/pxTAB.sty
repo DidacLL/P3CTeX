@@ -29,6 +29,7 @@
 \RequirePackage[table]{xcolor}
 \RequirePackage{colortbl}
 \RequirePackage{float}
+\RequirePackage{longtable}
 \ProvidesExplPackage{pxTAB}{2026/02/26}{v0.1}
 {P3CTeX predefined tables from comma-separated rows and columns}
 \file_input:n {pxTAB.code.tex}
@@ -122,4 +123,24 @@
 		\__pxtab_apply_local_options:n { #1 }
 		\pxTAB_table_matrix:nnn { #2 } { #3 } { #4 }
 	\group_end:
+}
+
+%% \pxTBLtop[maxwidth]{numcols}[gap]{headers}[rows prefix]{rows}
+\NewDocumentCommand{\pxTBLtop}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\IfBooleanTF{#1}
+	{\_pxtable_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+	{\_pxtable_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+}
+\NewDocumentCommand{\pxTBL}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\IfBooleanTF{#1}
+	{\_pxtable_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+	{\_pxtable_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+}
+\NewDocumentCommand{\pxTBLlong}{s O{\linewidth} m O{\quad} m O{p} +m}
+{
+	\IfBooleanTF{#1}
+	{\_pxtable_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+	{\_pxtable_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
 }

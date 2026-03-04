@@ -58,6 +58,11 @@
 \int_new:N \l__pxtab_row_index_int
 \int_new:N \l__pxtab_tmpa_int
 \int_new:N \l__pxtab_colspec_count_int
+\int_new:N \l_tabletmpa_int
+\dim_new:N \l_pxtable_tophead_dim
+\dim_new:N \l_pxtable_tophead_aux_dim
+\dim_new:N \l_pxtable_toplong_dim
+\dim_new:N \l_pxtable_toplong_aux_dim
 \dim_new:N \l__pxtab_tabcolsep_dim
 \dim_new:N \l__pxtab_rule_width_dim
 \dim_new:N \l__pxtab_paragraph_colwidth_dim
@@ -87,6 +92,17 @@
 		= { \tl_set:Nn \l__pxtab_style_tl {header-grid} },
 	style / header-striped .code:n
 		= { \tl_set:Nn \l__pxtab_style_tl {header-striped} },
+	striped 		.meta:n	= {style=striped},
+	boxed		 	.meta:n	= {style=boxed},
+	grid 			.meta:n	= {style=grid},
+	header 			.meta:n	= {style=header},
+	header-striped 	.meta:n	= {style=header-striped},
+	header-boxed 	.meta:n	= {style=header-boxed},
+	header-grid 	.meta:n	= {style=header-grid},
+	setheader 			.meta:n	= {style=header,headerbgcolor=#1},
+	setheader-striped 	.meta:n	= {style=header-striped,headerbgcolor=#1},
+	setheader-boxed 	.meta:n	= {style=header-boxed,headerbgcolor=#1},
+	setheader-grid 	.meta:n	= {style=header-grid,headerbgcolor=#1},
 	style          .initial:n  = plain,
 	headerbgcolor  .tl_set:N   = \l__pxtab_header_bg_tl,
 	headerbgcolor  .initial:n  = { blue!15 },
@@ -136,12 +152,14 @@
 	paragraphcells / false .code:n =
 		{ \tl_set:Nn \l__pxtab_cellmode_tl { inline } },
 	paragraphcells .default:n = true,
+	verbose .meta:n= {cellmode=paragraph},
+	paragraph .meta:n= {cellmode=paragraph},
 	paragraphcoltype .choice:,
 	paragraphcoltype / p .code:n =
 		{ \tl_set:Nn \l__pxtab_paragraph_coltype_tl { p } },
 	paragraphcoltype / m .code:n =
 		{ \tl_set:Nn \l__pxtab_paragraph_coltype_tl { m } },
-	paragraphcoltype .initial:n = p,
+	paragraphcoltype .initial:n = m,
 	rulecolor      .tl_set:N   = \l__pxtab_rule_color_tl,
 	rulecolor      .initial:n  = { black!55 },
 	rulewidth      .dim_set:N  = \l__pxtab_rule_width_dim,
@@ -1002,5 +1020,47 @@
 		{ \__pxtab_warn_empty_row: }
 	}
 	{ \__pxtab_warn_empty_table: }
+}
+
+
+
+%% \_pxtable_tophead:nnnn {headers}{rows}{numcols}{maxwidth}{cellprefix}{rowprefix}
+\cs_new:Npn \_pxtable_tophead:nnnnnnn #1#2#3#4#5#6#7 {
+	\dim_set:Nn \l_pxtable_tophead_dim {\dim_eval:n {#4/#3}}
+	\dim_set:Nn \l_pxtable_tophead_aux_dim {\dim_eval:n {(\l_pxtable_tophead_dim-#4)/10}}
+	\IfBlankF{#7}{\rowcolors*{1}{blue!25!}{}}
+	\begin{table}[h!]
+		%		\begin{center}
+			\hspace*{\l_pxtable_tophead_aux_dim }
+			\begin{tabular}{>{}*{#3}{#6{\l_pxtable_tophead_dim}@{#5}}}
+				#1\\\IfBlankT{#7}{\hline}\noalign{\smallskip}
+				\hiderowcolors#2
+			\end{tabular}\\[1em]
+			%		\end{center}
+	\end{table}
+}
+\cs_new:Npn \_pxtable_toplong:nnnnnnn #1#2#3#4#5#6#7 {
+	\dim_set:Nn \l_pxtable_toplong_dim {\dim_eval:n {#4/#3}}
+	\dim_set:Nn \l_pxtable_toplong_aux_dim {\dim_eval:n {(\l_pxtable_toplong_dim-#4)/10}}
+	\IfBlankF{#7}{\rowcolors*{1}{blue!25!}{blue!25!}}
+	\begin{longtable}[c]{*{#3}{#6{\l_pxtable_toplong_dim}}}
+		#1\\\IfBlankT{#7}{\hline}
+		\noalign{\smallskip}
+		\endfirsthead
+		#1\\\IfBlankTF{#7}{\hline}{\showrowcolors}
+		\noalign{\smallskip}
+		\endhead
+		\hiderowcolors#2
+	\end{longtable}
+}
+\cs_new:Npn \_pxtable_list:nnnnnnn #1#2#3#4#5#6#7 {
+	\clist_gclear:N \l_pxtable_list_clist
+	\clist_gclear:N \l_pxtable_list_aux_clist
+	\clist_gset:Nn \l_pxtable_list_clist {#1}
+	\clist_gset:Nn \l_pxtable_list_aux_clist {#2}
+	\_pxtable_toplong:nnnnnnn
+	{\bfseries\clist_use:Nn \l_pxtable_list_clist {\centering&\bfseries}}
+	{\clist_use:Nn \l_pxtable_list_aux_clist {\\\hline\noalign{\smallskip}}\\}
+	{#3}{#4}{#5}{#6}{#7}
 }
 \endinput
