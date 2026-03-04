@@ -258,8 +258,7 @@ cross-referenced in the usual way.
 \pxTABsetup{
   verbose,
   paragraphcoltype=p,
-  headerbgcolor=blue!15,
-  setheader=red!,
+  setheader=red!15,
   headertextcolor=blue!70!black,
   headerfont=\sffamily\bfseries,
   width=.9\linewidth,
@@ -279,6 +278,35 @@ cross-referenced in the usual way.
   P3CTeX template.  Include references and an appendix with test
   logs.}
 
+% --- Preset system examples ---
+
+% Custom preset: define once, reuse everywhere.
+\pxTABsavepreset{my-style}{
+    style=header-striped,
+    headerbgcolor=teal!25,
+    headertextcolor=white,
+    altrowbgcolor=teal!5,
+    centering=true
+}
+\pxTable[preset=my-style]
+    {Module, Credits, Grade}
+    {Algebra, 6, A}
+    {Calculus, 6, B+}
+
+% Built-in preset (registered at load time).
+\pxTable[preset=formal]
+    {Component, Status}
+    {API Design, Complete}
+    {Implementation, In progress}
+
+% Override a preset key inline.
+\pxTable[preset=formal, headerbgcolor=green!20]
+    {Test, Result}
+    {Unit, Pass}
+    {Integration, Pass}
+
+% --- pxTBLtop: legacy header-body shorthand ---
+\pxTBLtop{3}{Name & Course & Grade}{Alice & CS101 & A \\ Bob & CS102 & B+}
 
 \pxTBL{3}{Columna 1, Columna 2, Columna 3}{
 	11	&	12	&	13,

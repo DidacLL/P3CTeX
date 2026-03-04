@@ -16,7 +16,9 @@ $testFiles = @(
     "pxTAB.raw-tabular.test.tex",
     "pxTAB.style-probe.test.tex",
     "pxTAB.layout-size.test.tex",
-    "pxTAB.align-bug.test.tex"
+    "pxTAB.align-bug.test.tex",
+    "pxTAB.pxtbl.test.tex",
+    "pxTAB.preset.test.tex"
 )
 
 $oldTexInputs = $env:TEXINPUTS

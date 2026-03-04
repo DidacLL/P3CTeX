@@ -74,13 +74,13 @@ scoping rules apply).
     the corresponding base style (boxed, grid, striped) with
     an additional coloured header row.
 
-  \item \texttt{headerbgcolor} (token list, default \texttt{gray!25})\\
+  \item \texttt{headerbgcolor} (token list, default \texttt{blue!15})\\
     Background colour of the header row in \texttt{header} style.
 
-  \item \texttt{headertextcolor} (token list, default \texttt{black})\\
+  \item \texttt{headertextcolor} (token list, default \texttt{blue!70!black})\\
     Text colour used in the header row.
 
-  \item \texttt{altrowbgcolor} (token list, default \texttt{gray!10})\\
+  \item \texttt{altrowbgcolor} (token list, default \texttt{blue!5})\\
     Background colour for alternating rows in \texttt{striped} style.
 
   \item \texttt{altrowcolor} (meta)\\
@@ -102,6 +102,51 @@ scoping rules apply).
   \item \texttt{rulewidth} (dimension, default \texttt{0.4pt})\\
     Thickness of rules (applied via \verb|\arrayrulewidth|).
 \end{itemize}
+
+\subsection*{Style shortcuts}
+
+The following meta keys select a style without the \texttt{style=}
+prefix.  They take no argument and can be mixed freely with other
+keys:
+
+\begin{verbatim}
+\pxTABsetup{header-striped, headerbgcolor=teal!20}
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{striped} \quad $\equiv$ \texttt{style=striped}
+  \item \texttt{boxed} \quad $\equiv$ \texttt{style=boxed}
+  \item \texttt{grid} \quad $\equiv$ \texttt{style=grid}
+  \item \texttt{header} \quad $\equiv$ \texttt{style=header}
+  \item \texttt{header-striped} \quad $\equiv$ \texttt{style=header-striped}
+  \item \texttt{header-boxed} \quad $\equiv$ \texttt{style=header-boxed}
+  \item \texttt{header-grid} \quad $\equiv$ \texttt{style=header-grid}
+\end{itemize}
+
+\subsection*{Quick header setup}
+
+These convenience keys combine a style selection with a header
+background colour in a single key.  The colour argument follows
+standard \texttt{xcolor} syntax.  Note that \texttt{headertextcolor}
+and \texttt{headerfont} retain their current values (they are not
+reset by these keys).
+
+\begin{itemize}
+  \item \texttt{setheader=<colour>}\\
+    $\equiv$ \texttt{style=header, headerbgcolor=<colour>}
+  \item \texttt{setheader-striped=<colour>}\\
+    $\equiv$ \texttt{style=header-striped, headerbgcolor=<colour>}
+  \item \texttt{setheader-boxed=<colour>}\\
+    $\equiv$ \texttt{style=header-boxed, headerbgcolor=<colour>}
+  \item \texttt{setheader-grid=<colour>}\\
+    $\equiv$ \texttt{style=header-grid, headerbgcolor=<colour>}
+\end{itemize}
+
+\noindent Example:
+
+\begin{verbatim}
+\pxTable[setheader=teal!20]{Name, Grade}{Alice, 9}
+\end{verbatim}
 
 \subsection*{Geometry and layout}
 
@@ -177,10 +222,13 @@ passed in the per-table options:
     is to use prefixes such as \texttt{tab:grades} so that
     \verb|\ref{tab:grades}| yields the table number in the usual way.
 
-  \item \texttt{float} (token list, default empty)\\
+  \item \texttt{float} (token list, default \texttt{H})\\
     Placement specifier forwarded to the \texttt{table} environment
-    (e.g.\ \texttt{htbp}).  When empty, \LaTeX\ uses its default float
-    placement rules.
+    (e.g.\ \texttt{htbp}).  The default \texttt{H} (from the
+    \texttt{float} package, loaded automatically by \texttt{pxTAB})
+    pins the table at the exact source position when the float wrapper
+    is activated by \texttt{caption}, \texttt{label}, or a non-empty
+    \texttt{float} value.
 \end{itemize}
 
 Any non-empty combination of \texttt{caption}, \texttt{label}, or
@@ -241,7 +289,7 @@ previously available through \texttt{pxTBL}.
     When used without an explicit value (bare
     \verb|\pxTABsetup{paragraphcells}|) it defaults to \texttt{true}.
 
-  \item \texttt{paragraphcoltype} (choice, default \texttt{p})\\
+  \item \texttt{paragraphcoltype} (choice, default \texttt{m})\\
     Selects the underlying \LaTeX\ column type used in paragraph mode:
     \begin{itemize}
       \item \texttt{p} --- \texttt{p\{<width>\}} columns; cell content
@@ -252,6 +300,15 @@ previously available through \texttt{pxTBL}.
             within the cell box.
     \end{itemize}
     This key is ignored when \texttt{cellmode=inline}.
+
+  \item \texttt{paragraph} (meta, no argument)\\
+    Convenience alias for \texttt{cellmode=paragraph}.
+    Example: \verb|\pxTABsetup{paragraph}|.
+
+  \item \texttt{verbose} (meta, no argument)\\
+    Legacy alias for \texttt{cellmode=paragraph}, retained for
+    backward compatibility.  Prefer \texttt{paragraph} or the
+    explicit \texttt{cellmode=paragraph} form.
 \end{itemize}
 
 \paragraph{Effective width.}
@@ -279,6 +336,94 @@ regardless of \texttt{cellmode}.  In other words, \texttt{cellmode=paragraph}
 only affects the \emph{automatic} colspec builder; advanced users who
 need heterogeneous column widths or mixed column types should set
 \texttt{colspec} directly.
+
+\section{Presets}
+
+A \emph{preset} is a named bundle of key--value settings that can be
+saved once and applied to any number of tables.  Presets are stored
+globally (they survive group boundaries), but their \emph{effect} is
+local to the current scope, following normal \LaTeX\ scoping rules.
+
+\subsection{Preset commands}
+
+\begin{itemize}
+  \item \verb|\pxTABsavepreset{<name>}{<keys>}|\\
+    Stores the key--value string \verb|<keys>| under the name
+    \verb|<name>|.  If a preset with the same name already exists it is
+    silently overwritten.
+
+  \item \verb|\pxTABusepreset{<name>}|\\
+    Applies the preset \verb|<name>| in the current scope (equivalent
+    to calling \verb|\pxTABsetup| with the stored keys).  If the preset
+    is not defined, a warning is written to the log and the call is
+    ignored.
+
+  \item \texttt{preset} key\\
+    The \texttt{preset} key can be used inside any per-table option
+    list.  Because \texttt{l3keys} processes keys in source order, keys
+    appearing \emph{after} \texttt{preset} override preset values:
+
+\begin{verbatim}
+\pxTable[preset=formal, headerbgcolor=red!20]
+  {Name, Grade}{Alice, 9}
+\end{verbatim}
+
+    Here \texttt{formal} sets \texttt{headerbgcolor=blue!15}, but the
+    explicit \texttt{headerbgcolor=red!20} overrides it.
+\end{itemize}
+
+\subsection{Built-in presets}
+
+Three generic presets are always available (registered at package load
+time):
+
+\begin{center}
+\begin{tabular}{llp{.48\linewidth}}
+\textbf{Preset} & \textbf{Style} & \textbf{Key bundle}\\\hline
+\texttt{formal} & \texttt{header} &
+  \texttt{headerbgcolor=blue!15},
+  \texttt{headertextcolor=blue!70!black},
+  \texttt{headerfont=\textbackslash sffamily\textbackslash bfseries},
+  \texttt{centering=true}, \texttt{arraystretch=1.3}\\
+\texttt{zebra} & \texttt{header-striped} &
+  \texttt{headerbgcolor=blue!15},
+  \texttt{headertextcolor=blue!70!black},
+  \texttt{altrowbgcolor=blue!5},
+  \texttt{headerfont=\textbackslash bfseries},
+  \texttt{centering=true}\\
+\texttt{minimal} & \texttt{plain} &
+  \texttt{arraystretch=1.0}, \texttt{tabcolsep=4pt}\\
+\end{tabular}
+\end{center}
+
+\subsection{Usage example}
+
+\begin{verbatim}
+% Define a custom preset:
+\pxTABsavepreset{my-rubric}{
+  style=header-grid,
+  headerbgcolor=teal!30,
+  cellmode=paragraph,
+  width=\linewidth,
+  centering=true
+}
+
+% Use it:
+\pxTable[preset=my-rubric]{Criterion, Comment}
+  {Clarity, Clear and well-structured}
+  {Depth, Shows critical analysis}
+
+% Override one key:
+\pxTable[preset=my-rubric, headerbgcolor=orange!20]
+  {Criterion, Comment}
+  {Clarity, Clear and well-structured}
+
+% Apply a built-in preset via \pxTABusepreset:
+\begingroup
+  \pxTABusepreset{formal}
+  \pxTable{Name, Grade}{Alice, 9}{Bob, 7}
+\endgroup
+\end{verbatim}
 
 \section{Styles by example}
 
@@ -996,9 +1141,157 @@ Style-specific behaviour:
 When using the \texttt{P3CTeX} document class and its core package
 \texttt{pxCORE}, the \texttt{pxTAB} package is loaded as part of the
 default configuration so that table commands are available without
-extra setup.  The example document \texttt{P3CTeX-example.tex} in the
-repository includes several small \texttt{pxTAB} tables alongside the
-other P3CTeX modules.
+extra setup.
+
+\subsection{Branded presets}
+
+When \texttt{pxTAB} is loaded via the \texttt{P3CTeX} class, five
+branded presets are automatically registered before package option
+processing, so they can even be used in \verb|\usepackage| options:
+
+\begin{verbatim}
+\usepackage[preset=p3c-header]{pxTAB}
+\end{verbatim}
+
+The branded presets use the P3CTeX colour palette defined in
+\texttt{pxGDX} (\texttt{primaryColor}, \texttt{darkColor},
+\texttt{secondaryColor}, etc.).
+
+\begin{center}
+\begin{tabular}{lp{.6\linewidth}}
+\textbf{Preset} & \textbf{Description}\\\hline
+\texttt{p3c-header} &
+  Standard branded header table: deep navy header with white text
+  (\texttt{style=header}, sans-serif bold, centred).\\
+\texttt{p3c-data} &
+  Striped data table with branded colours: navy header plus light
+  cyan alternating rows (\texttt{style=header-striped}).\\
+\texttt{p3c-rubric} &
+  Assessment rubric: full grid with paragraph cells, dark blue header
+  (\texttt{style=header-grid}, \texttt{cellmode=paragraph}).\\
+\texttt{p3c-minimal} &
+  Clean minimal table: no header styling, tight spacing, neutral
+  rule colour (\texttt{style=plain}).\\
+\texttt{p3c-exam} &
+  Exam/assessment table: dark blue header with light grey alternating
+  rows, serif bold header, slightly wider row spacing
+  (\texttt{style=header-striped}).\\
+\end{tabular}
+\end{center}
+
+\noindent Example:
+
+\begin{verbatim}
+\documentclass{P3CTeX}
+% pxTAB is loaded automatically; branded presets are available.
+
+\begin{document}
+\pxTable[preset=p3c-header]{Name, Grade}{Alice, 9}{Bob, 7}
+\end{document}
+\end{verbatim}
+
+\subsection{Standalone loading}
+
+When \texttt{pxTAB} is loaded outside the \texttt{P3CTeX} class (e.g.\
+with \verb|\documentclass{article}|), the branded presets are
+\emph{not} registered.  The package behaves identically to a standalone
+installation: all generic built-in presets (\texttt{formal},
+\texttt{zebra}, \texttt{minimal}) remain available, and users can
+define their own presets with \verb|\pxTABsavepreset|.
+
+\section{Legacy pxTBL commands}
+
+The three commands described below provide a positional-argument
+interface to paragraph-column tables.  They predate the key--value API
+of \texttt{pxTAB} and are retained for backward compatibility.  For
+full key--value control, use the \texttt{pxTAB} commands instead.
+
+All three commands accept a star (\texttt{*}) variant that adds
+alternating row colours (hard-coded \texttt{blue!25!}).
+
+\subsection{\texttt{\textbackslash pxTBLtop}}
+
+\begin{verbatim}
+\pxTBLtop*[<maxwidth>]{<numcols>}[<gap>]{<headers>}[<prefix>]{<body>}
+\end{verbatim}
+
+Builds a fixed-position table (inside a \texttt{table} float) with
+equal-width paragraph columns.  The \verb|<headers>| and \verb|<body>|
+arguments contain \emph{raw tabular content} (cells separated by
+\texttt{\&}, rows by \verb|\\|).
+
+\begin{itemize}
+  \item \texttt{*} --- starred variant adds \verb|\rowcolors| for
+    alternating rows.
+  \item \texttt{[<maxwidth>]} --- total table width (default
+    \verb|\linewidth|).
+  \item \texttt{\{<numcols>\}} --- number of columns.
+  \item \texttt{[<gap>]} --- inter-column separator passed as
+    \verb|@{<gap>}| (default \verb|\quad|).
+  \item \texttt{\{<headers>\}} --- raw tabular header row.
+  \item \texttt{[<prefix>]} --- column type: \texttt{p} (top-aligned)
+    or \texttt{m} (vertically centred); default \texttt{p}.
+  \item \texttt{\{<body>\}} --- raw tabular body rows.
+\end{itemize}
+
+\noindent Example:
+
+\begin{verbatim}
+\pxTBLtop{3}{Header A & Header B & Header C}
+  {Row 1 Col A & Row 1 Col B & Row 1 Col C \\
+   Row 2 Col A & Row 2 Col B & Row 2 Col C}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxTBLlong}}
+
+\begin{verbatim}
+\pxTBLlong*[<maxwidth>]{<numcols>}[<gap>]{<headers>}[<prefix>]{<body>}
+\end{verbatim}
+
+Builds a page-breaking \texttt{longtable} with the header row repeated
+on every page.  Arguments are identical to \verb|\pxTBLtop|, but the
+output uses \texttt{longtable} instead of a \texttt{table} float.
+
+\noindent Example:
+
+\begin{verbatim}
+\pxTBLlong{2}{Name & Score}
+  {Alice & 9 \\ Bob & 7 \\ Carol & 8}
+\end{verbatim}
+
+\paragraph{Known quirk.}  The \texttt{[<gap>]} optional argument is
+accepted but \emph{silently ignored} by \verb|\pxTBLlong|---the
+longtable colspec does not include \verb|@{<gap>}| separators.
+
+\subsection{\texttt{\textbackslash pxTBL}}
+
+\begin{verbatim}
+\pxTBL*[<maxwidth>]{<numcols>}[<gap>]{<headers>}[<prefix>]{<body>}
+\end{verbatim}
+
+Convenience command that takes \emph{comma-separated lists} for
+\verb|<headers>| and \verb|<body>| (instead of raw tabular content)
+and delegates to the \texttt{longtable} renderer internally.  Each
+body item becomes one row; items are separated by \verb|\hline|.
+
+\noindent Example:
+
+\begin{verbatim}
+\pxTBL{3}{Name, Age, City}{Alice, 20, Barcelona, Bob, 22, Madrid}
+\end{verbatim}
+
+\paragraph{Known quirk.}  The \texttt{[<gap>]} argument is silently
+ignored (inherited from the underlying \verb|\pxTBLlong| renderer).
+
+\subsection{Star variant differences}
+
+The star variant semantics differ slightly between commands:
+\begin{itemize}
+  \item \verb|\pxTBLtop*| colours \emph{odd} body rows only
+    (\verb|\rowcolors*{1}{blue!25!}{}|).
+  \item \verb|\pxTBLlong*| and \verb|\pxTBL*| colour \emph{all} rows
+    (\verb|\rowcolors*{1}{blue!25!}{blue!25!}|).
+\end{itemize}
 
 \end{document}
 

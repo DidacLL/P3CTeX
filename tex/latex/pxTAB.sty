@@ -33,6 +33,47 @@
 \ProvidesExplPackage{pxTAB}{2026/02/26}{v0.1}
 {P3CTeX predefined tables from comma-separated rows and columns}
 \file_input:n {pxTAB.code.tex}
+%%% P3CTeX branded presets (registered before option processing
+%%% so that \usepackage[preset=p3c-header]{pxTAB} works).
+\@ifclassloaded{P3CTeX}
+{
+	\pxTAB_save_preset:nn { p3c-header }
+	{
+		style=header, headerbgcolor=primaryColor,
+		headertextcolor=lighterColor,
+		headerfont=\sffamily\bfseries,
+		rulecolor=darkColor, arraystretch=1.3, centering=true
+	}
+	\pxTAB_save_preset:nn { p3c-data }
+	{
+		style=header-striped, headerbgcolor=primaryColor,
+		headertextcolor=lighterColor,
+		altrowbgcolor=secondaryColor!15,
+		headerfont=\sffamily\bfseries,
+		rulecolor=neutralColor, arraystretch=1.25, centering=true
+	}
+	\pxTAB_save_preset:nn { p3c-rubric }
+	{
+		style=header-grid, headerbgcolor=darkColor,
+		headertextcolor=lighterColor,
+		headerfont=\sffamily\bfseries,
+		cellmode=paragraph, rulecolor=darkColor!50,
+		arraystretch=1.4, centering=true
+	}
+	\pxTAB_save_preset:nn { p3c-minimal }
+	{
+		style=plain, rulecolor=neutralColor,
+		arraystretch=1.15, tabcolsep=4pt
+	}
+	\pxTAB_save_preset:nn { p3c-exam }
+	{
+		style=header-striped, headerbgcolor=darkColor,
+		headertextcolor=lighterColor,
+		altrowbgcolor=lightColor!30,
+		headerfont=\bfseries,
+		rulecolor=darkColor!50, arraystretch=1.35, centering=true
+	}
+}{}
 \ProcessKeysOptions{ pxTAB }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%    	--	PUBLIC LaTeX2e API		--		%%%
@@ -42,6 +83,11 @@
 %%   \pxTABsetup sets package keys (global in document scope, local in TeX groups).
 \NewDocumentCommand{\pxTABsetup}{m}
   { \pxTAB_set_options:n { #1 } }
+%% Preset management.
+\NewDocumentCommand{\pxTABsavepreset}{mm}
+    { \pxTAB_save_preset:nn { #1 } { #2 } }
+\NewDocumentCommand{\pxTABusepreset}{m}
+    { \pxTAB_use_preset:n { #1 } }
 %% Shared helper: apply table-local options.
 \cs_new_protected:Npn \__pxtab_apply_local_options:n #1
 {
@@ -128,19 +174,27 @@
 %% \pxTBLtop[maxwidth]{numcols}[gap]{headers}[rows prefix]{rows}
 \NewDocumentCommand{\pxTBLtop}{s O{\linewidth} m O{\quad} m O{p} +m}
 {
-	\IfBooleanTF{#1}
-	{\_pxtable_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
-	{\_pxtable_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_begin:
+		\pxTAB_set_options:n { float=h!, centering=true, caption={}, label={} }
+		\tl_set:Nn \l__pxtab_paragraph_coltype_tl { #6 }
+		\IfBooleanTF{#1}
+		{\__pxtab_pxtbl_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+		{\__pxtab_pxtbl_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_end:
 }
 \NewDocumentCommand{\pxTBL}{s O{\linewidth} m O{\quad} m O{p} +m}
 {
-	\IfBooleanTF{#1}
-	{\_pxtable_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
-	{\_pxtable_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_begin:
+		\IfBooleanTF{#1}
+		{\__pxtab_pxtbl_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+		{\__pxtab_pxtbl_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_end:
 }
 \NewDocumentCommand{\pxTBLlong}{s O{\linewidth} m O{\quad} m O{p} +m}
 {
-	\IfBooleanTF{#1}
-	{\_pxtable_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
-	{\_pxtable_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_begin:
+		\IfBooleanTF{#1}
+		{\__pxtab_pxtbl_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{#1}}
+		{\__pxtab_pxtbl_toplong:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
+	\group_end:
 }

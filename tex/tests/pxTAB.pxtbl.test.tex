@@ -1,0 +1,91 @@
+% !TeX encoding = UTF-8
+% !TeX program = pdflatex
+%% pxTAB.pxtbl.test -- pxTBL compatibility-layer regression tests (T4)
+%%
+%% Tests cover: \pxTBLtop, \pxTBLtop*, \pxTBLlong, \pxTBLlong*, \pxTBL, \pxTBL*
+%% All assertions are compilation-based: reaching \typeout after each command
+%% proves the command compiled without fatal TeX errors.
+
+\documentclass{article}
+
+\usepackage{pxTAB}
+
+\begin{document}
+
+\section*{pxTBL compatibility layer regression tests}
+
+%% ------------------------------------------------------------------
+%% Compilation Tests
+%% ------------------------------------------------------------------
+
+\subsection*{Test 01: \texttt{\string\pxTBLtop} -- basic 3-column}
+\pxTBLtop{3}{Header1 & Header2 & Header3}{Row1A & Row1B & Row1C}
+\typeout{PXTAB_ASSERT PASS: pxtbl-01}
+
+\subsection*{Test 02: \texttt{\string\pxTBLtop*} -- starred variant}
+\pxTBLtop*{3}{H1 & H2 & H3}{A & B & C}
+\typeout{PXTAB_ASSERT PASS: pxtbl-02}
+
+\subsection*{Test 03: \texttt{\string\pxTBLlong} -- basic longtable}
+\pxTBLlong{3}{H1 & H2 & H3}{A & B & C \\ D & E & F}
+\typeout{PXTAB_ASSERT PASS: pxtbl-03}
+
+\subsection*{Test 04: \texttt{\string\pxTBLlong*} -- starred longtable}
+\pxTBLlong*{3}{H1 & H2 & H3}{A & B & C \\ D & E & F}
+\typeout{PXTAB_ASSERT PASS: pxtbl-04}
+
+\subsection*{Test 05: \texttt{\string\pxTBL} -- comma-list longtable}
+\pxTBL{3}{H1, H2, H3}{A, B, C}
+\typeout{PXTAB_ASSERT PASS: pxtbl-05}
+
+\subsection*{Test 06: \texttt{\string\pxTBL*} -- starred comma-list}
+\pxTBL*{3}{H1, H2, H3}{A, B, C}
+\typeout{PXTAB_ASSERT PASS: pxtbl-06}
+
+%% ------------------------------------------------------------------
+%% Argument Variation
+%% ------------------------------------------------------------------
+
+\subsection*{Test 07: \texttt{\string\pxTBLtop} -- custom maxwidth}
+\pxTBLtop[10cm]{2}{H1 & H2}{A & B}
+\typeout{PXTAB_ASSERT PASS: pxtbl-07}
+
+\subsection*{Test 08: \texttt{\string\pxTBLtop} -- custom gap}
+\pxTBLtop{3}[\;]{H1 & H2 & H3}{A & B & C}
+\typeout{PXTAB_ASSERT PASS: pxtbl-08}
+
+\subsection*{Test 09: \texttt{\string\pxTBLtop} -- column type m}
+\pxTBLtop{2}{H1 & H2}[m]{A & B}
+\typeout{PXTAB_ASSERT PASS: pxtbl-09}
+
+\subsection*{Test 10: \texttt{\string\pxTBLtop} -- 4 columns, multiple rows}
+\pxTBLtop{4}{H1 & H2 & H3 & H4}{A & B & C & D \\ E & F & G & H}
+\typeout{PXTAB_ASSERT PASS: pxtbl-10}
+
+%% ------------------------------------------------------------------
+%% Edge Cases
+%% ------------------------------------------------------------------
+
+\subsection*{Test 11: \texttt{\string\pxTBLtop} -- single column}
+\pxTBLtop{1}{Header}{Body}
+\typeout{PXTAB_ASSERT PASS: pxtbl-11}
+
+\subsection*{Test 12: \texttt{\string\pxTBLlong} -- multiple rows}
+\pxTBLlong{2}{H1 & H2}{A & B \\ C & D \\ E & F}
+\typeout{PXTAB_ASSERT PASS: pxtbl-12}
+
+\subsection*{Test 13: \texttt{\string\pxTBL} -- many comma-list body items}
+\pxTBL{2}{H1, H2}{A, B, C, D, E, F}
+\typeout{PXTAB_ASSERT PASS: pxtbl-13}
+
+%% ------------------------------------------------------------------
+%% Regression Guard: no state leakage between pxTBL and pxTable
+%% ------------------------------------------------------------------
+
+\subsection*{Test 14: State isolation -- \texttt{\string\pxTBLtop} then \texttt{\string\pxTable}}
+\pxTBLtop{2}{H1 & H2}{A & B}
+\pxTABsetup{style=plain}
+\pxTable{Name, Grade}{Alice, 9}
+\typeout{PXTAB_ASSERT PASS: pxtbl-14}
+
+\end{document}

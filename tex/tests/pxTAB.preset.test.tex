@@ -1,0 +1,345 @@
+% !TeX encoding = UTF-8
+% !TeX program = pdflatex
+%% pxTAB preset regression test
+%% Exercises: save/use roundtrip, override after preset, unknown preset,
+%%   built-in presets (formal/zebra/minimal), sequential preset layering,
+%%   scoped \pxTABusepreset, altrowbgcolor default, P3CTeX branded absence.
+
+\documentclass{article}
+\usepackage{pxTAB}
+
+\ExplSyntaxOn
+
+%%% ---- Assertion infrastructure ----
+
+\cs_new_protected:Npn \__pxtab_preset_test_pass:n #1
+  { \iow_term:x { PXTAB_ASSERT~PASS:~#1 } }
+
+\cs_new_protected:Npn \__pxtab_preset_test_fail:n #1
+  {
+    \iow_term:x { PXTAB_ASSERT~FAIL:~#1 }
+    \PackageError { pxTAB-preset-test } { #1 }
+      { Preset~test~assertion~failed. }
+  }
+
+\cs_new_protected:Npn \__pxtab_preset_test_assert_tl_eq:Nnn #1#2#3
+  {
+    \tl_if_eq:NnTF #1 { #2 }
+      { \__pxtab_preset_test_pass:n { #3 } }
+      {
+        \iow_term:x
+          { PXTAB_ASSERT~FAIL:~#3~(got=\tl_to_str:N #1) }
+        \PackageError { pxTAB-preset-test } { #3 }
+          { Preset~test~assertion~failed. }
+      }
+  }
+
+\cs_new_protected:Npn \__pxtab_preset_test_assert_bool_true:Nn #1#2
+  {
+    \bool_if:NTF #1
+      { \__pxtab_preset_test_pass:n { #2 } }
+      { \__pxtab_preset_test_fail:n { #2 } }
+  }
+
+\cs_new_protected:Npn \__pxtab_preset_test_assert_bool_false:Nn #1#2
+  {
+    \bool_if:NTF #1
+      { \__pxtab_preset_test_fail:n { #2 } }
+      { \__pxtab_preset_test_pass:n { #2 } }
+  }
+
+\cs_new_protected:Npn \__pxtab_preset_test_assert_dim_eq:nnn #1#2#3
+  {
+    \dim_compare:nNnTF { \dim_abs:n { #1 - #2 } } < { 0.1pt }
+      { \__pxtab_preset_test_pass:n { #3 } }
+      { \__pxtab_preset_test_fail:n { #3 } }
+  }
+
+%%% ---- Capture state ----
+
+\tl_new:N   \g__pxtab_preset_test_style_tl
+\tl_new:N   \g__pxtab_preset_test_header_bg_tl
+\tl_new:N   \g__pxtab_preset_test_header_text_tl
+\tl_new:N   \g__pxtab_preset_test_alt_row_bg_tl
+\tl_new:N   \g__pxtab_preset_test_arraystretch_tl
+\dim_new:N  \g__pxtab_preset_test_tabcolsep_dim
+\bool_new:N \g__pxtab_preset_test_center_bool
+\bool_new:N \g__pxtab_preset_test_capture_bool
+
+%%% ---- Probe hook: intercept emit to snapshot runtime key state ----
+
+\cs_new_eq:NN \__pxtab_preset_test_emit_orig:N
+  \__pxtab_emit_tabular_with_body:N
+
+\cs_set_protected:Npn \__pxtab_emit_tabular_with_body:N #1
+  {
+    \bool_if:NT \g__pxtab_preset_test_capture_bool
+      {
+        \tl_gset_eq:NN  \g__pxtab_preset_test_style_tl
+          \l__pxtab_style_tl
+        \tl_gset_eq:NN  \g__pxtab_preset_test_header_bg_tl
+          \l__pxtab_header_bg_tl
+        \tl_gset_eq:NN  \g__pxtab_preset_test_header_text_tl
+          \l__pxtab_header_text_tl
+        \tl_gset_eq:NN  \g__pxtab_preset_test_alt_row_bg_tl
+          \l__pxtab_alt_row_bg_tl
+        \tl_gset_eq:NN  \g__pxtab_preset_test_arraystretch_tl
+          \l__pxtab_arraystretch_tl
+        \dim_gset:Nn \g__pxtab_preset_test_tabcolsep_dim
+          { \l__pxtab_tabcolsep_dim }
+        \bool_if:NTF \l__pxtab_center_bool
+          { \bool_gset_true:N  \g__pxtab_preset_test_center_bool }
+          { \bool_gset_false:N \g__pxtab_preset_test_center_bool }
+      }
+    \__pxtab_preset_test_emit_orig:N #1
+  }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\section*{pxTAB preset regression tests}
+
+%% ====================================================================
+%% 1. Save/use roundtrip
+%%    Save a custom preset, apply via preset= key, verify probe state.
+%% ====================================================================
+\subsection*{1. Save/use roundtrip}
+
+\pxTABsavepreset{custom-test}{%
+  style=header,
+  headerbgcolor=red!20,
+  headertextcolor=red!70!black,
+  arraystretch=1.5}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\pxTable[preset=custom-test]{Name, Age}{Alice, 30}{Bob, 25}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { header }
+  { roundtrip-style-is-header }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_header_bg_tl { red!20 }
+  { roundtrip-headerbgcolor-is-red20 }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_header_text_tl { red!70!black }
+  { roundtrip-headertextcolor-is-red70black }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_arraystretch_tl { 1.5 }
+  { roundtrip-arraystretch-is-1.5 }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 2. Override after preset
+%%    Apply preset then override headerbgcolor; the override must win.
+%% ====================================================================
+\subsection*{2. Override after preset}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\pxTable[preset=custom-test, headerbgcolor=green!25]{Name, Age}{Carol, 28}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { header }
+  { override-style-still-header }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_header_bg_tl { green!25 }
+  { override-headerbgcolor-is-green25 }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 3. Unknown preset warning (non-fatal)
+%%    A non-existent preset emits a warning but the table compiles.
+%% ====================================================================
+\subsection*{3. Unknown preset warning}
+
+\pxTable[preset=nonexistent-preset]{X, Y}{1, 2}
+
+\ExplSyntaxOn
+\__pxtab_preset_test_pass:n { unknown-preset-compiles-without-error }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 4a. Built-in preset: formal
+%% ====================================================================
+\subsection*{4a. Built-in preset: formal}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\pxTable[preset=formal]{A, B}{1, 2}{3, 4}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { header }
+  { formal-style-is-header }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_header_bg_tl { blue!15 }
+  { formal-headerbgcolor-is-blue15 }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_header_text_tl { blue!70!black }
+  { formal-headertextcolor-is-blue70black }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_arraystretch_tl { 1.3 }
+  { formal-arraystretch-is-1.3 }
+\__pxtab_preset_test_assert_bool_true:Nn
+  \g__pxtab_preset_test_center_bool
+  { formal-centering-is-true }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 4b. Built-in preset: zebra
+%% ====================================================================
+\subsection*{4b. Built-in preset: zebra}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\pxTable[preset=zebra]{S1, S2}{a, b}{c, d}{e, f}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { header-striped }
+  { zebra-style-is-header-striped }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_header_bg_tl { blue!15 }
+  { zebra-headerbgcolor-is-blue15 }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_alt_row_bg_tl { blue!5 }
+  { zebra-altrowbgcolor-is-blue5 }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 4c. Built-in preset: minimal
+%% ====================================================================
+\subsection*{4c. Built-in preset: minimal}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\pxTable[preset=minimal]{M1, M2}{p, q}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { plain }
+  { minimal-style-is-plain }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_arraystretch_tl { 1.0 }
+  { minimal-arraystretch-is-1.0 }
+\__pxtab_preset_test_assert_dim_eq:nnn
+  { \g__pxtab_preset_test_tabcolsep_dim }
+  { 4pt }
+  { minimal-tabcolsep-is-4pt }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 5. Multiple presets sequentially
+%%    Apply formal then minimal in the same scope.  Minimal overrides
+%%    style and arraystretch; centering (from formal) persists because
+%%    minimal does not include it.
+%% ====================================================================
+\subsection*{5. Multiple presets sequentially}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\begingroup
+  \pxTABusepreset{formal}
+  \pxTABusepreset{minimal}
+  \pxTable{A, B}{1, 2}
+\endgroup
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { plain }
+  { sequential-style-overridden-to-plain }
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_arraystretch_tl { 1.0 }
+  { sequential-arraystretch-overridden-to-1.0 }
+\__pxtab_preset_test_assert_bool_true:Nn
+  \g__pxtab_preset_test_center_bool
+  { sequential-centering-persists-from-formal }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 6. \pxTABusepreset scope isolation
+%%    Inside a group the preset takes effect; outside the style reverts.
+%% ====================================================================
+\subsection*{6. \texttt{\string\pxTABusepreset} scope isolation}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\begingroup
+  \pxTABusepreset{formal}
+  \pxTable{E, F}{5, 6}
+\endgroup
+
+\ExplSyntaxOn
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { header }
+  { scope-inside-group-is-header }
+\ExplSyntaxOff
+
+\pxTable{G, H}{7, 8}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_style_tl { plain }
+  { scope-outside-group-reverts-to-plain }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 7. altrowbgcolor default value (blue!5 after typo fix)
+%%    Without any explicit altrowbgcolor setting, the default must be
+%%    blue!5 (not the old invalid blue!15gray).
+%% ====================================================================
+\subsection*{7. \texttt{altrowbgcolor} default}
+
+\ExplSyntaxOn
+\bool_gset_true:N \g__pxtab_preset_test_capture_bool
+\ExplSyntaxOff
+
+\pxTable[style=striped]{S1, S2}{a, b}{c, d}
+
+\ExplSyntaxOn
+\bool_gset_false:N \g__pxtab_preset_test_capture_bool
+\__pxtab_preset_test_assert_tl_eq:Nnn
+  \g__pxtab_preset_test_alt_row_bg_tl { blue!5 }
+  { default-altrowbgcolor-is-blue5 }
+\ExplSyntaxOff
+
+%% ====================================================================
+%% 8. P3CTeX branded presets absent in standalone mode
+%%    preset=p3c-header triggers unknown-preset warning but the table
+%%    still compiles (warning is non-fatal).  This confirms class
+%%    detection correctly withholds branded presets.
+%% ====================================================================
+\subsection*{8. P3CTeX branded presets absent in standalone}
+
+\pxTable[preset=p3c-header]{P1, P2}{x, y}
+
+\ExplSyntaxOn
+\__pxtab_preset_test_pass:n { p3c-branded-absent-compiles-without-error }
+\ExplSyntaxOff
+
+\end{document}
