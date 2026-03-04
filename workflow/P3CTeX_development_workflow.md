@@ -839,3 +839,78 @@ Use this checklist at the start of every iteration to ensure nothing is missed.
 | Discarding implementation rationale | Future maintainers lack context | §7.8 — Document root cause |
 | Dispatching trivially-small tasks to subagents | Unnecessary latency and context overhead | §7.11 — Orchestrator handles trivial insertions |
 | Running all design tasks serially when they are independent | Doubled wall-clock time for no benefit | §7.9 — Parallel dispatch for independent tasks |
+
+---
+
+## Appendix C: Future Backlog — Legacy-Derived Improvements
+
+This backlog captures high-value improvements identified from older P3CTeX implementations and `.raw` packages (under `tex/.raw/`). Each item is intended to seed one or more focused sprints following the multi-agent workflow defined in this document. Risk and difficulty are intentionally not pre-estimated here; they are left to per-sprint planning.
+
+### 1. Core Documentation & Example Overhaul
+
+- **P3CTeX documentation and example refresh**
+  - Bring `P3CTeX.tex` up to date so it briefly documents every P3CTeX package, including configuration keys and primary commands.
+  - Add realistic student-oriented examples that show typical exam or assignment workflows, reusing the same example scenario across packages where possible.
+  - Ensure the main example document `P3CTeX-example.tex` exercises these documented features and compiles cleanly under the current gate.
+
+### 2. PDF & Hyperref Behaviour
+
+- **Eliminate duplicated PDF option warnings**
+  - Audit how `hyperref` and related PDF options are loaded across the class and packages.
+  - Refactor option handling so PDF-related options are set exactly once, with clear precedence rules, avoiding duplicated-option warnings in typical documents.
+
+- **Improve PDF metadata and AI-related fields**
+  - Define a small, explicit key family for PDF metadata (title, author, subject, keywords, course, exercise ID, etc.).
+  - Add an optional field that carries a standardised “prompt-injection” notice or machine-readable flag when AI tools are used to correct or grade exercises.
+  - Ensure metadata keys integrate cleanly with `hyperref` without breaking existing defaults.
+
+### 3. Cross-Package Quality & Technical Debt
+
+- **Warning clean-up across packages**
+  - For each shipped package, run the current test and example suite and catalogue LaTeX warnings.
+  - Prioritise and fix the most common or confusing warnings, without changing public semantics, so a default run is as clean as practical.
+
+- **Standardise use of `pxPRP` for shared resources**
+  - Identify places where packages manage reusable objects or memory-like structures independently.
+  - Refactor those areas to use `pxPRP` (or an updated equivalent) as a shared primitive, with clear ownership and lifecycle decisions documented in the design specs.
+
+- **Clarify `pxGDX` key structure and data separation**
+  - Redesign `pxGDX` key names and grouping to clearly separate user data, cover data, and any preamble/“front matter” region between no-plagiarism declarations and the index.
+  - Introduce an explicit configuration option for inserting a preamble block between the no-plagi section and the index, with safe defaults.
+
+- **Test suite coverage and sprint per package**
+  - For each existing package, create or complete a minimal yet meaningful test suite following the patterns used in `pxTAB`.
+  - Plan at least one dedicated sprint per package to extend tests, run the full gate, and stabilise behaviour before adding new features.
+
+- **Restore and modernise `pxSRC` source-tracking behaviour**
+  - Reintroduce the ability of `pxSRC` to track newly included sources (as in older releases), but aligned with the current architecture and naming conventions.
+  - Ensure this behaviour is covered by tests and documented so users can rely on consistent source listings.
+
+- **Review discarded command variants for useful features**
+  - Systematically review legacy and discarded command variants in `.raw` code for functionality that is still valuable to users.
+  - Where appropriate, reintroduce these capabilities under coherent, modern command names, with clear deprecation and migration notes.
+
+### 4. New or Rewritten Packages from `.raw` Modules
+
+- **`pxANX`: Annex and glossary management**
+  - Design and implement a new `pxANX` package (in `.sty`/`.code.tex`) for managing document annexes, figure and table lists, extra code/documentation, and glossaries.
+  - Provide a `\pxGloss{word}{definition}` command that behaves like a footnote in the main text while also collecting entries into a glossary placed at the end of the document or in an annex, following standard document-ordering conventions.
+  - Use the `.raw` prototype only as an idea source; rewrite internals to match modern P3CTeX architecture and naming.
+
+- **`pxLST`: Professional list/code listing management**
+  - Treat the previous `pxLST` implementation as a requirements sketch and redesign a clean, consistent API similar in quality and organisation to `pxTAB`.
+  - Support the concrete listing needs that motivated the original `.raw` version (e.g., exam code snippets, solution fragments), with clear presets and test coverage.
+
+- **`pxMATH`: Step-by-step calculations and helpers**
+  - Extract the still-useful calculation helpers from the legacy `.raw` math code and design a coherent `pxMATH` package API.
+  - Support step-by-step printed calculations and other math-centric workflows, using `pxPRP` or other shared primitives where appropriate.
+  - Ensure typesetting integrates well with existing P3CTeX document styles and does not interfere with standard math environments.
+
+- **`pxPLOTS` and graphical elements**
+  - Define scope and API for a `pxPLOTS` (or similarly named) package to support simple, repeatable plots and graphs within exam/assignment contexts.
+  - Decide on integration strategy with external plotting tools (e.g., `pgfplots`) versus thin wrappers that standardise styling and labelling for P3CTeX documents.
+
+- **`pxDEBUG`: Introspective debugging support**
+  - Design and implement a modern `pxDEBUG` package that can print the current values of key configuration variables for each package/class.
+  - Provide user-facing commands to dump configuration state into the document or log, to aid both developers and advanced users when diagnosing misconfigurations.
+  - Ensure debug output is strictly opt-in and does not affect layout or performance when disabled.

@@ -1,0 +1,107 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+%% Probe harness: patch \__pxlst_apply_lstset: to record PXLST_ASSERT: lines in log.
+%% \makeatletter required so that @ is catcode 11 inside \ExplSyntaxOn,
+%% allowing access to the \pxlst@*@v display macros by their full names.
+\makeatletter
+\ExplSyntaxOn
+\bool_new:N  \g__pxlst_test_probe_bool
+\cs_new_protected:Npn \__pxlst_test_probe_on:
+  { \bool_gset_true:N  \g__pxlst_test_probe_bool }
+\cs_new_protected:Npn \__pxlst_test_probe_off:
+  { \bool_gset_false:N \g__pxlst_test_probe_bool }
+%% Wrap the real lstset apply to emit ASSERT lines when probe flag is set.
+\cs_new_eq:NN \__pxlst_apply_lstset_orig: \__pxlst_apply_lstset:
+\cs_set_protected:Npn \__pxlst_apply_lstset: {
+  \bool_if:NT \g__pxlst_test_probe_bool
+  {
+    \iow_term:x { PXLST_ASSERT:STYLE=\pxlst@lstyle@v }
+    \iow_term:x { PXLST_ASSERT:COLBACK=\pxlst@colback@v }
+    \iow_term:x { PXLST_ASSERT:COLTEXT=\pxlst@coltext@v }
+    \iow_term:x { PXLST_ASSERT:LANGUAGE=\pxlst@lang@v }
+  }
+  \__pxlst_apply_lstset_orig:
+}
+\ExplSyntaxOff
+\makeatother
+
+\section*{pxLST style renderer test}
+
+%% Activate probe
+\makeatletter\ExplSyntaxOn\__pxlst_test_probe_on:\ExplSyntaxOff\makeatother
+
+\subsection*{1. dark style (Darcula full dark background)}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\begin{pxCode}{style-dark}
+public class Dark {
+    String msg = "Darcula dark style";
+}
+\end{pxCode}
+
+\subsection*{2. framed style (Darcula with left rule)}
+\pxLSTsetup{style=framed, language=pxJava, numbers=left}
+\begin{pxCode}{style-framed}
+public class Framed {
+    int x = 0; // framed style
+}
+\end{pxCode}
+
+\subsection*{3. light style (white background, coloured syntax)}
+\pxLSTsetup{style=light, language=pxJava, numbers=left}
+\begin{pxCode}{style-light}
+public class Light {
+    String msg = "Light style on white";
+}
+\end{pxCode}
+
+\subsection*{4. plain style (monochrome, no frame)}
+\pxLSTsetup{style=plain, language=pxJava, numbers=none}
+\begin{pxCode}{style-plain}
+public class Plain {
+    // plain monochrome style
+    int n = 42;
+}
+\end{pxCode}
+
+%% Deactivate probe
+\makeatletter\ExplSyntaxOn\__pxlst_test_probe_off:\ExplSyntaxOff\makeatother
+
+\subsection*{5. pxBash with light style}
+\pxLSTsetup{style=light, language=pxBash}
+\begin{pxCode}{bash-light}
+echo "light bash"
+ls -la
+\end{pxCode}
+
+\subsection*{6. algoritme with framed style}
+\pxLSTsetup{style=framed, language=algoritme, numbers=left}
+\begin{pxCode}{alg-framed}
+Funcio sumar(a: Integer, b: Integer): Integer
+  Retornar a + b
+Fi Funcio
+\end{pxCode}
+
+\subsection*{7. Style parity: all four styles same language}
+\pxLSTsetup{style=dark,   language=pxYAML, numbers=none}
+\begin{pxCode}{yaml-dark}
+key: dark_value
+\end{pxCode}
+
+\pxLSTsetup{style=framed, language=pxYAML, numbers=none}
+\begin{pxCode}{yaml-framed}
+key: framed_value
+\end{pxCode}
+
+\pxLSTsetup{style=light,  language=pxYAML, numbers=none}
+\begin{pxCode}{yaml-light}
+key: light_value
+\end{pxCode}
+
+\pxLSTsetup{style=plain,  language=pxYAML, numbers=none}
+\begin{pxCode}{yaml-plain}
+key: plain_value
+\end{pxCode}
+
+\end{document}

@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+\section*{pxLST regression suite}
+
+\subsection*{1. pxCode default (dark style, pxJava language)}
+\begin{pxCode}{hello}
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, P3CTeX!");
+    }
+}
+\end{pxCode}
+
+\subsection*{2. pxCode with local style override (light)}
+\begin{pxCode}[style=light]{hello-light}
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Light style");
+    }
+}
+\end{pxCode}
+
+\subsection*{3. pxLSTsetup global change}
+\pxLSTsetup{style=plain, language=pxBash, numbers=none}
+\begin{pxCode}{bash-plain}
+echo "Hello from Bash"
+ls -la /tmp
+\end{pxCode}
+
+\subsection*{4. Restore dark style and verify local options do not leak}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\begin{pxCode}[style=light]{local-opt}
+// local light style
+int x = 42;
+\end{pxCode}
+% Next block should be dark (global style restored after group)
+\begin{pxCode}{after-local}
+// this should be dark (global)
+String s = "test";
+\end{pxCode}
+
+\subsection*{5. pxCodeBox with title, note, caption}
+\pxLSTsetup{style=dark, language=pxJava}
+\begin{pxCodeBox}{cbox1}{Listing Title}{short note}{Sample caption for codebox}
+public int add(int a, int b) {
+    return a + b;
+}
+\end{pxCodeBox}
+
+\subsection*{6. pxCodeBreak (breakable)}
+\begin{pxCodeBreak}{cbrk1}{Algorithm}{alg}{Algorithm pseudocode listing}
+Funcio factorial(n: Integer): Integer
+  Si n <= 1 Llavors
+    Retornar 1
+  Sinó
+    Retornar n * factorial(n - 1)
+  Fi Si
+Fi Funcio
+\end{pxCodeBreak}
+
+\subsection*{7. pxLSTinput from file}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\pxLSTinput[language=pxJava]{sample.java}
+
+\subsection*{8. Unknown key is silently ignored}
+\pxLSTsetup{style=plain, unknownkey=ignored}
+\begin{pxCode}{unknown-key}
+// unknown key was silently ignored
+int y = 0;
+\end{pxCode}
+
+\subsection*{9. tabsize and fontsize keys}
+\pxLSTsetup{style=dark, language=pxJava, tabsize=2, fontsize=\small}
+\begin{pxCode}{tabsize-test}
+if (true) {
+	int x = 1;
+}
+\end{pxCode}
+
+\subsection*{10. pxCode with framed style}
+\pxLSTsetup{style=framed, language=pxJava, numbers=left}
+\begin{pxCode}{framed-test}
+public class Framed {
+    private String name;
+}
+\end{pxCode}
+
+\end{document}

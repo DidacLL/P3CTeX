@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+\section*{pxLST preset mechanism test}
+
+\subsection*{1. Save and apply a custom preset}
+\pxLSTsavepreset{my-bash}{style=framed, language=pxBash, numbers=none}
+\pxLSTusepreset{my-bash}
+\begin{pxCode}{preset-custom}
+#!/bin/bash
+echo "custom preset applied"
+\end{pxCode}
+
+\subsection*{2. Preset applied via key}
+\pxLSTsetup{preset=my-bash}
+\begin{pxCode}{preset-via-key}
+#!/bin/bash
+echo "preset via key"
+\end{pxCode}
+
+\subsection*{3. Built-in preset: darcula}
+\pxLSTusepreset{darcula}
+\begin{pxCode}{preset-darcula}
+public class Darcula {
+    // built-in darcula preset
+    int x = 1;
+}
+\end{pxCode}
+
+\subsection*{4. Built-in preset: minimal}
+\pxLSTusepreset{minimal}
+\begin{pxCode}{preset-minimal}
+public class Minimal {
+    // minimal preset (plain, no numbers)
+    int x = 1;
+}
+\end{pxCode}
+
+\subsection*{5. Built-in preset: academic}
+\pxLSTusepreset{academic}
+\begin{pxCode}{preset-academic}
+public class Academic {
+    // academic preset (light, small font, numbers)
+    int x = 1;
+}
+\end{pxCode}
+
+\subsection*{6. Unknown preset logs warning (does not crash)}
+\pxLSTusepreset{nonexistent-preset}
+\begin{pxCode}{after-unknown-preset}
+// should compile fine after unknown-preset warning
+int y = 0;
+\end{pxCode}
+
+\subsection*{7. Preset overridden by subsequent key}
+\pxLSTsetup{preset=darcula, language=pxBash}
+% language=pxBash should override the pxJava set by darcula preset
+\begin{pxCode}{preset-override}
+#!/bin/bash
+echo "language overrides preset"
+\end{pxCode}
+
+\subsection*{8. P3CTeX branded presets not registered (article class)}
+%% p3c-code, p3c-alg, p3c-plain are only registered when P3CTeX class is loaded.
+%% Using them here logs a warning (unknown-preset) but must NOT crash.
+\pxLSTusepreset{p3c-code}
+\pxLSTsetup{style=dark, language=pxJava}
+\begin{pxCode}{after-p3c-code}
+// compiles fine despite p3c-code being unknown in article class
+int z = 0;
+\end{pxCode}
+
+\end{document}

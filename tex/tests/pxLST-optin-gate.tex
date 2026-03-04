@@ -1,0 +1,16 @@
+%% Gate 5: opt-in verification.
+%% pxLST MUST NOT be loaded when \usepackage{pxCORE} is used without [LST].
+%% This file verifies that \begin{pxCode} is UNDEFINED in that context.
+\documentclass{article}
+\usepackage{pxCORE}
+\begin{document}
+\ExplSyntaxOn
+\bool_if:NTF \l_pxcore_lst_use_bool
+  { \iow_term:n { GATE5:LST_LOADED=true } }
+  { \iow_term:n { GATE5:LST_LOADED=false } }
+\cs_if_exist:NTF \pxCode
+  { \iow_term:n { GATE5:FAIL:pxCode~is~defined~(pxLST~was~loaded) } }
+  { \iow_term:n { GATE5:PASS:pxCode~is~undefined~(pxLST~not~loaded) } }
+\ExplSyntaxOff
+Test complete.
+\end{document}

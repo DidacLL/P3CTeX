@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+\section*{pxLST float test}
+
+This document exercises the \texttt{pxCodeBox} and \texttt{pxCodeBreak} environments
+with captions and cross-references.
+
+\subsection*{1. pxCodeBox with label for cross-reference}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\begin{pxCodeBox}{float1}{Hello World}{[lst:float1]}{A simple Java Hello World listing.}
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+\end{pxCodeBox}
+
+See listing tagged \texttt{[lst:float1]} above.
+
+\subsection*{2. pxCodeBox with Bash language}
+\pxLSTsetup{style=framed, language=pxBash, numbers=none}
+\begin{pxCodeBox}{float2}{Build Script}{[lst:float2]}{Bash build script for P3CTeX.}
+#!/bin/bash
+cd tex/
+pdflatex -halt-on-error main.tex
+echo "Build complete."
+\end{pxCodeBox}
+
+See the build script in listing \texttt{[lst:float2]}.
+
+\subsection*{3. pxCodeBreak (breakable listing)}
+\pxLSTsetup{style=dark, language=algoritme, numbers=left}
+\begin{pxCodeBreak}{float3}{Factorial Algorithm}{[lst:float3]}{Iterative factorial in pseudocode.}
+Funcio factorial(n: Integer): Integer
+  Si n <= 0 Llavors
+    Retornar 1
+  Sinó
+    result <-- 1
+    Per i = 1 A n Fer
+      result <-- result * i
+    Fi Per
+    Retornar result
+  Fi Si
+Fi Funcio
+\end{pxCodeBreak}
+
+See the algorithm listing tagged as \texttt{[lst:float3]}.
+
+\subsection*{4. pxCode (simple, no caption)}
+\pxLSTsetup{style=plain, language=pxJava, numbers=none}
+\begin{pxCode}{simple-inline}
+// inline, no caption
+int x = 42;
+\end{pxCode}
+
+\subsection*{5. pxCodeBox with light style}
+\pxLSTsetup{style=light, language=pxYAML, numbers=none}
+\begin{pxCodeBox}{float4}{YAML Config}{[lst:float4]}{YAML configuration example.}
+server:
+  host: localhost
+  port: 8080
+  debug: false
+\end{pxCodeBox}
+
+\subsection*{6. Multiple listings cross-referencing each other}
+Listing \texttt{[lst:float1]} shows Java.
+Listing \texttt{[lst:float2]} shows Bash.
+Listing \texttt{[lst:float3]} shows an algorithm.
+Listing \texttt{[lst:float4]} shows YAML.
+
+\end{document}

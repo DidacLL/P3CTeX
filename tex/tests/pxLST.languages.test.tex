@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+\section*{pxLST language definitions test}
+
+\subsection*{1. pxJava}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\begin{pxCode}{java-sample}
+public class Example {
+    @Override
+    public String toString() {
+        return "Example";
+    }
+}
+\end{pxCode}
+
+\subsection*{2. pxProlog}
+\pxLSTsetup{style=dark, language=pxProlog, numbers=none}
+\begin{pxCode}{prolog-sample}
+parent(tom, bob).
+parent(bob, ann).
+grandparent(X, Z) :- parent(X, Y), parent(Y, Z).
+\end{pxCode}
+
+\subsection*{3. pxOWL (Manchester Syntax)}
+\pxLSTsetup{style=dark, language=pxOWL, numbers=none}
+\begin{pxCode}{owl-sample}
+Class: Animal
+  SubClassOf: owl:Thing
+  DisjointWith: Plant
+
+ObjectProperty: hasParent
+  Domain: Animal
+  Range: Animal
+\end{pxCode}
+
+\subsection*{4. pxTAD (Abstract Data Type)}
+\pxLSTsetup{style=dark, language=pxTAD, numbers=left}
+\begin{pxCode}{tad-sample}
+TAD Stack
+  @pre size > 0
+  @post result = top(S)
+  create: -> Stack
+  push: Stack x Integer -> Stack
+  pop: Stack -> Stack
+\end{pxCode}
+
+\subsection*{5. pxYAML}
+\pxLSTsetup{style=dark, language=pxYAML, numbers=none}
+\begin{pxCode}{yaml-sample}
+server:
+  host: localhost
+  port: 8080
+  debug: true
+  tags: [web, api, v1]
+\end{pxCode}
+
+\subsection*{6. algoritme (Catalan pseudocode)}
+\pxLSTsetup{style=dark, language=algoritme, numbers=left}
+\begin{pxCode}{alg-sample}
+Funcio sumar(a: Integer, b: Integer): Integer
+  Retornar a + b
+Fi Funcio
+\end{pxCode}
+
+\subsection*{7. pxBash}
+\pxLSTsetup{style=dark, language=pxBash, numbers=none}
+\begin{pxCode}{bash-sample}
+#!/bin/bash
+echo "Building P3CTeX..."
+pdflatex -halt-on-error main.tex
+echo "Done."
+\end{pxCode}
+
+\subsection*{8. Languages with accented characters (UTF-8)}
+\pxLSTsetup{style=dark, language=algoritme, numbers=none}
+\begin{pxCode}{accent-test}
+Funcio factorial(n: Integer): Integer
+  Si n = 0 Llavors
+    Retornar 1
+  Sinó
+    Retornar n * factorial(n - 1)
+  Fi Si
+Fi Funcio
+\end{pxCode}
+
+\end{document}

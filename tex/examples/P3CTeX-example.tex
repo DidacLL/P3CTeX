@@ -373,4 +373,60 @@ Debug state: \pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}.
 
 \pxGrow{Example title text}[\linewidth]
 
+% ========== 8. pxLST — Professional code listings ==========
+\section{pxLST: listats de codi professional}
+
+% 1. Java snippet — dark style
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\begin{pxCode}{lst-java-ex}
+public class Fibonacci {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        int a = 0, b = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = a + b;
+            a = b; b = tmp;
+        }
+        return b;
+    }
+}
+\end{pxCode}
+
+% 2. Algorithm — framed style with pxCodeBox and caption
+\pxLSTsetup{style=framed, language=algoritme, numbers=left}
+\begin{pxCodeBox}{lst-alg-ex}{Algorisme: factorial}{[lst:alg-ex]}{Càlcul del factorial de manera iterativa.}
+Funcio factorial(n: Integer): Integer
+  Si n <= 0 Llavors
+    Retornar 1
+  Sinó
+    resultat <-- 1
+    Per i = 1 A n Fer
+      resultat <-- resultat * i
+    Fi Per
+    Retornar resultat
+  Fi Si
+Fi Funcio
+\end{pxCodeBox}
+
+La llista~\ref{cdbx:lst-alg-ex} mostra l'algorisme iteratiu del factorial.
+
+% 3. YAML — light style
+\pxLSTsetup{style=light, language=pxYAML, numbers=none}
+\begin{pxCode}{lst-yaml-ex}
+project:
+  name: P3CTeX
+  version: "0.3"
+  languages: [ca, en]
+  debug: false
+\end{pxCode}
+
+% 4. Bash — plain style
+\pxLSTsetup{style=plain, language=pxBash, numbers=none}
+\begin{pxCode}{lst-bash-ex}
+#!/bin/bash
+cd tex/
+pdflatex -halt-on-error main.tex
+echo "Build complet."
+\end{pxCode}
+
 \end{document}

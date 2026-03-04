@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage[style=plain,language=pxBash,numbers=none]{pxLST}
+\begin{document}
+
+\section*{pxLST package-option (load-time options) test}
+%% Package loaded with: style=plain, language=pxBash, numbers=none
+
+\subsection*{1. Default style after load-time option}
+%% Should render in plain style with pxBash and no numbers
+\begin{pxCode}{opt1}
+#!/bin/bash
+echo "load-time style=plain applied"
+\end{pxCode}
+
+\subsection*{2. Override at use time}
+\begin{pxCode}[style=dark, language=pxJava, numbers=left]{opt2}
+public class Override {
+    // local override of load-time option
+    String s = "dark";
+}
+\end{pxCode}
+
+\subsection*{3. Global remains plain after local group ends}
+\begin{pxCode}{opt3}
+ls -la
+\end{pxCode}
+
+\subsection*{4. probe key works at load time}
+\pxLSTsetup{probe=true}
+\begin{pxCode}{probe-test}
+echo "probe active"
+\end{pxCode}
+\pxLSTsetup{probe=false}
+
+\subsection*{5. Tabsize load-time override}
+\pxLSTsetup{tabsize=2}
+\begin{pxCode}{tabsize2}
+if true; then
+	echo "2-space tab"
+fi
+\end{pxCode}
+
+\end{document}

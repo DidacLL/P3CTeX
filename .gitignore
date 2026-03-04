@@ -313,3 +313,8 @@ TSWLatexianTemp*
 #*Notes.bib
 /.cursor
 *.test.pdf
+*-gate.pdf
+*-smoke.pdf
+/tex/.raw
+/.vscode
+*.zip

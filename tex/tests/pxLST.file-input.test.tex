@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+\section*{pxLST file-input test}
+
+\subsection*{1. Input Java file with pxJava language}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\pxLSTinput[language=pxJava]{sample.java}
+
+\subsection*{2. Input Java file with light style}
+\pxLSTinput[style=light, language=pxJava, numbers=left]{sample.java}
+
+\subsection*{3. Input YAML file with pxYAML language}
+\pxLSTinput[style=dark, language=pxYAML, numbers=none]{sample.yaml}
+
+\subsection*{4. Input YAML with plain style}
+\pxLSTinput[style=plain, language=pxYAML, numbers=none]{sample.yaml}
+
+\subsection*{5. Input with probe key active}
+\pxLSTsetup{probe=true}
+\pxLSTinput[style=framed, language=pxJava, numbers=left]{sample.java}
+\pxLSTsetup{probe=false}
+
+\subsection*{6. File input without local options (uses global state)}
+\pxLSTsetup{style=dark, language=pxJava, numbers=none}
+\pxLSTinput{sample.java}
+
+\end{document}

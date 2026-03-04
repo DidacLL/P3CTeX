@@ -1,0 +1,654 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxLST -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (TEXINPUTS so package is found):
+%   set TEXINPUTS=.;./latex;./code;
+%   pdflatex -interaction=nonstopmode doc/pxLST.tex
+%   pdflatex -interaction=nonstopmode doc/pxLST.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue,hyperindex}{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{pxLST}
+
+\title{The \texttt{pxLST} package\\
+  \large Professional code listing environments for \LaTeX2e}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/03/04 -- Version 0.1}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxLST} provides a high-level \LaTeX2e\ API for typesetting
+  syntax-highlighted source code listings inside styled \texttt{tcolorbox}
+  frames.  It wraps the \texttt{listings} and \texttt{tcolorbox} packages
+  behind a unified key--value interface (the \texttt{pxLST} key family)
+  and ships four visual style renderers based on the Darcula colour palette,
+  seven pre-defined language grammars (Java, Prolog, OWL, TAD, YAML,
+  Catalan pseudocode, Bash), a named preset system, and a diagnostic probe
+  for quality-assurance harnesses.  Full UTF-8 literate support for accented
+  Latin characters is included at the global \texttt{lstset} baseline.
+\end{abstract}
+
+\tableofcontents
+
+%=============================================================================
+\section{Loading the package}
+%=============================================================================
+
+\begin{verbatim}
+\usepackage{pxLST}
+\end{verbatim}
+
+Package options are forwarded to the internal key family \texttt{pxLST}
+and are equivalent to calling \verb|\pxLSTsetup| in the preamble.
+All options are \texttt{key=value} pairs:
+
+\begin{verbatim}
+\usepackage[style=light,language=pxBash]{pxLST}
+\end{verbatim}
+
+Defaults are chosen to be sensible for course work and technical reports:
+dark Darcula background, Java language, line numbers on the left.  All keys
+affect subsequent listings until changed again; the usual \LaTeX\ group
+scoping rules apply.
+
+%=============================================================================
+\section{Key reference}
+%=============================================================================
+
+The \texttt{pxLST} key family contains twelve keys.  All of them can be
+set at load time via \verb|\usepackage[<keys>]{pxLST}|, globally at any
+point via \verb|\pxLSTsetup{<keys>}|, or locally per listing in the
+optional \verb|[<options>]| argument of every environment and command.
+
+\begin{center}
+\begin{tabular}{llll}
+\textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Description}
+\\\hline
+\texttt{style}      & choice  & \texttt{dark}          &
+  Visual renderer: \texttt{dark}, \texttt{framed}, \texttt{light},
+  \texttt{plain}.\\
+\texttt{language}   & tl      & \texttt{pxJava}        &
+  Any \verb|\lstdefinelanguage| name; controls grammar and keywords.\\
+\texttt{numbers}    & tl      & \texttt{left}          &
+  Line number position: \texttt{left}, \texttt{right}, \texttt{none}.\\
+\texttt{caption}    & tl      & (empty)                &
+  Caption text; stored but not auto-used in \texttt{pxCode}.\\
+\texttt{label}      & tl      & (empty)                &
+  Cross-reference label; inserted as \verb|\label{lst:<value>}|.\\
+\texttt{float}      & tl      & (empty)                &
+  Float placement (\texttt{h}, \texttt{t}, \texttt{htbp}\ldots);
+  empty~$=$~inline.\\
+\texttt{breakable}  & bool    & \texttt{true}          &
+  Allow \texttt{tcolorbox} page-break; \texttt{pxCodeBreak} forces true.\\
+\texttt{fontsize}   & tl      & \verb|\footnotesize|   &
+  Font-size command applied in \texttt{basicstyle}.\\
+\texttt{linespread} & tl      & \texttt{1.2}           &
+  Numeric factor forwarded to \verb|\linespread| inside \texttt{basicstyle}.\\
+\texttt{tabsize}    & int     & \texttt{4}             &
+  Tab width in spaces (forwarded to \texttt{listings}).\\
+\texttt{preset}     & code    & ---                    &
+  Apply a named preset; calls \verb|\pxLSTusepreset{<name>}|.\\
+\texttt{probe}      & bool    & \texttt{false}         &
+  Emit \texttt{PXLST\_ASSERT:} diagnostics to the log; see~\S\ref{sec:probe}.\\
+\end{tabular}
+\end{center}
+
+\noindent Unknown keys are silently ignored (reserved for future
+extension).
+
+\paragraph{Key interaction notes.}
+\begin{itemize}
+  \item \texttt{style} controls both the listings colour scheme
+    (\verb|\lstdefinestyle|) and the tcolorbox frame colours
+    (\texttt{colback}, \texttt{colframe}, \texttt{coltext}).
+  \item \texttt{language} is independent of \texttt{style}; both
+    apply simultaneously to the same listing box.
+  \item \texttt{preset} is a \texttt{.code:n} key, so subsequent keys
+    override preset values when they appear after \texttt{preset} in
+    the option list.  See~\S\ref{sec:presets}.
+  \item \texttt{float} and \texttt{breakable} are orthogonal: if
+    \texttt{float} is non-empty the listing is wrapped in a
+    \texttt{figure} float, and \texttt{breakable} is ignored (floats
+    cannot break across pages in standard \LaTeX).
+  \item \texttt{caption} and \texttt{label} are stored but are
+    \emph{not} automatically used in \texttt{pxCode}; they are used
+    by \texttt{pxCodeBox} and \texttt{pxCodeBreak} to build the
+    title bar and place \verb|\label|.
+\end{itemize}
+
+%=============================================================================
+\section{Global configuration --- \texttt{\textbackslash pxLSTsetup}}
+%=============================================================================
+
+\begin{verbatim}
+\pxLSTsetup{<key>=<value>,...}
+\end{verbatim}
+
+Sets package-wide defaults in the \texttt{pxLST} key family.  Usual
+\LaTeX\ scoping rules apply, so a setup call inside a group affects only
+the listings in that group.  At document level the settings remain in
+effect until overridden by another \verb|\pxLSTsetup| call or until a
+surrounding group ends.
+
+Example --- select the light style and Bash language for all subsequent
+listings in the current scope:
+
+\begin{verbatim}
+\pxLSTsetup{style=light, language=pxBash, numbers=none}
+\end{verbatim}
+
+%=============================================================================
+\section{Environments}
+%=============================================================================
+
+All three environments below use the same \texttt{pxlst@configure}
+mechanism internally: the optional \verb|[<options>]| argument is
+processed first (applying local key overrides), then the display macros
+are updated inside a \TeX\ group, so settings revert automatically when
+the environment ends.
+
+%-----------------------------------------------------------------------------
+\subsection{\texttt{pxCode}}
+%-----------------------------------------------------------------------------
+
+\begin{verbatim}
+\begin{pxCode}[<options>]{<label>}
+  ... code content ...
+\end{pxCode}
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{\#1} (optional) --- key--value overrides, local to this
+    environment instance.
+  \item \texttt{\#2} (mandatory) --- label string; displayed in the title
+    bar as \verb|\texttt{\bfseries #2}| and used as the \LaTeX\ label
+    anchor \verb|\label{lst:<label>}| when non-empty.
+\end{itemize}
+
+The environment wraps a \texttt{listings} \texttt{lstlisting} environment
+inside a \texttt{tcolorbox} with \texttt{listing~only} mode, a
+\texttt{drop~lifted~shadow} decoration, and a rounded frame (\texttt{arc=.25em}).
+It is defined via \verb|\newtcblisting| so that verbatim code inside is
+handled correctly.
+
+\paragraph{Example:}
+
+\begin{verbatim}
+\begin{pxCode}[language=pxJava, numbers=left]{HelloWorld.java}
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+\end{pxCode}
+\end{verbatim}
+
+%-----------------------------------------------------------------------------
+\subsection{\texttt{pxCodeBox}}
+%-----------------------------------------------------------------------------
+
+\begin{verbatim}
+\begin{pxCodeBox}[<options>]{<label>}{<title>}{<note>}{<caption>}
+  ... code content ...
+\end{pxCodeBox}
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{\#1} (optional) --- key--value overrides, local scope.
+  \item \texttt{\#2} --- label string; inserted as
+    \verb|\label{cdbx:<label>}| in the title bar and used in
+    continuation headers on subsequent pages.
+  \item \texttt{\#3} --- title text, shown right-aligned in the title bar.
+  \item \texttt{\#4} --- short note identifier, shown left-aligned in the
+    title bar in a smaller, lighter font.
+  \item \texttt{\#5} --- caption text, rendered in the comment panel below
+    the listing.
+\end{itemize}
+
+\texttt{pxCodeBox} renders a two-region \texttt{tcolorbox}: the main (top)
+panel contains the syntax-highlighted listing; the comment (bottom) panel
+displays the \texttt{\#5} caption alongside a small codebox anchor
+label derived from \texttt{\#2}.  The box is \emph{not} breakable by
+default (use \texttt{pxCodeBreak} for long listings).
+
+\paragraph{Example:}
+
+\begin{verbatim}
+\begin{pxCodeBox}[style=dark, language=pxJava]
+                 {alg:bubbleSort}
+                 {BubbleSort.java}
+                 {alg}
+                 {Classic O($n^2$) comparison sort.}
+public void bubbleSort(int[] a) {
+    for (int i = 0; i < a.length - 1; i++)
+        for (int j = 0; j < a.length - 1 - i; j++)
+            if (a[j] > a[j+1]) { int t = a[j]; a[j]=a[j+1]; a[j+1]=t; }
+}
+\end{pxCodeBox}
+\end{verbatim}
+
+%-----------------------------------------------------------------------------
+\subsection{\texttt{pxCodeBreak}}
+%-----------------------------------------------------------------------------
+
+\begin{verbatim}
+\begin{pxCodeBreak}[<options>]{<label>}{<title>}{<note>}{<caption>}
+  ... code content ...
+\end{pxCodeBreak}
+\end{verbatim}
+
+Identical signature to \texttt{pxCodeBox} but forces
+\texttt{breakable=true} regardless of any key setting.  Use for long
+listings that span multiple pages; the title bar is repeated on
+continuation pages with a ``\ldots{}continues from page~$N$'' prefix.
+
+%=============================================================================
+\section{File input --- \texttt{\textbackslash pxLSTinput}}
+%=============================================================================
+
+\begin{verbatim}
+\pxLSTinput[<options>]{<filename>}
+\end{verbatim}
+
+Reads an external source file and typesets it as a listing using the
+current key settings (with optional local overrides in \texttt{\#1}).
+Internally delegates to a \texttt{tcolorbox} that wraps
+\verb|\lstinputlisting|, so the full Darcula frame is preserved.
+
+\begin{itemize}
+  \item \texttt{\#1} (optional) --- any \texttt{pxLST} key--value pairs.
+  \item \texttt{\#2} --- filename, relative to the document's current
+    working directory (i.e.\ where \texttt{pdflatex} is invoked from).
+\end{itemize}
+
+\paragraph{Example:}
+
+\begin{verbatim}
+\pxLSTinput[style=light, language=pxBash]{scripts/build.sh}
+\end{verbatim}
+
+Unlike the verbatim environments, \verb|\pxLSTinput| is defined via
+\verb|\NewDocumentCommand| and can therefore appear in moving arguments
+and macros without special treatment.
+
+%=============================================================================
+\section{Style reference}
+\label{sec:styles}
+%=============================================================================
+
+\texttt{pxLST} provides four visual style renderers, each implemented
+as a \verb|\lstdefinestyle| entry paired with corresponding
+\texttt{tcolorbox} colour parameters.  All four styles use the Darcula
+colour palette defined at package load time.
+
+\begin{center}
+\begin{tabular}{llll}
+\textbf{Style} & \textbf{Background} & \textbf{Frame} &
+  \textbf{Syntax colours}\\\hline
+\texttt{dark}   & Darcula dark (\texttt{RGB\{40,44,52\}}) & none &
+  Full Darcula palette on dark ground.\\
+\texttt{framed} & Darcula dark & left rule (darcula-comment) &
+  Full Darcula palette; left rule decorates the gutter.\\
+\texttt{light}  & white & none &
+  Darcula tones darkened for legibility on white.\\
+\texttt{plain}  & white & none &
+  Monochrome: keywords bold black, comments italic grey.\\
+\end{tabular}
+\end{center}
+
+\paragraph{tcolorbox parameters per style.}
+
+\begin{center}
+\begin{tabular}{lllll}
+\textbf{Style} & \textbf{colback} & \textbf{colframe} &
+  \textbf{coltext} & \textbf{arc}\\\hline
+\texttt{dark}   & \texttt{darcula-bg!90!} & \texttt{darcula-bg!60!}     & \texttt{darcula-fg} & \texttt{.25em}\\
+\texttt{framed} & \texttt{darcula-bg!90!} & \texttt{darcula-comment!60!}& \texttt{darcula-fg} & \texttt{.25em}\\
+\texttt{light}  & \texttt{white}          & \texttt{gray!25!}           & \texttt{black}      & \texttt{.25em}\\
+\texttt{plain}  & \texttt{white}          & \texttt{gray!15!}           & \texttt{black}      & \texttt{0pt}\\
+\end{tabular}
+\end{center}
+
+\paragraph{Switching styles.}
+
+\begin{verbatim}
+% Globally:
+\pxLSTsetup{style=framed}
+
+% Locally in one listing:
+\begin{pxCode}[style=light]{MyFile.java}
+  ...
+\end{pxCode}
+\end{verbatim}
+
+The \texttt{dark} and \texttt{framed} styles are recommended for
+standalone course submissions and printable reports where a clear
+visual boundary is desired.  The \texttt{light} style suits documents
+that mix code with running prose and share the page background with
+text blocks.  The \texttt{plain} style is appropriate for black-and-white
+printing where colour ink should be avoided.
+
+%=============================================================================
+\section{Language reference}
+\label{sec:languages}
+%=============================================================================
+
+Seven language grammars are defined in \texttt{pxLST.code.tex} via
+\verb|\lstdefinelanguage|.  They are available regardless of the active
+style.
+
+\begin{center}
+\begin{tabular}{lll}
+\textbf{Language key} & \textbf{Based on} & \textbf{Typical use}\\\hline
+\texttt{pxJava}    & Java  & Java source, annotations (\texttt{@}), generics.\\
+\texttt{pxProlog}  & Prolog & Logic programming, facts, rules, DCG clauses.\\
+\texttt{pxOWL}     & --- & Manchester OWL ontology syntax.\\
+\texttt{pxTAD}     & --- & Abstract data type (TAD) specifications.\\
+\texttt{pxYAML}    & --- & YAML configuration files.\\
+\texttt{algoritme} & --- & Catalan pseudocode with rendered math symbols.\\
+\texttt{pxBash}    & bash & Shell scripts, command-line listings.\\
+\end{tabular}
+\end{center}
+
+\paragraph{UTF-8 literate map.}
+The global \verb|\lstset| baseline loaded by \texttt{pxLST} includes a
+comprehensive UTF-8 literate mapping for accented characters: acute,
+grave, umlaut, and circumflex accents are mapped for all letters
+\texttt{a--z} and \texttt{A--Z}, plus the digraphs
+\texttt{\c{c}}, \texttt{\c{C}}, \texttt{\~n}, \texttt{\~N},
+\texttt{\textquestiondown}, and \texttt{\textexclamdown}.
+This means Catalan, Spanish, and French source files containing accented
+identifiers or comments are typeset correctly without any manual literate
+entry.
+
+\paragraph{The \texttt{algoritme} language.}
+This language is designed for Catalan pseudocode used in UOC coursework.
+It maps common ASCII sequences to proper mathematical symbols:
+
+\begin{center}
+\begin{tabular}{ll}
+\textbf{Input} & \textbf{Output}\\\hline
+\texttt{<{-{}-}}\quad (three chars) & $\leftarrow$ (assignment arrow)\\
+\texttt{<=}    & $\leq$\\
+\texttt{>=}    & $\geq$\\
+\texttt{!=}    & $\neq$\\
+\texttt{*}     & $\times$\\
+\end{tabular}
+\end{center}
+
+Keywords (\texttt{Funcio}, \texttt{Fi}, \texttt{Si}, \texttt{Llavors},
+\texttt{Sinó}, \texttt{Mentre}, \texttt{Per}, \texttt{Retornar}\ldots)
+are rendered bold in the Darcula keyword colour; case-sensitive matching
+is active.
+
+%=============================================================================
+\section{Preset system}
+\label{sec:presets}
+%=============================================================================
+
+A \emph{preset} is a named bundle of key--value settings that can be
+saved once and applied to any number of listings.  Presets survive group
+boundaries when saved, but their \emph{effect} is local to the scope in
+which they are applied.
+
+\subsection{Preset commands}
+
+\begin{itemize}
+  \item \verb|\pxLSTsavepreset{<name>}{<option-string>}|\\
+    Stores the option string under the given name.  If a preset with the
+    same name already exists it is silently overwritten.
+
+  \item \verb|\pxLSTusepreset{<name>}|\\
+    Applies the preset in the current scope, equivalent to calling
+    \verb|\pxLSTsetup| with the stored option string.  If the preset is
+    not found, a warning is written to the log and the call is ignored.
+
+  \item \texttt{preset=<name>} key\\
+    The \texttt{preset} key can be used inside any option list.  Because
+    keys are processed in source order, keys appearing \emph{after}
+    \texttt{preset} override preset values:
+
+\begin{verbatim}
+% 'darcula' sets language=pxJava; the subsequent key overrides it.
+\pxLSTsetup{preset=darcula, language=pxBash}
+\end{verbatim}
+
+\end{itemize}
+
+\subsection{Built-in presets}
+
+Three generic presets are always available (registered at package load
+time):
+
+\begin{center}
+\begin{tabular}{lp{.55\linewidth}}
+\textbf{Preset} & \textbf{Key bundle}\\\hline
+\texttt{darcula}  &
+  \texttt{style=dark, language=pxJava, numbers=left, breakable=true}\\
+\texttt{minimal}  &
+  \texttt{style=plain, language=pxJava, numbers=none}\\
+\texttt{academic} &
+  \texttt{style=light, language=pxJava, numbers=left, fontsize=\textbackslash small}\\
+\end{tabular}
+\end{center}
+
+\subsection{P3CTeX branded presets}
+
+When \texttt{pxLST} is loaded via the \texttt{P3CTeX} document class,
+three additional branded presets are registered automatically before
+option processing, so they can be used in \verb|\usepackage| options:
+
+\begin{verbatim}
+\usepackage[preset=p3c-code]{pxLST}
+\end{verbatim}
+
+\begin{center}
+\begin{tabular}{lp{.58\linewidth}}
+\textbf{Preset} & \textbf{Key bundle}\\\hline
+\texttt{p3c-code}  &
+  \texttt{style=dark, language=pxJava, numbers=left, breakable=true}\\
+\texttt{p3c-alg}   &
+  \texttt{style=framed, language=algoritme, numbers=left, breakable=false}\\
+\texttt{p3c-plain} &
+  \texttt{style=plain, language=pxJava, numbers=none, breakable=false}\\
+\end{tabular}
+\end{center}
+
+\subsection{Usage example}
+
+\begin{verbatim}
+% Define a custom preset:
+\pxLSTsavepreset{myprolog}{style=framed, language=pxProlog, numbers=none}
+
+% Apply it globally:
+\pxLSTusepreset{myprolog}
+
+% Or locally:
+\begin{pxCode}[preset=myprolog]{family.pl}
+  parent(tom, bob). parent(tom, liz).
+  ancestor(X,Y) :- parent(X,Y).
+\end{pxCode}
+
+% Override one key after preset:
+\begin{pxCode}[preset=myprolog, numbers=left]{rules.pl}
+  ...
+\end{pxCode}
+\end{verbatim}
+
+%=============================================================================
+\section{pxCORE integration}
+\label{sec:pxcore}
+%=============================================================================
+
+\texttt{pxLST} is an opt-in module of \texttt{pxCORE}, the P3CTeX
+core package.  By default, \texttt{pxCORE} does \emph{not} load
+\texttt{pxLST} (initial value of the \texttt{LST} module key is
+\texttt{false}).
+
+\paragraph{Explicit opt-in.}
+\begin{verbatim}
+\usepackage[LST]{pxCORE}
+\end{verbatim}
+This sets \texttt{LST=true} and causes \verb|\RequirePackage{pxLST}| to
+be executed during \texttt{pxCORE} loading.
+
+\paragraph{Bundle (all modules).}
+\begin{verbatim}
+\usepackage[default]{pxCORE}
+\end{verbatim}
+The \texttt{default} meta-key activates all modules:
+\texttt{PRP}, \texttt{UML}, \texttt{SRC}, \texttt{TAB}, and \texttt{LST}.
+This is the recommended setup when using the full P3CTeX workflow.
+
+\paragraph{Module key summary.}
+
+\begin{center}
+\begin{tabular}{lll}
+\textbf{Usage} & \textbf{LST loaded?} & \textbf{Note}\\\hline
+\verb|\usepackage{pxCORE}|            & No  & Default (opt-in required).\\
+\verb|\usepackage[LST]{pxCORE}|       & Yes & Explicit opt-in.\\
+\verb|\usepackage[default]{pxCORE}|   & Yes & All modules bundle.\\
+\end{tabular}
+\end{center}
+
+%=============================================================================
+\section{Diagnostic probe}
+\label{sec:probe}
+%=============================================================================
+
+\begin{verbatim}
+\pxLSTsetup{probe=true}
+\end{verbatim}
+
+When \texttt{probe} is set to \texttt{true}, every call to
+\verb|\pxLSTsetup| (and every environment invocation) writes a block
+of diagnostic lines to the \LaTeX\ log via \verb|\iow_term:x|.  These
+lines start with the prefix \texttt{PXLST\_ASSERT:} and are intended
+for automated QA harnesses that parse the log file.
+
+\paragraph{Asserted values.}
+
+\begin{center}
+\begin{tabular}{ll}
+\textbf{Log key} & \textbf{Source variable}\\\hline
+\texttt{PXLST\_ASSERT: STYLE}    & \verb|\l_pxlst_style_tl| (e.g.\ \texttt{dark})\\
+\texttt{PXLST\_ASSERT: LANGUAGE} & \verb|\l_pxlst_language_tl| (e.g.\ \texttt{pxJava})\\
+\texttt{PXLST\_ASSERT: NUMBERS}  & \verb|\l_pxlst_numbers_tl| (e.g.\ \texttt{left})\\
+\texttt{PXLST\_ASSERT: COLBACK}  & \verb|\pxlst@colback@v| (e.g.\ \texttt{darcula-bg!90!})\\
+\texttt{PXLST\_ASSERT: LSTYLE}   & \verb|\pxlst@lstyle@v| (e.g.\ \texttt{pxlst@dark})\\
+\end{tabular}
+\end{center}
+
+Probe output has no effect on the typeset document.  Disable it again
+with \verb|\pxLSTsetup{probe=false}| once debugging is complete.
+
+%=============================================================================
+\section{Known limitations (v0.1)}
+\label{sec:limits}
+%=============================================================================
+
+The following items are explicitly outside the scope of the current
+release and are deferred to a future sprint.
+
+\begin{itemize}
+  \item \textbf{No \texttt{minted} backend.}  \texttt{pxLST} v0.1
+    uses the \texttt{listings} package exclusively.  A Pygments-based
+    (\texttt{minted}) rendering backend is a v0.2 candidate.
+
+  \item \textbf{No dedicated listing float counter.}  The \texttt{float}
+    key wraps listings in a \texttt{figure} environment.  A separate
+    \texttt{listing} float counter (compatible with \verb|\listoflistings|)
+    is deferred.
+
+  \item \textbf{No automatic language detection.}  \verb|\pxLSTinput|
+    does not infer the language from the file extension; the
+    \texttt{language} key must be set explicitly.
+
+  \item \textbf{No side-by-side listing environments.}  Two-column
+    code comparisons (source vs.\ output, before vs.\ after) are not
+    provided in this version.
+
+  \item \textbf{No per-environment keyword extension.}  There is no
+    high-level key to add \texttt{morekeywords} at use time beyond the
+    fixed language definition; users who need additional keywords must
+    use raw \verb|\lstset| calls.
+
+  \item \textbf{No \texttt{pxANX} integration.}  Automatic population
+    of a list-of-listings via the P3CTeX annex subsystem is deferred
+    to a future sprint.
+\end{itemize}
+
+%=============================================================================
+\section{Implementation notes}
+%=============================================================================
+
+This section gives a brief account of the internal architecture for
+maintainers and advanced users.
+
+\subsection*{File organisation}
+
+\texttt{pxLST} is split across two files:
+\begin{itemize}
+  \item \texttt{tex/latex/pxLST.sty} --- public \LaTeX2e\ API:
+    \verb|\RequirePackage| block, key-processing bootstrap,
+    public commands (\verb|\pxLSTsetup|, \verb|\pxLSTsavepreset|,
+    \verb|\pxLSTusepreset|, \verb|\pxLSTinput|), and the three
+    \verb|\newtcblisting| environment declarations.
+  \item \texttt{tex/code/pxLST.code.tex} --- expl3 internals: variable
+    declarations, key definitions, Darcula colour palette, display macro
+    initialisations, global \verb|\lstset| baseline, four style
+    definitions, seven language definitions, preset mechanism, probe,
+    and \verb|\pxLST_input_file:nn|.
+\end{itemize}
+
+The \texttt{.sty} inputs the \texttt{.code.tex} file via
+\verb|\file_input:n{pxLST.code.tex}|, so both files must be on the
+\texttt{TEXINPUTS} path.
+
+\subsection*{Dynamic option mechanism}
+
+Since \verb|\newtcblisting| environments must handle verbatim content,
+they cannot call \verb|\pxLSTsetup| directly inside their option
+argument.  Instead, a PGF key \texttt{/tcb/pxlst@configure} is defined
+in \texttt{.code.tex}:
+
+\begin{verbatim}
+\pgfkeys{/tcb/pxlst@configure/.code n args={1}{
+  \pxLST_set_options:n { #1 }
+  \__pxlst_set_style_vars:
+  \tcbset{
+    colback  = \pxlst@colback@v,
+    colframe = \pxlst@colframe@v,
+    ...
+  }
+}}
+\end{verbatim}
+
+Each \verb|\newtcblisting| passes \verb+pxlst@configure={#1}+
+as its first tcolorbox option, which triggers the key processing chain
+before the box is opened.  The display macros (\verb|\pxlst@*@v|) are
+set via \verb|\def| and therefore restore automatically when the
+group closed by \verb|\end{pxCode}| (etc.) unwinds.
+
+\subsection*{Dependency stack}
+
+\texttt{pxLST.sty} loads the following packages in order:
+\texttt{expl3}, \texttt{xparse}, \texttt{l3keys2e},
+\texttt{listings}, \texttt{listingsutf8}, \texttt{xcolor} (with the
+\texttt{table} option), \texttt{tcolorbox}.
+The tcolorbox libraries \texttt{listings}, \texttt{listingsutf8},
+\texttt{breakable}, \texttt{xparse}, and \texttt{skins} are loaded via
+\verb|\tcbuselibrary|.  The \texttt{float} package and \texttt{amssymb}
+are \emph{not} required: float wrapping uses the standard \texttt{figure}
+environment, and math symbols in the \texttt{algoritme} language are
+rendered inline via standard \LaTeX\ math mode.
+
+\end{document}

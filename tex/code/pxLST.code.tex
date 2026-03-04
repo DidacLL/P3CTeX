@@ -1,0 +1,480 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%    P3C.TeX   v0.3
+%%    SCVRIA SOFTWARE  Ultimate UOC PEC Repository
+%% =======================================================
+%% File: pxLST.code.tex
+%% Version: v0.1 (03/2026)
+%% Description: expl3 internals for pxLST professional code listings
+%% =======================================================
+\ProvidesExplFile{pxLST.code.tex}{2026/03/04}{v0.1}
+  {P3CTeX code listing internals}
+%% =================================
+%% ===== MODULE VARIABLES ==========
+%% =================================
+\tl_new:N   \l_pxlst_style_tl
+\tl_new:N   \l_pxlst_language_tl
+\tl_new:N   \l_pxlst_numbers_tl
+\tl_new:N   \l_pxlst_caption_tl
+\tl_new:N   \l_pxlst_label_tl
+\tl_new:N   \l_pxlst_float_tl
+\bool_new:N \l_pxlst_breakable_bool
+\tl_new:N   \l_pxlst_fontsize_tl
+\tl_new:N   \l_pxlst_linespread_tl
+\int_new:N  \l_pxlst_tabsize_int
+\bool_new:N \l_pxlst_probe_bool
+\prop_new:N \l_pxlst_presets_prop
+\tl_new:N   \l__pxlst_retrieved_tl
+%% =================================
+%% ===== KEY DEFINITIONS (pxLST) ===
+%% =================================
+\keys_define:nn { pxLST }
+{
+  style      .tl_set:N   = \l_pxlst_style_tl,
+  style      .initial:n  = dark,
+  language   .tl_set:N   = \l_pxlst_language_tl,
+  language   .initial:n  = pxJava,
+  numbers    .tl_set:N   = \l_pxlst_numbers_tl,
+  numbers    .initial:n  = left,
+  caption    .tl_set:N   = \l_pxlst_caption_tl,
+  caption    .initial:n  = {},
+  label      .tl_set:N   = \l_pxlst_label_tl,
+  label      .initial:n  = {},
+  float      .tl_set:N   = \l_pxlst_float_tl,
+  float      .initial:n  = {},
+  breakable  .bool_set:N = \l_pxlst_breakable_bool,
+  breakable  .initial:n  = true,
+  fontsize   .tl_set:N   = \l_pxlst_fontsize_tl,
+  fontsize   .initial:n  = \footnotesize,
+  linespread .tl_set:N   = \l_pxlst_linespread_tl,
+  linespread .initial:n  = 1.2,
+  tabsize    .int_set:N  = \l_pxlst_tabsize_int,
+  tabsize    .initial:n  = 4,
+  preset     .code:n     = { \pxLST_use_preset:n {#1} },
+  probe      .bool_set:N = \l_pxlst_probe_bool,
+  probe      .initial:n  = false,
+  unknown    .code:n     = {},
+}
+%% =================================
+%% ===== WARNINGS ===================
+%% =================================
+\msg_new:nnn { pxLST } { unknown-preset }
+  { Unknown~preset~'#1'.~Use~\pxLSTsavepreset~to~define~it. }
+%% =================================
+%% ===== DARCULA COLOR PALETTE ======
+%% =================================
+\definecolor{darcula-bg}      {RGB}{40,  44,  52 }
+\definecolor{darcula-fg}      {RGB}{255, 255, 255}
+\definecolor{darcula-keyword} {RGB}{240, 150, 20 }
+\definecolor{darcula-string}  {RGB}{152, 195, 121}
+\definecolor{darcula-tag}     {RGB}{80,  250, 180}
+\definecolor{darcula-comment} {RGB}{97,  200, 190}
+\definecolor{darcula-number}  {RGB}{210, 210, 210}
+\definecolor{darcula-type}    {RGB}{102, 153, 204}
+\definecolor{darcula-function}{RGB}{207, 138, 255}
+\definecolor{darcula-operator}{RGB}{255, 192, 144}
+%% =================================
+%% ===== DISPLAY MACRO INITS ========
+%% =================================
+\def\pxlst@colback@v   {darcula-bg!90!}
+\def\pxlst@colframe@v  {darcula-bg!60!}
+\def\pxlst@coltext@v   {darcula-fg}
+\def\pxlst@lstyle@v    {pxlst@dark}
+\def\pxlst@lang@v      {pxJava}
+\def\pxlst@numbers@v   {left}
+\def\pxlst@tabsize@v   {4}
+\def\pxlst@basicstyle@v{\footnotesize\linespread{1.2}\ttfamily}
+%% =================================
+%% ===== GLOBAL lstset BASELINE =====
+%% =================================
+\lstset{
+  inputencoding    = utf8,
+  extendedchars    = true,
+  escapeinside     = {\%*}{*)},
+  showspaces       = false,
+  showstringspaces = false,
+  showtabs         = false,
+  showlines        = false,
+  breakatwhitespace= true,
+  breaklines       = true,
+  breakautoindent  = false,
+  breakindent      = 4em,
+  captionpos       = b,
+  tabsize          = 4,
+  prebreak  = \parbox[t][.1em][c]{\fill}{\vspace{.5em}\raggedleft
+               \scalebox{-.8}[1.2]{\color{gray}$\hookrightarrow$}},
+  postbreak = \parbox[b][1em][c]{2em}{\scalebox{.8}{%
+               \color{gray}$\hookrightarrow$\hspace{2em}}},
+  literate =
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
+    {ä}{{\"a}}1  {ë}{{\"e}}1  {ï}{{\"i}}1  {ö}{{\"o}}1  {ü}{{\"u}}1
+    {Ä}{{\"A}}1  {Ë}{{\"E}}1  {Ï}{{\"I}}1  {Ö}{{\"O}}1  {Ü}{{\"U}}1
+    {â}{{\^a}}1  {ê}{{\^e}}1  {î}{{\^i}}1  {ô}{{\^o}}1  {û}{{\^u}}1
+    {Â}{{\^A}}1  {Ê}{{\^E}}1  {Î}{{\^I}}1  {Ô}{{\^O}}1  {Û}{{\^U}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+    {¿}{{?`}}1   {¡}{{!`}}1,
+}
+%% =================================
+%% ===== STYLE DEFINITIONS ==========
+%% =================================
+%% --- pxlst@dark: full Darcula dark background ---
+\lstdefinestyle{pxlst@dark}{
+  basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{darcula-fg},
+  identifierstyle  = \color{darcula-fg},
+  commentstyle     = \itshape\color{darcula-comment},
+  stringstyle      = \color{darcula-string},
+  keywordstyle     = \bfseries\color{darcula-keyword},
+  keywordstyle     = [2]\color{darcula-function}\bfseries,
+  keywordstyle     = [3]\color{darcula-type},
+  keywordstyle     = [4]\itshape\color{darcula-tag},
+  emphstyle        = \color{darcula-keyword!70!}\underbar,
+  frame            = none,
+  numbers          = left,
+  numberstyle      = \footnotesize\ttfamily\bfseries\color{darcula-bg!50!},
+  showstringspaces = false,
+  breaklines       = true,
+  breakatwhitespace= true,
+  keepspaces       = true,
+  tabsize          = 4,
+}
+%% --- pxlst@framed: Darcula dark with left rule frame ---
+\lstdefinestyle{pxlst@framed}{
+  basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{darcula-fg},
+  identifierstyle  = \color{darcula-fg},
+  commentstyle     = \itshape\color{darcula-comment},
+  stringstyle      = \color{darcula-string},
+  keywordstyle     = \bfseries\color{darcula-keyword},
+  keywordstyle     = [2]\color{darcula-function}\bfseries,
+  keywordstyle     = [3]\color{darcula-type},
+  keywordstyle     = [4]\itshape\color{darcula-tag},
+  emphstyle        = \color{darcula-keyword!70!}\underbar,
+  frame            = leftline,
+  framesep         = 2pt,
+  framexleftmargin = 3pt,
+  xleftmargin      = 5pt,
+  rulecolor        = \color{darcula-comment},
+  numbers          = left,
+  numberstyle      = \footnotesize\ttfamily\bfseries\color{darcula-bg!50!},
+  showstringspaces = false,
+  breaklines       = true,
+  breakatwhitespace= true,
+  keepspaces       = true,
+  tabsize          = 4,
+}
+%% --- pxlst@light: white background, coloured syntax ---
+\lstdefinestyle{pxlst@light}{
+  basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{black},
+  identifierstyle  = \color{black},
+  commentstyle     = \itshape\color{darcula-comment!80!black},
+  stringstyle      = \color{darcula-string!80!black},
+  keywordstyle     = \bfseries\color{darcula-keyword!80!black},
+  keywordstyle     = [2]\color{darcula-function!80!black}\bfseries,
+  keywordstyle     = [3]\color{darcula-type!70!black},
+  keywordstyle     = [4]\itshape\color{darcula-tag!70!black},
+  frame            = none,
+  numbers          = left,
+  numberstyle      = \footnotesize\ttfamily\color{gray!60!},
+  showstringspaces = false,
+  breaklines       = true,
+  breakatwhitespace= true,
+  keepspaces       = true,
+  tabsize          = 4,
+}
+%% --- pxlst@plain: white background, monochrome ---
+\lstdefinestyle{pxlst@plain}{
+  basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{black},
+  identifierstyle  = \color{black},
+  commentstyle     = \itshape\color{gray!70!black},
+  stringstyle      = \color{black},
+  keywordstyle     = \bfseries\color{black},
+  frame            = none,
+  numbers          = none,
+  numberstyle      = \footnotesize\ttfamily\color{gray!60!},
+  showstringspaces = false,
+  breaklines       = true,
+  breakatwhitespace= true,
+  keepspaces       = true,
+  tabsize          = 4,
+}
+%% =================================
+%% ===== LANGUAGE DEFINITIONS =======
+%% =================================
+%% --- pxJava: Java with extended keyword sets and annotation delimiter ---
+\lstdefinelanguage{pxJava}{
+  language         = Java,
+  emph             = {this,super},
+  morekeywords     = [1]{String,Integer,int,char,Double,Boolean,ArrayList,
+                        return,void,new,null,true,false},
+  morekeywords     = [2]{main,println,System,out,in,err,format,
+                        add,get,size,remove},
+  moredelim        = [s][stringstyle]{<<}{>>},
+  moredelim        = [s][commentstyle]{/*}{*/},
+  moredelim        = [l][\itshape\color{darcula-tag}]{@},
+}
+%% --- pxProlog: Prolog with operator literate coloring ---
+\lstdefinelanguage{pxProlog}{
+  language         = Prolog,
+  keywordstyle     = \color{darcula-keyword}\bfseries,
+  keywordstyle     = [3]\color{darcula-function}\bfseries,
+  literate         =
+    {(}{{\color{darcula-function}(}}1
+    {)}{{\color{darcula-fg})}}1
+    {.}{{\color{darcula-keyword}\bfseries.\color{darcula-fg}}}1
+    {,}{{\color{darcula-operator},\color{darcula-fg}}}1
+    {:-}{{\color{darcula-keyword}\bfseries{}:-\color{darcula-fg}}}2
+    {<}{{\color{darcula-operator}<\color{darcula-fg}}}1
+    {>}{{\color{darcula-operator}>\color{darcula-fg}}}1
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% --- pxOWL: Manchester OWL Syntax ---
+\lstdefinelanguage{pxOWL}{
+  morekeywords     = {AnnotationProperty,Annotations,Asymmetric,
+                     Characteristics,Class,
+                     Datatype,DataProperty,DatatypeProperty,
+                     DifferentFrom,DifferentIndividuals,DisjointClasses,
+                     DisjointProperties,DisjointUnionOf,DisjointWith,Domain,
+                     EquivalentClasses,EquivalentProperties,EquivalentTo,
+                     Facts,Functional,
+                     HasKey,
+                     Import,Individual,InverseFunctional,InverseOf,Irreflexive,
+                     ObjectProperty,
+                     Ontology,
+                     Prefix,
+                     Range,Reflexive,
+                     SameAs,SameIndividual,Self,SubClassOf,SubPropertyChain,
+                     SubPropertyOf,Symmetric,
+                     Transitive,Types,
+                     and,exactly,inverse,langPattern,length,
+                     max,maxLength,min,minLength,
+                     not,only,or,pattern,some,that,value},
+  morekeywords     = [3]{rdf,owl},
+  keywordstyle     = \color{darcula-keyword}\bfseries,
+  keywordstyle     = [3]\color{darcula-function}\bfseries,
+  morecomment      = [l]{\#\ },
+  morestring       = [b]",
+  literate         =
+    {.}{{\color{darcula-operator}\bfseries.\color{darcula-fg}}}1
+    {:}{{\color{darcula-operator}:\color{darcula-fg}}}1,
+}
+%% --- pxTAD: Abstract Data Type specification language ---
+\lstdefinelanguage{pxTAD}{
+  morekeywords     = {create,return,if,else,true,false,null},
+  morekeywords     = [2]{TAD,@pre,@post,Invariant,Boolean,Integer,String,Date,List},
+  morekeywords     = [3]{},
+  keywordstyle     = \color{darcula-keyword}\bfseries,
+  keywordstyle     = [2]\color{darcula-function}\bfseries,
+  keywordstyle     = [3]\color{darcula-type}\bfseries,
+  morecomment      = [l]{//},
+  morecomment      = [s]{/*}{*/},
+  morestring       = [b]",
+  literate         =
+    {.}{{\color{darcula-keyword}\bfseries.\color{darcula-fg}}}1
+    {,}{{\color{darcula-operator},\color{darcula-fg}}}1
+    {:}{{\color{darcula-keyword}\bfseries{}:\color{darcula-fg}}}1
+    {<}{{\color{darcula-operator}<\color{darcula-type}}}1
+    {>}{{\color{darcula-operator}>\color{darcula-fg}}}1
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% --- pxYAML: YAML configuration files ---
+\lstdefinelanguage{pxYAML}{
+  morekeywords     = {true,false,null,yes,no},
+  morestring       = [b]',
+  morestring       = [b]",
+  sensitive        = false,
+  comment          = [l]{\#},
+  literate         =
+    {:}{{\color{darcula-operator}:}}1
+    {,}{{\color{darcula-operator},}}1
+    {[}{{\color{darcula-type}[}}1
+    {]}{{\color{darcula-type}]}}1
+    {>}{{\color{darcula-function}>}}1
+    {|}{{\color{darcula-function}|}}1,
+}
+%% --- algoritme: Catalan pseudocode with math symbol literate ---
+\lstdefinelanguage{algoritme}{
+  morekeywords     = {Funcio,Fi,Funció,Si,Llavors,Sinó,Mentre,Fer,
+                     Per,Cada,A,Retornar,Sortir,Nova,Nou,Afegir,Extreure},
+  keywordstyle     = \color{darcula-keyword}\bfseries,
+  sensitive        = true,
+  morecomment      = [l]{//},
+  morecomment      = [s]{/*}{*/},
+  morestring       = [b]",
+  literate         =
+    {<--}{{\color{darcula-keyword}$\leftarrow$\color{darcula-fg}}}1
+    {<=}{{\color{darcula-keyword}$\leq$\color{darcula-fg}}}1
+    {>=}{{\color{darcula-keyword}$\geq$\color{darcula-fg}}}1
+    {!=}{{\color{darcula-keyword}$\neq$\color{darcula-fg}}}1
+    {*}{{\color{darcula-keyword}$\times$\color{darcula-fg}}}1
+    {_}{{\color{darcula-operator}\textunderscore\color{darcula-fg}}}1
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% --- pxBash: Bash/shell scripts ---
+\lstdefinelanguage{pxBash}{
+  language         = bash,
+  keywordstyle     = \color{darcula-keyword}\bfseries,
+  stringstyle      = \color{darcula-string},
+  commentstyle     = \color{darcula-comment}\itshape,
+  numberstyle      = \tiny\color{darcula-number},
+  showstringspaces = false,
+  columns          = flexible,
+  literate         =
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% =================================
+%% ===== STYLE VARIABLE SETTER ======
+%% =================================
+\cs_new_protected:Npn \__pxlst_set_style_vars: {
+  \str_case:VnF \l_pxlst_style_tl
+  {
+    { dark }
+    {
+      \def\pxlst@colback@v  { darcula-bg!90! }
+      \def\pxlst@colframe@v { darcula-bg!60! }
+      \def\pxlst@coltext@v  { darcula-fg }
+      \def\pxlst@lstyle@v   { pxlst@dark }
+    }
+    { framed }
+    {
+      \def\pxlst@colback@v  { darcula-bg!90! }
+      \def\pxlst@colframe@v { darcula-comment!60! }
+      \def\pxlst@coltext@v  { darcula-fg }
+      \def\pxlst@lstyle@v   { pxlst@framed }
+    }
+    { light }
+    {
+      \def\pxlst@colback@v  { white }
+      \def\pxlst@colframe@v { gray!25! }
+      \def\pxlst@coltext@v  { black }
+      \def\pxlst@lstyle@v   { pxlst@light }
+    }
+    { plain }
+    {
+      \def\pxlst@colback@v  { white }
+      \def\pxlst@colframe@v { gray!15! }
+      \def\pxlst@coltext@v  { black }
+      \def\pxlst@lstyle@v   { pxlst@plain }
+    }
+  }
+  {
+    \def\pxlst@colback@v  { darcula-bg!90! }
+    \def\pxlst@colframe@v { darcula-bg!60! }
+    \def\pxlst@coltext@v  { darcula-fg }
+    \def\pxlst@lstyle@v   { pxlst@dark }
+  }
+  \edef\pxlst@lang@v    { \tl_use:N \l_pxlst_language_tl }
+  \edef\pxlst@numbers@v { \tl_use:N \l_pxlst_numbers_tl  }
+  \edef\pxlst@tabsize@v { \int_use:N \l_pxlst_tabsize_int }
+  \protected@edef\pxlst@basicstyle@v {
+    \tl_use:N \l_pxlst_fontsize_tl
+    \noexpand\linespread { \tl_use:N \l_pxlst_linespread_tl }
+    \noexpand\ttfamily
+  }
+}
+%% =================================
+%% ===== PGF pxlst@configure KEY ====
+%% =================================
+\tcbset{
+  pxlst@configure/.code={
+    \tl_if_blank:nF {#1} { \pxLST_set_options:n {#1} }
+    \tcbset{
+      colback  = \pxlst@colback@v,
+      colframe = \pxlst@colframe@v,
+      coltext  = \pxlst@coltext@v,
+    }
+    \__pxlst_apply_lstset:
+  },
+}
+%% \__pxlst_apply_lstset: — build a fully-expanded \lstset call and execute it.
+%% The \edef approach expands display macros (\pxlst@lstyle@v → pxlst@dark, etc.)
+%% into literal strings so that listings can find the defined style/language names.
+\cs_new_protected:Npn \__pxlst_apply_lstset: {
+  \edef \pxlst@callbuf {
+    \noexpand\lstset{
+      style=\pxlst@lstyle@v,
+      language=\pxlst@lang@v,
+      numbers=\pxlst@numbers@v,
+      tabsize=\pxlst@tabsize@v
+    }
+  }
+  \pxlst@callbuf
+  \lstset{basicstyle=\pxlst@basicstyle@v}
+}
+%% =================================
+%% ===== PROBE DIAGNOSTIC ===========
+%% =================================
+\cs_new_protected:Npn \__pxlst_probe_emit: {
+  \bool_if:NT \l_pxlst_probe_bool
+  {
+    \iow_term:x { PXLST_ASSERT:STYLE=\tl_use:N \l_pxlst_style_tl }
+    \iow_term:x { PXLST_ASSERT:LANGUAGE=\tl_use:N \l_pxlst_language_tl }
+    \iow_term:x { PXLST_ASSERT:NUMBERS=\tl_use:N \l_pxlst_numbers_tl }
+    \iow_term:x { PXLST_ASSERT:COLBACK=\pxlst@colback@v }
+    \iow_term:x { PXLST_ASSERT:LSTYLE=\pxlst@lstyle@v }
+  }
+}
+%% =================================
+%% ===== PRESET FUNCTIONS ===========
+%% =================================
+\cs_new_protected:Npn \pxLST_save_preset:nn #1 #2 {
+  \prop_put:Nnn \l_pxlst_presets_prop { #1 } { #2 }
+}
+
+\cs_new_protected:Npn \pxLST_use_preset:n #1 {
+  \prop_get:NnNTF \l_pxlst_presets_prop { #1 } \l__pxlst_retrieved_tl
+    { \exp_args:NV \pxLST_set_options:n \l__pxlst_retrieved_tl }
+    { \msg_warning:nnn { pxLST } { unknown-preset } { #1 } }
+}
+%% =================================
+%% ===== BUILT-IN PRESETS ===========
+%% =================================
+\pxLST_save_preset:nn { darcula }
+  { style=dark, language=pxJava, numbers=left, breakable=true }
+\pxLST_save_preset:nn { minimal }
+  { style=plain, language=pxJava, numbers=none }
+\pxLST_save_preset:nn { academic }
+  { style=light, language=pxJava, numbers=left, fontsize=\small }
+%% =================================
+%% ===== CENTRAL OPTION SETTER ======
+%% =================================
+\cs_new_protected:Npn \pxLST_set_options:n #1 {
+  \keys_set:nn { pxLST } { #1 }
+  \__pxlst_set_style_vars:
+  \__pxlst_probe_emit:
+}
+%% =================================
+%% ===== FILE INPUT FUNCTION ========
+%% =================================
+\cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
+  \group_begin:
+    \tl_if_blank:nF {#1} { \pxLST_set_options:n {#1} }
+    \__pxlst_set_style_vars:
+    \tcbinputlisting{
+      pxlst@configure={},
+      listing~file=#2,
+      listing~only,
+      arc=.25em, outer~arc=.25em,
+      drop~lifted~shadow,
+      toptitle=-.1em,
+      title=\small\hspace*{\fill}\textbf{\ttfamily #2}
+    }
+  \group_end:
+}
+\endinput

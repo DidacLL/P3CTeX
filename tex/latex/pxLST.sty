@@ -1,0 +1,137 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%		P3C.TeX				v0.3
+%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%% =======================================================
+%%	This file is part of the P3CTeX project.
+%%
+%%	Author: Scvria
+%%	File: pxLST.sty
+%%	Version: v0.1 (03/2026)
+%%	Description:
+%%		Professional code listing environments and commands
+%%		for P3CTeX: syntax-highlighted code blocks with
+%%		Darcula-style tcolorbox frames, named preset system,
+%%		multi-language support (Java, Prolog, OWL, TAD,
+%%		YAML, Algorithm, Bash), and UTF-8 accent handling.
+%%
+%%	This file may be distributed and/or modified:
+%%
+%%	 1. under the LaTeX Project Public License and/or
+%%	 2. under the GNU Public License.
+%%
+%%	 See the file doc/LICENSE for more details.
+%%
+%% =======================================================
+\RequirePackage{expl3}
+\RequirePackage{xparse,l3keys2e}
+\RequirePackage{listings}
+\RequirePackage{listingsutf8}
+\RequirePackage[table]{xcolor}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{listings,listingsutf8,breakable,xparse,skins}
+\ProvidesExplPackage{pxLST}{2026/03/04}{v0.1}{P3CTeX professional code listings}
+\file_input:n {pxLST.code.tex}
+%%% P3CTeX branded presets (registered before option processing
+%%% so that \usepackage[preset=p3c-code]{pxLST} works).
+\@ifclassloaded{P3CTeX}
+{
+  \pxLST_save_preset:nn { p3c-code }
+    { style=dark, language=pxJava, numbers=left, breakable=true }
+  \pxLST_save_preset:nn { p3c-alg }
+    { style=framed, language=algoritme, numbers=left, breakable=false }
+  \pxLST_save_preset:nn { p3c-plain }
+    { style=plain, language=pxJava, numbers=none, breakable=false }
+}{}
+\ProcessKeysOptions{ pxLST }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%      --  PUBLIC LaTeX2e API   --         %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package configuration (pxLST key family).
+%%   \pxLSTsetup{key=value,...} applies keys in current TeX group scope.
+%%   At document level, effects are global until overridden or group ends.
+%%   Preset names are registered via \pxLSTsavepreset{name}{option-string}
+%%   and applied via \pxLSTusepreset{name} or key preset=name.
+\cs_new_protected:Npn \__pxlst_apply_local_options:n #1
+  { \tl_if_blank:nF {#1} { \pxLST_set_options:n {#1} } }
+\NewDocumentCommand{\pxLSTsetup}{m}
+  { \pxLST_set_options:n { #1 } }
+%% Preset management.
+\NewDocumentCommand{\pxLSTsavepreset}{mm}
+  { \pxLST_save_preset:nn { #1 } { #2 } }
+\NewDocumentCommand{\pxLSTusepreset}{m}
+  { \pxLST_use_preset:n { #1 } }
+%% -----------------------------------------------------------------------
+%% pxCode -- inline code listing with optional local key overrides.
+%%   #1 = optional key-value options (local to this environment)
+%%   #2 = label string (displayed in title bar)
+\newtcblisting{pxCode}[2][]{%
+  pxlst@configure={#1},%
+  listing~only,%
+  arc=.25em,outer~arc=.25em,%
+  drop~lifted~shadow,%
+  toptitle=-.1em,%
+  title=\small\hspace*{\fill}\textbf{\ttfamily #2}%
+}
+%% -----------------------------------------------------------------------
+%% pxCodeBox -- code listing with side-note comment panel (non-breakable).
+%%   #1 = optional key-value options (local)
+%%   #2 = label string (cross-reference anchor; inserts \label{cdbx:#2})
+%%   #3 = title text (title bar)
+%%   #4 = short note (comment panel identifier label)
+%%   #5 = caption text (comment panel body)
+\newtcblisting{pxCodeBox}[5][]{%
+  pxlst@configure={#1},%
+  enhanced,%
+  listing~and~comment,%
+  comment=\raggedleft\parbox[b]{.1\linewidth}{%
+    \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
+  }\hspace*{.05\linewidth}\parbox[c]{.8\linewidth}{%
+    \centering #5%
+  },%
+  drop~lifted~shadow,%
+  coltext=\pxlst@coltext@v,%
+  arc=.25em,outer~arc=.25em,%
+  toptitle=-.1em,%
+  title~after~break=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}..continues~from~page~\pageref{cdbx:#2}}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3},%
+  title=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}codebox:\color{gray!80!}#4}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3\label{cdbx:#2}},%
+  comment~outside~listing,%
+  listing~above~comment%
+}
+%% -----------------------------------------------------------------------
+%% pxCodeBreak -- same as pxCodeBox but forces breakable across pages.
+%%   Arguments identical to pxCodeBox.
+\newtcblisting{pxCodeBreak}[5][]{%
+  pxlst@configure={#1},%
+  enhanced,%
+  breakable,%
+  listing~and~comment,%
+  comment=\raggedleft\parbox[b]{.1\linewidth}{%
+    \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
+  }\hspace*{.05\linewidth}\parbox[c]{.8\linewidth}{%
+    \centering #5%
+  },%
+  drop~lifted~shadow,%
+  coltext=\pxlst@coltext@v,%
+  arc=.25em,outer~arc=.25em,%
+  toptitle=-.1em,%
+  title~after~break=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}..continues~from~page~\pageref{cdbx:#2}}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3},%
+  title=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}codebox:\color{gray!80!}#4}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3\label{cdbx:#2}},%
+  comment~outside~listing,%
+  listing~above~comment%
+}
+%% -----------------------------------------------------------------------
+%% \pxLSTinput[<options>]{<filename>}
+%%   Input an external source file as a code listing using current settings.
+%%   Optional #1 keys are applied locally before rendering.
+\NewDocumentCommand{\pxLSTinput}{ O{} m }
+  { \pxLST_input_file:nn { #1 } { #2 } }
