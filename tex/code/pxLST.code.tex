@@ -26,6 +26,12 @@
 \bool_new:N \l_pxlst_probe_bool
 \prop_new:N \l_pxlst_presets_prop
 \tl_new:N   \l__pxlst_retrieved_tl
+%% ===== Inline & annex collection (code only; tagged by annex-id)
+\seq_new:N  \g_pxlst_code_seq
+\bool_new:N \l_pxlst_collect_bool
+\tl_new:N   \l_pxlst_annex_id_tl
+\tl_new:N   \l_pxlst_scope_tl
+\tl_new:N   \l_pxlst_annex_title_tl
 %% =================================
 %% ===== KEY DEFINITIONS (pxLST) ===
 %% =================================
@@ -54,6 +60,14 @@
   preset     .code:n     = { \pxLST_use_preset:n {#1} },
   probe      .bool_set:N = \l_pxlst_probe_bool,
   probe      .initial:n  = false,
+  collect    .bool_set:N = \l_pxlst_collect_bool,
+  collect    .initial:n  = true,
+  annex-id   .tl_set:N   = \l_pxlst_annex_id_tl,
+  annex-id   .initial:n  = {},
+  scope      .tl_set:N   = \l_pxlst_scope_tl,
+  scope      .initial:n  = document,
+  title      .tl_set:N   = \l_pxlst_annex_title_tl,
+  title      .initial:n  = {},
   unknown    .code:n     = {},
 }
 %% =================================
@@ -207,10 +221,11 @@
 \lstdefinelanguage{pxJava}{
   language         = Java,
   emph             = {this,super},
-  morekeywords     = [1]{String,Integer,int,char,Double,Boolean,ArrayList,
+  morekeywords     = [1]{String,Integer,int,char,long,short,byte,float,Double,
+                        Boolean,boolean,ArrayList,List,Map,Set,
                         return,void,new,null,true,false},
   morekeywords     = [2]{main,println,System,out,in,err,format,
-                        add,get,size,remove},
+                        add,get,size,remove,put,contains,keySet,values,equals},
   moredelim        = [s][stringstyle]{<<}{>>},
   moredelim        = [s][commentstyle]{/*}{*/},
   moredelim        = [l][\itshape\color{darcula-tag}]{@},
@@ -220,6 +235,7 @@
   language         = Prolog,
   keywordstyle     = \color{darcula-keyword}\bfseries,
   keywordstyle     = [3]\color{darcula-function}\bfseries,
+  morekeywords     = [3]{atom_length,append,member,length,findall,nl,write},
   literate         =
     {(}{{\color{darcula-function}(}}1
     {)}{{\color{darcula-fg})}}1
@@ -258,7 +274,7 @@
   morekeywords     = [3]{rdf,owl},
   keywordstyle     = \color{darcula-keyword}\bfseries,
   keywordstyle     = [3]\color{darcula-function}\bfseries,
-  morecomment      = [l]{\#\ },
+  morecomment      = [l]{\#},
   morestring       = [b]",
   literate         =
     {.}{{\color{darcula-operator}\bfseries.\color{darcula-fg}}}1
@@ -290,6 +306,7 @@
   morekeywords     = {true,false,null,yes,no},
   morestring       = [b]',
   morestring       = [b]",
+  upquote           = true,
   sensitive        = false,
   comment          = [l]{\#},
   literate         =
@@ -329,13 +346,75 @@
   stringstyle      = \color{darcula-string},
   commentstyle     = \color{darcula-comment}\itshape,
   numberstyle      = \tiny\color{darcula-number},
-  showstringspaces = false,
+  showstringspaces  = false,
+  upquote          = true,
   columns          = flexible,
   literate         =
     {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
     {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
     {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
     {À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% --- pxPython: Python with Darcula styles and extended built-ins ---
+\lstdefinelanguage{pxPython}{
+  language         = Python,
+  morekeywords     = [2]{print,range,len,str,int,float,def,class,self,True,False,
+                        None,and,or,not,in,is,lambda,yield,async,await,list,dict,set},
+  morecomment      = [l]{\#},
+  morestring       = [b]',
+  morestring       = [b]",
+  morestring       = [s]{"""}{"""},
+  literate         =
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% --- pxC: C with Darcula styles and common stdlib ---
+\lstdefinelanguage{pxC}{
+  language         = C,
+  morekeywords     = [2]{printf,scanf,malloc,free,sizeof,typedef,struct,enum,include,define},
+  morecomment      = [l]{//},
+  morecomment      = [s]{/*}{*/},
+  morestring       = [b]",
+  literate         =
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% --- pxJavaScript: JavaScript/ECMAScript (listings has no built-in; define keywords) ---
+\lstdefinelanguage{pxJavaScript}{
+  morekeywords     = {function,var,let,const,return,if,else,for,while,do,switch,case,
+                      true,false,null,undefined,new,this,class,extends,async,await,
+                      try,catch,throw,finally,typeof,instanceof,in,of,delete,break,continue},
+  morekeywords     = [2]{console,log,warn,error,parseInt,parseFloat,Object,Array,String,Number},
+  morecomment      = [l]{//},
+  morecomment      = [s]{/*}{*/},
+  morestring       = [b]",
+  morestring       = [b]',
+  literate         =
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+}
+%% pxJS: alias for pxJavaScript (language=pxJS or language=pxJavaScript)
+\lstdefinelanguage{pxJS}{
+  language = pxJavaScript,
+}
+%% --- pxSQL: SQL (no built-in in listings) ---
+\lstdefinelanguage{pxSQL}{
+  morekeywords     = {SELECT,FROM,WHERE,INSERT,UPDATE,DELETE,JOIN,LEFT,RIGHT,INNER,OUTER,
+                      ON,AND,OR,NOT,NULL,AS,ORDER,BY,GROUP,HAVING,LIMIT,OFFSET,
+                      CREATE,TABLE,INDEX,VIEW,DROP,ALTER,PRIMARY,KEY,FOREIGN,REFERENCES,
+                      UNIQUE,DEFAULT,CHECK,INTO,VALUES,SET},
+  morekeywords     = [2]{COUNT,SUM,AVG,MIN,MAX,LIKE,BETWEEN,IN,EXISTS},
+  morecomment      = [l]{--},
+  morecomment      = [s]{/*}{*/},
+  morestring       = [b]',
+  literate         =
+    {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+    {à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
     {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% =================================
@@ -451,6 +530,14 @@
   { style=plain, language=pxJava, numbers=none }
 \pxLST_save_preset:nn { academic }
   { style=light, language=pxJava, numbers=left, fontsize=\small }
+\pxLST_save_preset:nn { python-code }
+  { style=dark, language=pxPython, numbers=left, breakable=true }
+\pxLST_save_preset:nn { c-code }
+  { style=dark, language=pxC, numbers=left, breakable=true }
+\pxLST_save_preset:nn { js-code }
+  { style=dark, language=pxJavaScript, numbers=left, breakable=true }
+\pxLST_save_preset:nn { sql-code }
+  { style=dark, language=pxSQL, numbers=left, breakable=true }
 %% =================================
 %% ===== CENTRAL OPTION SETTER ======
 %% =================================
@@ -476,5 +563,83 @@
       title=\small\hspace*{\fill}\textbf{\ttfamily #2}
     }
   \group_end:
+}
+%% =================================
+%% ===== CODE ANNEX =================
+%% =================================
+%% Code entry: {<annex-id>}{<snippet>}{<opts>}. Append with current annex-id and current options tl.
+\tl_new:N \l__pxlst_code_opts_tl
+\cs_new_protected:Npn \__pxlst_code_serialize_opts: {
+  \tl_set:Nx \l__pxlst_code_opts_tl {
+    style=\exp_not:V \l_pxlst_style_tl,
+    language=\exp_not:V \l_pxlst_language_tl,
+    numbers=\exp_not:V \l_pxlst_numbers_tl,
+    fontsize=\exp_not:V \l_pxlst_fontsize_tl,
+    tabsize=\int_use:N \l_pxlst_tabsize_int
+  }
+}
+\cs_new_protected:Npn \__pxlst_code_append:nnn #1 #2 #3 {
+  \seq_put_right:Nn \g_pxlst_code_seq { {#1}{#2}{#3} }
+}
+%% Process multiple code snippets (up to 8; xparse limit). Add non-blank to render and collect.
+\cs_new_protected:Npn \__pxlst_code_process_multiple:nnnnnnnn #1 #2 #3 #4 #5 #6 #7 #8 {
+  \__pxlst_code_render_one:n { #1 }
+  \__pxlst_code_render_one:n { #2 }
+  \__pxlst_code_render_one:n { #3 }
+  \__pxlst_code_render_one:n { #4 }
+  \__pxlst_code_render_one:n { #5 }
+  \__pxlst_code_render_one:n { #6 }
+  \__pxlst_code_render_one:n { #7 }
+  \__pxlst_code_render_one:n { #8 }
+}
+\cs_new_protected:Npn \__pxlst_code_render_one:n #1 {
+  \tl_if_blank:nF { #1 }
+    {
+      \__pxlst_code_render_inline:n { #1 }
+      \bool_if:NT \l_pxlst_collect_bool
+        {
+          \__pxlst_code_serialize_opts:
+          \__pxlst_code_append:nnn
+            { \tl_use:N \l_pxlst_annex_id_tl }
+            { #1 }
+            { \tl_use:N \l__pxlst_code_opts_tl }
+        }
+    }
+}
+%% Inline code render: small tcolorbox with lstinline per snippet
+\cs_new_protected:Npn \__pxlst_code_render_inline:n #1 {
+  \tcbox[
+    nobeforeafter,
+    size=minimal,
+    colback=\pxlst@colback@v,
+    colframe=\pxlst@colframe@v,
+    coltext=\pxlst@coltext@v,
+    boxrule=0.4pt,
+    arc=0.5mm,
+    left=1.5pt,
+    right=1.5pt,
+    top=0.5pt,
+    bottom=0.5pt,
+  ]
+  { \lstinline{#1} }
+}
+%% Code annex content producer (hook for pxANX). Outputs listings for annex-id; each with stored opts.
+\cs_new_protected:Npn \__pxlst_code_annex_output:n #1 {
+  \seq_map_inline:Nn \g_pxlst_code_seq
+    {
+      \__pxlst_code_annex_output_entry:nnnn { #1 } ##1
+    }
+}
+\cs_new_protected:Npn \__pxlst_code_annex_output_entry:nnnn #1 #2 #3 #4 {
+  \tl_if_eq:nnT { #1 } { #2 }
+    {
+      \group_begin:
+      \tl_if_blank:nF { #4 } { \pxLST_set_options:n { #4 } }
+      \__pxlst_set_style_vars:
+      \__pxlst_apply_lstset:
+      \par\smallskip
+      \__pxlst_code_render_inline:n { #3 }
+      \group_end:
+    }
 }
 \endinput

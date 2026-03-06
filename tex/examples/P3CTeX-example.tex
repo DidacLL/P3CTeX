@@ -1,5 +1,5 @@
 % !TeX encoding = UTF-8
-% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+% !TeX spellcheck = cat
 %% =======================================================
 %%  P3CTeX — Example document (LaTeX2e API showcase)
 %%  Build from tex/tests/ so that img/ finds tex/tests/img/:
@@ -9,193 +9,270 @@
 %%  and run from tex/tests/ (or adjust image paths).
 %% =======================================================
 
-\documentclass[fake,default]{P3CTeX}
-
+\documentclass[cover,toc,default]{P3CTeX} %set P3CTeX as document class
+\PECTeXcover{fullcover, text-uppertitle=EXAMPLE} %additional cover config, overrides default text for uppertitle
 \PECTeXconfig{
-	cover-config={offset,defaultcover},
-	page-config={
-		doc-name  = {P3CTeX Example},
-		subj-name = {Software Engineering},
-		refcode   = {EXAMPLE-001}
-	},
-	pdf-config={
-		pdf-title  = {P3CTeX LaTeX2e API Example},
-		pdf-author = {P3CTeX User}
-	},
-	cover,
-	toc,
-	default
+	data= {%% set user data
+		student 		= {Vladimir Scoriae},
+		grade 			= {Ultimate \LaTeX~ Repository},
+		subj-fullname	= {\pxGrow*{\PECTeX}\\ Exemple pràctic d'ús},
+		subj-shortname	= {\PECTeX},
+		subj-code		= {01312},
+		ca-fullname		= {Repte 1: Introducció a \PECTeX },
+		ca-shortname	= {PAC1},
+	}
 }
 
 \pxSRCsetup{placeholder-color=blue}
 \begin{document}
-% ========== Cover and TOC (pxGDX) ==========
-%\PECTeXprintCover
-%\PECTeXprintTOC*
+\section*{Introducció} %% amb la opció * la seccio no te numeració ni d'afegeix al index
 
-% ========== 1. pxGDX — Sections and rules ==========
-\sectionuoc{First UOC section}
-\PECTeX~Sample text with UOC section style.
+	En aquest document es mostra un exemple pràctic de l'ús de \PECTeX
+	per fer PACs i PRs seguint l'estil oficial de la UOC.
+	\bigskip\\ %força un salt de linia mes gran si es possible
+	Tot i això, el repositori \PECTeX i les llibreries que el componen
+	tenen moltes mes opcions possibles. Per això recomanem revisar la
+	documentació de cada mòdul situat a la carpeta ``\texttt{/doc}''. %% forma correcte de posar les cometes ``''
+	Pots contribuir a ampliar aquest projecte a \url{https://github.com/DidacLL/P3CTeX}
+%	\bigskip\\
+	\subsection*{F.A.Q.}
+	\pxHRule*[.6\linewidth] %Regal horizontal gruixuda de 0.6 l'ample del text
+		\subsubsection*{Per què \PECTeX?}
+			\PECTeX es una eina desenvolupada durant els estudis d'enginyeria informàtica a la UOC.
+			 Son eines, comandes i entorns complets per facilitar la resolució de les proves de
+			 l'avaluació continua o pràctiques mantenint el format oficial de la UOC i els estàndards
+			 requerits en documents acadèmics, cientifics o tècnics adequats.
+		\subsubsection*{Però.. fer les PACs en \LaTeX ?}
+			Quan et planteges per primer cop fer les PACs en \LaTeX pot semblar un complicació innecessària,
+			 però en la meva experiència personal puc dir que aprendre a utilitzar \LaTeX amb comoditat és
+			 la millor decisió que he pres durant els meus estudis.
+			\\
+			Per una banda ofereix un format estandarditzat i adequat per a la avaluació. Això es valora a l'hora
+			 de puntuar i sens dubte els professors ho reben d'una altra manera si es presenten les
+			  entregues en un format polit i adequat.
+			\\
+			Però no nomes per al format ni el resultat, sinó perquè a la llarga t'estalvia molt temps i permet crear
+			 un ritme de treball mes òptim, centrar-te en el contingut sense preocupar-te per al format.
+			\bigskip\\
+			A mes a mes, \PECTeX, ha estat pensat des del principi per apropar les funcions mes complexes i modernes de \LaTeX
+			d'una manera senzilla per als usuaris mes nous. Així doncs es proporcionen eines per a automatitzar tasques i calculs,
+			molt útil en pràctiques en les que s'han d'introduir moltes captures de pantalla, gràfiques, diagrames etc..
+		%% TODO Afegir explicacio de l'entorn PECTeX quan tinguem els preambles fets
+		\subsubsection*{En que es diferencia de \LaTeX?}
+			\PECTeX està construït per damunt de \LaTeX 2e (la versió actual) i combina funcions de \emph{expl3} (conegut com \LaTeX3)
+			però sempre accessibles des de documents \LaTeX estàndard. Com a repositori pensat per al usuari final, aquest paquet carrega automàticament altres paquets
+			\footnote{Si bé els mòduls individuals si son independents i es poden carregar o utilitzar sense necessitat de carregar tota la classe}%% NOTA AL PEU DE LA PAGINA
+			 per tant recomanem
+			 consultar-ne la documentació oficial per veure totes les funcions que aporten
+			 %% TODO CREATE LIBRARIES SECTION AND REFERENCE HERE, ALSO TALK IN EVERY SECTION ABOUT OTHER FUNCTIONS PROVIDED BY RELATED LOIADED PACKAGES
+\newpage %% força el salt de pagina
+\section{Document Setup}
+	\subsection{Com utilitzar la classe de document \texttt{P3CTeX}}
 
-\subsectionuoc{UOC subsection}
-\subsubsectionuoc{UOC subsubsection}
-More text with UOC subsection style.
+	Per començar a utilitzar la classe de document \texttt{P3CTeX} en els teus documents \LaTeX, primer cal definir-la a l'inici del fitxer principal. Aquest pas permet carregar els estils i les funcionalitats proporcionades pel paquet.
 
-Thin horizontal rule:\\
-\pxHRule
+	\begin{verbatim}
+	\documentclass{P3CTeX}
+	\end{verbatim}
 
-Thick horizontal rule (centered):\\
-\pxPageRule*
+	Aquesta comanda assegura que l'estructura, el format i les opcions específiques de la UOC es carreguin automàticament. Pots afegir opcions addicionals si ho vols, per exemple:
 
-% ========== 2. pxPRP — Property maps ==========
-\section{pxPRP: property maps and lists}
+	\begin{verbatim}
+	\documentclass[ca-exercise]{P3CTeX}
+	\end{verbatim}
 
-\subsection{Objects, keys, and access}
-\pxNewObject{DEMO}
-\pxSetValue{DEMO}{k1}{v1,v2}
-\pxSetValue{DEMO}{k2}{vA,vB,vC}
+	A continuació, pots configurar la informació bàsica del treball mitjançant l'ordre \verb|\pxAuthorSetup| per establir el teu nom, NIU i altres detalls rellevants:
 
-\verb*|\pxGET DEMO.k1[2]| $\to$ \pxGET DEMO.k1[2].\\
-\verb*|\pxPRINTF DEMO.k2[2]| $\to$ \pxPRINTF DEMO.k2[2].
+	\begin{verbatim}
+	\pxAuthorSetup{
+	  author       = {Nom Cognom},
+	  niu          = {1234567},
+	  subject      = {Nom de l'assignatura},
+	  ca-fullname  = {Nom de la pràctica o PAC}
+	}
+	\end{verbatim}
 
-\subsection{Overwrite and append}
-\pxNewObject{OVER}
-\pxSetValue{OVER}{state}{old}
-Before overwrite: OVER.state[1] = \pxGET OVER.state[1].
-\pxSetValue{OVER}{state}{newA,newB}
-After: OVER.state[1] = \pxGET OVER.state[1],\quad
-OVER.state[2] = \pxGET OVER.state[2].
+	També pots fer servir altres comandes com \verb|\pxSRCsetup| i \verb|\pxTABsetup| per personalitzar el comportament de càrrega d'imatges o l'estil de les taules, respectivament.
 
-\subsection{Lists: \texttt{\textbackslash pxPutValue}, \texttt{\textbackslash pxListSet}, \texttt{\textbackslash pxListAll}}
-\pxNewObject{LST}
-\pxPutValue{LST}{items}{a}
-\pxPutValue{LST}{items}{b,c}
-LST.items = (\pxGET LST.items[1], \pxGET LST.items[2], \pxGET LST.items[3]).
+	Finalment, com en tot document \LaTeX, el contingut va entre \verb|\begin{document}| i \verb|\end{document}|.
+	L'exemple següent mostra una estructura bàsica:
 
-\pxNewObject{OBJL}
-\pxListSet{OBJL}{nums}{1,2,3}
-All values (expected 1--3): \pxListAll{OBJL}{nums}[ -- ].
+	\begin{verbatim}
+	\documentclass{P3CTeX}
+	\begin{document}
+		\section{Introducció}
+			Això és un document d'exemple amb \PECTeX.
+	\end{document}
+	\end{verbatim}
 
-\subsection{Clear key/object and predicates}
-\pxNewObject{TMP}
-\pxSetValue{TMP}{k}{X,Y}
-Before clear: TMP.k[1] = \pxGET TMP.k[1].
-\pxClearKey{TMP}{k}
-\pxSetValue{TMP}{k}{Z}
-After: TMP.k[1] = \pxGET TMP.k[1].
-\pxClearObject{TMP}
-\pxNewObject{TMP}
-\pxSetValue{TMP}{k}{P,Q}
-Now: TMP.k[1] = \pxGET TMP.k[1].
+	Pots ampliar el document utilitzant les funcionalitats addicionals de la classe, com ara comandaments per inserir codi, taules millorades, gestió de captures de pantalla i molt més.
 
-\pxIfObjectExistsTF{MISSING}
-	{Object exists.}
-	{Object MISSING is not present, as expected.}
+\newpage %% força el salt de pagina
+\section{\LaTeX Basic} %%todo
+	\LaTeX és un sistema de composició de textos que permet crear documents estructurats i formatejats de manera eficient.
 
-\pxNewObject{CHK}
-\pxSetValue{CHK}{nums}{1,2,3}
-\pxIfObjectExistsTF{CHK}{CHK exists.}{CHK does not exist.}
-\pxIfKeyExistsTF{CHK}{nums}{Key \texttt{nums} exists in CHK.}{Key missing.}
-Length of CHK.nums: \pxListLen{CHK}{nums}.
+	\LaTeX bàsic es basa en l'ús d'entorns per a estructurar el contingut. Els entorns més comuns són:
 
-\subsection{Boolean flags and scalar access}
-\pxNewObject{FLAGS}
-\pxSetValue{FLAGS}{on}{true}
-\pxSetValue{FLAGS}{off}{{false}}
-\pxIfTrueTF{FLAGS}{on}{ON}{OFF},\quad
-\pxIfTrueTF{FLAGS}{off}{ON}{OFF}.
+	\begin{itemize}
+		\item{Organitzacio del document}
+		\subitem{Seccions} \hspace{\fill} \verb|\section{Títol} \subsection{Títol} \subsubsection{Títol}|
+		\subitem{Paràgrafs} \hspace{\fill} \verb|\paragraph{Títol} \subparagraph{Títol}|
+		\item{Format del text}
+			\subitem \verb|\textbf{ }|\hspace{\fill} \textbf{per a escriure en negreta.}
+			\subitem \verb|\textit{ }|\hspace{\fill} \textit{per a escriure en itàlica.}
+			\subitem \verb|\underline{ }|\hspace{\fill}  \underline{per a escriure en subratllat.}
+			\subitem \verb|\emph{ }|\hspace{\fill}  \emph{per a escriure en emphàtic.}
+			\subitem \verb|\texttt{ }|\hspace{\fill}  \texttt{per a escriure en mono.}
+		\item{Mida del text}
+			\subitem de gran a petit:
+			\subitem \hspace{\fill}
+				 \verb|\normalsize|
+				 \small\verb|\small|
+				 \footnotesize\verb|\footnotesize|
+				 \scriptsize\verb|\scriptsize|
+				 \tiny\verb|\tiny|
+			 \normalsize
+			\subitem de petit a gran:
+			\subitem \hspace{\fill}  \verb|\normalsize|
+			 \large\verb|\large|
+			 \Large\verb|\Large|
+			 \LARGE\verb|\LARGE|
+			 \huge\verb|\huge|
+			 \Huge\verb|\Huge|
+			 \normalsize
+		\item{Referencies}
+			\subitem \verb|\cite{referencia}|: per a citar una referència.
+			\subitem \verb|\label{etiqueta}|: per a etiquetar un element del document.
+			\subitem \verb|\ref{etiqueta}|: per a referir-se a un element etiquetat.
+			\subitem \verb|\pageref{etiqueta}|: per a referir-se a la pàgina d'un element etiquetat.
+	\end{itemize}
+	També es pot formatejar l'espai vertical o horitzontal:\\
+	\verb|\hspace{\fill}| \vspace*{\fill} \hspace*{\fill}o \hspace*{\fill}\verb|\hspace*{2ex}| \\\vspace{-1em}
+	\verb|\vspace{1in}| o	\verb|\vspace*{0.3em}|
 
-\pxNewObject{SCALAR}
-\pxSetValue{SCALAR}{flag}{true}
-\pxSetValue{SCALAR}{text}{Hello, world.}
-Scalar SCALAR.flag: \pxGetScalar{SCALAR}{flag}.\\
-Scalar SCALAR.text: \pxGetScalar{SCALAR}{text}.\\
-Missing key: [\pxGetScalar{SCALAR}{none}].
+	\subsection{Com utilitzar les comandes de \LaTeX}
 
-\subsection{List clear and compact API}
-\pxNewObject{LCLR}
-\pxListSet{LCLR}{vals}{a,b,c}
-Length before clear: \pxListLen{LCLR}{vals}.
-\pxListClear{LCLR}{vals}
-Length after clear: \pxListLen{LCLR}{vals}.
-\pxListPutRight{LCLR}{vals}{x,y}
-Values: \pxListAll{LCLR}{vals}.
+		Algunes comandes de \LaTeX nomes es poden executar en determinats entorns com es el cas del contingut del document mateix.\\
+		\verb|\begin{comanda}| \quad per a iniciar un entorn.\\
+			Aqui dins podem executar les comandes d'aquest entorn
+		\verb|\end{comanda}|\quad per a finalitzar un entorn.\\
 
-\pxSETlst LCLR.vals={z,a}
-After \verb|\pxSETlst|: \pxListAll{LCLR}{vals}.
-\pxSET LCLR.vals=A
-After \verb|\pxSET|: \pxGETtl(LCLR.vals).
-\pxPUT LCLR.vals+=B
-After \verb|\pxPUT|: \pxPRINTlst LCLR.vals().
-With separator: \pxPRINTlst LCLR.vals(, ).
+		alguns exemples d'aquests entorns son:
+		\begin{itemize}
+			\item verbatim : permet escriure codi o caracters especials sense ser comptat com a codi \LaTeX
+			\item document : engloba tot el que s'imprimeix en el document final, a la part anterior se'n diu Preamble i s'utilitza per declarar comandes i configuració.
+			\item itemize/ enumerate : crea llistes o enumeracions respectivament amb les comandes \verb|\item|,\verb|\subitem| i \verb|\subsubitem|.
+		\end{itemize}
+		\begin{verbatim}
+			\begin{itemize}
+				\item Llista desordenada
+					\subitem primer subelement
+						\subsubitem primer subsubelement
+					\subitem segon subelement
+						\subsubitem primer subsubelement
+						\subsubitem segon subsubelement
+			\end{itemize}
+		\end{verbatim}
+		\begin{itemize}
+			\item Llista desordenada
+			\subitem primer subelement
+			\subsubitem primer subsubelement
+			\subitem segon subelement
+			\subsubitem primer subsubelement
+			\subsubitem segon subsubelement
+		\end{itemize}
+		\begin{verbatim}
+			\begin{enumerate}
+				\item Llista desordenada
+				\subitem primer subelement
+				\subsubitem primer subsubelement
+				\subitem segon subelement
+				\subsubitem primer subsubelement
+				\subsubitem segon subsubelement
+			\end{enumerate}
+		\end{verbatim}
+		\begin{enumerate}
+			\item Llista ordenada
+			\subitem primer subelement
+			\item segon element
+			\item tercer element
+			\subitem primer subelement
+			\subsubitem primer subsubelement
+		\end{enumerate}
 
-% ========== 3. pxUML — Class diagrams ==========
-\section{pxUML: class diagrams}
+	\subsection{crear comandes propies}
 
-\subsection{Classes and diagram}
-\pxUMLClass{Person}
-	{- name : String}
-	[+ getName() : String]
+	També es pot crear comandes propies per a utilitzar-les en el document. Per exemple:
 
-\addAttribute{Person}{- age : Integer}
-\addOperation{Person}{+ setName(newName : String) : void}
+	\newcommand{\mycommand}[1]{Hello #1}
+	\begin{verbatim}
+	\newcommand{\mycommand}[1]{Hello #1}
+	\end{verbatim}
 
-\pxUMLClass{BaseClass}{- id : Integer}
-\pxUMLClass{DerivedClass}{- extra : String}
-\addInheritance{DerivedClass}{BaseClass}
+	Aquesta comanda crea una comanda \verb|\mycommand| que es pot utilitzar en el document a partir d'aquest moment:
+	\begin{verbatim}
+	\mycommand{World}
+	\end{verbatim}
+	Això imprimeix: \mycommand{World} \\
+	També es pot crear comandes amb arguments opcionals:\\
+	\begin{verbatim}
+	\newcommand{\mycommand}[2][default]{#1 #2}
+	\end{verbatim}
+	Aquesta comanda crearia una comanda \verb|\mycommand| que es pot utilitzar en el document com ara:
 
-\pxUMLClass{Service}{- name : String}[+ run() : void]
+	\begin{verbatim}
+	\mycommand{Això és un argument}
+	\mycommand[Aquest es opcional]{Això és un argument}
+	\end{verbatim}
 
-\pxUMLDiagram{
-	\drawclass[text width=14em]{Person}[0,0]
-	\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
-	\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
-	\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{- name : String}{+ run() : void}
-}[0.9\linewidth]
+	També disposem de la manera primitiva de declarar comandes, si bé té algunes avantatges i es més àgil, no està protegida contra sobreescriptura i pot causar comportaments no desitjats.
+	Però és molt útil per entendre com funciona \LaTeX. \LaTeX analitza el document per tokens, tokens que va expandint (intercanviant per el seu valor) quan troba alguna macro.
 
-\PXshowclass{Person}
-\PXshowclass{Service}
+	Un token pot ser tant:
+	\begin{itemize}
+		\item A \hspace{\fill}		cada caracter es un token
+		\item \verb|\PECTeX| \hspace{\fill}		cada comanda o macro es un sol token
+		\item \verb|{Patatas pata todos}| \hspace{\fill}		el contingut de dues \{ \} es tracta com un sol token
+	\end{itemize}
 
-Inspection: Person attributes: [\pxUMLAttributes{Person}].\\
-Service operations: [\pxUMLOperations{Service}].\\
-Parents of DerivedClass: [\pxUMLParents{DerivedClass}].\\
-Non-existent class: [\pxUMLAttributes{NoExisteix}].
+	Aixi podem entendre la comanda \verb|\def| que es la manera de definir macros a un nivell més baix, concretament demana el nom de la macro, els parametres i el codi que expandir en lloc de la macro.\\
+	\verb|\def\foomacro{PATATA}| $\to$\quad \verb|\foomacro| simplement escriu ``PATATA''\\
+	\verb|\def\foomacro#1{Patata #1}| $\to$\quad \verb|\foomacro{frita}| espera 1 parametre (o un token) es per això que posem les \{\} tot i que les podriem ometre i nomes agafaria el primer token.\\
+	Sabent això podem definir altres formes de separar els parametres entenent que \LaTeX va escanejant la comanda esperant el caracter definit per entendre la separació entre parametres. Si no hi ha cap separador agafar un unic token.
+	\begin{itemize}
+		\item \verb|\def\patata#1#2#3|
+		\subitem es crida com \verb|\patata{param 1}{param 2}{param 3}|
+		\item \verb|\def\patata#1.#2.#3:|
+		\subitem es crida com \verb|\patata{param 1}.{param 2}.{param 3}:|
+		\subitem o \verb|\patata param 1.param 2.param 3:|
+	\end{itemize}
+\newpage %% força el salt de pagina
 
-\subsection{Enums and associations}
-\pxUMLClass[enumclass]{Role}{DEVELOPER, MANAGER}
-\pxUMLClass[enumclass]{Kind}{A, B, C}
+\section{Taules}
+	Les taules a \LaTeX es solen fer amb l'entorn \emph{tabular} però té una sintaxi molt farragosa per un ús habitual, per això \PECTeX n'ofereix una serie de metodes alternatius.
 
-\pxUMLClass{Entity}{- role : Role, - name : String}[+ doIt() : void]
-\pxUMLClass{Container}{- id : Integer}
+	L'entorn \textbf{pxTAB} de \PECTeX ofereix uan seria d'estils de taules automàtiques predisenyat, a continuació es mostra alguns dels mes habituals i com utilitzarlos.
 
-\pxUMLDiagram{
-	\drawclass*[text width=12em]{Role}[0,0]
-	\drawclass*[text width=12em]{Kind}[10,0]
-	\drawclass[text width=14em]{Entity}[0,-4]
-	\drawclass[text width=14em]{Container}[10,-4]
-	\association{Entity}{0..*}{}{Container}{}{1}
-}[0.85\linewidth]
+	En aquest cas ofereix la opció de configurar el disseny de les taules individualment. Aixi doncs quan apliquem la configuració s'aplicarà la nova configuracio en les taules següents sense modificar les anteriors:
+	\begin{verbatim}
+\pxTABsetup{style=header}
 
-% ========== 4. pxSRC — Images ==========
-\section{pxSRC: safe images}
+\pxTable{Name, Age, City}
+		{Alice, 20, Barcelona}
+		{Bob, 22, Madrid}
+	\end{verbatim}
+\subsection*{Table Styles}
 
-\pxIMG[.2\linewidth]{img/testimage}[primaryColor]{Single image caption}[fig:one]
-
-\pxIMG[.2\linewidth]{img/testimage}{Caption (optional width; color uses default)}[fig:two]
-
-\pxIMGpair{img/testimage}{img/testimage}[primaryColor]{Pair caption}[fig:pair]
-
-\pxIMGList{testimage}{Step one, Step two, Step three, Step four}
-
-% ========== 5. pxTAB — Tables ==========
-\section{pxTAB: predefined tables}
-
-\pxTABsetup{style=header,headerbgcolor=blue!15,headertextcolor=blue!70!black}
-\pxTable{Name, Age, City}{Alice, 20, Barcelona}{Bob, 22, Madrid}
-
+\pxTABsetup{style=header}
+\pxTable{Name, Age, City}
+{Alice, 20, Barcelona}
+{Bob, 22, Madrid}
 % Striped style: alternating row backgrounds fill the full cell area.
-\pxTABsetup{style=striped,altrowbgcolor=gray!10,altrowtextcolor=black}
-\pxTable{Item, Quantity}{Apples, 3}{Oranges, 5}{Bananas, 2}
+\pxTABsetup{style=striped}
+\pxTable{Item, Quantity}
+{Apples, 3}
+{Oranges, 5}
+{Bananas, 2}
 
 \pxTABsetup{style=boxed}
 \pxTableFromList{Code, Description; PX1, First code; PX2, Second code}
@@ -203,116 +280,127 @@ Non-existent class: [\pxUMLAttributes{NoExisteix}].
 \pxTABsetup{style=grid}
 \pxTableMatrix{2}{3}{m11,m12,m13,m21,m22,m23}
 
-% Centered header-style table using the new key.
+ Centered header-style table using the new key.
 \pxTABsetup{
-  style=header,
-  headerbgcolor=blue!15,
-  headertextcolor=blue!70!black,
-  centering=true,
+	style=header,
+	headerbgcolor=blue!15,
+	headertextcolor=blue!70!black,
+	centering=true,
 }
 \pxTable{Language, Users}{
-  LaTeX, Many}{
-  P3CTeX, Felizment cada cop m\'es}
-
-% Float table with caption, label, and explicit placement.
+	LaTeX, Many}{
+	P3CTeX, Felizment cada cop m\'es}
+\bigskip
+ Float table with caption, label, and explicit placement.
 \pxTable[
-  style=header,
-  caption={Sample pxTAB float table},
-  label=tab:pxTAB-example,
-  float=htbp
+style=header,
+caption={Sample pxTAB float table},
+label=tab:pxTAB-example,
+float=H
 ]{Module, Feature}{
-  pxSRC, Safe image inclusion}{
-  pxTAB, Predefined table styles}
+	pxSRC, Safe image inclusion}{
+	pxTAB, Predefined table styles}
 %\vspace{1em}
 Table~\ref{tab:pxTAB-example} shows a small pxTAB float that can be
 cross-referenced in the usual way.
-
-% Composed styles: rubric-style grid and striped dataset.
-% Row backgrounds fill the entire cell area for all striped-like styles,
-% including with explicit width/tabwidth settings.
+\subsection*{Composed styles}
+ Composed styles: rubric-style grid and striped dataset.
+ Row backgrounds fill the entire cell area for all striped-like styles,
+ including with explicit width/tabwidth settings.
 \pxTABsetup{
-  style=header-grid,
-  headerbgcolor=blue!15,
-  headertextcolor=blue!70!black,
-  headerfont=\sffamily\bfseries,
-  tabwidth=\linewidth
+	style=header-grid,
+	headerbgcolor=blue!15,
+	headertextcolor=blue!70!black,
+	headerfont=\sffamily\bfseries,
+	tabwidth=\linewidth
 }
 \pxTable{Criterion, Weight, Notes}{
-  Design, 40\%, Structure and clarity}{
-  Implementation, 40\%, Correctness and style}{
-  Testing, 20\%, Coverage and edge cases}
+	Design, 40\%, Structure and clarity}{
+	Implementation, 40\%, Correctness and style}{
+	Testing, 20\%, Coverage and edge cases}
 
 \pxTABsetup{
-  style=header-striped,
-  altrowbgcolor=gray!10,
-  altrowtextcolor=black,
-  tabwidth=.9\linewidth
+	style=header-striped,
+	altrowbgcolor=gray!10,
+	altrowtextcolor=black,
+	tabwidth=.9\linewidth
 }
 \pxTable{Student, PEC 1, PEC 2, Final}{
-  Alice, 8.0, 9.0, 8.5}{
-  Bruno, 7.5, 8.0, 7.8}{
-  Carla, 9.0, 9.5, 9.3}{
-  Daniel, 6.5, 7.0, 6.8}
-
-% Paragraph-cell mode: multi-line wrapping in equal-width columns.
+	Alice, 8.0, 9.0, 8.5}{
+	Bruno, 7.5, 8.0, 7.8}{
+	Carla, 9.0, 9.5, 9.3}{
+	Daniel, 6.5, 7.0, 6.8}
+\subsection*{Paragraph-cell}
+Paragraph-cell mode: multi-line wrapping in equal-width columns.
 \pxTABsetup{
-  verbose,
-  paragraphcoltype=p,
-  setheader=red!15,
-  headertextcolor=blue!70!black,
-  headerfont=\sffamily\bfseries,
-  width=.9\linewidth,
-  tabcolsep=2pt,
-  centering=true
+	verbose,
+	paragraphcoltype=p,
+	setheader=red!15,
+	headertextcolor=blue!70!black,
+	headerfont=\sffamily\bfseries,
+	width=.9\linewidth,
+	tabcolsep=2pt,
+	centering=true
 }
 \pxTable{Component, Weight, Description}{
-  Design, 30\%, Justify architectural decisions and document the
-  chosen patterns.  Include a class diagram and a brief rationale
-  for each design trade-off.}{
-  Implementation, 40\%, Deliver clean and well-structured source
-  code with meaningful variable names.  The build must succeed
-  without errors or critical warnings.}{
-  Testing, 20\%, Provide unit tests covering the main public API
-  and at least two edge cases per module.}{
-  Report, 10\%, Summarise the work in a concise document using the
-  P3CTeX template.  Include references and an appendix with test
-  logs.}
+	Design, 30\%, Justify architectural decisions and document the
+	chosen patterns.  Include a class diagram and a brief rationale
+	for each design trade-off.}{
+	Implementation, 40\%, Deliver clean and well-structured source
+	code with meaningful variable names.  The build must succeed
+	without errors or critical warnings.}{
+	Testing, 20\%, Provide unit tests covering the main public API
+	and at least two edge cases per module.}{
+	Report, 10\%, Summarise the work in a concise document using the
+	P3CTeX template.  Include references and an appendix with test
+	logs.}
 
-% --- Preset system examples ---
+\subsection*{Preset system examples}
 
-% Custom preset: define once, reuse everywhere.
+Custom preset: define once, reuse everywhere.
 \pxTABsavepreset{my-style}{
-    style=header-striped,
-    headerbgcolor=teal!25,
-    headertextcolor=white,
-    altrowbgcolor=teal!5,
-    centering=true
+	style=header-striped,
+	headerbgcolor=teal!25,
+	headertextcolor=white,
+	altrowbgcolor=teal!5,
+	centering=true
 }
 \pxTable[preset=my-style]
-    {Module, Credits, Grade}
-    {Algebra, 6, A}
-    {Calculus, 6, B+}
+{Module, Credits, Grade}
+{Algebra, 6, A}
+{Calculus, 6, B+}
 
-% Built-in preset (registered at load time).
+ Built-in preset (registered at load time).
 \pxTable[preset=formal]
-    {Component, Status}
-    {API Design, Complete}
-    {Implementation, In progress}
+{Component, Status}
+{API Design, Complete}
+{Implementation, In progress}
 
-% Override a preset key inline.
+ Override a preset key inline.
 \pxTable[preset=formal, headerbgcolor=green!20]
-    {Test, Result}
-    {Unit, Pass}
-    {Integration, Pass}
+{Test, Result}
+{Unit, Pass}
+{Integration, Pass}
 
-% --- pxTBLtop: legacy header-body shorthand ---
-\pxTBLtop{3}{Name & Course & Grade}{Alice & CS101 & A \\ Bob & CS102 & B+}
+\subsection*{Alternative tables}
+ pxTBLtop: legacy header-body shorthand and includes longtables
+
+\pxTBLtop{3}{Name & Course & Grade}{Alice & CS101 & A \\ Bob & CS102 & B+\\}
 
 \pxTBL{3}{Columna 1, Columna 2, Columna 3}{
 	11	&	12	&	13,
 	21	& 	22	& 	23,
 	31	&	32	&	33}
-\pxTBLlong[.3\linewidth]{8}{1 &2&3&4&5&6&7&8}{
+\pxTBLlong[.8\linewidth]{8}{1 &2&3&4&5&6&7&8}{
+	Aquesta es una mostra d'una taula que s'exten a varies pagines & & \\
+	X & a mes no respecta el numero de columnes en totes les files &&&&SENSE MOSTRAR CAP ERROR\\
+	X & Y & Z\\
+	X & Y & Z\\
+	X & Y & Z\\
+	X & Y & Z\\
+	X & Y & Z\\
+	X & Y & Z\\
+	X & Y & &&&&&TUDO BEM\\
 	X & Y & Z\\
 	X & Y & Z\\
 	X & Y & Z\\
@@ -351,33 +439,120 @@ cross-referenced in the usual way.
 	X & Y & Z\\
 	X & Y & Z\\
 	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	X & Y & Z\\
-	P&A&T&A&T&A\\
+	P&A&T&A&T&A&S\\
 	P&A&T&A&T&O&D&OS\\
 }
-% ========== 6. pxCORE — Debug (optional) ==========
-\section{pxCORE: setup and debug}
+\newpage
+\section{Imatges}
+	Tot i estar disponible la comanda habitual \verb*|\includegraphics[keyvals]{imagefile}|
+	\PECTeX ofereix una opció mes segura, en la que si la imatge no existeix simplement imprimeix un placeholder
+	amb la mateixa mida i a la mateixa posicio, permetent incloure una imatge que encara no tenim i podent seguir redactant i formatejant.
 
-\pxCOREsetup{debug=false}
-Debug state: \pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}.
+	Aquesta comanda es :
+	\bigskip\\
+	\verb|\pxIMG[width]{imagename}[placeholderColor]{Caption text}[label]|
+	\bigskip\\
+	On els parametres entre ``[]'' son opcionals.\\
+	La amplada es pot indicar en cualsevol unitat valida (cm,in,pt,em,ex) o bé amb fraccions d'una mida vàlida (\verb*|0.5\linewidth|)\\
 
-% ========== 7. pxGDX — Layout ==========
-\section{pxGDX: layout helpers}
+	Aixi la versio minima de la comanda seria:
+	\verb|\pxIMG{imagename}{Caption text}|
+	\bigskip\\
+	També tenim les opcions per inserir dues imatges una al costat de l'altre amb un sol peu de imatge\\
+	\verb*|\pxIMGpair{imgname1}{imgname2}[errcolor]{caption}[label]|
+	\bigskip\\
+	i per últim una opció per introduir llistats de imatges nombrades sequüencialment (sense 0s a l'esquerra) en una mateixa carpeta\\
+	\verb|\pxIMGList{nom}{Caption de la primera imatge, caption de la segona, tercera, ...n}|\\
+	això carregaria 4 imatges anomenades nom1,nom2,nom3,nom4 ja que hi ha 4 elements a la llista de captions\\
+	\subsection*{Exemples}
+\pxIMG[12em]{img/testimage}{Aquesta imatge medeix 12em (o 12 caracters de la mida de la font actual)}[fig:emtest]
 
-\pxGrow{Example title text}[\linewidth]
+\pxIMG[.3\linewidth]{img/fakeimageurl}[primaryColor]{Aquesta imatge medeix 0.3*linewidth i a mes la imatge no existeix, hem modificat el color del placeholder a primaryColor que es el per defecte de \PECTeX}[fig:width]
+
+\pxIMGpair{img/testimage}{img/testimage5}{Pair caption}[fig:pair]
+
+\pxIMGList[.3\linewidth]{testimage}{
+	Imatge automatitzada amb la IMGList 1,
+	Imatge automatitzada amb la IMGList 2,
+	Imatge automatitzada amb la IMGList 3,
+	Imatge automatitzada amb la IMGList 4
+}
+\newpage
+\section{pxPRP: Objectes i OOP }
+	Aquest mòdul de \PECTeX ens permet crear i enmagatzemar objectes lògics. Es pot utilitzar simplement per enmagatzemar
+	informació amb una estructura lògica, o per implementar funcions mes avançades
+	(com per exemple les funcions de UML s'han fet utilitzant aquesta llibreria independent)
+	\subsection{Objects, keys, and access}
+		\NEW(Projecte)
+		\SET(Projecte.nom)\PECTeX
+		\SET(Projecte.autor){V}
+		\PUT(Projecte.autor){Scvria}
+
+		Document il·lustratiu de com utilitzar \GET(Projecte.nom) \\
+		Redactat per: \GETlst(Projecte.autor){.~}\\
+		(O pots dir-me nomes \GETv(Projecte.autor[2]))\\
+		\GETv(Projecte.autor[3]) %%SI ACCEDIM A UN CAMP BUIT NO ES PRODUEIX CAP ERROR
+\newpage
+\section{pxUML: class diagrams}
+	Per als UML \PECTeX crea una ampliació de les comandes de \emph{pgfuml-cd} a mes de carregar directament
+	\emph{pgfuml-sd} per tant les comandes habituals d'aquests dos reconeguts paquets estan disponibles igualment
+	i per defecte al activar el mòdul pxUML de \PECTeX
+
+	A mes de les opcions habituals, \PECTeX ofereix una abstracció de la sintaxi similar al OOP en la que es separa la declaració de les classes i les propietats,
+	de dibuixar el diagrama, permetent aixi reutilitzar el codi de les mateixes classes al llarg del document en diferents diagrames i anar afegint mes atributs dinamicament.
+
+	\subsection{Classes and diagram}
+		\pxUMLClass{Person}
+			{- name : String}
+			[+ getName() : String]
+
+		\addAttribute{Person}{- age : Integer}
+		\addOperation{Person}{+ setName(newName : String) : void}
+
+		\pxUMLClass{BaseClass}{- id : Integer}
+		\pxUMLClass{DerivedClass}{- extra : String}
+		\addInheritance{DerivedClass}{BaseClass}
+
+		\pxUMLClass{Service}{- name : String}[+ run() : void]
+
+		\pxUMLDiagram{
+			\drawclass[text width=14em]{Person}[0,0]
+			\drawsimpleclass*[text width=10em]{BaseClass}[8,0]
+			\drawsimpleclass[text width=10em]{DerivedClass}[8,-4]
+			\drawinstance*[14]{ServiceInstance}[0,-6]{Service}{- name : String}{+ run() : void}
+		}[0.9\linewidth]
+
+		\PXshowclass{Person}
+		\PXshowclass{Service}
+
+		Inspection: Person attributes: [\pxUMLAttributes{Person}].\\
+		Service operations: [\pxUMLOperations{Service}].\\
+		Parents of DerivedClass: [\pxUMLParents{DerivedClass}].\\
+		Non-existent class: [\pxUMLAttributes{NoExisteix}].
+
+	\subsection{Enums and associations}
+		\pxUMLClass[enumclass]{Role}{DEVELOPER, MANAGER}
+		\pxUMLClass[enumclass]{Kind}{A, B, C}
+
+		\pxUMLClass{Entity}{- role : Role, - name : String}[+ doIt() : void]
+		\pxUMLClass{Container}{- id : Integer}
+
+		\pxUMLDiagram{
+			\drawclass*[text width=12em]{Role}[0,0]
+			\drawclass*[text width=12em]{Kind}[10,0]
+			\drawclass[text width=14em]{Entity}[0,-4]
+			\drawclass[text width=14em]{Container}[10,-4]
+			\association{Entity}{0..*}{}{Container}{}{1}
+		}[0.85\linewidth]
+
+% ========== 4. pxSRC — Images ==========
 
 % ========== 8. pxLST — Professional code listings ==========
-\section{pxLST: listats de codi professional}
+\section{Code}
+	A \PECTeX es proporciona un metode rapid per a poder incloure codi formatejat per als llenguatges i estils mes habituals.
 
 % 1. Java snippet — dark style
-\pxLSTsetup{style=dark, language=pxJava, numbers=left}
+\pxLSTsetup{style=dark, language=pxJava, numbers=left} %%TODO NOT RENDERING SYNTAX HIGHLIGHT
 \begin{pxCode}{lst-java-ex}
 public class Fibonacci {
     public static int fib(int n) {
@@ -428,5 +603,11 @@ cd tex/
 pdflatex -halt-on-error main.tex
 echo "Build complet."
 \end{pxCode}
+
+% 5. Inline code + annex (one clear example)
+\subsection{Exercici: codi inline}
+En aquest exercici es mostren fragments de codi inline.
+Fragment en Java: \pxCodeInline{int n = 0;}{return n + 1;}{}{}{}{}{}{}.%% AI SLOP
+Un altre fragment en Bash: \pxCodeInline[language=pxBash]{echo "fi"}{}{}{}{}{}{}{}.%%TODO WTF is too many params?? AI SLOP
 
 \end{document}

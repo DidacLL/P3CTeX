@@ -34,14 +34,14 @@
 \ProvidesExplPackage{pxLST}{2026/03/04}{v0.1}{P3CTeX professional code listings}
 \file_input:n {pxLST.code.tex}
 %%% P3CTeX branded presets (registered before option processing
-%%% so that \usepackage[preset=p3c-code]{pxLST} works).
+%%% so that \usepackage[preset=pxcode]{pxLST} works).
 \@ifclassloaded{P3CTeX}
 {
-  \pxLST_save_preset:nn { p3c-code }
+  \pxLST_save_preset:nn { pxcode }
     { style=dark, language=pxJava, numbers=left, breakable=true }
-  \pxLST_save_preset:nn { p3c-alg }
+  \pxLST_save_preset:nn { pxalg }
     { style=framed, language=algoritme, numbers=left, breakable=false }
-  \pxLST_save_preset:nn { p3c-plain }
+  \pxLST_save_preset:nn { pxplain }
     { style=plain, language=pxJava, numbers=none, breakable=false }
 }{}
 \ProcessKeysOptions{ pxLST }
@@ -135,3 +135,24 @@
 %%   Optional #1 keys are applied locally before rendering.
 \NewDocumentCommand{\pxLSTinput}{ O{} m }
   { \pxLST_input_file:nn { #1 } { #2 } }
+%% -----------------------------------------------------------------------
+%% Inline code + annex. \pxCodeInline[opts]{s1}{s2}... (name avoids clashing with pxCode environment).
+%% Up to 8 snippets (xparse limit); for fewer use trailing {}, e.g. \pxCodeInline[O]{s1}{s2}{}{}{}{}{}{}
+\NewDocumentCommand{\pxCodeInline}{ O{} m m m m m m m m }
+  {
+    \group_begin:
+    \keys_set:nn { pxLST } { #1 }
+    \__pxlst_set_style_vars:
+    \__pxlst_apply_lstset:
+    \__pxlst_code_process_multiple:nnnnnnnn { #2 } { #3 } { #4 } { #5 } { #6 } { #7 } { #8 } { #9 }
+    \group_end:
+  }
+\NewDocumentCommand{\printPxCodeAnnex}{ O{} }
+  {
+    \group_begin:
+    \keys_set:nn { pxLST } { #1 }
+    \tl_if_blank:nF \l_pxlst_annex_title_tl
+      { \section* { \l_pxlst_annex_title_tl } }
+    \exp_args:NV \__pxlst_code_annex_output:n \l_pxlst_annex_id_tl
+    \group_end:
+  }

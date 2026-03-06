@@ -1,0 +1,11 @@
+% !TeX program = pdflatex
+% !TeX encoding = UTF-8
+% Minimal annex test (T4): one \pxCodeInline then \printPxCodeAnnex must show content in PDF.
+% Compile from tex/tests with: TEXINPUTS=.;../latex;../code pdflatex -interaction=nonstopmode pxLST.annex-minimal.test.tex
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+\section*{Minimal annex test}
+Inline: \pxCodeInline{int x=1;}{}{}{}{}{}{}{}.
+\printPxCodeAnnex[title=Code]
+\end{document}

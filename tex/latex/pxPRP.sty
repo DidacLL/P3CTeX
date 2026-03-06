@@ -112,15 +112,21 @@
 %%	 OBJ	- identificador de l'objecte
 %%	 clau - clau dins de l'objecte
 %%	 idx	- posició (1-based) dins de la llista
-\def\pxGET~#1.#2[#3]{	\pxPRP_get_item:nnn {#1}{#2}{#3}	}
-\def\pxSET~#1.#2=#3{	\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
-\def\pxPUT~#1.#2+=#3{	\pxPRP_put_items:nnn {#1}{#2}{#3}	}
-\def\pxIF(#1.#2)#3\pxELSE#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
-\def\pxGETtl(#1.#2){\pxPRP_get_scalar:nn {#1}{#2}}
-\def\pxSETlst#1.#2=#3 {\pxprp_list_set:nnn {#1}{#2}{#3}}
-\def\pxIfVal#1.#2:#3#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
-\def\pxIfObj#1:#2#3{\pxPRP_object_exists:nTF {#1}{#2}{#3}}
-\def\pxIfKey#1.#2:#3#4{\pxPRP_key_exists:nnTF {#1}{#2}{#3}{#4}}
+\def\NEW(#1){\pxPRP_ensure:n {#1}} %TODO pxSYNTAX
+\def\GET(#1.#2){\pxPRP_get_scalar:nn {#1}{#2}} %TODO pxSYNTAX
+\def\GETv(#1.#2[#3]){	\pxPRP_get_item:nnn {#1}{#2}{#3}	} %TODO pxSYNTAX
+\def\GETlst(#1.#2)#3{ \pxPRP_list_use:nnn {#1}{#2}{#3}} %TODO pxSYNTAX
+\def\SET(#1.#2)#3{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop} %TODO pxSYNTAX
+\def\PUT(#1.#2)#3{	\pxPRP_put_items:nnn {#1}{#2}{#3}	} %TODO pxSYNTAX
+\def\pxIF(#1.#2)#3\pxELSE#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}%TODO pxSYNTAX
+\def\pxGET~#1.#2[#3]{	\pxPRP_get_item:nnn {#1}{#2}{#3}} %TODO DEPRECATE
+\def\pxSET~#1.#2=#3{	\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop} %TODO DEPRECATE
+\def\pxPUT~#1.#2+=#3{	\pxPRP_put_items:nnn {#1}{#2}{#3}	} %TODO DEPRECATE
+\def\pxGETtl(#1.#2){\pxPRP_get_scalar:nn {#1}{#2}} %TODO DEPRECATE
+\def\pxSETlst#1.#2=#3 {\pxprp_list_set:nnn {#1}{#2}{#3}} %TODO DEPRECATE (\SET could manage it)
+\def\pxIfVal#1.#2:#3#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}%TODO pxSYNTAX
+\def\pxIfObj#1:#2#3{\pxPRP_object_exists:nTF {#1}{#2}{#3}}%TODO pxSYNTAX
+\def\pxIfKey#1.#2:#3#4{\pxPRP_key_exists:nnTF {#1}{#2}{#3}{#4}}%TODO pxSYNTAX
 %% Variante que imprimeix una etiqueta en negreta abans del valor.
-\def\pxPRINTF~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} }
-\def\pxPRINTlst#1.#2(#3){ \pxPRP_list_use:nnn {#1}{#2}{#3}}
+\def\pxPRINTF~#1.#2[#3]{ \textbf{#1 . #2 [ #3 ] :} \pxPRP_get_item:nnn {#1}{#2}{#3} } %TODO DEPRECATE unnecessary function
+\def\pxPRINTlst#1.#2(#3){ \pxPRP_list_use:nnn {#1}{#2}{#3}}%TODO pxSYNTAX

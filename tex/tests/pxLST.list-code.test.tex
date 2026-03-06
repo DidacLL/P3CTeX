@@ -1,0 +1,29 @@
+% !TeX program = pdflatex
+% !TeX encoding = UTF-8
+% pxLST code inline & annex test: \pxCodeInline, \printPxCodeAnnex only (no list commands).
+% Compile from tex/ with: TEXINPUTS=.;./latex;./code;./tests pdflatex -interaction=nonstopmode tex/tests/pxLST.list-code.test.tex
+% Or run via: powershell -File tests/run-pxLST-tests.ps1 (from tex/).
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+
+\section*{pxLST code inline \& annex test}
+
+\subsection*{1. Inline code (1--2 snippets, trailing empty slots)}
+Code inline: \pxCodeInline{int x = 0;}{return x + 1;}{}{}{}{}{}{}.
+
+\subsection*{2. Opt-in: no print commands here}
+This subsection uses only inline \pxCodeInline{baz}{}{}{}{}{}{}{} and never calls \printPxCodeAnnex. No annex output; no errors.
+
+\subsection*{3. Named annex-id (code scopes)}
+\pxCodeInline[annex-id=scope-a]{snippet A}{}{}{}{}{}{}{}
+\pxCodeInline[annex-id=scope-b]{snippet B}{}{}{}{}{}{}{}
+
+\section*{Annexes (default scope)}
+\printPxCodeAnnex[title=Code snippets (default)]
+
+\section*{Annexes (named scopes)}
+\printPxCodeAnnex[annex-id=scope-a, title=Annex A code]
+\printPxCodeAnnex[annex-id=scope-b, title=Annex B code]
+
+\end{document}

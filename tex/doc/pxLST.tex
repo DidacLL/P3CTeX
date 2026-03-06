@@ -63,7 +63,7 @@ scoping rules apply.
 \section{Key reference}
 %=============================================================================
 
-The \texttt{pxLST} key family contains twelve keys.  All of them can be
+The \texttt{pxLST} key family contains the following keys.  All of them can be
 set at load time via \verb|\usepackage[<keys>]{pxLST}|, globally at any
 point via \verb|\pxLSTsetup{<keys>}|, or locally per listing in the
 optional \verb|[<options>]| argument of every environment and command.
@@ -98,6 +98,14 @@ optional \verb|[<options>]| argument of every environment and command.
   Apply a named preset; calls \verb|\pxLSTusepreset{<name>}|.\\
 \texttt{probe}      & bool    & \texttt{false}         &
   Emit \texttt{PXLST\_ASSERT:} diagnostics to the log; see~\S\ref{sec:probe}.\\
+\texttt{collect}   & bool    & \texttt{true}          &
+  If \texttt{true}, append snippets to the code annex; if \texttt{false}, only inline rendering (see~\S\ref{sec:inline-annex}).\\
+\texttt{annex-id}   & tl      & (empty)               &
+  Scope identifier for the code annex; empty = default document-wide; non-empty = named scope (see~\S\ref{sec:annex-advanced}).\\
+\texttt{scope}      & tl      & \texttt{document}     &
+  Reserved for future use; per-document scope only in this release.\\
+\texttt{title}      & tl      & (empty)               &
+  Section title for the code annex when using \verb|\printPxCodeAnnex|.\\
 \end{tabular}
 \end{center}
 
@@ -278,6 +286,121 @@ Internally delegates to a \texttt{tcolorbox} that wraps
 Unlike the verbatim environments, \verb|\pxLSTinput| is defined via
 \verb|\NewDocumentCommand| and can therefore appear in moving arguments
 and macros without special treatment.
+
+%=============================================================================
+\section{Inline code and code annex}
+\label{sec:inline-annex}
+%=============================================================================
+
+This section describes the command that typesets short code snippets
+\emph{inline} in the main text and, optionally, collects them for a
+consolidated listing at the end of the document.
+
+The \textbf{code annex} is a section at the end of the document where all
+code snippets collected with \verb|\pxCodeInline| are listed when you call
+\verb|\printPxCodeAnnex|.
+
+\paragraph{Naming: pxCode environment vs.\ inline code command.}
+The package provides two different mechanisms involving ``code'':
+\begin{itemize}
+  \item \textbf{pxCode environment} --- \verb|\begin{pxCode}[<options>]{<label>}| \ldots\ \verb|\end{pxCode}|.
+    A single block of verbatim code inside a styled tcolorbox; see~\S\ref{sec:styles}.
+  \item \textbf{Inline/annex code command} --- \verb|\pxCodeInline|.
+    Takes one or more short code snippets as braced arguments, renders them inline, and can collect them for \verb|\printPxCodeAnnex|.
+    Snippets are normal braced material (not verbatim); for long verbatim blocks use the \textbf{pxCode environment}.
+\end{itemize}
+
+%-----------------------------------------------------------------------------
+\subsection{\texttt{\textbackslash pxCodeInline}}
+%-----------------------------------------------------------------------------
+
+\begin{verbatim}
+\pxCodeInline[<options>]{<snippet1>}{<snippet2>}...{<snippet8>}
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{\#1} (optional) --- \texttt{pxLST} keys: \texttt{style}, \texttt{language}, \texttt{preset}, \texttt{collect}, \texttt{annex-id}.
+    Per-call overrides apply to both the inline rendering and the stored copy for the code annex.
+  \item \texttt{\#2}--\texttt{\#9} --- up to \textbf{8} code snippets; each braced argument is one snippet.
+    For fewer than 8 snippets, use trailing empty braces, e.g.\ \verb|\pxCodeInline{int x=0;}{return x;}{}{}{}{}{}{}|.
+\end{itemize}
+
+Content is \emph{not} verbatim: special characters (\texttt{\#}, \texttt{\%}, \texttt{\&}) must be escaped as in normal \LaTeX.
+For full verbatim blocks use \verb|\begin{pxCode}...\end{pxCode}|.
+
+\paragraph{Semantics.}
+(1)~\textbf{Inline:} each snippet is rendered as a short inline listing (small tcbox + lstlisting).
+(2)~\textbf{Collection:} if \texttt{collect=true}, each snippet (with its effective style/language at call time) is appended to the code annex for the current \texttt{annex-id}.
+
+%-----------------------------------------------------------------------------
+\subsection{\texttt{\textbackslash printPxCodeAnnex}}
+%-----------------------------------------------------------------------------
+
+\begin{verbatim}
+\printPxCodeAnnex[<options>]
+\end{verbatim}
+
+Output the collected code snippets at the call site.  Place this command
+where the code annex should appear (e.g.\ after \verb|\appendix|).
+
+\begin{itemize}
+  \item \texttt{title} --- if non-empty, a \verb|\section*| (or similar) is emitted above the code block.
+\end{itemize}
+
+Printing does \emph{not} clear the collection; calling \verb|\printPxCodeAnnex| again outputs the same content.
+For multiple named scopes (advanced), see~\S\ref{sec:annex-advanced}.
+
+%-----------------------------------------------------------------------------
+\subsection{Keys for inline and annex}
+%-----------------------------------------------------------------------------
+
+\begin{center}
+\begin{tabular}{llll}
+\textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Use}\\\hline
+\texttt{collect}  & bool & \texttt{true} & Append to code annex; \texttt{false} = inline only.\\
+\texttt{annex-id} & tl   & (empty)       & Scope name; empty = default annex (see~\S\ref{sec:annex-advanced}).\\
+\texttt{title}    & tl   & (empty)       & Section title for the code annex when using \verb|\printPxCodeAnnex|.\\
+\end{tabular}
+\end{center}
+
+\verb|\pxLSTsetup| and presets apply: e.g.\ \verb|\pxLSTsetup{style=light}| affects the style used for \verb|\pxCodeInline| and for the annexed code; \verb|\pxCodeInline[preset=minimal, language=pxBash]{echo hello}{}{}{}{}{}{}{}| uses that preset and language for that call and for the stored annex copy.
+
+%-----------------------------------------------------------------------------
+\subsubsection{Scoped annex (annex-id) --- advanced}
+\label{sec:annex-advanced}
+%-----------------------------------------------------------------------------
+
+\paragraph{annex-id.}
+If set, only snippets collected with that same \texttt{annex-id} are output when \verb|\printPxCodeAnnex[annex-id=...]| is called; empty = default document-wide scope.
+
+\paragraph{scope.}
+Reserved for future use; in this release only per-document scope is supported.
+
+%-----------------------------------------------------------------------------
+\subsection{Full example: inline code + code annex}
+%-----------------------------------------------------------------------------
+
+The following example uses inline code in the body, then prints the code annex in an appendix.
+Interaction with \verb|\pxLSTsetup| and presets is as described above.
+
+\begin{verbatim}
+\documentclass{article}
+\usepackage{pxLST}
+
+\begin{document}
+\section{Exercise}
+Implement: \pxCodeInline{int x = 0;}{return x + 1;}{}{}{}{}{}{}.
+
+\pxLSTsetup{style=light}
+Elsewhere: \pxCodeInline[language=pxBash]{echo hello}{}{}{}{}{}{}{}.
+
+\appendix
+\section*{Annex}
+\printPxCodeAnnex[title=Code snippets]
+\end{document}
+\end{verbatim}
+
+Omitting \verb|\printPxCodeAnnex| does not change the main-text output; annex printing is explicitly requested by the user (opt-in).
 
 %=============================================================================
 \section{Style reference}
@@ -581,9 +704,10 @@ release and are deferred to a future sprint.
     fixed language definition; users who need additional keywords must
     use raw \verb|\lstset| calls.
 
-  \item \textbf{No \texttt{pxANX} integration.}  Automatic population
-    of a list-of-listings via the P3CTeX annex subsystem is deferred
-    to a future sprint.
+  \item \textbf{No \texttt{pxANX} integration.}  Document-local code
+    annex is supported via \verb|\printPxCodeAnnex| (see~\S\ref{sec:inline-annex}).  Automatic
+    population of a list-of-listings via the P3CTeX annex subsystem
+    (pxANX) is deferred to a future sprint.
 \end{itemize}
 
 %=============================================================================
@@ -600,7 +724,8 @@ maintainers and advanced users.
   \item \texttt{tex/latex/pxLST.sty} --- public \LaTeX2e\ API:
     \verb|\RequirePackage| block, key-processing bootstrap,
     public commands (\verb|\pxLSTsetup|, \verb|\pxLSTsavepreset|,
-    \verb|\pxLSTusepreset|, \verb|\pxLSTinput|), and the three
+    \verb|\pxLSTusepreset|, \verb|\pxLSTinput|, \verb|\pxCodeInline|,
+    \verb|\printPxCodeAnnex|), and the three
     \verb|\newtcblisting| environment declarations.
   \item \texttt{tex/code/pxLST.code.tex} --- expl3 internals: variable
     declarations, key definitions, Darcula colour palette, display macro

@@ -2,7 +2,7 @@
 
 > **Purpose**: Single-source context for AI agents working on pxLST or authoring documents with it.
 > Read this instead of the full source. Compact, complete, token-aware.
-> **Last updated:** 2026-03-04 (v0.1 Foundation Sprint)
+> **Last updated:** 2026-03-04 (v0.1 Foundation + Inline & Annex Sprint)
 
 ---
 
@@ -47,6 +47,13 @@ The central design challenge (solved): tcolorbox verbatim environments need all 
 | `\pxLSTsavepreset` | `{name}{keys}` | Store a named option bundle |
 | `\pxLSTusepreset` | `{name}` | Apply a stored preset |
 | `\pxLSTinput` | `[opts]{filename}` | Input external file as listing |
+| `\pxList` | `[opts]{item1,item2,...}` | Inline list + optional collection for annex (clist) |
+| `\pxListItems` | `[opts]{i1}{i2}...` | Same; up to 8 items (trailing `{}` for fewer); items may contain commas |
+| `\pxCodeInline` | `[opts]{s1}{s2}...` | Inline code snippets + optional collection; up to 8 (trailing `{}`); not verbatim |
+| `\printPxListAnnex` | `[opts]` | Output collected list items at call site (keys: `annex-id`, `title`) |
+| `\printPxCodeAnnex` | `[opts]` | Output collected code snippets at call site (keys: `annex-id`, `title`) |
+
+**Naming:** The **pxCode environment** (`\begin{pxCode}...\end{pxCode}`) is unchanged. The new inline/annex code command is **\pxCodeInline** (design doc referred to it as `\pxCode`; name avoids clashing with the environment). Full spec: `workflow/pxlst-inline-annex-design.md`; user manual §5: inline list and code, and annex.
 
 ### 3.2 Environments
 
@@ -81,6 +88,10 @@ Set via `\pxLSTsetup{...}`, per-environment `[options]`, or `preset=<name>`.
 | `preset` | code | — | Apply named preset via `\pxLST_use_preset:n` |
 | `probe` | bool | `false` | Emit `PXLST_ASSERT:` diagnostic log lines |
 | `unknown` | code=`{}` | — | Silently ignores unrecognised keys |
+| `collect` | bool | `true` | If true, append to annex collection; if false, inline only (list/code annex) |
+| `annex-id` | tl | `` | Scope name for annex; empty = default (document-wide) |
+| `scope` | tl | `document` | Reserved (per-document only in v1) |
+| `title` | tl | `` | Optional section title for `\printPxListAnnex` / `\printPxCodeAnnex` |
 
 **Scope:** All `\l_pxlst_*` variables are **local** (expl3 convention). `\pxLSTsetup` at document level is effectively global. Inside a `pxCode` environment group, local options revert after `\end{pxCode}`.
 
