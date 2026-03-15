@@ -75,6 +75,20 @@
   title=\small\hspace*{\fill}\textbf{\ttfamily #2}%
 }
 %% -----------------------------------------------------------------------
+%% pxCODE -- convenience environment with Darcula + pxJava defaults.
+%%   Signature mirrors the legacy p3xLST environment:
+%%     [#1] = language (defaults to pxJava)
+%%      #2 = label shown in the title bar.
+%%   Internally delegates to the pxLST key pipeline via pxlst@configure.
+\newtcblisting{pxCODE}[2][pxJava]{%
+  pxlst@configure={style=dark,language=#1,numbers=left},%
+  listing~only,%
+  arc=.25em,outer~arc=.25em,%
+  drop~lifted~shadow,%
+  toptitle=-.1em,%
+  title=\small\hspace*{\fill}\textbf{\ttfamily #2}%
+}
+%% -----------------------------------------------------------------------
 %% pxCodeBox -- code listing with side-note comment panel (non-breakable).
 %%   #1 = optional key-value options (local)
 %%   #2 = label string (cross-reference anchor; inserts \label{cdbx:#2})
@@ -136,23 +150,15 @@
 \NewDocumentCommand{\pxLSTinput}{ O{} m }
   { \pxLST_input_file:nn { #1 } { #2 } }
 %% -----------------------------------------------------------------------
-%% Inline code + annex. \pxCodeInline[opts]{s1}{s2}... (name avoids clashing with pxCode environment).
-%% Up to 8 snippets (xparse limit); for fewer use trailing {}, e.g. \pxCodeInline[O]{s1}{s2}{}{}{}{}{}{}
-\NewDocumentCommand{\pxCodeInline}{ O{} m m m m m m m m }
+%% \pxCodeInline[<options>]{<snippet>}
+%%   Single-snippet inline code in a small tcolorbox. Content is non-verbatim.
+%%   For multiple snippets use multiple \pxCodeInline calls.
+\NewDocumentCommand{\pxCodeInline}{ O{} m }
   {
     \group_begin:
-    \keys_set:nn { pxLST } { #1 }
+    \tl_if_blank:nF {#1} { \pxLST_set_options:n {#1} }
     \__pxlst_set_style_vars:
     \__pxlst_apply_lstset:
-    \__pxlst_code_process_multiple:nnnnnnnn { #2 } { #3 } { #4 } { #5 } { #6 } { #7 } { #8 } { #9 }
-    \group_end:
-  }
-\NewDocumentCommand{\printPxCodeAnnex}{ O{} }
-  {
-    \group_begin:
-    \keys_set:nn { pxLST } { #1 }
-    \tl_if_blank:nF \l_pxlst_annex_title_tl
-      { \section* { \l_pxlst_annex_title_tl } }
-    \exp_args:NV \__pxlst_code_annex_output:n \l_pxlst_annex_id_tl
+    \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }

@@ -552,7 +552,7 @@ Custom preset: define once, reuse everywhere.
 	A \PECTeX es proporciona un metode rapid per a poder incloure codi formatejat per als llenguatges i estils mes habituals.
 
 % 1. Java snippet — dark style
-\pxLSTsetup{style=dark, language=pxJava, numbers=left} %%TODO NOT RENDERING SYNTAX HIGHLIGHT
+%\pxLSTsetup{style=dark, language=pxJava, numbers=left}
 \begin{pxCode}{lst-java-ex}
 public class Fibonacci {
     public static int fib(int n) {
@@ -604,10 +604,10 @@ pdflatex -halt-on-error main.tex
 echo "Build complet."
 \end{pxCode}
 
-% 5. Inline code + annex (one clear example)
+% 5. Inline code
 \subsection{Exercici: codi inline}
 En aquest exercici es mostren fragments de codi inline.
-Fragment en Java: \pxCodeInline{int n = 0;}{return n + 1;}{}{}{}{}{}{}.%% AI SLOP
-Un altre fragment en Bash: \pxCodeInline[language=pxBash]{echo "fi"}{}{}{}{}{}{}{}.%%TODO WTF is too many params?? AI SLOP
+Fragment en Java: \pxCodeInline{int n = 0;} i \pxCodeInline{return n + 1;}.
+Un altre fragment en Bash: \pxCodeInline[language=pxBash]{echo "fi"}.
 
 \end{document}

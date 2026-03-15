@@ -234,36 +234,28 @@ Assertions are parsed from the `.log` file by the test runner or manually verifi
 | New language `pxSQL` | `pxLST.code.tex` after the 7th language definition |
 | New style `monokai` | `pxLST.code.tex`: add `\lstdefinestyle{pxlst@monokai}` + new case in `\__pxlst_set_style_vars:` |
 | Minted backend | Parallel `.code.tex` function `\__pxlst_apply_minted_opts:` + `backend` key in `\keys_define:nn{pxLST}` |
-| New pxCORE module (e.g. pxANX) | Follow the TAB/LST pattern in `pxCORE.code.tex` |
-| Dedicated `listing` float counter | Add `\newfloat{listing}{htbp}{lol}` guard in `pxLST.sty` after `\ProcessKeysOptions` |
 | More keywords for existing language | `\lstdefinelanguage{pxJava}[Custom]{pxJava}{ morekeywords={...} }` (dialect pattern) |
-| Inline/annex: pxANX delegation | Content producers: `\__pxlst_list_annex_output:n`, `\__pxlst_code_annex_output:n`; pxANX can call with annex-id. |
+
 
 ---
 
 ## 9 Inline & Annex Sprint (2026-03-04) — Condensed
 
-**Scope:** Add inline list/code commands that typeset in-place and collect for annex; print commands output at call site. Additive only; opt-in.
+**Scope:** Add inline list/code commands that typeset in-place ; 
 
 ### 9.1 Public API (implemented)
 
 | Command | Signature | Purpose |
 |---------|-----------|---------|
-| `\pxList` | `O{} m` | Clist → inline comma-separated + collect (if collect=true). |
-| `\pxListItems` | `O{} m×8` | One item per arg (items may contain commas); trailing `{}` for &lt;8. |
 | `\pxCodeInline` | `O{} m×8` | One snippet per arg; inline small tcbox+lstinline; collect; trailing `{}` for &lt;8. **Not** verbatim. |
-| `\printPxListAnnex` | `O{}` | Output collected list (keys: annex-id, title). |
-| `\printPxCodeAnnex` | `O{}` | Output collected code (keys: annex-id, title). |
 
-**Naming:** Design used `\pxCode`; implementation is **\pxCodeInline** because `\pxCode` starts the **pxCode environment** (`\begin{pxCode}...\end{pxCode}`). Redefining it would break the environment.
-
-**New keys (pxLST):** `collect` (bool, default true), `annex-id` (tl), `scope` (reserved), `title` (tl). Reuse: style, language, preset, numbers, fontsize, tabsize.
+**Naming:** Design used `\pxCode`; implementation is **\pxCodeInline** because `\pxCode` starts the **pxCode environment** (`\begin{pxCode}...\end{pxCode}`). Redefining it would break the environment.  (TODO: REVIEW THIS)
 
 ### 9.2 Storage and internals
 
-- **Option A:** `\g_pxlst_list_seq`, `\g_pxlst_code_seq`; entries tagged `{<annex-id>}{<item>}` / `{<annex-id>}{<snippet>}{<opts>}`; print filters by annex-id.
-- **8-arg limit:** xparse max 9 args; with O{} → 8 mandatory. Implemented as 8×m; trailing `{}` for fewer.
-- **pxANX hooks:** `\printPxListAnnex` / `\printPxCodeAnnex` call `\__pxlst_list_annex_output:n`, `\__pxlst_code_annex_output:n`. Future pxANX can call these; no public API change.
+**Storage:** Storage is done via the `\seq_new:N \g_pxlst_code_seq` sequence.
+
+**Internals:** Internals are done via the `\__pxlst_code_serialize_opts:` function.
 
 ### 9.3 Bugs fixed during Testing (T5)
 
@@ -273,7 +265,7 @@ Assertions are parsed from the `.log` file by the test runner or manually verifi
 ### 9.4 Limitations and risks
 
 - **Limitations:** 8 items/snippets per call; no verbatim in \pxCodeInline (use pxCode environment); per-document scope; print does not clear (repeated print = same output).
-- **Risks:** pxANX may depend on internal `\__pxlst_*` names until a formal hook; 8-arg limit may surprise users.
+
 
 ### 9.5 Artefacts (traceability)
 
@@ -281,11 +273,11 @@ T1 design → (merged into this memo). T2–T4 → `.code.tex` (list/code seqs, 
 
 ### 9.6 Next-iteration backlog (prioritised)
 
-1. Lift 8-arg limit (variadic or multiple-call workaround).
+1. Lift 8-arg limit (USE LESS ARGUMENTS IN THE COMMAND).
 2. pxANX: stable hook or public wrapper for annex content.
 3. TOC for annex sections (key-driven).
 4. Optional `\pxCode` alias → `\pxCodeInline` (without redefining environment).
-5. Deduplication key for list/code annex output.
+5. Remove all references to list/annex previous failed functions or keys.
 
 ---
 

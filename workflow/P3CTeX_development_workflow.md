@@ -877,6 +877,7 @@ This backlog captures high-value improvements identified from older P3CTeX imple
 - **Clarify `pxGDX` key structure and data separation**
   - Redesign `pxGDX` key names and grouping to clearly separate user data, cover data, and any preamble/“front matter” region between no-plagiarism declarations and the index.
   - Introduce an explicit configuration option for inserting a preamble block between the no-plagi section and the index, with safe defaults.
+  - Propagate color options from the class to the packages that use it.
 
 - **Test suite coverage and sprint per package**
   - For each existing package, create or complete a minimal yet meaningful test suite following the patterns used in `pxTAB`.
@@ -885,22 +886,17 @@ This backlog captures high-value improvements identified from older P3CTeX imple
 - **Restore and modernise `pxSRC` source-tracking behaviour**
   - Reintroduce the ability of `pxSRC` to track newly included sources (as in older releases), but aligned with the current architecture and naming conventions.
   - Ensure this behaviour is covered by tests and documented so users can rely on consistent source listings.
+  - Receive colors from the class to the package.
+  - add option to IMGList to specify width of the images.
 
 - **Review discarded command variants for useful features**
   - Systematically review legacy and discarded command variants in `.raw` code for functionality that is still valuable to users.
   - Where appropriate, reintroduce these capabilities under coherent, modern command names, with clear deprecation and migration notes.
 
-### 4. New or Rewritten Packages from `.raw` Modules
-
-- **`pxANX`: Annex and glossary management**
-  - Design and implement a new `pxANX` package (in `.sty`/`.code.tex`) for managing document annexes, figure and table lists, extra code/documentation, and glossaries.
-  - Provide a `\pxGloss{word}{definition}` command that behaves like a footnote in the main text while also collecting entries into a glossary placed at the end of the document or in an annex, following standard document-ordering conventions.
-  - Use the `.raw` prototype only as an idea source; rewrite internals to match modern P3CTeX architecture and naming.
-
-- **`pxLST`: Professional list/code listing management**
-  - Treat the previous `pxLST` implementation as a requirements sketch and redesign a clean, consistent API similar in quality and organisation to `pxTAB`.
-  - Support the concrete listing needs that motivated the original `.raw` version (e.g., exam code snippets, solution fragments), with clear presets and test coverage.
-
+- **`pxLST`: Listings/code listing management**
+  - Refine de newly designed `pxLST` package (in `.sty`/`.code.tex`) for managing list/code listings.
+  - Review syntax highlighting for code listings, currently we've got many languages but theyre not rendering correctly.
+  
 - **`pxMATH`: Step-by-step calculations and helpers**
   - Extract the still-useful calculation helpers from the legacy `.raw` math code and design a coherent `pxMATH` package API.
   - Support step-by-step printed calculations and other math-centric workflows, using `pxPRP` or other shared primitives where appropriate.
@@ -914,3 +910,7 @@ This backlog captures high-value improvements identified from older P3CTeX imple
   - Design and implement a modern `pxDEBUG` package that can print the current values of key configuration variables for each package/class.
   - Provide user-facing commands to dump configuration state into the document or log, to aid both developers and advanced users when diagnosing misconfigurations.
   - Ensure debug output is strictly opt-in and does not affect layout or performance when disabled.
+-**`SynthSyntax`: Fancy syntax for ease access**
+  - Design and implement a class option that can provide a fancy syntax for ease access to P3CTeX features. It can be enabled/disabled with the key \verb|\pxSynthSyntax in the preamble.
+  - Provide user-facing commands to write text in a fancy way, with a syntax that is easy to understand and use. like ``\itembf bold text: description text in normal text or the \GET \PUT commands from pxPRP that do not use the usual convention of \command{argument} but use a more user-friendly syntax. Anyway as they could be confusing for new users, they should be disabled by default and got a more verbose syntax alternatively.
+  - Ensure fancy syntax is strictly opt-in and does not affect layout or performance when disabled.

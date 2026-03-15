@@ -18,8 +18,7 @@ $testFiles = @(
     "pxLST.package-option.test.tex",
     "pxLST.float.test.tex",
     "pxLST.file-input.test.tex",
-    "pxLST.list-code.test.tex",
-    "pxLST.annex-minimal.test.tex"
+    "pxLST.inline.test.tex"
 )
 
 $oldTexInputs = $env:TEXINPUTS

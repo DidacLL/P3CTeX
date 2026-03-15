@@ -26,12 +26,6 @@
 \bool_new:N \l_pxlst_probe_bool
 \prop_new:N \l_pxlst_presets_prop
 \tl_new:N   \l__pxlst_retrieved_tl
-%% ===== Inline & annex collection (code only; tagged by annex-id)
-\seq_new:N  \g_pxlst_code_seq
-\bool_new:N \l_pxlst_collect_bool
-\tl_new:N   \l_pxlst_annex_id_tl
-\tl_new:N   \l_pxlst_scope_tl
-\tl_new:N   \l_pxlst_annex_title_tl
 %% =================================
 %% ===== KEY DEFINITIONS (pxLST) ===
 %% =================================
@@ -60,14 +54,6 @@
   preset     .code:n     = { \pxLST_use_preset:n {#1} },
   probe      .bool_set:N = \l_pxlst_probe_bool,
   probe      .initial:n  = false,
-  collect    .bool_set:N = \l_pxlst_collect_bool,
-  collect    .initial:n  = true,
-  annex-id   .tl_set:N   = \l_pxlst_annex_id_tl,
-  annex-id   .initial:n  = {},
-  scope      .tl_set:N   = \l_pxlst_scope_tl,
-  scope      .initial:n  = document,
-  title      .tl_set:N   = \l_pxlst_annex_title_tl,
-  title      .initial:n  = {},
   unknown    .code:n     = {},
 }
 %% =================================
@@ -306,7 +292,6 @@
   morekeywords     = {true,false,null,yes,no},
   morestring       = [b]',
   morestring       = [b]",
-  upquote           = true,
   sensitive        = false,
   comment          = [l]{\#},
   literate         =
@@ -347,7 +332,6 @@
   commentstyle     = \color{darcula-comment}\itshape,
   numberstyle      = \tiny\color{darcula-number},
   showstringspaces  = false,
-  upquote          = true,
   columns          = flexible,
   literate         =
     {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
@@ -487,8 +471,8 @@
 \cs_new_protected:Npn \__pxlst_apply_lstset: {
   \edef \pxlst@callbuf {
     \noexpand\lstset{
-      style=\pxlst@lstyle@v,
       language=\pxlst@lang@v,
+      style=\pxlst@lstyle@v,
       numbers=\pxlst@numbers@v,
       tabsize=\pxlst@tabsize@v
     }
@@ -565,48 +549,9 @@
   \group_end:
 }
 %% =================================
-%% ===== CODE ANNEX =================
+%% ===== INLINE CODE RENDER ==========
 %% =================================
-%% Code entry: {<annex-id>}{<snippet>}{<opts>}. Append with current annex-id and current options tl.
-\tl_new:N \l__pxlst_code_opts_tl
-\cs_new_protected:Npn \__pxlst_code_serialize_opts: {
-  \tl_set:Nx \l__pxlst_code_opts_tl {
-    style=\exp_not:V \l_pxlst_style_tl,
-    language=\exp_not:V \l_pxlst_language_tl,
-    numbers=\exp_not:V \l_pxlst_numbers_tl,
-    fontsize=\exp_not:V \l_pxlst_fontsize_tl,
-    tabsize=\int_use:N \l_pxlst_tabsize_int
-  }
-}
-\cs_new_protected:Npn \__pxlst_code_append:nnn #1 #2 #3 {
-  \seq_put_right:Nn \g_pxlst_code_seq { {#1}{#2}{#3} }
-}
-%% Process multiple code snippets (up to 8; xparse limit). Add non-blank to render and collect.
-\cs_new_protected:Npn \__pxlst_code_process_multiple:nnnnnnnn #1 #2 #3 #4 #5 #6 #7 #8 {
-  \__pxlst_code_render_one:n { #1 }
-  \__pxlst_code_render_one:n { #2 }
-  \__pxlst_code_render_one:n { #3 }
-  \__pxlst_code_render_one:n { #4 }
-  \__pxlst_code_render_one:n { #5 }
-  \__pxlst_code_render_one:n { #6 }
-  \__pxlst_code_render_one:n { #7 }
-  \__pxlst_code_render_one:n { #8 }
-}
-\cs_new_protected:Npn \__pxlst_code_render_one:n #1 {
-  \tl_if_blank:nF { #1 }
-    {
-      \__pxlst_code_render_inline:n { #1 }
-      \bool_if:NT \l_pxlst_collect_bool
-        {
-          \__pxlst_code_serialize_opts:
-          \__pxlst_code_append:nnn
-            { \tl_use:N \l_pxlst_annex_id_tl }
-            { #1 }
-            { \tl_use:N \l__pxlst_code_opts_tl }
-        }
-    }
-}
-%% Inline code render: small tcolorbox with lstinline per snippet
+%% Small tcolorbox with lstinline for single-snippet inline code.
 \cs_new_protected:Npn \__pxlst_code_render_inline:n #1 {
   \tcbox[
     nobeforeafter,
@@ -622,24 +567,5 @@
     bottom=0.5pt,
   ]
   { \lstinline{#1} }
-}
-%% Code annex content producer (hook for pxANX). Outputs listings for annex-id; each with stored opts.
-\cs_new_protected:Npn \__pxlst_code_annex_output:n #1 {
-  \seq_map_inline:Nn \g_pxlst_code_seq
-    {
-      \__pxlst_code_annex_output_entry:nnnn { #1 } ##1
-    }
-}
-\cs_new_protected:Npn \__pxlst_code_annex_output_entry:nnnn #1 #2 #3 #4 {
-  \tl_if_eq:nnT { #1 } { #2 }
-    {
-      \group_begin:
-      \tl_if_blank:nF { #4 } { \pxLST_set_options:n { #4 } }
-      \__pxlst_set_style_vars:
-      \__pxlst_apply_lstset:
-      \par\smallskip
-      \__pxlst_code_render_inline:n { #3 }
-      \group_end:
-    }
 }
 \endinput
