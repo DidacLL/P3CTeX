@@ -552,8 +552,8 @@ Custom preset: define once, reuse everywhere.
 	A \PECTeX es proporciona un metode rapid per a poder incloure codi formatejat per als llenguatges i estils mes habituals.
 
 % 1. Java snippet — dark style
-%\pxLSTsetup{style=dark, language=pxJava, numbers=left}
-\begin{pxCode}{lst-java-ex}
+\pxLSTsetup[dark]{pxJava}
+\begin{CODE}{FFSDA}
 public class Fibonacci {
     public static int fib(int n) {
         if (n <= 1) return n;
@@ -565,11 +565,11 @@ public class Fibonacci {
         return b;
     }
 }
-\end{pxCode}
+\end{CODE}
 
 % 2. Algorithm — framed style with pxCodeBox and caption
-\pxLSTsetup{style=framed, language=algoritme, numbers=left}
-\begin{pxCodeBox}{lst-alg-ex}{Algorisme: factorial}{[lst:alg-ex]}{Càlcul del factorial de manera iterativa.}
+\pxLSTsetup[pastel]{algoritme}[framed]
+\begin{CodeBox}{lst-alg-ex}{Algorisme: factorial}{[lst:alg-ex]}{Calcul del factorial de manera iterativa.}
 Funcio factorial(n: Integer): Integer
   Si n <= 0 Llavors
     Retornar 1
@@ -581,33 +581,33 @@ Funcio factorial(n: Integer): Integer
     Retornar resultat
   Fi Si
 Fi Funcio
-\end{pxCodeBox}
+\end{CodeBox}
 
 La llista~\ref{cdbx:lst-alg-ex} mostra l'algorisme iteratiu del factorial.
 
 % 3. YAML — light style
-\pxLSTsetup{style=light, language=pxYAML, numbers=none}
-\begin{pxCode}{lst-yaml-ex}
+\pxLSTsetup[light]{pxYAML}
+\begin{Code}{lst-yaml-ex}
 project:
   name: P3CTeX
   version: "0.3"
   languages: [ca, en]
   debug: false
-\end{pxCode}
-
-% 4. Bash — plain style
-\pxLSTsetup{style=plain, language=pxBash, numbers=none}
-\begin{pxCode}{lst-bash-ex}
+\end{Code}
+%
+%% 4. Bash — plain style
+%\pxLSTsetup[pastel]{pxBash}[framed]
+\begin{miniCode}[.5\linewidth]
 #!/bin/bash
 cd tex/
 pdflatex -halt-on-error main.tex
 echo "Build complet."
-\end{pxCode}
+\end{miniCode}
 
 % 5. Inline code
 \subsection{Exercici: codi inline}
 En aquest exercici es mostren fragments de codi inline.
 Fragment en Java: \pxCodeInline{int n = 0;} i \pxCodeInline{return n + 1;}.
-Un altre fragment en Bash: \pxCodeInline[language=pxBash]{echo "fi"}.
+Un altre fragment en Bash: \pxCodeInline[pxBash]{echo "fi"}.
 
 \end{document}
