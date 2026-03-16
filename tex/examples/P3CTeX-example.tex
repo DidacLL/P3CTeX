@@ -553,8 +553,9 @@ Custom preset: define once, reuse everywhere.
 
 % 1. Java snippet — dark style
 \pxLSTsetup[dark]{pxJava}
-\begin{CODE}{FFSDA}
-public class Fibonacci {
+\hspace*{\fill}\begin{CODE}[language=pxJava]{FFSDA}
+	@Overwrite
+public class Fibonacci<?> {
     public static int fib(int n) {
         if (n <= 1) return n;
         int a = 0, b = 1;
@@ -563,6 +564,7 @@ public class Fibonacci {
             a = b; b = tmp;
         }
         return b;
+        [false == 23] patata;
     }
 }
 \end{CODE}
@@ -578,7 +580,7 @@ Funcio factorial(n: Integer): Integer
     Per i = 1 A n Fer
       resultat <-- resultat * i
     Fi Per
-    Retornar resultat
+    Retornar "resultat" @tag
   Fi Si
 Fi Funcio
 \end{CodeBox}

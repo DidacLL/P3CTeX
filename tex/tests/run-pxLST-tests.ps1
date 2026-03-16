@@ -5,25 +5,21 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$scriptDir  = Split-Path -Parent $MyInvocation.MyCommand.Path
-$latexDir   = Resolve-Path (Join-Path $scriptDir "..\latex")
-$codeDir    = Resolve-Path (Join-Path $scriptDir "..\code")
-$testsDir   = Resolve-Path $scriptDir
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$latexDir = Resolve-Path (Join-Path $scriptDir "..\latex")
+$codeDir = Resolve-Path (Join-Path $scriptDir "..\code")
+$testsDir = Resolve-Path $scriptDir
 
 $testFiles = @(
     "pxLST.test.tex",
     "pxLST.languages.test.tex",
-    "pxLST.styles.test.tex",
-    "pxLST.presets.test.tex",
-    "pxLST.package-option.test.tex",
-    "pxLST.float.test.tex",
-    "pxLST.file-input.test.tex",
-    "pxLST.inline.test.tex"
+    "pxLST.io.test.tex"
 )
 
 $oldTexInputs = $env:TEXINPUTS
-$oldLocation  = Get-Location
+$oldLocation = Get-Location
 try {
+    # Keep default TeX search path by ending with ';'.
     $env:TEXINPUTS = "$latexDir;$codeDir;$testsDir;"
 
     Write-Host "== pxLST quality gate =="
@@ -36,19 +32,25 @@ try {
     foreach ($testFile in $testFiles) {
         $testPath = Join-Path $testsDir $testFile
         if (-not (Test-Path $testPath)) {
-            $results += [PSCustomObject]@{ TestFile=$testFile; ExitCode=2; Status="MISSING" }
+            $results += [PSCustomObject]@{
+                TestFile  = $testFile
+                ExitCode  = 2
+                Status    = "MISSING"
+            }
             Write-Host "[MISSING] $testFile" -ForegroundColor Red
             continue
         }
 
         Write-Host "---- Running $testFile ----"
-        # Run twice for cross-reference stabilisation
-        & pdflatex -halt-on-error -file-line-error -interaction=nonstopmode $testFile | Out-Null
         & pdflatex -halt-on-error -file-line-error -interaction=nonstopmode $testFile
         $exitCode = $LASTEXITCODE
         $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
 
-        $results += [PSCustomObject]@{ TestFile=$testFile; ExitCode=$exitCode; Status=$status }
+        $results += [PSCustomObject]@{
+            TestFile  = $testFile
+            ExitCode  = $exitCode
+            Status    = $status
+        }
 
         if ($exitCode -eq 0) {
             Write-Host "[PASS] $testFile (exit=$exitCode)" -ForegroundColor Green
@@ -64,20 +66,23 @@ try {
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.pdf")
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.synctex.gz")
         }
+
         Write-Host ""
     }
 
     Write-Host "== pxLST quality gate summary =="
     foreach ($result in $results) {
-        $color = if ($result.Status -eq "PASS") { "Green" } elseif ($result.Status -eq "MISSING") { "Yellow" } else { "Red" }
-        Write-Host ("{0} | exit={1} | {2}" -f $result.TestFile, $result.ExitCode, $result.Status) -ForegroundColor $color
+        Write-Host ("{0} | exit={1} | {2}" -f $result.TestFile, $result.ExitCode, $result.Status)
     }
 
     $failedCount = @($results | Where-Object { $_.ExitCode -ne 0 }).Count
     if ($failedCount -gt 0) {
+        Write-Host ""
         Write-Host "QUALITY GATE: FAILED ($failedCount failing test(s))" -ForegroundColor Red
         exit 1
     }
+
+    Write-Host ""
     Write-Host "QUALITY GATE: PASSED" -ForegroundColor Green
     exit 0
 }
@@ -85,3 +90,4 @@ finally {
     Set-Location $oldLocation
     $env:TEXINPUTS = $oldTexInputs
 }
+

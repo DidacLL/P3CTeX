@@ -1,0 +1,23 @@
+\documentclass{article}
+
+\usepackage{pxLST}
+
+\begin{document}
+
+\section*{pxLST file input + inline}
+
+% Inline with default language (from setup).
+\pxLSTsetup[dark]{pxJava}
+Inline Java: \pxCodeInline{int n = 0;} and \pxCodeInline{return n + 1;}.
+
+% Inline with language override.
+Inline Bash: \pxCodeInline[pxBash]{echo "fi"}.
+
+\bigskip
+
+% File input (fixtures live in tex/tests/; build is run from tex/).
+\pxLSTinput[pxJava]{tests/sample.java}
+\pxLSTinput[pxYAML]{tests/sample.yaml}
+
+\end{document}
+

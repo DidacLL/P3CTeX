@@ -1,89 +1,83 @@
 \documentclass{article}
-\usepackage[T1]{fontenc}
+
 \usepackage{pxLST}
+
 \begin{document}
 
-\section*{pxLST language definitions test}
+\section*{pxLST language definitions}
 
-\subsection*{1. pxJava}
-\pxLSTsetup{style=dark, language=pxJava, numbers=left}
-\begin{pxCode}{java-sample}
-public class Example {
-    @Override
-    public String toString() {
-        return "Example";
-    }
-}
-\end{pxCode}
+\pxLSTsetup[dark]{pxJava}
+\begin{Code}{pxJava}
+// Accents: àèìòù áéíóú ç ñ ¿ ¡
+public class Hello { public static void main(String[] args) { System.out.println("ok"); } }
+\end{Code}
 
-\subsection*{2. pxProlog}
-\pxLSTsetup{style=dark, language=pxProlog, numbers=none}
-\begin{pxCode}{prolog-sample}
+\pxLSTsetup[pastel]{pxProlog}
+\begin{Code}{pxProlog}
 parent(tom, bob).
-parent(bob, ann).
-grandparent(X, Z) :- parent(X, Y), parent(Y, Z).
-\end{pxCode}
+ancestor(X,Y) :- parent(X,Y).
+\end{Code}
 
-\subsection*{3. pxOWL (Manchester Syntax)}
-\pxLSTsetup{style=dark, language=pxOWL, numbers=none}
-\begin{pxCode}{owl-sample}
-Class: Animal
-  SubClassOf: owl:Thing
-  DisjointWith: Plant
+\pxLSTsetup[dark]{pxOWL}
+\begin{Code}{pxOWL}
+Prefix: : <http://example.org/>
+Ontology: <http://example.org/onto>
+Class: :Person
+\end{Code}
 
-ObjectProperty: hasParent
-  Domain: Animal
-  Range: Animal
-\end{pxCode}
-
-\subsection*{4. pxTAD (Abstract Data Type)}
-\pxLSTsetup{style=dark, language=pxTAD, numbers=left}
-\begin{pxCode}{tad-sample}
+\pxLSTsetup[light]{pxTAD}
+\begin{Code}{pxTAD}
 TAD Stack
-  @pre size > 0
-  @post result = top(S)
-  create: -> Stack
-  push: Stack x Integer -> Stack
-  pop: Stack -> Stack
-\end{pxCode}
+create(): Stack
+return true
+\end{Code}
 
-\subsection*{5. pxYAML}
-\pxLSTsetup{style=dark, language=pxYAML, numbers=none}
-\begin{pxCode}{yaml-sample}
-server:
-  host: localhost
-  port: 8080
-  debug: true
-  tags: [web, api, v1]
-\end{pxCode}
+\pxLSTsetup[light]{pxYAML}
+\begin{Code}{pxYAML}
+project:
+  name: "P3CTeX"
+  ok: true
+\end{Code}
 
-\subsection*{6. algoritme (Catalan pseudocode)}
-\pxLSTsetup{style=dark, language=algoritme, numbers=left}
-\begin{pxCode}{alg-sample}
-Funcio sumar(a: Integer, b: Integer): Integer
+\pxLSTsetup[pastel]{algoritme}
+\begin{Code}{algoritme}
+Funcio suma(a: Integer, b: Integer): Integer
   Retornar a + b
 Fi Funcio
-\end{pxCode}
+\end{Code}
 
-\subsection*{7. pxBash}
-\pxLSTsetup{style=dark, language=pxBash, numbers=none}
-\begin{pxCode}{bash-sample}
+\pxLSTsetup[dark]{pxBash}
+\begin{Code}{pxBash}
 #!/bin/bash
-echo "Building P3CTeX..."
-pdflatex -halt-on-error main.tex
-echo "Done."
-\end{pxCode}
+echo "done"
+\end{Code}
 
-\subsection*{8. Languages with accented characters (UTF-8)}
-\pxLSTsetup{style=dark, language=algoritme, numbers=none}
-\begin{pxCode}{accent-test}
-Funcio factorial(n: Integer): Integer
-  Si n = 0 Llavors
-    Retornar 1
-  Sinó
-    Retornar n * factorial(n - 1)
-  Fi Si
-Fi Funcio
-\end{pxCode}
+\pxLSTsetup[dark]{pxPython}
+\begin{Code}{pxPython}
+def f(x):
+    return x + 1
+\end{Code}
+
+\pxLSTsetup[dark]{pxC}
+\begin{Code}{pxC}
+#include <stdio.h>
+int main(void){ printf("ok\n"); return 0; }
+\end{Code}
+
+\pxLSTsetup[dark]{pxJavaScript}
+\begin{Code}{pxJavaScript}
+function add(a,b){ return a + b; }
+\end{Code}
+
+\pxLSTsetup[dark]{pxJS}
+\begin{Code}{pxJS}
+const x = 1;
+\end{Code}
+
+\pxLSTsetup[dark]{pxSQL}
+\begin{Code}{pxSQL}
+SELECT * FROM table WHERE id = 1;
+\end{Code}
 
 \end{document}
+
