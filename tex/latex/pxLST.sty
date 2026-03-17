@@ -33,67 +33,6 @@
 \tcbuselibrary{listings,listingsutf8,breakable,xparse,skins}
 \ProvidesExplPackage{pxLST}{2026/03/04}{v0.1}{P3CTeX professional code listings}
 
-
-
-%% =================================
-%% ===== KEY DEFINITIONS (pxLST) ===
-%% =================================
-\keys_define:nn { pxLST }
-{
-	palette      .tl_set:N   = \l_pxlst_style_tl,
-	palette      .initial:n  = {dark},
-	colback    .tl_set:N   = \l_pxlst_colback_tl,
-	colback    .initial:n  = {dark-bg!90!},
-	colframe    .tl_set:N   = \l_pxlst_colframe_tl,
-	colframe    .initial:n  = {dark-bg!60!},
-	coltext    .tl_set:N   = \l_pxlst_coltext_tl,
-	coltext    .initial:n  = {dark-fg},
-	DARK			.meta:n	=	{
-		colback={ dark-bg!90! },
-		colframe={ dark-bg!60! },
-		coltext={ dark-fg },
-	},
-	FRAMED		.meta:n	=	{
-		colback={ dark-bg!90! },
-		colframe={ dark-comment!60!},
-		coltext={ dark-fg },
-	},
-	LIGHT			.meta:n	=	{
-		colback={ white},
-		colframe={ gray!25! },
-		coltext={ black },
-	},
-	PLAIN			.meta:n	=	{
-		colback={ white},
-		colframe={ gray!15! },
-		coltext={ black },
-	},
-	language   .tl_set:N   = \l_pxlst_language_tl,
-	language   .initial:n  = pxJava,
-	numbers    .tl_set:N   = \l_pxlst_numbers_tl,
-	numbers    .initial:n  =  left,
-	caption    .tl_set:N   = \l_pxlst_caption_tl,
-	caption    .initial:n  = {},
-	label      .tl_set:N   = \l_pxlst_label_tl,
-	label      .initial:n  = {},
-	float      .tl_set:N   = \l_pxlst_float_tl,
-	float      .initial:n  = {},
-	breakable  .bool_set:N = \l_pxlst_breakable_bool,
-	breakable  .initial:n  = true,
-	fontsize   .tl_set:N   = \l_pxlst_fontsize_tl,
-	fontsize   .initial:n  = \footnotesize,
-	linespread .tl_set:N   = \l_pxlst_linespread_tl,
-	linespread .initial:n  = 1.2,
-	tabsize    .int_set:N  = \l_pxlst_tabsize_int,
-	tabsize    .initial:n  = 4,
-	unknown    .code:n     = {},
-}
-%% =================================
-%% ===== WARNINGS ===================
-%% =================================
-%% =================================
-%% ===== DARCULA COLOR PALETTE ======
-%% =================================
 \definecolor{dark-bg}      {RGB}{40,  44,  52 }
 \definecolor{dark-fg}      {RGB}{250, 250, 250}
 \definecolor{dark-keyword} {RGB}{240, 150, 20 }
@@ -126,70 +65,54 @@
 \definecolor{light-operator}{RGB}{180, 110, 60 }
 
 %% Palette selection model (alias-based, no expl3 tl state):
-%% - Stable alias color names `pxlst-<role>` are used everywhere in listings/tcolorbox.
-%% - Role macros map directly to these aliases, e.g. \pxDEFlstfg -> \color{pxlst-fg}.
+%% - Stable alias color names `px<role>` are used everywhere in listings/tcolorbox.
+%% - Role macros map directly to these aliases, e.g. \color{pxfg} -> \color{pxfg}.
 %% - Palette macros only `\colorlet` the aliases to concrete dark/pastel/light colors.
-\colorlet{pxlst-bg}{dark-bg}
-\colorlet{pxlst-fg}{dark-fg}
-\colorlet{pxlst-keyword}{dark-keyword}
-\colorlet{pxlst-string}{dark-string}
-\colorlet{pxlst-tag}{dark-tag}
-\colorlet{pxlst-comment}{dark-comment}
-\colorlet{pxlst-number}{dark-number}
-\colorlet{pxlst-type}{dark-type}
-\colorlet{pxlst-function}{dark-function}
-\colorlet{pxlst-operator}{dark-operator}
-\def\pxDEFlstbg{\color{pxlst-bg}}
-\def\pxDEFlstbgv{pxlst-bg}
-\def\pxDEFlstfg{\color{pxlst-fg}}
-\def\pxDEFlstfgv{pxlst-fg}
-\def\pxDEFlstkeyword{\color{pxlst-keyword}}
-\def\pxDEFlststring{\color{pxlst-string}}
-\def\pxDEFlsttag{\color{pxlst-tag}}
-\def\pxDEFlstcomment{\color{pxlst-comment}}
-\def\pxDEFlstnumber{\color{pxlst-number}}
-\def\pxDEFlsttype{\color{pxlst-type}}
-\def\pxDEFlstfunction{\color{pxlst-function}}
-\def\pxDEFlstoperator{\color{pxlst-operator}}
-\def\pxDEFlstnumberv{pxlst-number}
-\def\pxDEFlstnumbervFifty{pxlst-number!50!}
-\def\pxDEFlstfgvFifty{pxlst-fg!50!}
-\def\pxDEFlstfgvSeventyFive{pxlst-fg!75!}
+\colorlet{pxbg}{dark-bg}
+\colorlet{pxfg}{dark-fg}
+\colorlet{pxkeyword}{dark-keyword}
+\colorlet{pxstring}{dark-string}
+\colorlet{pxtag}{dark-tag}
+\colorlet{pxcomment}{dark-comment}
+\colorlet{pxnumber}{dark-number}
+\colorlet{pxtype}{dark-type}
+\colorlet{pxfunction}{dark-function}
+\colorlet{pxoperator}{dark-operator}
 \def\pxLSTpalettedark{%
-  \colorlet{pxlst-bg}{dark-bg}%
-  \colorlet{pxlst-fg}{dark-fg}%
-  \colorlet{pxlst-keyword}{dark-keyword}%
-  \colorlet{pxlst-string}{dark-string}%
-  \colorlet{pxlst-tag}{dark-tag}%
-  \colorlet{pxlst-comment}{dark-comment}%
-  \colorlet{pxlst-number}{dark-number}%
-  \colorlet{pxlst-type}{dark-type}%
-  \colorlet{pxlst-function}{dark-function}%
-  \colorlet{pxlst-operator}{dark-operator}%
+  \colorlet{pxbg}{dark-bg}%
+  \colorlet{pxfg}{dark-fg}%
+  \colorlet{pxkeyword}{dark-keyword}%
+  \colorlet{pxstring}{dark-string}%
+  \colorlet{pxtag}{dark-tag}%
+  \colorlet{pxcomment}{dark-comment}%
+  \colorlet{pxnumber}{dark-number}%
+  \colorlet{pxtype}{dark-type}%
+  \colorlet{pxfunction}{dark-function}%
+  \colorlet{pxoperator}{dark-operator}%
 }
 \def\pxLSTpalettepastel{%
-  \colorlet{pxlst-bg}{pastel-bg}%
-  \colorlet{pxlst-fg}{pastel-fg}%
-  \colorlet{pxlst-keyword}{pastel-keyword}%
-  \colorlet{pxlst-string}{pastel-string}%
-  \colorlet{pxlst-tag}{pastel-tag}%
-  \colorlet{pxlst-comment}{pastel-comment}%
-  \colorlet{pxlst-number}{pastel-number}%
-  \colorlet{pxlst-type}{pastel-type}%
-  \colorlet{pxlst-function}{pastel-function}%
-  \colorlet{pxlst-operator}{pastel-operator}%
+  \colorlet{pxbg}{pastel-bg}%
+  \colorlet{pxfg}{pastel-fg}%
+  \colorlet{pxkeyword}{pastel-keyword}%
+  \colorlet{pxstring}{pastel-string}%
+  \colorlet{pxtag}{pastel-tag}%
+  \colorlet{pxcomment}{pastel-comment}%
+  \colorlet{pxnumber}{pastel-number}%
+  \colorlet{pxtype}{pastel-type}%
+  \colorlet{pxfunction}{pastel-function}%
+  \colorlet{pxoperator}{pastel-operator}%
 }
 \def\pxLSTpalettelight{%
-  \colorlet{pxlst-bg}{light-bg}%
-  \colorlet{pxlst-fg}{light-fg}%
-  \colorlet{pxlst-keyword}{light-keyword}%
-  \colorlet{pxlst-string}{light-string}%
-  \colorlet{pxlst-tag}{light-tag}%
-  \colorlet{pxlst-comment}{light-comment}%
-  \colorlet{pxlst-number}{light-number}%
-  \colorlet{pxlst-type}{light-type}%
-  \colorlet{pxlst-function}{light-function}%
-  \colorlet{pxlst-operator}{light-operator}%
+  \colorlet{pxbg}{light-bg}%
+  \colorlet{pxfg}{light-fg}%
+  \colorlet{pxkeyword}{light-keyword}%
+  \colorlet{pxstring}{light-string}%
+  \colorlet{pxtag}{light-tag}%
+  \colorlet{pxcomment}{light-comment}%
+  \colorlet{pxnumber}{light-number}%
+  \colorlet{pxtype}{light-type}%
+  \colorlet{pxfunction}{light-function}%
+  \colorlet{pxoperator}{light-operator}%
 }
 \makeatletter
 \def\pxLSTpaletteSelect#1{%
@@ -214,16 +137,16 @@
 \lstdefinestyle{pxlst}{
 	inputencoding    = utf8,
 	extendedchars    = true,
-	basicstyle       = \footnotesize\linespread{1.2}\ttfamily\pxDEFlstfg,
-	identifierstyle  = \pxDEFlstfg,
-	commentstyle     = \itshape\pxDEFlstcomment,
-	stringstyle      = \pxDEFlststring,
-	keywordstyle     = \bfseries\pxDEFlstkeyword,
-	keywordstyle     = [2]\bfseries\pxDEFlstfunction,
-	keywordstyle     = [3]\pxDEFlsttype,
-	keywordstyle     = [4]\itshape\pxDEFlsttag,
-	keywordstyle     = [5]\bfseries\color{pxlst-keyword!65!},
-	emphstyle        = \underbar\pxDEFlstoperator,
+	basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{pxfg},
+	identifierstyle  = \color{pxfg},
+	commentstyle     = \itshape\color{pxcomment},
+	stringstyle      = \color{pxstring},
+	keywordstyle     = \bfseries\color{pxkeyword},
+	keywordstyle     = [2]\bfseries\color{pxfunction},
+	keywordstyle     = [3]\color{pxtype},
+	keywordstyle     = [4]\itshape\color{pxtag},
+	keywordstyle     = [5]\bfseries\color{pxkeyword!65!},
+	emphstyle        = \underbar\color{pxoperator},
 	showstringspaces = false,
 	showspaces       = false,
 	showtabs         = false,
@@ -276,9 +199,7 @@
 	frame= bottomtop,
 	style=pxlst,
 	framesep		= .5em,
-%	framexleftmargin= 4em,
-%	xleftmargin		= 2em,
-	rulecolor 		= \color{\pxDEFlstnumbervFifty},
+	rulecolor 		= \color{pxnumber!50!},
 }
 
 \lstdefinestyle{plain}{
@@ -301,22 +222,22 @@
 	moredelim        = [s][stringstyle]{<<}{>>},
 	moredelim 		 =**[s][stringstyle]{[}{]},
 	moredelim        = [s][commentstyle]{/*}{*/},
-	moredelim        = [l][\itshape\pxDEFlsttag]{@},
+	moredelim        = [l][\itshape\color{pxtag}]{@},
 }
 %% --- pxProlog: Prolog with operator literate coloring ---
 \lstdefinelanguage{pxProlog}{
 	language         = Prolog,
-	keywordstyle     = \pxDEFlstkeyword\bfseries,
-	keywordstyle     = [3]\pxDEFlstfunction\bfseries,
+	keywordstyle     = \color{pxkeyword}\bfseries,
+	keywordstyle     = [3]\color{pxfunction}\bfseries,
 	morekeywords     = [3]{atom_length,append,member,length,findall,nl,write},
 	literate         =
-	{(}{{\pxDEFlstfunction(}}1
-	{)}{{\pxDEFlstfg)}}1
-	{.}{{\pxDEFlstkeyword\bfseries.\pxDEFlstfg}}1
-	{,}{{\pxDEFlstoperator,\pxDEFlstfg}}1
-	{:-}{{\pxDEFlstkeyword\bfseries{}:-\pxDEFlstfg}}2
-	{<}{{\pxDEFlstoperator<\pxDEFlstfg}}1
-	{>}{{\pxDEFlstoperator>\pxDEFlstfg}}1
+	{(}{{\color{pxfunction}(}}1
+	{)}{{\color{pxfg})}}1
+	{.}{{\color{pxkeyword}\bfseries.\color{pxfg}}}1
+	{,}{{\color{pxoperator},\color{pxfg}}}1
+	{:-}{{\color{pxkeyword}\bfseries{}:-\color{pxfg}}}2
+	{<}{{\color{pxoperator}<\color{pxfg}}}1
+	{>}{{\color{pxoperator}>\color{pxfg}}}1
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
@@ -345,31 +266,31 @@
 		max,maxLength,min,minLength,
 		not,only,or,pattern,some,that,value},
 	morekeywords     = [3]{rdf,owl},
-	keywordstyle     = \pxDEFlstkeyword\bfseries,
-	keywordstyle     = [3]\pxDEFlstfunction\bfseries,
+	keywordstyle     = \color{pxkeyword}\bfseries,
+	keywordstyle     = [3]\color{pxfunction}\bfseries,
 	morecomment      = [l]{\#},
 	morestring       = [b]",
 	literate         =
-	{.}{{\pxDEFlstoperator\bfseries.\pxDEFlstfg}}1
-	{:}{{\pxDEFlstoperator:\pxDEFlstfg}}1,
+	{.}{{\color{pxoperator}\bfseries.\color{pxfg}}}1
+	{:}{{\color{pxoperator}:\color{pxfg}}}1,
 }
 %% --- pxTAD: Abstract Data Type specification language ---
 \lstdefinelanguage{pxTAD}{
 	morekeywords     = {create,return,if,else,true,false,null},
 	morekeywords     = [2]{TAD,@pre,@post,Invariant,Boolean,Integer,String,Date,List},
 	morekeywords     = [3]{},
-	keywordstyle     = \pxDEFlstkeyword\bfseries,
-	keywordstyle     = [2]\pxDEFlstfunction\bfseries,
-	keywordstyle     = [3]\pxDEFlsttype\bfseries,
+	keywordstyle     = \color{pxkeyword}\bfseries,
+	keywordstyle     = [2]\color{pxfunction}\bfseries,
+	keywordstyle     = [3]\color{pxtype}\bfseries,
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
 	literate         =
-	{.}{{\pxDEFlstkeyword\bfseries.\pxDEFlstfg}}1
-	{,}{{\pxDEFlstoperator,\pxDEFlstfg}}1
-	{:}{{\pxDEFlstkeyword\bfseries{}:\pxDEFlstfg}}1
-	{<}{{\pxDEFlstoperator<\pxDEFlsttype}}1
-	{>}{{\pxDEFlstoperator>\pxDEFlstfg}}1
+	{.}{{\color{pxkeyword}\bfseries.\color{pxfg}}}1
+	{,}{{\color{pxoperator},\color{pxfg}}}1
+	{:}{{\color{pxkeyword}\bfseries{}:\color{pxfg}}}1
+	{<}{{\color{pxoperator}<\color{pxtype}}}1
+	{>}{{\color{pxoperator}>\color{pxfg}}}1
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
@@ -382,29 +303,29 @@
 	sensitive        = false,
 	comment          = [l]{\#},
 	literate         =
-	{:}{{\pxDEFlstoperator :}}1
-	{,}{{\pxDEFlstoperator ,}}1
-	{[}{{\pxDEFlsttype [ }}1
-	{]}{{\pxDEFlsttype ] }}1
-	{>}{{\pxDEFlstfunction > }}1
-	{|}{{\pxDEFlstfunction | }}1,
+	{:}{{\color{pxoperator} :}}1
+	{,}{{\color{pxoperator} ,}}1
+	{[}{{\color{pxtype} [ }}1
+	{]}{{\color{pxtype} ] }}1
+	{>}{{\color{pxfunction} > }}1
+	{|}{{\color{pxfunction} | }}1,
 }
 %% --- algoritme: Catalan pseudocode with math symbol literate ---
 \lstdefinelanguage{algoritme}{
 	morekeywords     = {Funcio,Fi,Funció,Si,Llavors,Sinó,Mentre,Fer,
 		Per,Cada,A,Retornar,Sortir,Nova,Nou,Afegir,Extreure},
-	keywordstyle     = \pxDEFlstkeyword\bfseries,
+	keywordstyle     = \color{pxkeyword}\bfseries,
 	sensitive        = true,
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
 	literate         =
-	{<--}{{\pxDEFlstkeyword$\leftarrow$\pxDEFlstfg}}1
-	{<=}{{\pxDEFlstkeyword$\leq$\pxDEFlstfg}}1
-	{>=}{{\pxDEFlstkeyword$\geq$\pxDEFlstfg}}1
-	{!=}{{\pxDEFlstkeyword$\neq$\pxDEFlstfg}}1
-	{*}{{\pxDEFlstkeyword$\times$\pxDEFlstfg}}1
-	{_}{{\pxDEFlstoperator\textunderscore\pxDEFlstfg}}1
+	{<--}{{\color{pxkeyword}$\leftarrow$\color{pxfg}}}1
+	{<=}{{\color{pxkeyword}$\leq$\color{pxfg}}}1
+	{>=}{{\color{pxkeyword}$\geq$\color{pxfg}}}1
+	{!=}{{\color{pxkeyword}$\neq$\color{pxfg}}}1
+	{*}{{\color{pxkeyword}$\times$\color{pxfg}}}1
+	{_}{{\color{pxoperator}\textunderscore\color{pxfg}}}1
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
@@ -414,10 +335,10 @@
 %% --- pxBash: Bash/shell scripts ---
 \lstdefinelanguage{pxBash}{
 	language         = bash,
-	keywordstyle     = \pxDEFlstkeyword\bfseries,
-	stringstyle      = \pxDEFlststring,
-	commentstyle     = \pxDEFlstcomment\itshape,
-	numberstyle      = \tiny\pxDEFlstnumber,
+	keywordstyle     = \color{pxkeyword}\bfseries,
+	stringstyle      = \color{pxstring},
+	commentstyle     = \color{pxcomment}\itshape,
+	numberstyle      = \tiny\color{pxnumber},
 	showstringspaces  = false,
 	columns          = flexible,
 	literate         =
@@ -494,9 +415,9 @@
 \cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
 	\tcbinputlisting{
 		listing~options={language=#1},
-		colback=\pxDEFlstbgv!90!,
-		colframe=\pxDEFlstbgv!60!,
-		coltext=\pxDEFlstfgv,
+		colback=pxbg!90!,
+		colframe=pxbg!60!,
+		coltext=pxfg,
 		listing~file=#2,
 		listing~only,
 		arc=.25em, outer~arc=.25em,
@@ -513,9 +434,9 @@
 	\tcbox[
 	nobeforeafter,
 	size=minimal,
-	colback=\pxDEFlstbgv!90!,
-	colframe=\pxDEFlstbgv!60!,
-	coltext=\pxDEFlstfgv,
+	colback=pxbg!90!,
+	colframe=pxbg!60!,
+	coltext=pxfg,
 	boxrule=0.4pt,
 	arc=0.5mm,
 	left=1.5pt,
@@ -537,7 +458,7 @@
 %%   At document level, effects are global until overridden or group ends.
 %%   Preset names are registered via \pxLSTsavepreset{name}{option-string}
 %%   and applied via \pxLSTusepreset{name} or key preset=name.
-\NewDocumentCommand{\pxLSTsetup}{O{dark} m O{pxlst}}{%
+\NewDocumentCommand{\pxCodeSet}{O{dark} m O{pxlst}}{%
   \pxLSTpaletteSelect{#1}%
   \lstset{%
     language=#2,%
@@ -548,16 +469,16 @@
 %% pxCode -- inline code listing with optional local key overrides.
 %%   #1 = optional key-value options (local to this environment)
 %%   #2 = label string (displayed in title bar)
-\newtcblisting{Code}[2][]{%
+\newtcblisting{pxCode}[2][]{%
 	listing~options={#1},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	drop~lifted~shadow,%
-	colback=\pxDEFlstbgv!90!,
-	colframe=\pxDEFlstbgv!60!,
-	coltext=\pxDEFlstfgv,
+	colback=pxbg!95!,
+	colframe=pxbg!70!,
+	coltext=pxfg,
 	toptitle=-.1em,%
-	title=\small\hspace*{\fill}\textbf{\ttfamily \color{\pxDEFlstfgvSeventyFive} #2}%
+	title=\small\hspace*{\fill}\textbf{\ttfamily \color{pxfg!75!} #2}%
 }
 \newtcblisting{miniCode}[1][.8\linewidth]{%
 	width=#1,
@@ -565,9 +486,9 @@
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	drop~lifted~shadow,%
-	colback=\pxDEFlstbgv!90!,
-	colframe=\pxDEFlstbgv!60!,
-	coltext=\pxDEFlstfgv,
+	colback=pxbg!60!,
+	colframe=pxbg!30!,
+	coltext=pxfg,
 }
 %% -----------------------------------------------------------------------
 %% pxCODE -- convenience environment with Darcula + pxJava defaults.
@@ -575,16 +496,16 @@
 %%     [#1] = language (defaults to pxJava)
 %%      #2 = label shown in the title bar.
 %%   Internally delegates to the pxLST key pipeline via configure.
-\newtcblisting{CODE}[2][]{%
+\newtcblisting{pxCode*}[2][]{%
 	listing~options={#1},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
-	colback=\pxDEFlstbgv!90!,
-	colframe=\pxDEFlstbgv!60!,
-	coltext=\pxDEFlstfgv,
+	colback=pxbg!70!gray,
+	colframe=pxbg!30!pxbg,
+	coltext=pxbg!90!,
 	drop~lifted~shadow,%
 	toptitle=-.1em,%
-	title=\small\hspace*{\fill}\textbf{\ttfamily #2}%
+	title=\color{pxbg!35!pxfg}\small\hspace*{\fill}\textbf{\ttfamily #2}%
 }
 %% -----------------------------------------------------------------------
 %% pxCodeBox -- code listing with side-note comment panel (non-breakable).
@@ -596,9 +517,9 @@
 \newtcblisting{CodeBox}[5][]{%
 	listing~options={#1},
   enhanced,%
-  colback=\pxDEFlstbgv!90!,
-  colframe=\pxDEFlstbgv!60!,
-  coltext=\pxDEFlstfgv,
+  colback=pxbg!90!,
+  colframe=pxbg!60!,
+  coltext=pxfg,
   listing~and~comment,%
   comment=\raggedleft\parbox[b]{.1\linewidth}{%
     \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
@@ -620,8 +541,8 @@
 %% -----------------------------------------------------------------------
 %% pxCodeBreak -- same as pxCodeBox but forces breakable across pages.
 %%   Arguments identical to pxCodeBox.
-\newtcblisting{CodeBox*}[5][pxJava]{%
-	listing~options={language=#1},
+\newtcblisting{CodeBox*}[5][]{%
+	listing~options={#1},
   enhanced,%
   breakable,%
   listing~and~comment,%
@@ -631,9 +552,9 @@
     \centering #5%
   },%
   drop~lifted~shadow,%
-  colback=\pxDEFlstbgv!90!,
-  colframe=\pxDEFlstbgv!60!,
-  coltext=\pxDEFlstfgv,
+  colback=pxbg!90!,
+  colframe=pxbg!60!,
+  coltext=pxfg,
   arc=.25em,outer~arc=.25em,%
   toptitle=-.1em,%
   title~after~break=%
@@ -645,13 +566,14 @@
   comment~outside~listing,%
   listing~above~comment%
 }
-\NewDocumentCommand{\pxLSTinput}{ O{} m }
+\NewDocumentCommand{\pxCodeFile}{ O{} m }
   { \pxLST_input_file:nn { #1 } { #2 } }
-\NewDocumentCommand{\pxCodeInline}{ O{} m }
+
+\NewDocumentCommand{\pxCodeIn}{ O{} m O{pxlst}}
   {
     \group_begin:
       \tl_if_blank:nF { #1 }
-        { \lstset{ language=#1, style=pxlst } }
+        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, language=#1, style=#3 } }
       \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }

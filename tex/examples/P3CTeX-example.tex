@@ -552,8 +552,8 @@ Custom preset: define once, reuse everywhere.
 	A \PECTeX es proporciona un metode rapid per a poder incloure codi formatejat per als llenguatges i estils mes habituals.
 
 % 1. Java snippet — dark style
-\pxLSTsetup[dark]{pxJava}
-\hspace*{\fill}\begin{CODE}[language=pxJava]{FFSDA}
+\pxCodeSet[dark]{pxJava}
+\hspace*{\fill}\begin{pxCode}[language=pxJava]{FFSDA}
 	@Overwrite
 public class Fibonacci<?> {
     public static int fib(int n) {
@@ -567,10 +567,89 @@ public class Fibonacci<?> {
         [false == 23] patata;
     }
 }
-\end{CODE}
+\end{pxCode}
+\hspace*{\fill}\begin{pxCode*}[language=pxJava]{FFSDA}
+	@Overwrite
+public class Fibonacci<?> {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        int a = 0, b = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = a + b;
+            a = b; b = tmp;
+        }
+        return b;
+        [false == 23] patata;
+    }
+}
+\end{pxCode*}
+% 1. Java snippet — dark style
+\pxCodeSet[pastel]{pxJava}
+\hspace*{\fill}\begin{pxCode}[language=pxJava]{FFSDA}
+	@Overwrite
+public class Fibonacci<?> {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        int a = 0, b = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = a + b;
+            a = b; b = tmp;
+        }
+        return b;
+        [false == 23] patata;
+    }
+}
+\end{pxCode}
+\hspace*{\fill}\begin{pxCode*}[language=pxJava]{FFSDA}
+	@Overwrite
+public class Fibonacci<?> {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        int a = 0, b = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = a + b;
+            a = b; b = tmp;
+        }
+        return b;
+        [false == 23] patata;
+    }
+}
+\end{pxCode*}
+% 1. Java snippet — dark style
+\pxCodeSet[light]{pxJava}
+\hspace*{\fill}\begin{pxCode}[language=pxJava]{FFSDA}
+	@Overwrite
+public class Fibonacci<?> {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        int a = 0, b = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = a + b;
+            a = b; b = tmp;
+        }
+        return b;
+        [false == 23] patata;
+    }
+}
+\end{pxCode}
+\hspace*{\fill}\begin{pxCode*}[language=pxJava]{FFSDA}
+	@Overwrite
+public class Fibonacci<?> {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        int a = 0, b = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = a + b;
+            a = b; b = tmp;
+        }
+        return b;
+        [false == 23] patata;
+    }
+}
+\end{pxCode*}
 
 % 2. Algorithm — framed style with pxCodeBox and caption
-\pxLSTsetup[pastel]{algoritme}[framed]
+\pxCodeSet[pastel]{algoritme}[framed]
 \begin{CodeBox}{lst-alg-ex}{Algorisme: factorial}{[lst:alg-ex]}{Calcul del factorial de manera iterativa.}
 Funcio factorial(n: Integer): Integer
   Si n <= 0 Llavors
@@ -588,17 +667,17 @@ Fi Funcio
 La llista~\ref{cdbx:lst-alg-ex} mostra l'algorisme iteratiu del factorial.
 
 % 3. YAML — light style
-\pxLSTsetup[light]{pxYAML}
-\begin{Code}{lst-yaml-ex}
+\pxCodeSet[light]{pxYAML}
+\begin{pxCode}{lst-yaml-ex}
 project:
   name: P3CTeX
   version: "0.3"
   languages: [ca, en]
   debug: false
-\end{Code}
+\end{pxCode}
 %
 %% 4. Bash — plain style
-%\pxLSTsetup[pastel]{pxBash}[framed]
+%\pxCodeSet[pastel]{pxBash}[framed]
 \begin{miniCode}[.5\linewidth]
 #!/bin/bash
 cd tex/
@@ -609,7 +688,9 @@ echo "Build complet."
 % 5. Inline code
 \subsection{Exercici: codi inline}
 En aquest exercici es mostren fragments de codi inline.
-Fragment en Java: \pxCodeInline{int n = 0;} i \pxCodeInline{return n + 1;}.
-Un altre fragment en Bash: \pxCodeInline[pxBash]{echo "fi"}.
+Fragment en Java: \pxCode{int n = 0;} i \pxCode{return n + 1;}.
+Un altre fragment en Bash: \pxCode[pxBash]{echo "fi"}.
+
+\pxCode{dfghd}
 
 \end{document}
