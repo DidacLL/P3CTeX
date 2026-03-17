@@ -117,8 +117,8 @@
 %%		Fourth img caption,
 %%		Fifth img caption
 %%	}
-\NewDocumentCommand{\pxIMGList}{O{img/} m O{} +m}{
+\NewDocumentCommand{\pxIMGList}{O{.8\linewidth} m O{} +m}{
 	\foreach \captionItem[count=\i] in {#4}{
-		\pxIMG{#1#2\i}{\IfBlankF{#3}{#3}\captionItem}[img:#2\i]
+		\pxIMG[#1]{#2\i}{\IfBlankF{#3}{#3}\captionItem}[img:#2\i]
 	}
 }

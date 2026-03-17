@@ -1,0 +1,5 @@
+project:
+  name: P3CTeX
+  version: "0.3"
+  languages: [ca, en]
+  debug: false

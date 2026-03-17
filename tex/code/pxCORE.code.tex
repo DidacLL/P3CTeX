@@ -52,11 +52,15 @@
 	TAB			.bool_set:N 	= \l_pxcore_tab_use_bool,
 		TAB			.initial:n	= false,
 		TAB			.default:n	= true,
+	LST			.bool_set:N 	= \l_pxcore_lst_use_bool,
+		LST			.initial:n	= false,
+		LST			.default:n	= true,
 	default		.meta:n	=	{
 		PRP		=	true,
 		UML		=	true,
 		SRC 	=	true,
-		TAB 	=	true
+		TAB 	=	true,
+		LST 	=	true
 	},
 	unknown		.code:n ={}
 }
@@ -77,4 +81,5 @@
 	{ \RequirePackage[\l_pxcore_src_config_tl]{pxSRC} }
 }
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
+\bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \endinput
