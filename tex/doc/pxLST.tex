@@ -1,0 +1,169 @@
+% !TeX encoding = UTF-8
+% Manual d’ús per al paquet pxLST dins de P3CTeX.
+\documentclass{P3CTeX}
+
+\usepackage{pxLST}
+
+\title{pxLST\\Entorns professionals de llistats de codi per a P3CTeX}
+\author{P3CTeX / SCVRIA SOFTWARE}
+\date{Març 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+El paquet \texttt{pxLST} proporciona entorns de llistats de codi amb
+estil tipus Darcula, suport multillenguatge i integració amb
+\texttt{tcolorbox}, pensats per a pràctiques, PECs i exàmens dins del
+flux P3CTeX.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introducció}
+
+L’objectiu de \texttt{pxLST} és oferir un conjunt petit però coherent
+d’entorns per mostrar codi font:
+
+\begin{itemize}
+  \item estil fosc/pastel/clar unificat,
+  \item configuració global senzilla,
+  \item entorns per a fragments breus, blocs amplis i caixes amb comentaris.
+\end{itemize}
+
+La implementació actual és una versió simplificada respecte a iteracions
+anteriors i constitueix la base estable del mòdul.
+
+\section{Configuració bàsica}
+
+Carregueu el paquet de manera estàndard:
+
+\begin{verbatim}
+\usepackage{pxLST}
+\end{verbatim}
+
+Abans de començar a inserir codi, és recomanable fixar una configuració
+global mitjançant:
+
+\begin{verbatim}
+\pxCodeSet[<paleta>]{<llenguatge>}[<estil>]
+\end{verbatim}
+
+On:
+
+\begin{itemize}
+  \item \texttt{<paleta>} és una de \texttt{dark}, \texttt{pastel} o
+        \texttt{light} (per defecte \texttt{dark});
+  \item \texttt{<llenguatge>} és el llenguatge base dels llistats
+        (\texttt{pxJava}, \texttt{pxPython}, \dots);
+  \item \texttt{<estil>} és l’estil de \texttt{listings} utilitzat
+        (per defecte \texttt{pxlst}).
+\end{itemize}
+
+\section{Entorns principals}
+
+\subsection{\texttt{pxCode}}
+
+Entorn de llistat principal, amb capçalera tipus barra de títol.
+
+\begin{description}
+  \item[Sintaxi] \verb|\begin{pxCode}[opcions]{Etiqueta} ... \end{pxCode}|
+  \item[\texttt{Etiqueta}] text que apareix a la barra de títol.
+  \item[\texttt{opcions}] opcions locals de \texttt{listings}
+        (per exemple \verb|language=pxJava|).
+\end{description}
+
+\subsection{\texttt{pxCode*}}
+
+Variant amb estil alternatiu (fons i marc modificats) pensada per a
+fragments destacats. La signatura és idèntica a \texttt{pxCode}.
+
+\subsection{\texttt{CodeBox} i \texttt{CodeBox*}}
+
+Entorns de caixa amb comentari lateral i títol:
+
+\begin{verbatim}
+\begin{CodeBox}[opcions]{id}{títol}{etiqueta}{text de comentari}
+  <codi>
+\end{CodeBox}
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{id}: identificador intern (s’utilitza per referències).
+  \item \texttt{títol}: text de la barra de títol.
+  \item \texttt{etiqueta}: etiqueta curta que apareix al comentari.
+  \item \texttt{text de comentari}: descripció breu associada al codi.
+\end{itemize}
+
+L’entorn \texttt{CodeBox*} és una versió \emph{breakable} per a llistats
+que poden saltar de pàgina.
+
+\subsection{\texttt{\textbackslash pxCodeFile} i \texttt{\textbackslash pxCodeIn}}
+
+\begin{description}
+  \item[\texttt{\textbackslash pxCodeFile[llenguatge]\{fitxer\}}]
+        insereix un fitxer de codi extern dins d’una caixa
+        \texttt{tcolorbox} estilitzada.
+  \item[\texttt{\textbackslash pxCodeIn[llenguatge]\{fragment\}}]
+        mostra un petit fragment de codi en línia, dins d’una capsa
+        compacta integrada en el paràgraf.
+\end{description}
+
+\section{Exemples bàsics}
+
+Aquesta secció reprodueix, en forma simplificada, els casos d’ús
+presentats als fitxers de prova de \texttt{tex/tests}.
+
+\subsection{Exemple bàsic}
+
+\begin{verbatim}
+\pxCodeSet[dark]{pxJava}[pxlst]
+
+\begin{pxCode}[language=pxJava]{HelloWorld.java}
+public class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hola, món!");
+  }
+}
+\end{pxCode}
+\end{verbatim}
+
+\subsection{Cobertura de llenguatges}
+
+Per canviar de llenguatge només cal passar l’opció
+\verb|language=<nom>| a l’entorn:
+
+\begin{verbatim}
+\begin{pxCode}[language=pxPython]{demo.py}
+def suma(a, b):
+    return a + b
+\end{pxCode}
+\end{verbatim}
+
+Els llenguatges suportats inclouen, entre d’altres:
+
+\begin{itemize}
+  \item \texttt{pxJava}, \texttt{pxPython}, \texttt{pxC},
+        \texttt{pxJavaScript}, \texttt{pxSQL};
+  \item llenguatges “de modelatge” com \texttt{pxOWL}, \texttt{pxTAD},
+        \texttt{pxYAML};
+  \item pseudocodi en català mitjançant \texttt{algoritme}.
+\end{itemize}
+
+\section{Relació amb les proves automàtiques}
+
+Els fitxers:
+
+\begin{itemize}
+  \item \texttt{tex/tests/pxLST-basic.tex}
+  \item \texttt{tex/tests/pxLST-languages.tex}
+\end{itemize}
+
+serveixen com a proves de regressió bàsiques: cobreixen els entorns
+principals i una mostra representativa de llenguatges. La documentació
+d’aquest manual està escrita per tal que els exemples siguin coherents
+amb aquests fitxers de prova.
+
+\end{document}
+

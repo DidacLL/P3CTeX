@@ -1,0 +1,34 @@
+% !TeX encoding = UTF-8
+% Exemple amb CodeBox i múltiples llenguatges.
+\documentclass{P3CTeX}
+
+\usepackage{pxLST}
+
+\begin{document}
+
+\section*{Exemple avançat de pxLST}
+
+\pxCodeSet[pastel]{pxPython}[pxlst]
+
+\subsection*{Pseudocodi}
+
+\begin{pxCode}[language=algoritme]{CercaSeqüencial}
+Funcio Cerca(x, A)
+  Per Cada i A
+    Si A[i] = x Llavors
+      Retornar i
+    Fi
+  Fi
+  Retornar -1
+Fi
+\end{pxCode}
+
+\subsection*{Caixa amb comentari}
+
+\begin{CodeBox}[language=pxPython]{bx:alg}{Funció suma}{nota}{Implementació simple de suma en Python}
+def suma(a, b):
+    return a + b
+\end{CodeBox}
+
+\end{document}
+

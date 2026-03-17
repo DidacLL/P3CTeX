@@ -1,0 +1,26 @@
+% !TeX encoding = UTF-8
+% Exemple mínim d’ús de pxLST dins d’un document P3CTeX.
+\documentclass{P3CTeX}
+
+\usepackage{pxLST}
+
+\begin{document}
+
+\section*{Exemple bàsic de pxLST}
+
+\pxCodeSet[dark]{pxJava}[pxlst]
+
+El codi següent mostra un \emph{hello world} senzill en Java:
+
+\begin{pxCode}[language=pxJava]{HelloWorld.java}
+public class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hola, món!");
+  }
+}
+\end{pxCode}
+
+També podem inserir fragments en línia amb \pxCodeIn[pxJava]{suma(a,b)}.
+
+\end{document}
+
