@@ -93,4 +93,4 @@
 	}
 }
 
-\newcommand\PECTeX{P\kern-.05ex$^3$\kern-.5ex\raise-0.5ex\hbox{C}\kern-.2ex\TeX~}
+\def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }
