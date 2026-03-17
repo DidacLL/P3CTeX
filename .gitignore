@@ -313,3 +313,5 @@ TSWLatexianTemp*
 #*Notes.bib
 /.cursor
 *.test.pdf
+/tex/.raw
+/.vscode
