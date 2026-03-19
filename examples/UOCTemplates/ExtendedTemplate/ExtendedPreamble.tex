@@ -1,0 +1,54 @@
+%\documentclass[PR,cat,default]{P3CTeX}
+\input{../../SharedPreamble.tex} %% Relative to the PAC Document loading them all
+
+
+\def\ISI{Integració de Sistemes d'Informació}
+%% Exemple de programació LaTeX avançada
+%% Definim un command utilitzant la sintaxi de xparse on:
+%% #1 's' Si hi ha un * entre el nom i el primer parametre llavors #1=True
+%% #2 'O{PR}'Argument [opcional], si no és present posa PR per defecte.
+%% #3 'm' Argument {obligatori}
+%% #4 'O{#2}' Argument [opcional] si no és present s'hi posa el mateix valor que #2
+%% USAGE: \LoadPreamble*[PR,no-toc]{PR2}{Segona Pràctica}
+\NewDocumentCommand{\LoadPreamble}{s O{PR} m O{#2}}{
+	% configuració de les metadades utilitzades en les capçaleres peus de pagina i la portada
+	\PECTeXconfig{
+		data= {
+			subj-fullname	= {\ISI},
+			subj-shortname	= {ISI},
+			subj-code		= {05.597},
+			ca-fullname		= {#4},
+			ca-shortname	= {#3},
+			date			= {\today}
+		},
+		#2 	%% backdoor to set configs
+	}
+	% HaCkTeX
+	\IfBooleanF{#1}{ %% Si no té * s'executa la portada modificada
+		\PECTeXcover{%configuració del disseny de la portada per aquesta asignatura
+			outter-backtitle, % vs inner-bactitle
+			subtitle,uppertitle, %% both contains same text value from "data={ ca-fullname= this text}"
+			subsubtitle, %% Default value "data={ subj-code= this text}"
+			text-uppertitle={\vspace*{3ex}\pxGrow{\textcolor{white!60!secondaryColor}{\textbf{ISI [05.597]~}}}}, % Hack default uppertitle text
+			text-subsubtitle={2025/2026-2} % Hack default subsubtitle text
+		}
+	}
+	%% superhack: Overwrite no-plagi text:
+	\renewcommand{\pxDEFnoplagi}[1]{%%
+		\parbox[t][][t]{\linewidth}{
+			Aquest es un document d'exemple de com utilitzar \PECTeX reutilitzant el mateix preamble per a totes les PAC i PRs d'una mateixa assignatura.
+		}
+	}
+}
+
+% Exemple de macro que es carregara al final de cada document de l'assignatura
+\AtEndDocument{
+	\newpage
+	%------ Cites i bibliografia -------
+	%------ pots emplenar manualment l'arxiu referencies.bib com l'exemple mostrat, o bé exportar a LaTeX des del teu gestor de bibliografia com mendeley, zotero...
+	% per defecte LaTeX nomes inclou aquelles referencies bibliografiques que hagim utilitzat en el document, si volem que les inclogui totes, citades o no, hem d'incloure la linia seguent:
+	\nocite{*}
+	%% ---- mes info : https://bibtex.eu/es/
+	\bibliographystyle{abbrvnat}
+	\bibliography{../references} %% Relative to the PAC Document loading them all
+}

@@ -1,0 +1,32 @@
+\input{../../SharedPreamble.tex} %% Relative to the PAC Document loading them all
+
+%% Minimal version of a preamble loader, it sets the subject information and expects the assessestment short and full name.
+%% #1 Assessement short name
+%% #2 Assessement full name
+%% #3 P3CTeX options (optional, if not present it loads anyway)
+%% Usage: \LoadPreamble{PR1}{Primera Practica de la Evaluacio Continua}{PAC, no-plagi}
+\def\LoadPreamble#1#2#3 {
+	\PECTeXconfig{
+		data= {
+			subj-fullname	= {Minimal Template},
+			subj-shortname	= {MT},
+			subj-code		= {05.597},
+			ca-fullname		= {#2},
+			ca-shortname	= {#1},
+			date			= {\today}
+		},
+		PR, %SET PR AS DEFAULT DESIGN, STILL CAN BE OVERWRITED OR SIMPLY QUIT THAT LINE
+		#3
+	}
+}
+\AtEndDocument{
+	\newpage
+	%------ Cites i bibliografia -------
+	%------ pots emplenar manualment l'arxiu referencies.bib com l'exemple mostrat, o bé exportar a LaTeX des del teu gestor de bibliografia com mendeley, zotero...
+	% per defecte LaTeX nomes inclou aquelles referencies bibliografiques que hagim utilitzat en el document, si volem que les inclogui totes, citades o no, hem d'incloure la linia seguent:
+	\nocite{*}
+	%% ---- mes info : https://bibtex.eu/es/
+	\bibliographystyle{abbrvnat}
+	\bibliography{../references} %% Relative to the PAC Document loading them all
+}
+

@@ -1,0 +1,27 @@
+\documentclass[cat]{P3CTeX} %% Activate language at package loading for better babel matching even if could be loaded in PECTeXconfig
+
+%% Set configuration for ALL my P3CTeX documents.
+\PECTeXconfig{ %configuració de les metadades utilitzades en les capçaleres peus de pagina i la portada
+	data= {
+		student	= {Vladimir Scoriae},%% student full name
+		grade 	= {Enginyeria Informàtica},%% Grade or Course name
+	},
+	no-plagi %% Activem la declaracio de no plagi per a tots els documents que utilitzin aquest preamble
+}
+%%% Totes les comandes que definim aqui estaran disponibles en tots els documents que fagin servir aquests preambles
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%	User Global Macros		%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% itembf macro family for formating item titles.
+%% It takes as argument every token from \itembf until it finds a ':' token
+\def\itembf#1:{
+	\item\textbf{#1:}
+}
+\def\subitembf#1:{
+	\subitem\textbf{#1:}
+}
+\def\subsubitembf#1:{
+	\subitem\textbf{#1:}
+}
