@@ -6,62 +6,92 @@
 
 \begin{document}
 	\section*{Introducció}
-		\pxIMG[\linewidth]{img/p3ctexlogo}{\PECTeX Logo}
+		\pxIMG[.75\linewidth]{img/p3ctexlogo}{\PECTeX Logo}
 
-		Aquest document es un exemple de com configurar un entorn per a una assignatura concreta. Fa servir dos preambles diferents, un general \emph{``SharedPreamble.tex''} a la carpeta arrel, després es crea una carpeta per a cada assignatura que conté el seu propi preamble ``ExtendedPreamble.tex'' compartit per tots els documents de la assignatura.
+		Aquest document mostra la versió estesa del flux de treball amb preambles compartits de \PECTeX. L'estructura es divideix en tres nivells reals: \texttt{SharedPreamble.tex} per a les dades i macros comunes a totes les entregues, \texttt{ExtendedPreamble.tex} per a la configuració específica d'una assignatura, i \texttt{PAC1/ExtendedTemplatePAC.tex} per al contingut concret de l'activitat. L'objectiu és mantenir cada PAC o PR neta, amb molt poc codi de configuració dins del fitxer principal, però reutilitzant metadades de l'assignatura, personalització de portada, bibliografia i macros compartides. D'aquesta manera, cada nova activitat es pot crear duplicant la carpeta existent i actualitzant només les dades pròpies de l'entrega.
 
-		Finalment es crea una carpeta per cada activitat on crearem al document de la activitat actual que carrega els dos preambles superiors. Aixi ens assegurem que totes les entregues comparteixen una mateixa configuració i referències bibliografiques acumulativas al llarg de l'evaluació d'una manera senzilla i intuïtiva, a mes de mantenir el document \TeX de cada activitat net i lliure de comandes o codi.
+		\subsubsection*{English.}
+	 		This document shows the extended shared-preamble workflow for \PECTeX. The structure is split into three real levels: \texttt{SharedPreamble.tex} for metadata and macros shared by all submissions, \texttt{ExtendedPreamble.tex} for subject-specific configuration, and \texttt{PAC1/ExtendedTemplatePAC.tex} for the actual activity content. The goal is to keep each PAC or PR clean, with very little setup code inside the main file, while still reusing subject metadata, cover customization, bibliography, and shared macros. With this arrangement, each new activity can be created by duplicating the existing folder and updating only the assignment-specific data.
 
 
 	\newpage
 	\section[Part 1]{Preguntes teòriques}
-		Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+
+		Aquesta part resumeix quina responsabilitat té cada nivell de la plantilla estesa. La idea no és escriure tota la configuració dins del document de la PAC, sinó repartir-la de manera estable perquè els fitxers siguin més fàcils de mantenir al llarg de tot el semestre.
+
+		\subsubsection*{English.}
+		 This part summarizes the responsibility of each layer in the extended template. The point is not to write all configuration inside the PAC document, but to split it in a stable way so the files stay easier to maintain during the whole semester.
 
 
 		\subsection{Pregunta 1}
-			Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.
+			\emph{SharedPreamble.tex} és el punt on s'han de definir les opcions globals que vols compartir entre totes les entregues.
 
+			En l'exemple actual és on es carrega \verb|\documentclass[cat]{P3CTeX}|, s'hi declara una configuració global amb \verb|\PECTeXconfig|, s'hi fixen metadades comunes com l'estudiant i el grau, i també s'hi deixen macros reutilitzables que poden servir a qualsevol assignatura.
 
-			Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+			Per tant, aquest fitxer s'hauria de tocar poques vegades. La regla pràctica és simple: si una dada o una macro ha d'aparèixer a totes les PAC i PR, pertany aquí; si només té sentit dins d'una assignatura, és millor moure-la al preàmbul estès de l'assignatura.
+
+			\subsubsection*{English.}
+
+			\texttt{SharedPreamble.tex} is where you should define the global options you want to share across all submissions. In the current example this is where \verb|\documentclass[cat]{P3CTeX}| is loaded, where a global \verb|\PECTeXconfig| block is declared, where common metadata such as the student and degree are stored, and where reusable macros valid for any subject are kept.
+
+			As a result, this file should be edited rarely. The practical rule is simple: if a piece of data or a macro must appear in every PAC and PR, it belongs here; if it only makes sense inside one subject, it should move to the subject's extended preamble.
 
 	\subsection{Pregunta 2}
 
-			At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			\texttt{ExtendedPreamble.tex} és la capa on es defineix la identitat d'una assignatura i la lògica que vols reutilitzar en totes les seves activitats. En aquesta plantilla és on es declara la macro del nom de l'assignatura, on es construeix la comanda \verb|\LoadPreamble|, on es personalitza opcionalment la portada, on es connecten les dades específiques de cada activitat i on es deixa preparada la bibliografia al final del document.
+
+			A nivell pràctic, la crida habitual és \verb|\LoadPreamble| sense estrella, perquè aquest camí activa la portada personalitzada prevista per l'assignatura. La versió amb estrella queda com a opció avançada per a qui vulgui adaptar el carregador o passar opcions diferents del document sense reescriure cada PAC.
+
+		\subsubsection*{English.}
+		\texttt{ExtendedPreamble.tex} is the layer where you define the identity of one subject and the logic you want to reuse across all of its activities. In this template it declares the subject-name macro, builds the \verb|\LoadPreamble| command, optionally customizes the cover, wires the assignment-specific metadata, and prepares the bibliography at the end of the document.
+
+		In practical terms, the usual call is the non-starred \verb|\LoadPreamble| because that path enables the subject-specific cover customization. The starred form remains an advanced option for users who want to adapt the loader or pass different document options without rewriting each PAC file.
 
 	\subsection{Pregunta 3}
 
-			At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			El fitxer de la PAC hauria de ser la peça més simple del conjunt. Aquí només hi haurien de viure l'estructura de seccions, les respostes, i els recursos d'aquesta activitat concreta, com ara imatges, taules o codi quan facin falta. Com menys configuració hi hagi dins d'aquest fitxer, més fàcil serà copiar-lo i reutilitzar-lo a la següent entrega.
 
-			Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+			Quan necessitis crear \texttt{PAC2}, \texttt{PAC3} o una \texttt{PR1}, el flux recomanat és duplicar la carpeta de l'activitat, conservar el mateix \texttt{ExtendedPreamble.tex} i canviar només el nom curt, el títol complet i el contingut específic del nou document. Això manté totes les entregues coherents sense convertir cada fitxer en un preàmbul improvisat.
 
-			Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+			\subsubsection*{English.}
+ 			The PAC file itself should be the simplest piece of the whole setup. It should mainly contain the section structure, the answers, and the assets that belong to this activity, such as figures, tables, or code when needed. The less configuration lives in this file, the easier it becomes to copy and reuse it for the next submission.
+
+			When you need to create \texttt{PAC2}, \texttt{PAC3}, or a \texttt{PR1}, the recommended workflow is to duplicate the activity folder, keep the same \texttt{ExtendedPreamble.tex}, and update only the short name, the full title, and the content specific to the new document. This keeps all submissions consistent without turning each file into an improvised preamble.
 
 	\newpage
 	\section[Part 2]{Preguntes Pràctiques}
 
-	Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+	A la pràctica, el flux recomanat és aquest: primer copia l'arbre de la plantilla; després personalitza \texttt{SharedPreamble.tex} amb les teves dades globals; tot seguit adapta \texttt{ExtendedPreamble.tex} per a l'assignatura; duplica la carpeta \texttt{PAC1} per a cada activitat futura; actualitza els arguments de \verb|\LoadPreamble| a cada document; i finalment escriu només el contingut que pertany a aquella entrega.
 
-	\pxIMG[.6\linewidth]{Image1}{Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. }
+	\subsubsection*{English.}
+	In practice, the recommended workflow is this: first copy the template tree; then personalize \texttt{SharedPreamble.tex} with your global data; next customize \texttt{ExtendedPreamble.tex} for the subject; duplicate the \texttt{PAC1} folder for each future activity; update the \verb|\LoadPreamble| arguments in each document; and finally write only the content that belongs to that submission.
 
+	\pxIMG[.6\linewidth]{Image1}{Exemple d'espai reservat per a recursos propis de l'activitat, mantenint la configuració compartida fora del fitxer principal.\\ \textbf{English.} Example placeholder for activity-specific assets while keeping shared configuration outside the main file.}
 
+	\newpage
+	\subsection{ExtendedTemplate}
 	%% Using itembf macros defined at UOCPreamble
 	\begin{itemize}
-		\itembf Lorem ipsum:
-			\subitem dolor sit amet
-			\subitem consetetur sadipscing elitr
-			\subitem sed diam nonumy eirmod
-			\subitem tempor invidunt ut labore
-			\subitem et dolore magna aliquyam erat
-			\subitem sed diam voluptua.
-		\itembf At vero eos et accusam et justo duo dolores et ea rebum:
-			\subitembf Stet clita kasd gubergren: no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-				\subsubitem At vero eos et accusam et justo duo dolores et
+		\itembf Beneficis del model estès:
+			\subitem separa les dades globals, les dades de l'assignatura i el contingut de cada PAC
+			\subitem redueix la repetició quan prepares múltiples entregues
+			\subitem manté portades, encapçalaments i bibliografia consistents
+			\subitem permet afegir macros i personalitzacions específiques sense embrutar el document principal
+		\itembf English benefits:
+			\subitem keeps global data, subject data, and per-assignment content clearly separated
+			\subitem reduces repetition when preparing many submissions
+			\subitem keeps covers, headers, and bibliography consistent
+			\subitem allows reusable macros and subject customization without cluttering the main document
 	\end{itemize}
 
 
-	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+	Aquest enfocament és especialment útil quan una assignatura acumula diverses PACs, PRs o annexos amb una mateixa identitat visual i acadèmica. La configuració queda agrupada on toca, les actualitzacions es fan una sola vegada i el fitxer de cada activitat continua sent llegible fins i tot quan incorpora taules, captures, codi o referències bibliogràfiques.
 
+	A llarg termini, la plantilla estesa et permet mantenir una base comuna i documentar millor el teu propi flux de treball. El resultat no és només una PAC amb bon format, sinó també una estructura reutilitzable que fa més ràpida la preparació de noves entregues i redueix errors en metadades, portades i bibliografia.
 
-	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+	\subsubsection*{English.}
+		This approach is especially useful when one subject accumulates several PACs, PRs, or appendices that must keep the same visual and academic identity. Configuration stays grouped in the right place, updates are applied once, and each activity file remains readable even when it includes tables, screenshots, code, or bibliography.
+
+		In the long term, the extended template helps you keep a common base and document your own workflow more clearly. The result is not only a well-formatted PAC, but also a reusable structure that speeds up future submissions and reduces mistakes in metadata, covers, and bibliography.
 
 \end{document}

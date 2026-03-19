@@ -3,23 +3,66 @@
 \LoadPreamble{PAC1}{Motivacions i Fonaments de la Integració Empresarial}
 \begin{document}
 	\section*{ Introducció }
+		Aquesta plantilla mostra la versió mínima del flux de treball amb preambles compartits de \PECTeX. La idea és separar la configuració comuna del contingut de cada entrega perquè les PAC i PR futures es puguin crear duplicant la carpeta de l'activitat i canviant només els arguments de \verb|\LoadPreamble{...}{...}| i el text del document.
+
+		El circuit bàsic té tres fitxers:
+		\begin{enumerate}
+			\item \texttt{SharedPreamble.tex} per a la configuració global
+			\item \texttt{MINPreamble.tex} per a la configuració de la plantilla o assignatura
+			\item \texttt{PAC1/MinimalTemplatePAC.tex} per al contingut de l'activitat concreta.
+		\end{enumerate}
+			Amb aquesta estructura, les metadades, l'estil del document i la bibliografia queden centralitzats des del principi. Recomanem renombrar els fitxers amb el nom de cada assignatura, recorda canviar-ho també a les comandes \verb|\input{../MyPreamble.tex}|
+
+		\bigskip\\
+		\textbf{English.}\\ This template shows the minimal shared-preamble workflow for \PECTeX. The goal is to keep common configuration separate from the content of each submission so future PACs and PRs can be created by duplicating the activity folder and changing only the \verb|\LoadPreamble{...}{...}| arguments plus the document body.
+
+		The basic chain has three files: \texttt{SharedPreamble.tex} for global configuration, \texttt{MINPreamble.tex} for template or subject-level setup, and \texttt{PAC1/MinimalTemplatePAC.tex} for the activity content itself. This keeps metadata, document style, and bibliography wiring centralized from the start.
 	\section[Exercici 1]{Primer Exercici}
 		\subsection{Pregunta A}
+			Aquesta pregunta és el primer punt que cal revisar quan adaptes la plantilla.\\
+			La línia \verb|\input{../MINPreamble.tex}| carrega el preàmbul mínim,\\
+			i la crida \verb|\LoadPreamble{PAC1}{...}| hi injecta el nom curt i el nom complet de l'activitat actual.
+			\\
+			Per personalitzar-la, primer edita les dades generals del preàmbul, després actualitza els noms de la PAC o PR en \verb|\LoadPreamble|, i finalment substitueix el text de les seccions per les teves respostes.
+			\bigskip\\
+			\textbf{English.}\\
+			 This question marks the first part you should review when adapting the template. The line \verb|\input{../MINPreamble.tex}| loads the minimal preamble, and \verb|\LoadPreamble{PAC1}{...}| injects the short and full names of the current assignment. To personalize it, first edit the shared metadata in the preamble, then update the PAC or PR names in \verb|\LoadPreamble|, and finally replace the section text with your own answers.
 		\subsection{Pregunta B}
+			Un cop carregat el preàmbul, el cos del document ha de contenir només l'estructura de la PAC i el contingut que vols entregar. Mantén les respostes dins dels \verb|\section| i \verb|\subsection| existents, escriu paràgrafs curts i clars, i afegeix figures, taules o fragments de codi només quan ajudin a explicar la solució.
+			\bigskip\\
+			\textbf{English.}\\
+			 Once the preamble is loaded, the body of the document should contain only the PAC structure and the content you want to submit. Keep your answers inside the existing \verb|\section| and \verb|\subsection| blocks, write short focused paragraphs, and add figures, tables, or code snippets only when they help explain the solution.
 		\subsection{Pregunta C}
+			La bibliografia també queda resolta des del preàmbul. En aquesta plantilla, el fitxer de referències viu un nivell per sobre del document de la PAC, i al final del document s'afegeix automàticament la bibliografia. Quan redactes, només has de citar les entrades que necessitis i mantenir el fitxer \texttt{references.bib} compartit actualitzat.
+			\bigskip\\
+			\textbf{English.}\\
+			 Bibliography handling is also inherited from the preamble. In this template, the references file lives one level above the PAC document, and the bibliography is injected automatically at the end of the document. While writing, you only need to cite the entries you need and keep the shared \texttt{references.bib} file up to date.
 	\newpage
 	\section[Exercici 2]{Segon Exercici}
 
 		\subsection{Pregunta A}
+			Per crear una entrega nova, pots copiar la carpeta \texttt{PAC1}, renombrar-la a \texttt{PAC2} o \texttt{PR1}, i mantenir exactament la mateixa cadena de preambles. Després només cal ajustar els arguments de \verb|\LoadPreamble| i omplir el contingut nou. Aquest patró evita repetir metadades, estils i configuració de bibliografia a cada fitxer.
+			\bigskip\\
+			\textbf{English.}\\
+			To create a new submission, you can copy the \texttt{PAC1} folder, rename it to \texttt{PAC2} or \texttt{PR1}, and keep the same preamble chain unchanged. Then you only update the \verb|\LoadPreamble| arguments and write the new content. This pattern avoids repeating metadata, styling, and bibliography setup in every file.
 
 		\subsection{Pregunta B}
+			La plantilla mínima és l'opció adequada quan vols una configuració centralitzada però no necessites massa lògica específica per assignatura. És útil per començar ràpid, per mantenir els documents nets i per reutilitzar la mateixa estructura en totes les entregues sense complicar el fitxer principal.
+			\bigskip\\
+			\textbf{English.}\\The minimal template is the right choice when you want centralized configuration but do not need much subject-specific logic. It is useful for fast onboarding, for keeping documents clean, and for reusing the same structure across all submissions without making the main file more complex.
 
 	\newpage
 	\section[Exercici 3]{Tercer Exercici}
+		Abans de compilar, pots fer servir aquesta secció com a recordatori ràpid: actualitza les metadades comunes, comprova que els camins relatius continuen sent correctes, escriu les respostes dins de l'estructura existent, afegeix cites si les necessites i compila el document per verificar que la portada, els encapçalaments i la bibliografia es generen correctament.
+		\bigskip\\
+		\textbf{English.}\\ Before compiling, you can use this section as a quick checklist: update the shared metadata, confirm the relative paths are still correct, write the answers inside the existing structure, add citations if needed, and compile the document to verify that the cover, headers, and bibliography are generated correctly.
 
 
 	\newpage
 	\section[Exercici 4]{Quart Exercici}
+		Si més endavant necessites una portada més personalitzada, macros reutilitzables per a una assignatura concreta o una configuració més rica compartida entre moltes activitats, el pas natural és migrar a la plantilla estesa. Aquesta versió mínima et dona una base neta; la plantilla avançada afegeix una capa extra de reutilització sense canviar la manera d'escriure les respostes.
+		\bigskip\\
+		\textbf{English.}\\If later you need a more customized cover, reusable macros for a specific subject, or richer shared configuration across many activities, the natural next step is the extended template. This minimal version gives you a clean base; the advanced template adds another layer of reuse without changing how you write the actual answers.
 
 
 \end{document}
