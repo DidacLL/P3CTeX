@@ -151,6 +151,24 @@
 		\tl_if_blank:VF \l__inheritance_tl {\cs:w inherit \cs_end:{\l__inheritance_tl}}
 	\end{\l__obj_type_tl}
 }
+\cs_new:Npn \__pxuml_printclassattributes:nn #1#2 {
+	%%%%%%%% ATTRIBUTES
+	\clist_clear_new:N	\l__attributes_clist
+	\tl_clear_new:N \l__attributes_tl
+	\pxprp_get_clist:nnNN {#1}{ attributes } \l__attributes_clist \g_pxuml_classREG_prop
+	\begin{itemize}
+		\foreach \objattr in \l__attributes_clist {\item[#2]{\objattr}}
+	\end{itemize}
+}
+\cs_new:Npn \__pxuml_printclassoperations:nn #1#2 {
+	%%%%%%%% OPERATIONS
+	\clist_clear_new:N	\l__operations_clist
+	\tl_clear_new:N \l__operations_tl
+	\pxprp_get_clist:nnNN { #1 }{ operations } \l__operations_clist \g_pxuml_classREG_prop
+	\begin{itemize}
+		\foreach \objop in \l__operations_clist {\item[#2]{\objop}}
+	\end{itemize}
+}
 %% LOAD VARIABLE COLORS
 \cs_new:Nn \__pxuml_load_varcolor:{
 	\renewcommand {\umltextcolor }{\l__pxuml_bg_color_tl!}

@@ -64,6 +64,12 @@
 	\__pxuml_drawsimpleclass:nnn {#3} {#4} {#2}
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 }
+\NewDocumentCommand{\printAttributes}{ m O{ }}{
+	\__pxuml_printclassattributes:nn {#1}{#2}
+}
+\NewDocumentCommand{\printOperations}{ m O{ }}{
+	\__pxuml_printclassoperations:nn {#1}{#2}
+}
 \NewDocumentCommand{\drawinstance}{s O{16} m O{0,0} m m o }{
 	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
 	\begin{object}[ text~ width= #2em]{#3}{#4}
