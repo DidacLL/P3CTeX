@@ -55,6 +55,9 @@
 	LST			.bool_set:N 	= \l_pxcore_lst_use_bool,
 		LST			.initial:n	= false,
 		LST			.default:n	= true,
+	ORL			.bool_set:N = \l_pxcore_orl_use_bool,
+		ORL         .initial:n  = false,
+		ORL         .default:n  = true,
 	default		.meta:n	=	{
 		PRP		=	true,
 		UML		=	true,
@@ -62,6 +65,9 @@
 		TAB 	=	true,
 		LST 	=	true
 	},
+	SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
+		SYNTAX		.initial:n	= false,
+		SYNTAX		.default:n	= true,
 	unknown		.code:n ={}
 }
 \ProcessKeysOptions{ pxCORE }
@@ -82,4 +88,12 @@
 }
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
+\bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
+\bool_if:NT \l_pxcore_lst_use_bool {}
+
+
+
+
+
+
 \endinput

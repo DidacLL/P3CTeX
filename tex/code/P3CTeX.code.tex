@@ -38,6 +38,10 @@
 }
 \bool_new:N \l_pxdoc_language_bool
 \bool_set_false:N \l_pxdoc_language_bool
+\bool_new:N \l_pxdoc_useglossary_bool
+\bool_set_false:N \l_pxdoc_useglossary_bool
+%\bool_new:N \l_pxdoc_usebibliography_bool
+%\bool_set_false:N \l_pxdoc_usebibliography_bool
 %% =================================
 %% ===== P3CTeX KEYS DEFINITION ====
 %% =================================
@@ -54,8 +58,21 @@
 	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
 		no-plagi	.initial:n 	=	false,
 		no-plagi	.default:n 	=	true,
-	CA		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, en},
-	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, cat},
+	glossary		.code		={
+									\RequirePackage[acronym]{glossaries}
+									\bool_set_true:N \l_pxdoc_useglossary_bool
+								},
+%	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
+%		bibliography			.initial:n	= {},
+%	references			.meta:n		={usebibliography={true}, bibpath={#1}},
+	preamble		.bool_set:N 		=\l_pxdoc_usepreamble_bool,
+		preamble		.initial:n 		=	false,
+		preamble		.default:n 		=	true,
+	preamblepath			.tl_set:N 		= \l__pxdoc_preamblepath_tl,
+	preamblepath			.initial:n	= {},
+	setPreamble		.meta:n	={preamble={true}, preamblepath={#1}},
+	CA		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true},en},
+	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true},cat},
 	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
 	PR		.meta:n	={cover = {true} , toc ={ true }},
 	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
@@ -143,6 +160,9 @@
 \cs_new:Nn \__ifcover:nn {\bool_if:NTF	\l_pxdoc_usecover_bool{#1}{#2}}
 \cs_new:Nn \__iftoc:nn	 {\bool_if:NTF	\l_pxdoc_usetoc_bool	{#1}{#2}}
 \cs_new:Nn \__ifplagi:nn {\bool_if:NTF	\l_pxdoc_useplagi_bool{#1}{#2}}
+\cs_new:Nn \__ifpreamble:nn {\bool_if:NTF	\l_pxdoc_usepreamble_bool{#1}{#2}}
+\cs_new:Nn \__ifglossary:nn {\bool_if:NTF	\l_pxdoc_useglossary_bool{#1}{#2}}
+%\cs_new:Nn \__ifbibliography:nn {\tl_if_blank:VTF \l__pxdoc_bibpath_tl {#2} {#1}}
 %% =================================
 %% ======= LOAD P3CTeX DATA ========
 %% =================================

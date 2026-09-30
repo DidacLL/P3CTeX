@@ -1,0 +1,166 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%      P3C.TeX
+%%      SCVRIA SOFWARE      Ultimate UOC PEC Repository
+%% =======================================================
+%%  This file is part of the P3CTeX project.
+%%
+%%  Author: Scvria
+%%  File: pxORL.sty
+%%  Version: v0.1 (07/2026)
+%%  Description:
+%%    P3CTeX orla / graduation board module.
+%%    Provides list-driven graduation boards using the package visual
+%%    system: P3CTeX colors, presets, typography helpers and placeholders.
+%% =======================================================
+
+\RequirePackage{expl3}
+\RequirePackage{xparse,l3keys2e}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{pgffor}
+\RequirePackage{geometry}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins}
+\ProvidesExplPackage{pxORL}{2026/07/03}{v0.1}
+{P3CTeX orla / graduation board module}
+
+% Fallbacks for standalone usage. P3CTeX/pxGDX already define these.
+\providecolor{primaryColor}{rgb}{0,0,.47}
+\providecolor{secondaryColor}{rgb}{.45,.93,1}
+\providecolor{neutralColor}{cmyk}{0.5,0.14,0.16,0}
+\providecolor{darkColor}{rgb}{.1,.25,.5}
+\providecolor{lightColor}{cmyk}{0,0,0,0.3}
+\providecolor{lighterColor}{rgb}{1,1,1}
+
+\file_input:n {pxORL.code.tex}
+\pxORL_save_preset:nn { p3c-uoc-orla }
+{
+	maincolor      = primaryColor,
+	accentcolor    = secondaryColor,
+	neutralcolor   = neutralColor,
+	textcolor      = darkColor,
+	papercolor     = lighterColor,
+	framecolor     = primaryColor,
+	photo-bg-color = lighterColor,
+
+	title-size     = \huge,
+	subtitle-size  = \large,
+	name-size      = \small,
+	title-max      = 30pt,
+
+	page-margin    = 9mm,
+	board-padding  = 10mm,
+
+	logo-left      = img/pxhlogo.png,
+	logo-right     = img/pxflogo.png,
+	logo-height    = .78cm,
+	logo-left-width  = 4.6cm,
+	logo-right-width = 4.2cm,
+
+	auto-columns   = true,
+	auto-size      = true,
+	print-placeholders = true,
+	clearpage      = true
+}
+% P3CTeX-branded presets. Registered before option processing.
+\pxORL_save_preset:nn { p3c-classic }
+{
+	maincolor      = primaryColor,
+	accentcolor    = secondaryColor,
+	neutralcolor   = neutralColor,
+	textcolor      = darkColor,
+	papercolor     = lighterColor,
+	framecolor     = primaryColor,
+	photo-bg-color = lighterColor,
+	title-size     = \Huge,
+	subtitle-size  = \large,
+	name-size      = \small,
+	photo-width    = 2.8cm,
+	photo-height   = 3.55cm,
+	card-width     = 3.35cm,
+	card-sep       = .45cm,
+	row-sep        = 1.1em,
+	auto-columns   = true,
+	print-placeholders = true
+}
+
+\pxORL_save_preset:nn { p3c-compact }
+{
+	maincolor      = primaryColor,
+	accentcolor    = secondaryColor,
+	neutralcolor   = neutralColor,
+	textcolor      = darkColor,
+	papercolor     = lighterColor,
+	framecolor     = primaryColor,
+	photo-bg-color = lighterColor,
+	title-size     = \huge,
+	subtitle-size  = \normalsize,
+	name-size      = \scriptsize,
+	photo-width    = 2.25cm,
+	photo-height   = 2.9cm,
+	card-width     = 2.75cm,
+	card-sep       = .32cm,
+	row-sep        = .8em,
+	auto-columns   = true,
+	print-placeholders = true
+}
+
+\pxORL_save_preset:nn { p3c-formal }
+{
+	maincolor      = darkColor,
+	accentcolor    = primaryColor,
+	neutralcolor   = neutralColor,
+	textcolor      = darkColor,
+	papercolor     = lighterColor,
+	framecolor     = darkColor,
+	photo-bg-color = lightColor!15,
+	title-size     = \Huge,
+	subtitle-size  = \large,
+	name-size      = \small,
+	photo-width    = 2.7cm,
+	photo-height   = 3.45cm,
+	card-width     = 3.25cm,
+	card-sep       = .42cm,
+	row-sep        = 1em,
+	auto-columns   = true,
+	print-placeholders = true
+}
+
+\ProcessKeysOptions{ pxORL }
+
+%% Public LaTeX2e API
+
+\NewDocumentCommand{\pxORLsetup}{m}
+{ \pxORL_set_options:n { #1 } }
+
+\NewDocumentCommand{\pxORLsavepreset}{m m}
+{ \pxORL_save_preset:nn { #1 } { #2 } }
+
+\NewDocumentCommand{\pxORLusepreset}{m}
+{ \pxORL_use_preset:n { #1 } }
+
+% \pxORLprint[<local options>]{<students>}
+%
+% Input:
+%   {Student Name}/{photo-file},
+%   {Student Name}/,
+%   {Student Name}/{photo-file}
+%
+% Empty or missing photos print a P3CTeX-style placeholder when
+% print-placeholders=true.
+\NewDocumentCommand{\pxORLprint}{ O{} +m }
+{
+	\group_begin:
+	\pxORL_set_options:n { #1 }
+	\pxORL_print:n { #2 }
+	\group_end:
+}
+
+% Catalan/Spanish semantic alias, still mapped to the pxORL API.
+\NewDocumentCommand{\pxOrla}{ O{} +m }
+{ \pxORLprint[#1]{#2} }
+
+\endinput

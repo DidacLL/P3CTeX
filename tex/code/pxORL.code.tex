@@ -1,0 +1,625 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_EN-EnglishUnitedKingdom
+%% =======================================================
+%%      P3C.TeX
+%%      SCVRIA SOFWARE      Ultimate UOC PEC Repository
+%% =======================================================
+%%  This file is part of the P3CTeX project.
+%%
+%%  Author: Scvria
+%%  File: pxORL.code.tex
+%%  Version: v0.1 (07/2026)
+%%  Description:
+%%    Implementation for pxORL orla / graduation board module.
+%% =======================================================
+
+\ProvidesExplFile{pxORL.code.tex}{2026/07/03}{v0.1}
+{P3CTeX orla implementation}
+
+%% -------------------------------------------------------
+%% Registry / variables
+%% -------------------------------------------------------
+
+\prop_if_exist:NF \g_pxorl_presets_prop
+{ \prop_gclear_new:N \g_pxorl_presets_prop }
+
+\tl_new:N  \l__pxorl_title_tl
+\tl_new:N  \l__pxorl_subtitle_tl
+\tl_new:N  \l__pxorl_footer_tl
+\tl_new:N  \l__pxorl_photos_path_tl
+
+\tl_new:N  \l__pxorl_main_color_tl
+\tl_new:N  \l__pxorl_accent_color_tl
+\tl_new:N  \l__pxorl_neutral_color_tl
+\tl_new:N  \l__pxorl_text_color_tl
+\tl_new:N  \l__pxorl_paper_color_tl
+\tl_new:N  \l__pxorl_frame_color_tl
+\tl_new:N  \l__pxorl_photo_bg_color_tl
+
+\tl_new:N  \l__pxorl_title_size_tl
+\tl_new:N  \l__pxorl_subtitle_size_tl
+\tl_new:N  \l__pxorl_name_size_tl
+\tl_new:N  \l__pxorl_logo_left_tl
+\tl_new:N  \l__pxorl_logo_right_tl
+
+\dim_new:N \l__pxorl_page_margin_dim
+\dim_new:N \l__pxorl_board_padding_dim
+\dim_new:N \l__pxorl_page_safety_dim
+\dim_new:N \l__pxorl_logo_height_dim
+\dim_new:N \l__pxorl_logo_left_width_dim
+\dim_new:N \l__pxorl_logo_right_width_dim
+\dim_new:N \l__pxorl_photo_width_dim
+\dim_new:N \l__pxorl_photo_height_dim
+\dim_new:N \l__pxorl_card_width_dim
+\dim_new:N \l__pxorl_card_sep_dim
+\dim_new:N \l__pxorl_row_sep_dim
+\dim_new:N \l__pxorl_title_max_dim
+
+\int_new:N \l__pxorl_columns_int
+\int_new:N \l__pxorl_count_int
+
+\bool_new:N \l__pxorl_auto_size_bool
+\bool_new:N \l__pxorl_auto_columns_bool
+\bool_new:N \l__pxorl_print_placeholders_bool
+\bool_new:N \l__pxorl_clearpage_bool
+
+\clist_new:N \l__pxorl_students_clist
+
+%% -------------------------------------------------------
+%% Messages
+%% -------------------------------------------------------
+
+\msg_new:nnn { pxORL } { unknown-preset }
+{ Unknown~pxORL~preset~'#1'. }
+
+%% -------------------------------------------------------
+%% Preset management
+%% -------------------------------------------------------
+
+\cs_new_protected:Npn \pxORL_save_preset:nn #1#2
+{
+	\prop_gput:Nnn \g_pxorl_presets_prop { #1 } { #2 }
+}
+
+\cs_new_protected:Npn \pxORL_use_preset:n #1
+{
+	\prop_get:NnNTF \g_pxorl_presets_prop { #1 } \l_tmpa_tl
+	{ \keys_set:nV { pxORL } \l_tmpa_tl }
+	{ \msg_warning:nnn { pxORL } { unknown-preset } { #1 } }
+}
+
+%% -------------------------------------------------------
+%% Keys
+%% -------------------------------------------------------
+
+\keys_define:nn { pxORL }
+{
+	preset .code:n = { \pxORL_use_preset:n { #1 } },
+
+	title .tl_set:N = \l__pxorl_title_tl,
+	title .initial:n = { Orla },
+
+	subtitle .tl_set:N = \l__pxorl_subtitle_tl,
+	subtitle .initial:n = { Promoció },
+
+	footer .tl_set:N = \l__pxorl_footer_tl,
+	footer .initial:n = { },
+
+	photos-path .tl_set:N = \l__pxorl_photos_path_tl,
+	photos-path .initial:n = { },
+
+	maincolor .tl_set:N = \l__pxorl_main_color_tl,
+	maincolor .initial:n = primaryColor,
+
+	accentcolor .tl_set:N = \l__pxorl_accent_color_tl,
+	accentcolor .initial:n = secondaryColor,
+
+	neutralcolor .tl_set:N = \l__pxorl_neutral_color_tl,
+	neutralcolor .initial:n = neutralColor,
+
+	textcolor .tl_set:N = \l__pxorl_text_color_tl,
+	textcolor .initial:n = darkColor,
+
+	papercolor .tl_set:N = \l__pxorl_paper_color_tl,
+	papercolor .initial:n = lighterColor,
+
+	framecolor .tl_set:N = \l__pxorl_frame_color_tl,
+	framecolor .initial:n = primaryColor,
+
+	photo-bg-color .tl_set:N = \l__pxorl_photo_bg_color_tl,
+	photo-bg-color .initial:n = lighterColor,
+
+	title-size .tl_set:N = \l__pxorl_title_size_tl,
+	title-size .initial:n = \Huge,
+
+	subtitle-size .tl_set:N = \l__pxorl_subtitle_size_tl,
+	subtitle-size .initial:n = \large,
+
+	name-size .tl_set:N = \l__pxorl_name_size_tl,
+	name-size .initial:n = \small,
+
+	title-max .dim_set:N = \l__pxorl_title_max_dim,
+	title-max .initial:n = 42pt,
+
+	photo-width .dim_set:N = \l__pxorl_photo_width_dim,
+	photo-width .initial:n = 2.8cm,
+
+	photo-height .dim_set:N = \l__pxorl_photo_height_dim,
+	photo-height .initial:n = 3.55cm,
+
+	card-width .dim_set:N = \l__pxorl_card_width_dim,
+	card-width .initial:n = 3.35cm,
+
+	card-sep .dim_set:N = \l__pxorl_card_sep_dim,
+	card-sep .initial:n = .45cm,
+
+	row-sep .dim_set:N = \l__pxorl_row_sep_dim,
+	row-sep .initial:n = 1.1em,
+
+	columns .int_set:N = \l__pxorl_columns_int,
+	columns .initial:n = 4,
+
+	auto-columns .bool_set:N = \l__pxorl_auto_columns_bool,
+	auto-columns .initial:n = true,
+	auto-columns .default:n = true,
+
+	print-placeholders .bool_set:N = \l__pxorl_print_placeholders_bool,
+	print-placeholders .initial:n = true,
+	print-placeholders .default:n = true,
+
+	clearpage .bool_set:N = \l__pxorl_clearpage_bool,
+	clearpage .initial:n = true,
+	clearpage .default:n = true,
+
+	no-clearpage .meta:n = { clearpage = false },
+
+	classic .meta:n = { preset = p3c-classic },
+	compact .meta:n = { preset = p3c-compact },
+	formal  .meta:n = { preset = p3c-formal },
+
+	page-margin .dim_set:N = \l__pxorl_page_margin_dim,
+	page-margin .initial:n = 9mm,
+
+	board-padding .dim_set:N = \l__pxorl_board_padding_dim,
+	board-padding .initial:n = 10mm,
+
+	page-safety .dim_set:N = \l__pxorl_page_safety_dim,
+	page-safety .initial:n = 6mm,
+
+	logo-left .tl_set:N = \l__pxorl_logo_left_tl,
+	logo-left .initial:n = img/pxhlogo.png,
+
+	logo-right .tl_set:N = \l__pxorl_logo_right_tl,
+	logo-right .initial:n = img/pxflogo.png,
+
+	logo-height .dim_set:N = \l__pxorl_logo_height_dim,
+	logo-height .initial:n = .78cm,
+
+	logo-left-width .dim_set:N = \l__pxorl_logo_left_width_dim,
+	logo-left-width .initial:n = 4.6cm,
+
+	logo-right-width .dim_set:N = \l__pxorl_logo_right_width_dim,
+	logo-right-width .initial:n = 4.2cm,
+
+	auto-size .bool_set:N = \l__pxorl_auto_size_bool,
+	auto-size .initial:n = true,
+	auto-size .default:n = true,
+
+	unknown .code:n = { }
+}
+
+\cs_new_protected:Npn \pxORL_set_options:n #1
+{
+	\keys_set:nn { pxORL } { #1 }
+}
+
+%% -------------------------------------------------------
+%% P3CTeX-aware helpers
+%% -------------------------------------------------------
+\cs_new_protected:Npn \__pxorl_logo:Nnn #1#2#3
+{
+	\tl_if_blank:VTF #1
+	{ }
+	{
+		\IfFileExists{\tl_use:N #1}
+		{
+			\includegraphics[
+			height=#2,
+			width=#3,
+			keepaspectratio
+			]{\tl_use:N #1}
+		}
+		{ }
+	}
+}
+
+\cs_new_protected:Npn \__pxorl_rule:n #1
+{
+	\cs_if_exist:NTF \pxHRule
+	{ \pxHRule[#1] }
+	{ \noindent\rule{#1}{.75pt} }
+}
+
+\cs_new_protected:Npn \__pxorl_grow:nn #1#2
+{
+	\cs_if_exist:NTF \pxGrow
+	{ \pxGrow[#1]{#2}[\l__pxorl_title_max_dim] }
+	{ \resizebox{#1\linewidth}{!}{#2} }
+}
+
+\cs_set_protected:Npn \__pxorl_select_columns:
+{
+	\int_compare:nNnTF { \l__pxorl_count_int } < { 5 }
+	{ \int_set:Nn \l__pxorl_columns_int { 2 } }
+	{
+		\int_compare:nNnTF { \l__pxorl_count_int } < { 10 }
+		{ \int_set:Nn \l__pxorl_columns_int { 3 } }
+		{ \int_set:Nn \l__pxorl_columns_int { 4 } }
+	}
+}
+\cs_new_protected:Npn \__pxorl_select_layout:
+{
+	\bool_if:NT \l__pxorl_auto_columns_bool
+	{
+		\int_compare:nNnTF { \l__pxorl_count_int } < { 2 }
+		{ \int_set:Nn \l__pxorl_columns_int { 1 } }
+		{
+			\int_compare:nNnTF { \l__pxorl_count_int } < { 5 }
+			{ \int_set:Nn \l__pxorl_columns_int { 2 } }
+			{
+				\int_compare:nNnTF { \l__pxorl_count_int } < { 10 }
+				{ \int_set:Nn \l__pxorl_columns_int { 3 } }
+				{
+					\int_compare:nNnTF { \l__pxorl_count_int } < { 17 }
+					{ \int_set:Nn \l__pxorl_columns_int { 4 } }
+					{ \int_set:Nn \l__pxorl_columns_int { 5 } }
+				}
+			}
+		}
+	}
+
+	\bool_if:NT \l__pxorl_auto_size_bool
+	{
+		\int_compare:nNnTF { \l__pxorl_count_int } < { 7 }
+		{
+			\dim_set:Nn \l__pxorl_photo_width_dim  { 4.05cm }
+			\dim_set:Nn \l__pxorl_photo_height_dim { 5.10cm }
+			\dim_set:Nn \l__pxorl_card_width_dim   { 4.65cm }
+			\dim_set:Nn \l__pxorl_card_sep_dim     { .70cm }
+			\dim_set:Nn \l__pxorl_row_sep_dim      { .95cm }
+			\tl_set:Nn  \l__pxorl_name_size_tl     { \normalsize }
+		}
+		{
+			\int_compare:nNnTF { \l__pxorl_count_int } < { 13 }
+			{
+				\dim_set:Nn \l__pxorl_photo_width_dim  { 3.05cm }
+				\dim_set:Nn \l__pxorl_photo_height_dim { 3.85cm }
+				\dim_set:Nn \l__pxorl_card_width_dim   { 3.55cm }
+				\dim_set:Nn \l__pxorl_card_sep_dim     { .48cm }
+				\dim_set:Nn \l__pxorl_row_sep_dim      { .85cm }
+				\tl_set:Nn  \l__pxorl_name_size_tl     { \small }
+			}
+			{
+				\dim_set:Nn \l__pxorl_photo_width_dim  { 2.45cm }
+				\dim_set:Nn \l__pxorl_photo_height_dim { 3.10cm }
+				\dim_set:Nn \l__pxorl_card_width_dim   { 2.95cm }
+				\dim_set:Nn \l__pxorl_card_sep_dim     { .35cm }
+				\dim_set:Nn \l__pxorl_row_sep_dim      { .65cm }
+				\tl_set:Nn  \l__pxorl_name_size_tl     { \scriptsize }
+			}
+		}
+	}
+}
+%% -------------------------------------------------------
+%% Photo / placeholder rendering
+%% -------------------------------------------------------
+
+\cs_set_protected:Npn \__pxorl_placeholder:n #1
+{
+	% TeX-only fixed-size placeholder. Do not use a TikZ node here:
+	% the previous implementation drew the frame correctly but placed the
+	% placeholder text off-centre in some engines/viewers.
+	\begingroup
+		\setlength{\fboxrule}{.45pt}
+		\setlength{\fboxsep}{0pt}
+		\fcolorbox{\l__pxorl_neutral_color_tl}{\l__pxorl_photo_bg_color_tl}
+		{
+			\makebox[\dimexpr\l__pxorl_photo_width_dim-2\fboxrule\relax][c]
+			{
+				\vbox to \dimexpr\l__pxorl_photo_height_dim-2\fboxrule\relax
+				{
+					\vfil
+					\hbox to \dimexpr\l__pxorl_photo_width_dim-2\fboxrule\relax
+					{
+						\hfil
+						\begin{minipage}{\dimexpr\l__pxorl_photo_width_dim-2\fboxrule\relax}
+							\centering
+							{\Large\bfseries\color{\l__pxorl_neutral_color_tl}?\par}
+							\vspace{.35em}
+							{\scriptsize\color{\l__pxorl_neutral_color_tl}#1\par}
+						\end{minipage}
+						\hfil
+					}
+					\vfil
+				}
+			}
+		}
+	\endgroup
+}
+
+\cs_new_protected:Npn \__pxorl_centered_photo_box:n #1
+{
+	\makebox[\l__pxorl_photo_width_dim][c]{%
+		\vbox to \l__pxorl_photo_height_dim {%
+			\vfil
+			\hbox{#1}%
+			\vfil
+		}%
+	}%
+}
+
+\cs_set_protected:Npn \__pxorl_photo:n #1
+{
+	% \foreach can leave trailing space tokens in the last item of the list
+	% when the user formats the argument across lines.  That makes the final
+	% file lookup become, for example, `img/orla/nuria.jpg<space>`, so
+	% \IfFileExists fails and prints the placeholder.  Normalise the received
+	% photo field before testing or including the file.
+	\tl_set:Nn \l_tmpa_tl { #1 }
+	\tl_trim_spaces:N \l_tmpa_tl
+	\tl_set_eq:NN \l_tmpb_tl \l__pxorl_photos_path_tl
+	\tl_trim_spaces:N \l_tmpb_tl
+
+	\tl_if_blank:VTF \l_tmpa_tl
+	{
+		\bool_if:NTF \l__pxorl_print_placeholders_bool
+		{ \__pxorl_placeholder:n { Foto~pendent } }
+		{ \__pxorl_centered_photo_box:n { } }
+	}
+	{
+		\IfFileExists{\tl_use:N \l_tmpb_tl \tl_use:N \l_tmpa_tl}
+		{
+			\__pxorl_centered_photo_box:n
+			{
+				\includegraphics[
+				width=\l__pxorl_photo_width_dim,
+				height=\l__pxorl_photo_height_dim,
+				keepaspectratio
+				]{\tl_use:N \l_tmpb_tl \tl_use:N \l_tmpa_tl}
+			}
+		}
+		{
+			\bool_if:NTF \l__pxorl_print_placeholders_bool
+			{ \__pxorl_placeholder:n { Foto~pendent } }
+			{ \__pxorl_centered_photo_box:n { } }
+		}
+	}
+}
+
+%% -------------------------------------------------------
+%% Student card
+%% -------------------------------------------------------
+
+\cs_set_protected:Npn \__pxorl_student:nn #1#2
+{
+	\begin{minipage}[t]{\l__pxorl_card_width_dim}
+		\centering
+
+		\begingroup
+		\setlength{\fboxrule}{.55pt}
+		\setlength{\fboxsep}{4pt}
+		\makebox[\l__pxorl_card_width_dim][c]{%
+			\fcolorbox{\l__pxorl_frame_color_tl}{\l__pxorl_paper_color_tl}
+			{%
+				\__pxorl_photo:n { #2 }%
+			}%
+		}%
+		\endgroup
+
+		\par\vspace{.45em}
+
+		{
+			\l__pxorl_name_size_tl
+			\bfseries
+			\color{\l__pxorl_text_color_tl}
+			#1
+			\par
+		}
+	\end{minipage}
+}
+%% -------------------------------------------------------
+%% Header / footer
+%% -------------------------------------------------------
+
+\cs_set_protected:Npn \__pxorl_print_header:
+{
+	\noindent
+	\begin{minipage}[c]{.45\linewidth}
+		\raggedright
+		\__pxorl_logo:Nnn
+		\l__pxorl_logo_left_tl
+		{ \l__pxorl_logo_height_dim }
+		{ \l__pxorl_logo_left_width_dim }
+	\end{minipage}
+	\hfill
+	\begin{minipage}[c]{.45\linewidth}
+		\raggedleft
+		\__pxorl_logo:Nnn
+		\l__pxorl_logo_right_tl
+		{ \l__pxorl_logo_height_dim }
+		{ \l__pxorl_logo_right_width_dim }
+	\end{minipage}
+
+	\par\vspace{.55cm}
+
+	\begin{center}
+		{
+			\color{\l__pxorl_text_color_tl}
+			\l__pxorl_title_size_tl
+			\bfseries
+			\__pxorl_grow:nn {.70} { \tl_use:N \l__pxorl_title_tl }
+			\par
+		}
+
+		\vspace{.25em}
+
+		{
+			\color{\l__pxorl_main_color_tl}
+			\l__pxorl_subtitle_size_tl
+			\__pxorl_grow:nn {.86} { \tl_use:N \l__pxorl_subtitle_tl }
+			\par
+		}
+	\end{center}
+
+	\vspace{.55em}
+
+	\textcolor{\l__pxorl_main_color_tl}
+	{ \rule{\linewidth}{.75pt} }
+
+	\par\vspace{.7cm}
+}
+
+\cs_set_protected:Npn \__pxorl_print_footer:
+{
+	\textcolor{\l__pxorl_neutral_color_tl}
+	{ \rule{\linewidth}{.45pt} }
+
+	\par\vspace{.55em}
+
+	\noindent
+	\begin{minipage}[c]{.58\linewidth}
+		\raggedright
+		{
+			\small
+			\color{\l__pxorl_text_color_tl}
+			\tl_if_blank:VTF \l__pxorl_footer_tl
+			{ \tl_use:N \l__pxorl_subtitle_tl }
+			{ \tl_use:N \l__pxorl_footer_tl }
+		}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[c]{.36\linewidth}
+		\raggedleft
+		\__pxorl_logo:Nnn
+		\l__pxorl_logo_right_tl
+		{ .55cm }
+		{ 3.2cm }
+	\end{minipage}
+}
+
+%% -------------------------------------------------------
+%% Main renderer
+%% -------------------------------------------------------
+\cs_set_protected:Npn \pxORL_print:n #1
+{
+	\clist_set:Nn \l__pxorl_students_clist { #1 }
+	\int_set:Nn \l__pxorl_count_int
+	{ \clist_count:N \l__pxorl_students_clist }
+
+	\__pxorl_select_layout:
+
+	% Do not call \clearpage unconditionally here.
+	% At the start of a document it creates the blank first page seen in the test PDF.
+	% Only clear when the current page already has material.
+	\bool_if:NT \l__pxorl_clearpage_bool
+	{
+		\ifdim\pagetotal>0pt
+			\clearpage
+		\fi
+	}
+
+	\thispagestyle{empty}
+	\setlength{\parindent}{0pt}
+
+	% Render as a real page overlay, but draw the frame with TikZ instead
+	% of using \fcolorbox. \fcolorbox around a fixed-height minipage can
+	% still contribute depth and push the visible box below the page.
+	\null
+	\begin{tikzpicture}[remember~picture, overlay]
+		% Page-safe background and outer frame.
+		\fill[
+			\l__pxorl_paper_color_tl
+		]
+			([xshift=\l__pxorl_page_margin_dim,
+			  yshift=-\l__pxorl_page_margin_dim]current~page.north~west)
+			rectangle
+			([xshift=-\l__pxorl_page_margin_dim,
+			  yshift=\dimexpr\l__pxorl_page_margin_dim+\l__pxorl_page_safety_dim\relax]current~page.south~east);
+
+		\draw[
+			\l__pxorl_frame_color_tl,
+			line~width=.75pt
+		]
+			([xshift=\l__pxorl_page_margin_dim,
+			  yshift=-\l__pxorl_page_margin_dim]current~page.north~west)
+			rectangle
+			([xshift=-\l__pxorl_page_margin_dim,
+			  yshift=\dimexpr\l__pxorl_page_margin_dim+\l__pxorl_page_safety_dim\relax]current~page.south~east);
+
+		% Inner thin frame, equivalent to the earlier double-frame look,
+		% but also constrained to the physical page.
+		\draw[
+			\l__pxorl_neutral_color_tl,
+			line~width=.35pt
+		]
+			([xshift=\dimexpr\l__pxorl_page_margin_dim+4pt\relax,
+			  yshift=\dimexpr-\l__pxorl_page_margin_dim-4pt\relax]current~page.north~west)
+			rectangle
+			([xshift=\dimexpr-\l__pxorl_page_margin_dim-4pt\relax,
+			  yshift=\dimexpr\l__pxorl_page_margin_dim+\l__pxorl_page_safety_dim+4pt\relax]current~page.south~east);
+
+		% Content box. It is smaller than the drawn frame, so even if TeX
+		% adds depth to the node/minipage, the visible material remains in page.
+		\node[
+			anchor=north~west,
+			inner~sep=0pt,
+			text~width=\dimexpr\paperwidth-2\l__pxorl_page_margin_dim-2\l__pxorl_board_padding_dim\relax,
+			align=left
+		]
+		at
+			([xshift=\dimexpr\l__pxorl_page_margin_dim+\l__pxorl_board_padding_dim\relax,
+			  yshift=\dimexpr-\l__pxorl_page_margin_dim-\l__pxorl_board_padding_dim\relax]current~page.north~west)
+		{
+			\begin{minipage}[t]
+				[\dimexpr\paperheight-2\l__pxorl_page_margin_dim-\l__pxorl_page_safety_dim-2\l__pxorl_board_padding_dim-1mm\relax]
+				[s]
+				{\dimexpr\paperwidth-2\l__pxorl_page_margin_dim-2\l__pxorl_board_padding_dim\relax}
+
+				\__pxorl_print_header:
+
+				\vfill
+
+				{
+					\centering
+					\foreach \pxorlname/\pxorlphoto [count=\pxorli from 1] in { #1 }
+					{
+						\__pxorl_student:nn { \pxorlname } { \pxorlphoto }
+
+						\pgfmathtruncatemacro
+						{\pxorlbreak}
+						{ mod(\pxorli,\int_use:N \l__pxorl_columns_int) }
+
+						\ifnum\pxorli<\int_use:N \l__pxorl_count_int
+							\ifnum\pxorlbreak=0
+								\par\vspace{\l__pxorl_row_sep_dim}
+							\else
+								\hspace{\l__pxorl_card_sep_dim}
+							\fi
+						\fi
+					}
+					\par
+				}
+
+				\vfill
+
+				\__pxorl_print_footer:
+
+			\end{minipage}
+		};
+	\end{tikzpicture}
+
+	\bool_if:NT \l__pxorl_clearpage_bool
+	{ \newpage }
+}
+
+\endinput

@@ -68,6 +68,7 @@
 \NewDocumentCommand{\pxGrow}{ s O{1} m O{42pt} }{\__pxgdx_grow:nnnn {#1}{#2}{#3}{#4}}
 % pxFill: Fills Horizontal space
 \NewDocumentCommand{\pxFill}{}{	\__pxgdx_hfill:	}
+\NewDocumentCommand{\pxCenter}{m}{\pxFill#1\pxFill}
 % legacy uoc sections comands
 \NewDocumentCommand{\sectionuoc}{ m }{\__px_sectionuoc:n {#1}}
 \NewDocumentCommand{\subsectionuoc}{ m }{\__px_subsectionuoc:n {#1}}
@@ -82,6 +83,13 @@
 		{\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\}
 }
 %% AUTO LOAD COVER AND TOC
+\AtEndOfClass{
+	\__ifglossary:nn{
+		\makenoidxglossaries
+		\NewDocumentCommand{\GL}{s m}{\IfBooleanTF{#1}{\acrlong{#2} }{\acrshort{#2} } }
+	}{}
+	\__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
+}
 \AfterBeginDocument{
 	\__ifcover:nn{
 		\__ifplagi:nn{\PECTeXprintCover*}{\PECTeXprintCover}
@@ -92,5 +100,26 @@
 		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
 }
+\AtEndDocument{
+%	\glsaddall
 
+	\__ifglossary:nn{
+		\clearpage
+		\addcontentsline{toc}{section}{Glossari}
+		\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
+		\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
+	}{}
+%	\__ifbibliography:nn{
+%		\pxBib{ \l__pxdoc_bibpath_tl }
+%	}{}
+}
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }
+%\makeatletter
+%\def\pxBib#1{
+%	\newpage
+%	\nocite{*}
+%	\addcontentsline{toc}{section}{Referències}
+%	\bibliographystyle{abbrvnat}
+%	\bibliography{ #1 }
+%}
+%\makeatother
