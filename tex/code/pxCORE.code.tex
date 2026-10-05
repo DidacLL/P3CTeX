@@ -28,6 +28,10 @@
 %% =================================
 %% ===== pxCORE KEYS DEFINITION ====
 %% =================================
+%% pxCORE package keys.
+%% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
+%% PRP/UML/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig forward option strings to those packages.
+%% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
 	debug		.bool_set:N 	= \l_pxcore_debug_bool,
@@ -72,6 +76,8 @@
 }
 \ProcessKeysOptions{ pxCORE }
 %% =================================
+%% Module-selection flags are consumed here during package loading.
+%% Changing them later with \pxCOREsetup changes state only; it does not re-run these \RequirePackage branches.
 %% ===== LOAD SELECTED MODULES =====
 %% =================================
 \bool_if:NT \l_pxcore_uml_use_bool

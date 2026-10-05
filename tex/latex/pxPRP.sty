@@ -32,6 +32,9 @@
 
 %% Create (or ensure existence of) a new logical pxPRP object.
 %%	 #1 - logical object identifier (short name, e.g. PATATA)
+%% \pxNewObject{<id>}
+%% Ensure a logical object exists in the global pxPRP registry.
+%% #1 - object identifier.
 \NewDocumentCommand{\pxNewObject}{m}{\pxPRP_ensure:n {#1}}
 
 %% Assigna un valor escalar (tl) a una clau dins d'un objecte.
@@ -39,6 +42,9 @@
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - valor escalar (pot contenir comes)
+%% \pxSetValue{<id>}{<key>}{<value>}
+%% Set/replace one scalar property value.
+%% #1 - object id.  #2 - key.  #3 - value.
 \NewDocumentCommand{\pxSetValue}{m m m}{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
 %\def\pxSET#1.#2=#3{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
 %% Afegeix un element al final de la llista associada a una clau.
@@ -46,46 +52,73 @@
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - nou element a afegir
+%% \pxPutValue{<id>}{<key>}{<item>}
+%% Append one item to the comma-list stored at a property.
+%% #1 - object id.  #2 - key.  #3 - item.
 \NewDocumentCommand{\pxPutValue}{m m +m}{\pxPRP_put_items:nnn {#1}{#2}{#3}}
 %\def\pxPUT #1.#2+=#3{\pxPRP_put_items:nnn {#1}{#2}{#3}}
 %% Afegeix una llista de valors al final de la llista existent.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - llista separada per comes a concatenar a la dreta
+%% \pxListPutRight{<id>}{<key>}{<list>}
+%% Append a comma-separated list to the current property value.
+%% #1 - object id.  #2 - key.  #3 - list to append.
 \NewDocumentCommand{\pxListPutRight}{m m m}{\pxprp_list_put_right:nnn {#1}{#2}{#3}}
 %% Afegeix una llista de valors al principi de la llista existent.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - llista separada per comes a concatenar a l'esquerra
+%% \pxListPutLeft{<id>}{<key>}{<list>}
+%% Prepend a comma-separated list to the current property value.
+%% #1 - object id.  #2 - key.  #3 - list to prepend.
 \NewDocumentCommand{\pxListPutLeft}{m m m}{\pxprp_list_put_left:nnn {#1}{#2}{#3}}
 
 %% Substitueix completament la llista associada a una clau.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - nova llista completa separada per comes
+%% \pxListSet{<id>}{<key>}{<list>}
+%% Replace the entire list value stored at a property.
+%% #1 - object id.  #2 - key.  #3 - replacement list.
 \NewDocumentCommand{\pxListSet}{m m m}{\pxprp_list_set:nnn {#1}{#2}{#3}}
 %% Mostra tots els valors d'una clau com a llista, separats per un separador.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - separador (opcional, per defecte ", ")
+%% \pxListAll{<id>}{<key>}[<separator>]
+%% Expand all list items separated by the requested token list.
+%% #1 - object id.  #2 - key.  #3 - separator (default `, `).
 \NewDocumentCommand{\pxListAll}{m m O{, }}{ \pxPRP_list_use:nnn {#1}{#2}{#3}}
 
 %% Retorna la llargada (nombre d'elements) de la llista associada a una clau.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
+%% \pxListLen{<id>}{<key>}
+%% Expand to the number of comma-list items stored at the property.
+%% #1 - object id.  #2 - key.
 \NewDocumentCommand{\pxListLen}{m m}{\pxPRP_list_length:nn {#1}{#2}}
 %% Neteja el contingut de la llista associada a una clau, mantenint la clau.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
+%% \pxListClear{<id>}{<key>}
+%% Keep the property but replace its value with an empty list.
+%% #1 - object id.  #2 - key.
 \NewDocumentCommand{\pxListClear}{m m}{\pxprp_list_set:nnn {#1}{#2}{}}
 
 %% Elimina una clau (i el seu valor) d'un objecte.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau a eliminar
+%% \pxClearKey{<id>}{<key>}
+%% Remove one property key from an object.
+%% #1 - object id.  #2 - key.
 \NewDocumentCommand{\pxClearKey}{m m}{\pxPRP_clear_key:nn {#1}{#2}}
 %% Obté el valor escalar (tl) associat a una clau, sense tractar-lo com a llista.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
+%% \pxGetScalar{<id>}{<key>}
+%% Expand to the scalar token-list value stored at a property.
+%% #1 - object id.  #2 - key.
 \NewDocumentCommand{\pxGetScalar}{m m}{\pxPRP_get_scalar:nn {#1}{#2}}
 %% Test boolean sobre el valor escalar d'una clau.
 %% El valor "false" o buit es considera fals; qualsevol altre, cert.
@@ -93,25 +126,39 @@
 %%	 #2 - clau
 %%	 #3 - codi executat si és cert
 %%	 #4 - codi executat si és fals
+%% \pxIfTrueTF{<id>}{<key>}{<true>}{<false>}
+%% Branch using pxPRP boolean semantics: blank/`false` => false, any other value => true.
+%% #1 - object id.  #2 - key.  #3/#4 - true/false code.
 \def\pxIfTrueTF#1#2#3#4{\pxPRP_if_true:nnTF {#1}{#2}{#3}{#4}}
 %% Test d'existència d'objecte: executa #2 si l'objecte existeix, #3 altrament.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - codi per al cas existent
 %%	 #3 - codi per al cas inexistent
+%% \pxIfObjectExistsTF{<id>}{<true>}{<false>}
+%% Branch on whether an object id is registered.
+%% #1 - object id.  #2/#3 - true/false code.
 \def\pxIfObjectExistsTF#1#2#3{\pxPRP_object_exists:nTF {#1}{#2}{#3}}
 %% Test d'existència de clau dins d'un objecte.
 %%	 #1 - identificador de l'objecte
 %%	 #2 - clau
 %%	 #3 - codi per al cas existent
 %%	 #4 - codi per al cas inexistent
+%% \pxIfKeyExistsTF{<id>}{<key>}{<true>}{<false>}
+%% Branch on whether a property key exists in an object.
+%% #1 - object id.  #2 - key.  #3/#4 - true/false code.
 \def\pxIfKeyExistsTF#1#2#3#4{\pxPRP_key_exists:nnTF {#1}{#2}{#3}{#4}}
 %% Elimina completament l'objecte i totes les seves claus del registre global.
 %%	 #1 - identificador de l'objecte
+%% \pxClearObject{<id>}
+%% Clear the backing prop and remove the object from the global registry.
+%% #1 - object id.
 \NewDocumentCommand{\pxClearObject}{m}{	\pxPRP_clear_object:n {#1}}
 %% Accés compacte a un element de llista: \pxGet OBJ.clau[idx]
 %%	 OBJ	- identificador de l'objecte
 %%	 clau - clau dins de l'objecte
 %%	 idx	- posició (1-based) dins de la llista
+%% Compact/legacy syntax below uses delimiters as part of each call, e.g. \GET(OBJ.key), \GETv(OBJ.key[2]), \SET(OBJ.key){value}.
+%% These wrappers map directly to the public pxPRP primitives above and are marked for pxSYNTAX/deprecation in-place.
 \def\NEW(#1){\pxPRP_ensure:n {#1}} %TODO pxSYNTAX
 \def\GETlength(#1.#2){\pxPRP_list_length:nn {#1}{#2}} %TODO pxSYNTAX
 \def\GETlast(#1.#2){\pxPRP_get_item:nnn {#1}{#2}{\pxPRP_list_length:nn {#1}{#2}}} %TODO pxSYNTAX

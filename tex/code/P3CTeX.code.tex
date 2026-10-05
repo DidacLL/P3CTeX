@@ -45,6 +45,10 @@
 %% =================================
 %% ===== P3CTeX KEYS DEFINITION ====
 %% =================================
+%% P3CTeX class keys.
+%% Configure at class load (\documentclass[<keys>]{P3CTeX}) or later with \PECTeXconfig{<keys>}.
+%% cover/toc/no-plagi/glossary/preamble control document features; data={...} delegates metadata to P3CTeX/data.
+%% Unrecognised options are stored in \l__pxdoc_unknown_tl and later forwarded to pxCORE.
 \keys_define:nn {P3CTeX}
 {
 	cover		.bool_set:N 	=\l_pxdoc_usecover_bool,
@@ -107,6 +111,9 @@
 %% =================================
 %% == P3CTeX/data KEYS DEFINITION ==
 %% =================================
+%% P3CTeX/data metadata keys.
+%% Configure through data={student=..., grade=..., subj-fullname=..., subj-shortname=..., subj-code=...,
+%% ca-fullname=..., ca-shortname=..., date=...}; example/help/documentation are predefined metadata sets.
 \keys_define:nn { P3CTeX / data}
 {
 	student			.tl_set:N 		= \l__pxdata_student_tl,
@@ -157,10 +164,25 @@
 	},
 	load-data		.code:n	={}
 }
+%% \__ifcover:nn {<true>} {<false>}
+%% Execute one branch according to the class cover flag.
+%% #1 - code when cover=true.  #2 - code when cover=false.
 \cs_new:Nn \__ifcover:nn {\bool_if:NTF	\l_pxdoc_usecover_bool{#1}{#2}}
+%% \__iftoc:nn {<true>} {<false>}
+%% Execute one branch according to the class toc flag.
+%% #1 - code when toc=true.  #2 - code when toc=false.
 \cs_new:Nn \__iftoc:nn	 {\bool_if:NTF	\l_pxdoc_usetoc_bool	{#1}{#2}}
+%% \__ifplagi:nn {<true>} {<false>}
+%% Execute one branch according to the no-plagi flag.
+%% #1 - code when no-plagi=true.  #2 - code otherwise.
 \cs_new:Nn \__ifplagi:nn {\bool_if:NTF	\l_pxdoc_useplagi_bool{#1}{#2}}
+%% \__ifpreamble:nn {<true>} {<false>}
+%% Execute one branch according to the preamble flag.
+%% #1 - code when preamble=true.  #2 - code otherwise.
 \cs_new:Nn \__ifpreamble:nn {\bool_if:NTF	\l_pxdoc_usepreamble_bool{#1}{#2}}
+%% \__ifglossary:nn {<true>} {<false>}
+%% Execute one branch according to the glossary flag.
+%% #1 - code when glossary support is enabled.  #2 - code otherwise.
 \cs_new:Nn \__ifglossary:nn {\bool_if:NTF	\l_pxdoc_useglossary_bool{#1}{#2}}
 %\cs_new:Nn \__ifbibliography:nn {\tl_if_blank:VTF \l__pxdoc_bibpath_tl {#2} {#1}}
 %% =================================

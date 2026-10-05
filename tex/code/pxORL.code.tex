@@ -76,11 +76,17 @@
 %% Preset management
 %% -------------------------------------------------------
 
+%% \pxORL_save_preset:nn {<name>}{<key list>}
+%% Register/replace a named pxORL preset.
+%% #1 - preset name.  #2 - pxORL key list stored for later application.
 \cs_new_protected:Npn \pxORL_save_preset:nn #1#2
 {
 	\prop_gput:Nnn \g_pxorl_presets_prop { #1 } { #2 }
 }
 
+%% \pxORL_use_preset:n {<name>}
+%% Apply a stored preset through the normal pxORL key parser; warn when unknown.
+%% #1 - preset name.
 \cs_new_protected:Npn \pxORL_use_preset:n #1
 {
 	\prop_get:NnNTF \g_pxorl_presets_prop { #1 } \l_tmpa_tl
@@ -92,6 +98,9 @@
 %% Keys
 %% -------------------------------------------------------
 
+%% pxORL configuration keys.
+%% Public configuration: \pxORLsetup{<keys>} or local options in \pxORLprint[<keys>]{...}.
+%% Main groups: title/subtitle/footer, colours, card/photo dimensions, column/auto-size behaviour, logos and presets.
 \keys_define:nn { pxORL }
 {
 	preset .code:n = { \pxORL_use_preset:n { #1 } },
@@ -208,6 +217,9 @@
 	unknown .code:n = { }
 }
 
+%% \pxORL_set_options:n {<key list>}
+%% Apply pxORL keys to the current scope.
+%% #1 - comma-separated pxORL configuration.
 \cs_new_protected:Npn \pxORL_set_options:n #1
 {
 	\keys_set:nn { pxORL } { #1 }
@@ -216,6 +228,9 @@
 %% -------------------------------------------------------
 %% P3CTeX-aware helpers
 %% -------------------------------------------------------
+%% \__pxorl_logo:Nnn <path tl> {<height>}{<max width>}
+%% Include a logo only when the configured path is nonblank and exists.
+%% #1 - tl variable containing the filename.  #2 - target height.  #3 - maximum width.
 \cs_new_protected:Npn \__pxorl_logo:Nnn #1#2#3
 {
 	\tl_if_blank:VTF #1
@@ -233,6 +248,9 @@
 	}
 }
 
+%% \__pxorl_rule:n {<width>}
+%% Draw a P3CTeX rule when \pxHRule exists, otherwise fall back to \rule.
+%% #1 - rule width.
 \cs_new_protected:Npn \__pxorl_rule:n #1
 {
 	\cs_if_exist:NTF \pxHRule
@@ -240,6 +258,9 @@
 	{ \noindent\rule{#1}{.75pt} }
 }
 
+%% \__pxorl_grow:nn {<width factor>}{<content>}
+%% Fit text with \pxGrow when available, otherwise use \resizebox.
+%% #1 - fraction of \linewidth.  #2 - content.
 \cs_new_protected:Npn \__pxorl_grow:nn #1#2
 {
 	\cs_if_exist:NTF \pxGrow
@@ -247,6 +268,8 @@
 	{ \resizebox{#1\linewidth}{!}{#2} }
 }
 
+%% \__pxorl_select_columns:
+%% Legacy column selector: 2 columns below 5 students, 3 below 10, otherwise 4.
 \cs_set_protected:Npn \__pxorl_select_columns:
 {
 	\int_compare:nNnTF { \l__pxorl_count_int } < { 5 }
@@ -257,6 +280,8 @@
 		{ \int_set:Nn \l__pxorl_columns_int { 4 } }
 	}
 }
+%% \__pxorl_select_layout:
+%% Resolve automatic column count and automatic card/photo dimensions from \l__pxorl_count_int.
 \cs_new_protected:Npn \__pxorl_select_layout:
 {
 	\bool_if:NT \l__pxorl_auto_columns_bool
@@ -314,6 +339,9 @@
 %% Photo / placeholder rendering
 %% -------------------------------------------------------
 
+%% \__pxorl_placeholder:n {<text>}
+%% Draw a fixed-size framed placeholder matching the configured photo dimensions.
+%% #1 - text displayed below the placeholder question mark.
 \cs_set_protected:Npn \__pxorl_placeholder:n #1
 {
 	% TeX-only fixed-size placeholder. Do not use a TikZ node here:
@@ -347,6 +375,9 @@
 	\endgroup
 }
 
+%% \__pxorl_centered_photo_box:n {<content>}
+%% Vertically and horizontally center content inside the configured photo rectangle.
+%% #1 - image or empty content.
 \cs_new_protected:Npn \__pxorl_centered_photo_box:n #1
 {
 	\makebox[\l__pxorl_photo_width_dim][c]{%
@@ -358,6 +389,9 @@
 	}%
 }
 
+%% \__pxorl_photo:n {<filename>}
+%% Resolve <photos-path><filename>; include it proportionally or emit/leave a placeholder according to print-placeholders.
+%% #1 - student photo filename; blank is treated as a missing photo.
 \cs_set_protected:Npn \__pxorl_photo:n #1
 {
 	% \foreach can leave trailing space tokens in the last item of the list
@@ -400,6 +434,9 @@
 %% Student card
 %% -------------------------------------------------------
 
+%% \__pxorl_student:nn {<name>}{<photo>}
+%% Render one framed photo card and its student name.
+%% #1 - displayed name.  #2 - photo filename passed to \__pxorl_photo:n.
 \cs_set_protected:Npn \__pxorl_student:nn #1#2
 {
 	\begin{minipage}[t]{\l__pxorl_card_width_dim}
@@ -431,6 +468,8 @@
 %% Header / footer
 %% -------------------------------------------------------
 
+%% \__pxorl_print_header:
+%% Render board logos, title/subtitle and the separator rule from current pxORL state.
 \cs_set_protected:Npn \__pxorl_print_header:
 {
 	\noindent
@@ -479,6 +518,8 @@
 	\par\vspace{.7cm}
 }
 
+%% \__pxorl_print_footer:
+%% Render footer rule, footer/subtitle text and right logo.
 \cs_set_protected:Npn \__pxorl_print_footer:
 {
 	\textcolor{\l__pxorl_neutral_color_tl}
@@ -510,6 +551,9 @@
 %% -------------------------------------------------------
 %% Main renderer
 %% -------------------------------------------------------
+%% \pxORL_print:n {<students>}
+%% Render one complete orla page from a comma list of {Name}/{photo-file} pairs.
+%% #1 - student entries consumed by pgffor; empty photo fields are allowed.
 \cs_set_protected:Npn \pxORL_print:n #1
 {
 	\clist_set:Nn \l__pxorl_students_clist { #1 }

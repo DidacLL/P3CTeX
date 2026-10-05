@@ -79,6 +79,10 @@
 %% =================================
 %% ===== KEY DEFINITIONS (pxTAB) ====
 %% =================================
+%% pxTAB configuration keys.
+%% Public configuration: package options or \pxTABsetup{<keys>}; every table command also accepts local [<options>].
+%% Main groups: style/preset, colours/fonts, spacing/width/alignment, cellmode/paragraph columns, colspec, separators,
+%% caption/label/float, centering and the diagnostic probe flag.
 \keys_define:nn { pxTAB }
 {
 	style          .choice:,
@@ -197,6 +201,8 @@
 	{ pxTAB:~preset~'#1'~is~not~defined,~ignoring. } { }
 \msg_new:nnnn { pxTAB } { pxtbl-invalid-numcols }
 	{ pxTAB~(pxTBL~compat):~numcols~must~be~>=~1,~skipping~table. } { }
+%% \__pxtab_warn_empty_table: / \__pxtab_warn_empty_row:
+%% Emit the module warnings used when parsed input cannot form a table.
 \cs_new_protected:Npn \__pxtab_warn_empty_table:
 	{ \msg_warning:nn { pxTAB } { empty-table } }
 \cs_new_protected:Npn \__pxtab_warn_empty_row:
@@ -204,6 +210,9 @@
 %% Test probe hook (no-op by default).
 %% Dedicated QA harnesses can temporarily redefine this macro.
 %% When probe=true, logs event name and value to the log file for diagnostics.
+%% \__pxtab_probe_event:nn {<event>}{<value>}
+%% Log one diagnostic probe record when probe=true.
+%% #1 - event name.  #2 - value written to the log.
 \cs_new_protected:Npn \__pxtab_probe_event:nn #1#2
 {
 	\bool_if:NT \l__pxtab_probe_bool
@@ -212,21 +221,32 @@
 %% Explicit alignment-tab token producer.
 \group_begin:
 	\char_set_catcode_alignment:N \&
+%% \__pxtab_alignment_tab:
+%% Expand to an alignment-tab token with catcode 4; used while constructing tabular rows as token lists.
 	\cs_new:Npn \__pxtab_alignment_tab: { & }
 \group_end:
 %% =================================
 %% ===== PARSING HELPERS ============
 %% =================================
 \cs_generate_variant:Nn \seq_set_split:Nnn { NVV }
+%% \__pxtab_row_to_cells_seq:VN <row tl> <seq>
+%% Split a row token-list variable at the configured cellsep into a destination sequence.
+%% #1 - row tl variable.  #2 - destination sequence.
 \cs_new_protected:Npn \__pxtab_row_to_cells_seq:VN #1#2
 {
 	\seq_set_split:NVV #2 \l__pxtab_cell_sep_tl #1
 }
+%% \__pxtab_row_to_cells_seq:nN {<row>} <seq>
+%% Literal-input wrapper around the V-form row splitter.
+%% #1 - row text.  #2 - destination sequence.
 \cs_new_protected:Npn \__pxtab_row_to_cells_seq:nN #1#2
 {
 	\tl_set:Nn \l__pxtab_tmpa_tl { #1 }
 	\__pxtab_row_to_cells_seq:VN \l__pxtab_tmpa_tl #2
 }
+%% \__pxtab_row_has_content:nTF {<row>}{<true>}{<false>}
+%% Test whether at least one parsed cell in a row is nonblank.
+%% #1 - row text.
 \prg_new_conditional:Npnn \__pxtab_row_has_content:n #1 { TF }
 {
 	\__pxtab_row_to_cells_seq:nN { #1 } \l__pxtab_cells_seq
@@ -240,6 +260,8 @@
 		{ \prg_return_true: }
 		{ \prg_return_false: }
 }
+%% \__pxtab_trim_trailing_empty_rows:
+%% Remove blank rows recursively from the right edge of \l__pxtab_rows_seq.
 \cs_new_protected:Npn \__pxtab_trim_trailing_empty_rows:
 {
 	\seq_if_empty:NF \l__pxtab_rows_seq
@@ -253,6 +275,9 @@
 				}
 		}
 }
+%% \__pxtab_parse_rows_from_list:n {<data>}
+%% Split flat table data by the configured rowsep and discard trailing empty rows.
+%% #1 - row-list input, normally `row1;row2;...`.
 \cs_new_protected:Npn \__pxtab_parse_rows_from_list:n #1
 {
 	\seq_clear:N \l__pxtab_rows_seq
@@ -260,6 +285,8 @@
 	\seq_set_split:NVV \l__pxtab_rows_seq \l__pxtab_row_sep_tl \l__pxtab_tmpa_tl
 	\__pxtab_trim_trailing_empty_rows:
 }
+%% \__pxtab_prepare_ncols:TF {<true>}{<false>}
+%% Derive column count from the first parsed row; false branch also emits empty-table/row warnings.
 \prg_new_conditional:Npnn \__pxtab_prepare_ncols: { TF }
 {
 	\seq_if_empty:NTF \l__pxtab_rows_seq
@@ -282,6 +309,9 @@
 %% =================================
 %% ===== ROW EMISSION ===============
 %% =================================
+%% \__pxtab_emit_cell:nnn {<content>}{<text colour>}{<font code>}
+%% Typeset one cell with optional text colour and local font commands.
+%% #1 - cell content.  #2 - colour name or blank.  #3 - font/style code.
 \cs_new_protected:Npn \__pxtab_emit_cell:nnn #1#2#3
 {
 	{
@@ -291,6 +321,9 @@
 			{ \textcolor{#2}{#1} }
 	}
 }
+%% \__pxtab_append_row_to_body:nnnn {<row>}{<ncols>}{<text colour>}{<font code>}
+%% Parse one row, pad/truncate to ncols and append its alignment-separated cells to \l__pxtab_body_tl.
+%% #1 - row data.  #2 - target column count.  #3 - text colour.  #4 - font/style code.
 \cs_new_protected:Npn \__pxtab_append_row_to_body:nnnn #1#2#3#4
 {
 	\__pxtab_row_to_cells_seq:nN { #1 } \l__pxtab_cells_seq
@@ -316,6 +349,9 @@
 	}
 	\tl_put_right:Nx \l__pxtab_body_tl { \exp_not:V \l__pxtab_tmpa_tl }
 }
+%% \__pxtab_append_row_styled_to_body:nnnnn {<row>}{<ncols>}{<background>}{<text colour>}{<font code>}
+%% Append a row with optional row-level background plus text/font styling.
+%% #1 - row data.  #2 - column count.  #3 - background colour.  #4 - text colour.  #5 - font/style code.
 \cs_new_protected:Npn \__pxtab_append_row_styled_to_body:nnnnn #1#2#3#4#5
 {
 	\tl_if_blank:eF { #3 }
@@ -333,6 +369,9 @@
 	\__pxtab_probe_event:nn { styled-row-font } { #5 }
 	\__pxtab_append_row_to_body:nnnn { #1 } { #2 } { #4 } { #5 }
 }
+%% \__pxtab_emit_row_direct:nnnn {<row>}{<ncols>}{<text colour>}{<font code>}
+%% Typeset a parsed row immediately instead of appending it to the buffered body.
+%% #1 - row data.  #2 - column count.  #3 - text colour.  #4 - font/style code.
 \cs_new_protected:Npn \__pxtab_emit_row_direct:nnnn #1#2#3#4
 {
 	\__pxtab_row_to_cells_seq:nN { #1 } \l__pxtab_cells_seq
@@ -353,6 +392,8 @@
 %% =================================
 %% ===== COLUMN SPEC HELPERS =======
 %% =================================
+%% \__pxtab_count_simple_colspec:
+%% Classify the configured colspec as simple l/c/r-only syntax and count those columns.
 \cs_new_protected:Npn \__pxtab_count_simple_colspec:
 {
 	\int_zero:N \l__pxtab_colspec_count_int
@@ -373,6 +414,8 @@
 			}
 	}
 }
+%% \__pxtab_width_is_natural:TF {<true>}{<false>}
+%% Test whether width is the `natural` sentinel rather than an explicit dimension.
 \prg_new_conditional:Npnn \__pxtab_width_is_natural: { TF }
 {
 	\tl_set_eq:NN \l__pxtab_tmpa_tl \l__pxtab_width_tl
@@ -382,6 +425,9 @@
 		{ \prg_return_false: }
 }
 \cs_generate_variant:Nn \str_case:nnF { xn }
+%% \__pxtab_prepare_paragraph_column_width:n {<ncols>}
+%% Compute equal paragraph-column width from table width/\linewidth and select the alignment prefix.
+%% #1 - number of columns.
 \cs_new_protected:Npn \__pxtab_prepare_paragraph_column_width:n #1
 {
 	\__pxtab_width_is_natural:TF
@@ -401,6 +447,9 @@
 		}
 		{ \tl_set:Nn \l__pxtab_paragraph_align_spec_tl { \centering\arraybackslash } }
 }
+%% \__pxtab_build_paragraph_colspec:n {<ncols>}
+%% Build an equal-width p/m paragraph colspec into \l__pxtab_colspec_tl.
+%% #1 - number of columns.
 \cs_new_protected:Npn \__pxtab_build_paragraph_colspec:n #1
 {
 	\__pxtab_prepare_paragraph_column_width:n { #1 }
@@ -415,6 +464,9 @@
 			}
 	}
 }
+%% \__pxtab_build_paragraph_box_colspec:nN {<ncols>} <tl>
+%% Build the paragraph colspec with vertical bars around every column.
+%% #1 - number of columns.  #2 - destination tl.
 \cs_new_protected:Npn \__pxtab_build_paragraph_box_colspec:nN #1#2
 {
 	\__pxtab_prepare_paragraph_column_width:n { #1 }
@@ -431,6 +483,9 @@
 	}
 	\tl_put_right:Nn #2 { | }
 }
+%% \__pxtab_append_auto_column_to_tl:N <tl>
+%% Append one l/c/r column token according to the current align key.
+%% #1 - destination tl.
 \cs_new_protected:Npn \__pxtab_append_auto_column_to_tl:N #1
 {
 	\str_case:xnF { \tl_to_str:N \l__pxtab_auto_align_tl }
@@ -441,12 +496,18 @@
 		}
 		{ \tl_put_right:Nn #1 { c } }
 }
+%% \__pxtab_build_auto_colspec:n {<ncols>}
+%% Build the automatic inline l/c/r colspec into \l__pxtab_colspec_tl.
+%% #1 - number of columns.
 \cs_new_protected:Npn \__pxtab_build_auto_colspec:n #1
 {
 	\tl_clear:N \l__pxtab_colspec_tl
 	\int_step_inline:nn { #1 }
 		{ \__pxtab_append_auto_column_to_tl:N \l__pxtab_colspec_tl }
 }
+%% \__pxtab_build_auto_box_colspec:nN {<ncols>} <tl>
+%% Build an automatic l/c/r colspec with vertical rules around all columns.
+%% #1 - number of columns.  #2 - destination tl.
 \cs_new_protected:Npn \__pxtab_build_auto_box_colspec:nN #1#2
 {
 	\tl_clear:N #2
@@ -457,6 +518,8 @@
 			\tl_put_right:Nn #2 { | }
 		}
 }
+%% \__pxtab_prepare_layout_mode:
+%% Select natural-width tabular or explicit-width tabular* emission from the width key.
 \cs_new_protected:Npn \__pxtab_prepare_layout_mode:
 {
 	\bool_set_false:N \l__pxtab_use_tabularx_bool
@@ -464,6 +527,9 @@
 		{ }
 		{ \bool_set_true:N \l__pxtab_use_tabularx_bool }
 }
+%% \__pxtab_validate_or_build_colspec:n {<ncols>}
+%% Validate simple explicit colspec length; otherwise build the automatic inline/paragraph colspec.
+%% #1 - required column count.
 \cs_new_protected:Npn \__pxtab_validate_or_build_colspec:n #1
 {
 	\bool_set_false:N \l__pxtab_auto_colspec_bool
@@ -487,6 +553,9 @@
 			{ \__pxtab_build_auto_colspec:n { #1 } }
 	}
 }
+%% \__pxtab_build_box_colspec:NN <dest tl> <source tl>
+%% Add outer/inter-column vertical rules to an explicit colspec.
+%% #1 - destination tl.  #2 - source colspec tl.
 \cs_new_protected:Npn \__pxtab_build_box_colspec:NN #1#2
 {
 	\tl_set:Nx \l__pxtab_tmpa_tl { \tl_use:N #2 }
@@ -510,6 +579,9 @@
 	}
 	{ \tl_set:Nx #1 { | \tl_use:N #2 | } }
 }
+%% \__pxtab_begin_tabular_from_tl:N <colspec tl>
+%% Open tabular/tabular* using the current width mode and the supplied column specification.
+%% #1 - tl containing the colspec.
 \cs_new_protected:Npn \__pxtab_begin_tabular_from_tl:N #1
 {
 	\bool_if:NTF \l__pxtab_use_tabularx_bool
@@ -529,10 +601,15 @@
 				}
 		}
 }
+%% \__pxtab_end_tabular:
+%% Close the tabular environment selected by \__pxtab_prepare_layout_mode:.
 \cs_new_protected:Npn \__pxtab_end_tabular:
 {
 	\bool_if:NTF \l__pxtab_use_tabularx_bool {\end{tabular*}} {\end{tabular}}
 }
+%% \__pxtab_emit_tabular_with_body:N <colspec tl>
+%% Apply visual setup, open the selected tabular form, emit \l__pxtab_body_tl and close it.
+%% #1 - tl containing the final colspec.
 \cs_new_protected:Npn \__pxtab_emit_tabular_with_body:N #1
 {
 	% Centralize visual/layout setup so every renderer applies it at emission time.
@@ -558,6 +635,8 @@
 			\end{tabular}
 		}
 }
+%% \__pxtab_apply_visual_setup:
+%% Apply font size, tabcolsep, arraystretch, rule colour/width and centering before table emission.
 \cs_new_protected:Npn \__pxtab_apply_visual_setup:
 {
 	\tl_if_blank:VF \l__pxtab_font_size_tl
@@ -576,6 +655,8 @@
 %% =================================
 %% ===== FLOAT WRAPPER ==============
 %% =================================
+%% \__pxtab_begin_table_env: / \__pxtab_end_table_env:
+%% Open/close a table float using the configured float spec and centering flag.
 \cs_new_protected:Npn \__pxtab_begin_table_env:
 {
 	\tl_if_blank:VTF \l__pxtab_float_tl
@@ -592,6 +673,9 @@
 {
 	\end{table}
 }
+%% \__pxtab_wrap_in_table:nnn {<caption>}{<label>}{<table body>}
+%% Add a table float only when caption/label/float state requires one, then emit the supplied table body.
+%% #1/#2 - compatibility arguments; current implementation reads caption/label from module state.  #3 - rendered tabular code.
 \cs_new_protected:Npn \__pxtab_wrap_in_table:nnn #1#2#3
 {
 	\tl_if_blank:VTF \l__pxtab_caption_tl
@@ -624,6 +708,9 @@
 %% =================================
 %% ===== STYLE RENDERERS ============
 %% =================================
+%% \__pxtab_render_table_plain:n {<ncols>}
+%% Render buffered rows without header/stripe/box styling.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_plain:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -644,6 +731,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
 		}
 }
+%% \__pxtab_render_table_header:n {<ncols>}
+%% Render first row with header styling and remaining rows as plain body rows.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_header:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -674,6 +764,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_colspec_tl
 		}
 }
+%% \__pxtab_render_table_striped:n {<ncols>}
+%% Render alternating body-row background/text styles.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_striped:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -721,6 +814,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
+%% \__pxtab_render_table_boxed:n {<ncols>}
+%% Render outer/vertical box rules with top and bottom horizontal rules.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_boxed:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -750,6 +846,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
+%% \__pxtab_render_table_grid:n {<ncols>}
+%% Render a full grid with horizontal rules after every row.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_grid:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -775,6 +874,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
+%% \__pxtab_render_table_header_boxed:n {<ncols>}
+%% Render boxed layout with the first row using header colours/fonts.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_header_boxed:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -814,6 +916,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
+%% \__pxtab_render_table_header_grid:n {<ncols>}
+%% Render full-grid layout with a styled header row.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_header_grid:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -862,6 +967,9 @@
 			\__pxtab_emit_tabular_with_body:N \l__pxtab_tmpb_tl
 		}
 }
+%% \__pxtab_render_table_header_striped:n {<ncols>}
+%% Render a styled header followed by alternating body stripes.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_render_table_header_striped:n #1
 {
 	\tl_clear:N \l__pxtab_body_tl
@@ -923,6 +1031,9 @@
 %% =================================
 %% ===== MAIN RENDER ENTRY ==========
 %% =================================
+%% \__pxtab_table_from_seq:n {<ncols>}
+%% Validate layout state and dispatch \l__pxtab_rows_seq to the renderer selected by style=.
+%% #1 - column count.
 \cs_new_protected:Npn \__pxtab_table_from_seq:n #1
 {
 	\__pxtab_validate_or_build_colspec:n { #1 }
@@ -962,40 +1073,69 @@
 %% =================================
 %% ===== .sty FACING INTERNAL API ===
 %% =================================
+%% \pxTAB_set_options:n {<key list>}
+%% Apply pxTAB keys in the current scope.
+%% #1 - pxTAB key list.
 \cs_new_protected:Npn \pxTAB_set_options:n #1
 	{ \keys_set:nn { pxTAB } { #1 } }
+%% \pxTAB_table_from_seq:n {<ncols>}
+%% .sty-facing wrapper that renders the current row sequence.
+%% #1 - column count.
 \cs_new_protected:Npn \pxTAB_table_from_seq:n #1
 	{ \__pxtab_table_from_seq:n { #1 } }
+%% \pxTAB_table_from_seq:nn {<options>}{<ncols>}
+%% Apply local options then render the current row sequence.
+%% #1 - pxTAB keys.  #2 - column count.
 \cs_new_protected:Npn \pxTAB_table_from_seq:nn #1#2
 {
 	\keys_set:nn { pxTAB } { #1 }
 	\__pxtab_table_from_seq:n { #2 }
 }
+%% \pxTAB_rows_from_list:n {<data>}
+%% Parse row-separated list input into \l__pxtab_rows_seq.
+%% #1 - flat table data.
 \cs_new_protected:Npn \pxTAB_rows_from_list:n #1
 	{ \__pxtab_parse_rows_from_list:n { #1 } }
+%% \pxTAB_rows_prepend:n {<row>}
+%% Prepend one row to the current row sequence, used for explicit headers.
+%% #1 - row data.
 \cs_new_protected:Npn \pxTAB_rows_prepend:n #1
 	{ \seq_put_left:Nn \l__pxtab_rows_seq { #1 } }
+%% \pxTAB_prepare_table_from_current_rows:
+%% Determine ncols from current rows and render only when the parsed table is valid.
 \cs_new_protected:Npn \pxTAB_prepare_table_from_current_rows:
 {
 	\__pxtab_prepare_ncols:TF
 		{ \__pxtab_table_from_seq:n { \l__pxtab_ncols_int } }
 		{ }
 }
+%% \pxTAB_table_from_list:n {<data>}
+%% Parse flat row-list input and render it with current pxTAB settings.
+%% #1 - table data.
 \cs_new_protected:Npn \pxTAB_table_from_list:n #1
 {
 	\__pxtab_parse_rows_from_list:n { #1 }
 	\pxTAB_prepare_table_from_current_rows:
 }
+%% \pxTAB_table_from_list:nn {<options>}{<data>}
+%% Apply options, parse flat row-list input and render it.
+%% #1 - pxTAB key list.  #2 - table data.
 \cs_new_protected:Npn \pxTAB_table_from_list:nn #1#2
 {
 	\keys_set:nn { pxTAB } { #1 }
 	\pxTAB_table_from_list:n { #2 }
 }
 %% Preset storage and retrieval.
+%% \pxTAB_save_preset:nn {<name>}{<key list>}
+%% Register/replace a named pxTAB preset.
+%% #1 - preset name.  #2 - stored key list.
 \cs_new_protected:Npn \pxTAB_save_preset:nn #1#2
 {
 	\prop_gput:Nnn \g__pxtab_presets_prop { #1 } { #2 }
 }
+%% \pxTAB_use_preset:n {<name>}
+%% Apply a named preset or issue the unknown-preset warning.
+%% #1 - preset name.
 \cs_new_protected:Npn \pxTAB_use_preset:n #1
 {
 	\prop_if_in:NnTF \g__pxtab_presets_prop { #1 }
@@ -1023,6 +1163,9 @@
 {
 	style=plain, arraystretch=1.0, tabcolsep=4pt
 }
+%% \pxTAB_table_matrix:nnn {<rows>}{<cols>}{<flat cells>}
+%% Repartition a flat cell list into the requested matrix dimensions, then use the normal rendering pipeline.
+%% #1 - row count.  #2 - column count.  #3 - flat cell list separated by cellsep.
 \cs_new_protected:Npn \pxTAB_table_matrix:nnn #1#2#3
 {
 	\int_compare:nNnTF { #1 } > { 0 }
@@ -1064,6 +1207,9 @@
 
 %% Build colspec: >{align}prefix{colwidth}@{gap} repeated numcols times.
 %% #1 = numcols, #2 = maxwidth, #3 = gap
+%% \__pxtab_pxtbl_build_gap_colspec:nnn {<ncols>}{<max width>}{<gap>}
+%% Build the legacy pxTBL equal-width paragraph colspec with an @{} gap after each column.
+%% #1 - column count.  #2 - total maximum width.  #3 - inter-column gap.
 \cs_new_protected:Npn \__pxtab_pxtbl_build_gap_colspec:nnn #1#2#3
 {
 	\tl_set:Nn \l__pxtab_width_tl { #2 }
@@ -1081,6 +1227,10 @@
 	}
 }
 %% \__pxtab_pxtbl_tophead:nnnnnnn {headers}{body}{numcols}{maxwidth}{gap}{prefix}{star}
+%% \__pxtab_pxtbl_tophead:nnnnnnn {<header>}{<body>}{<ncols>}{<max width>}{<gap>}{<prefix>}{<star>}
+%% Render the legacy short pxTBLtop table with a separate header and body.
+%% #1 - header row code.  #2 - body row code.  #3 - column count.  #4 - total width.  #5 - gap.
+%% #6 - legacy column prefix argument.  #7 - star token controlling row-colour/header-rule behaviour.
 \cs_new:Npn \__pxtab_pxtbl_tophead:nnnnnnn #1#2#3#4#5#6#7 {
 	\int_compare:nNnTF { #3 } < { 1 }
 	{
@@ -1102,6 +1252,10 @@
 		}
 	}
 }
+%% \__pxtab_pxtbl_toplong:nnnnnnn {<header>}{<body>}{<ncols>}{<max width>}{<gap>}{<prefix>}{<star>}
+%% Render the legacy longtable form with repeated headers.
+%% #1 - header row code.  #2 - body row code.  #3 - column count.  #4 - total width.
+%% #5 - legacy gap argument.  #6 - column-type prefix (e.g. p/m).  #7 - star token controlling row colours.
 \cs_new:Npn \__pxtab_pxtbl_toplong:nnnnnnn #1#2#3#4#5#6#7 {
 	\int_compare:nNnTF { #3 } < { 1 }
 	{
@@ -1121,6 +1275,10 @@
 		\end{longtable}
 	}
 }
+%% \__pxtab_pxtbl_list:nnnnnnn {<headers>}{<body cells>}{<ncols>}{<max width>}{<gap>}{<prefix>}{<star>}
+%% Convert legacy comma-list header/body input into row code and delegate to the longtable renderer.
+%% #1 - header clist.  #2 - body clist.  #3 - column count.  #4 - total width.
+%% #5 - gap.  #6 - column-type prefix.  #7 - star token.
 \cs_new:Npn \__pxtab_pxtbl_list:nnnnnnn #1#2#3#4#5#6#7 {
 	\int_compare:nNnTF { #3 } < { 1 }
 	{

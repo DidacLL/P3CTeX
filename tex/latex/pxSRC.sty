@@ -43,10 +43,16 @@
 %%%%%%%%%%%%%%	LaTeX2e API %%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%
 %% Package configuration (pxSRC key family).
+%% \pxSRCsetup{<key=value,...>}
+%% Configure pxSRC defaults: default-width, pair-width, placeholder-color, float-spec, pair-gap and label-prefix.
+%% #1 - pxSRC key list.
 \NewDocumentCommand{\pxSRCsetup}{m}{
 	\keys_set:nn { pxSRC } { #1 }
 	\ProcessKeysOptions{ pxSRC }
 }
+%% Legacy default setters: \pxDEFimagewidth{...}, \pxDEFimagepairwidth{...}, \pxDEFimageplaceholdercolor{...},
+%% \pxDEFimageposition{...}, \pxDEFimagepairgap{...}, \pxDEFimagelabelprefix{...}.
+%%TODO: each command currently ignores its argument and restores a hard-coded default; prefer \pxSRCsetup.
 \NewDocumentCommand{\pxDEFimagewidth}{m}{\tl_set:Nn \l__pxsrc_default_width_tl { .8\linewidth }}
 \NewDocumentCommand{\pxDEFimagepairwidth}{m}{\tl_set:Nn \l__pxsrc_pair_width_tl { .4\linewidth }}
 \NewDocumentCommand{\pxDEFimageplaceholdercolor}{m}{\tl_set:Nn \l__pxsrc_placeholder_color_tl { gray }}
@@ -60,6 +66,10 @@
 %% [#3] PLACEHOLDER COLOR *optional
 %% {#4} CAPTION TEXT
 %% [#5] Caption short / label *optional (if not present, a safe label is auto-generated)
+%% \pxIMG[<width>]{<path>}[<placeholder colour>]{<caption>}[<short caption / label>]
+%% Include one image safely; missing files render a placeholder instead of failing.
+%% #1 - optional width (default default-width).  #2 - path/name.  #3 - optional placeholder colour.
+%% #4 - full caption.  #5 - optional short caption, also used as label; if omitted a label is generated from the path.
 \NewDocumentCommand{\pxIMG}{ o m o m o }
 	{
 		\group_begin:
@@ -89,6 +99,10 @@
 %% [#4] PLACEHOLDER COLOR *optional
 %% {#5} CAPTION TEXT
 %% [#6] Caption short / label *optional (if not present, a safe label is auto-generated)
+%% \pxIMGpair[<width>]{<left path>}{<right path>}[<placeholder colour>]{<caption>}[<short caption / label>]
+%% Include two images/placeholders in one figure.
+%% #1 - optional per-image width.  #2/#3 - image paths.  #4 - optional placeholder colour.
+%% #5 - full caption.  #6 - optional short caption, also used as label; omitted => generated label from both paths.
 \NewDocumentCommand{\pxIMGpair}{ o m m o m o }
 	{
 		\group_begin:
@@ -117,6 +131,10 @@
 %%		Fourth img caption,
 %%		Fifth img caption
 %%	}
+%% \pxIMGList[<width>]{<filename prefix>}[<caption prefix>]{<caption list>}
+%% Expand a caption list into consecutively numbered image names <prefix>1, <prefix>2, ... and call \pxIMG for each.
+%% #1 - image width (default .8\linewidth).  #2 - filename/path prefix.  #3 - optional caption prefix.
+%% #4 - comma-separated captions; generated labels are img:<prefix><index>.
 \NewDocumentCommand{\pxIMGList}{O{.8\linewidth} m O{} +m}{
 	\foreach \captionItem[count=\i] in {#4}{
 		\pxIMG[#1]{#2\i}{\IfBlankF{#3}{#3}\captionItem}[img:#2\i]

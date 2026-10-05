@@ -38,6 +38,9 @@
 %% =================================
 %% ==== pxSRC KEYS DEFINITION ===
 %% =================================
+%% pxSRC configuration keys.
+%% Public entry point: \pxSRCsetup{default-width=..., pair-width=..., placeholder-color=..., float-spec=...,
+%% pair-gap=..., label-prefix=...}.
 \keys_define:nn { pxSRC }
 {
 	default-width		.tl_set:N 		= \l__pxsrc_default_width_tl,
@@ -54,6 +57,9 @@
 		label-prefix		.initial:n 	= { img: },
 }
 
+%% \__pxsrc_label_from_string:nN {<source text>} <tl>
+%% Sanitize a path/name into a label-safe string and prepend the configured label-prefix.
+%% #1 - source text.  #2 - destination token list.
 \cs_new_protected:Npn \__pxsrc_label_from_string:nN #1 #2
 	{
 		\tl_set:Nn #2 { #1 }
@@ -65,10 +71,19 @@
 		\tl_set:Nx #2 { \l__pxsrc_label_prefix_tl \tl_use:N #2 }
 	}
 
+%% \__pxsrc_figure_begin: / \__pxsrc_figure_end:
+%% Open/close a figure using the current float-spec key.
 \cs_new_protected:Npn \__pxsrc_figure_begin:
 	{ \expanded { \noexpand \begin { figure } [ \l__pxsrc_float_spec_tl ] } }
 \cs_new_protected:Npn \__pxsrc_figure_end: { \end{figure} }
 %% SAFE METHOD TO INCLUDE IMAGES OR PLACEHOLDER
+%% \__px_fancy_shadowbox:nnnnnnnnn {<width>}{<top>}{<middle>}{<back>}{<left>}{<right>}{<c1>}{<c2>}{<c3>}
+%% Build the three-layer missing-image placeholder.
+%% #1 - box width.  #2/#3/#4 - top/middle/background text.  #5/#6 - side embellishments.
+%% #7/#8/#9 - colours for the middle/background/top layers.
+%% \__px_fancy_shadowbox:nnnnn {<width>}{<top>}{<middle>}{<back>}{<base colour>}
+%% Convenience placeholder using fixed >>/<< embellishments and three tints of one colour.
+%% #1 - width.  #2/#3/#4 - text layers.  #5 - base colour.
 \cs_new:Npn \__px_fancy_shadowbox:nnnnnnnnn #1 #2 #3 #4 #5 #6 #7 #8 #9 { %TODO ADD A PRP Register for future references to included inputs
 	% #1 width
 	% #2 TOP Rectangle TEXT
@@ -132,6 +147,9 @@
 \cs_new:Npn \__px_fancy_shadowbox:nnnnn #1 #2 #3 #4 #5 {
 	\__px_fancy_shadowbox:nnnnnnnnn{#1}{#2}{#3}{#4}{\hspace{-.2em}>>}{<<}{ #5 !75!}{ #5 !50!}{ #5 !25!}
 }
+%% \__px_simple_shadowbox:nnnn {<width>}{<back colour>}{<front colour/text>}{<back text>}
+%% Build the legacy two-layer simple placeholder.
+%% #1 - width.  #2 - rear colour.  #3 - front colour (also printed as front text).  #4 - rear text.
 \cs_new:Npn \__px_simple_shadowbox:nnnn	#1 #2 #3 #4 {
 	\dim_if_exist:NF \l__pexDEV_api_simpl_tmpHa_dim {	\dim_new:N \l__pexDEV_api_simpl_tmpHa_dim	}
 	\dim_if_exist:NF \l__pexDEV_api_simpl_tmpHb_dim {	\dim_new:N \l__pexDEV_api_simpl_tmpHb_dim	}
@@ -145,6 +163,9 @@
 		\parbox[b][.6\l__pexDEV_api_simpl_tmpHb_dim][c]{.8\l__pexDEV_api_simpl_tmpHa_dim}{#3}
 	}
 }
+%% \__pxsrc_resolve_graphic:nN {<path>} <tl>
+%% Resolve an image path as given, then try .png, .pdf and .jpg; leave destination blank if none exists.
+%% #1 - requested path/name.  #2 - destination tl for the resolved filename.
 \cs_new:Npn \__pxsrc_resolve_graphic:nN #1 #2{
 		\tl_clear:N #2
 		\file_if_exist:nTF { #1 }{ \tl_set:Nn #2 { #1 } }{
@@ -156,6 +177,9 @@
 	}
 }
 
+%% \__pxsrc_graphic_box:nnn {<width>}{<path>}{<placeholder colour>}
+%% Include the resolved graphic or render the standard missing-image placeholder.
+%% #1 - output width.  #2 - image path/name.  #3 - placeholder base colour.
 \cs_new:Npn \__pxsrc_graphic_box:nnn #1 #2 #3
 	{
 		\tl_clear:N \l__pxsrc_graphic_file_tl
@@ -165,6 +189,9 @@
 			{ \includegraphics[width = #1]{ \l__pxsrc_graphic_file_tl } }
 	}
 
+%% \__pxsrc_safeimg:nnnnn {<width>}{<path>}{<colour>}{<caption>}{<label>}
+%% Emit one figure with image/placeholder, full caption and label.
+%% #1 - width.  #2 - path.  #3 - placeholder colour.  #4 - caption.  #5 - label.
 \cs_new_protected:Npn \__pxsrc_safeimg:nnnnn	#1 #2 #3 #4 #5
 	{
 		\__pxsrc_figure_begin:
@@ -174,6 +201,9 @@
 		\__pxsrc_figure_end:
 	}
 
+%% \__pxsrc_safeimg_short:nnnnnn {<width>}{<path>}{<colour>}{<caption>}{<short caption>}{<label>}
+%% Single-image figure variant with an explicit short caption.
+%% #1 - width.  #2 - path.  #3 - placeholder colour.  #4 - caption.  #5 - short caption.  #6 - label.
 \cs_new_protected:Npn \__pxsrc_safeimg_short:nnnnnn	#1 #2 #3 #4 #5 #6
 	{
 		\__pxsrc_figure_begin:
@@ -183,6 +213,9 @@
 		\__pxsrc_figure_end:
 	}
 %% TODO ADD METHOD FOR A MATRIX OF IMAGES WITH ROWS AND COLUMNS USING FOREACH LIST
+%% \__pxsrc_safeimg_pair:nnnnnn {<width>}{<left>}{<right>}{<colour>}{<caption>}{<label>}
+%% Emit two images/placeholders in one figure using the configured pair gap.
+%% #1 - width per image.  #2/#3 - left/right paths.  #4 - placeholder colour.  #5 - caption.  #6 - label.
 \cs_new_protected:Npn \__pxsrc_safeimg_pair:nnnnnn	#1 #2 #3 #4 #5 #6
 	{
 		\__pxsrc_figure_begin:
@@ -194,6 +227,9 @@
 		\__pxsrc_figure_end:
 	}
 
+%% \__pxsrc_safeimg_pair_short:nnnnnnn {<width>}{<left>}{<right>}{<colour>}{<caption>}{<short caption>}{<label>}
+%% Pair-image figure variant with an explicit short caption.
+%% #1 - width.  #2/#3 - image paths.  #4 - placeholder colour.  #5 - caption.  #6 - short caption.  #7 - label.
 \cs_new_protected:Npn \__pxsrc_safeimg_pair_short:nnnnnnn	#1 #2 #3 #4 #5 #6 #7
 	{
 		\__pxsrc_figure_begin:
@@ -205,6 +241,9 @@
 		\__pxsrc_figure_end:
 	}
 % Legacy placeholder (kept for backwards compatibility; prefer \__pxsrc_graphic_box:nnn).
+%% \__px_safeimg_placeholder:nnnnn {<width>}{<path>}{<colour>}{<caption>}{<label>}
+%% Legacy standalone placeholder figure kept for compatibility.
+%% #1 - width.  #2 - missing path.  #3 - colour.  #4 - caption.  #5 - label.
 \cs_new:Npn \__px_safeimg_placeholder:nnnnn	#1 #2 #3 #4 #5 {
 	\begin{figure}[H]
 		\centering
@@ -221,6 +260,9 @@
 	\end{figure}
 }
 
+%% \_pxIMG:nnnnn {<width>}{<path>}{<colour>}{<caption>}{<short caption/NoValue>}
+%% Legacy single-image dispatcher selecting automatic-label or short-caption rendering.
+%% #1 - width.  #2 - path.  #3 - placeholder colour.  #4 - caption.  #5 - optional short caption sentinel/value.
 \cs_new:Npn \_pxIMG:nnnnn #1#2#3#4#5{
 	\dim_set:Nn \l_tmpa_dim { #1 }
 	\IfNoValueTF{ #5 }

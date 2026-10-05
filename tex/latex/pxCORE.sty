@@ -78,9 +78,15 @@
 
 % Configure pxCORE keys after package loading.
 %   \pxCOREsetup{<key>=<value>,...}
+%% \pxCOREsetup{<key=value,...>}
+%% Update pxCORE key state after package loading.
+%% #1 - pxCORE key list; module enable flags changed here do not retroactively load packages.
 \NewDocumentCommand{\pxCOREsetup}{m}
   { \keys_set:nn { pxCORE } { #1 } }
 
 % Branch on pxCORE debug flag (set via [debug] or \pxCOREsetup{debug=<bool>}).
+%% \pxCOREIfDebugTF{<true code>}{<false code>}
+%% Branch on the current pxCORE debug flag.
+%% #1 - code when debug=true.  #2 - code when debug=false.
 \NewDocumentCommand{\pxCOREIfDebugTF}{+m +m}
   { \bool_if:NTF \l_pxcore_debug_bool { #1 } { #2 } }

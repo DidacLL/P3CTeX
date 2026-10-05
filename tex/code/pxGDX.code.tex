@@ -49,13 +49,21 @@
 \definecolor{lighterColor}{rgb}{1,1,1}
 %\cs_generate_variant:Nn \tl_set:Nn { Ne }
 %	RULES
+%% \__pxDEV_HRule: / \__pxDEV_Hrule:
+%% Draw full-width 1.5pt / 0.75pt horizontal rules.
 \cs_new:Nn	\__pxDEV_HRule: { \noindent \rule{\linewidth}{1.5pt} }
+%% \__pxDEV_HRule:n {<width>} / \__pxDEV_Hrule:n {<width>}
+%% Width-selectable variants of the thick/thin horizontal rules.
+%% #1 - rule width.
 \cs_new:Nn	\__pxDEV_HRule:n { \noindent \rule{#1}{1.5pt} }
 \cs_new:Nn	\__pxDEV_Hrule: { \noindent \rule{\linewidth}{0.75pt} }
 \cs_new:Nn	\__pxDEV_Hrule:n { \noindent \rule{#1}{0.75pt} }
 %% =================================
 %% ==== gdxSTYLE KEYS DEFINITION ===
 %% =================================
+%% gdxSTYLE page-layout keys.
+%% Configure through \PECTeXpage{<keys>} or \pxGDXconfig{page-config={<keys>}}.
+%% Stores author/document/subject/reference metadata plus header-left/center/right and footer-left/center/right contents.
 \keys_define:nn { gdxSTYLE }
 {	%% TEXTVALUES
 	author-name		.tl_set:N		=	\l__gdx_layout_author_tl,
@@ -95,6 +103,10 @@
 %% =================================
 %% ==== gdxCOVER KEYS DEFINITION ===
 %% =================================
+%% gdxCOVER cover keys.
+%% Configure through \PECTeXcover{<keys>} or \pxGDXconfig{cover-config={<keys>}}.
+%% Controls cover dimensions, optional sections, displayed text, image names, colours and margins.
+%% fullcover/defaultcover/print-placeholders are convenience meta-configurations.
 \keys_define:nn { gdxCOVER }
 { 		% --- Dimensions ---
 	cover-header-height		.dim_set:N 		=	\l__gdx_cover_header_height,
@@ -233,6 +245,9 @@
 		text-auxtext 		=	auxtext
 	}
 }
+%% pxGDX dispatcher keys.
+%% cover-config/page-config/pdf-config forward nested key lists to gdxCOVER/gdxSTYLE/gdxPDF.
+%% Any other top-level key is forwarded to gdxCOVER by the unknown handler.
 \keys_define:nn { pxGDX }
 {
 	cover-config	.code:n			=	{	\keys_set:nn { gdxCOVER } {#1}	},
@@ -245,6 +260,9 @@
 %% =================================
 %% ===== gdxPDF KEYS DEFINITION ====
 %% =================================
+%% gdxPDF metadata/link keys.
+%% Configure through \PECTeXpdf{<keys>} or \pxGDXconfig{pdf-config={<keys>}}.
+%% Values are buffered here and applied together by \__px_apply_pdf:.
 \keys_define:nn { gdxPDF }
 {
 	pdf-title		 	.tl_set:N 		=	\l__px_pdf_title_tl,
@@ -272,6 +290,8 @@
 		bookmarks			.initial:n 	= 		true,
 	unknown 		.code:n ={ }
 }
+%% \__px_apply_pdf:
+%% Apply the current gdxPDF state to hyperref with a single \hypersetup call.
 \cs_new_protected_nopar:Nn \__px_apply_pdf:
 {
 	\keys_set:nn { gdxPDF} {colorlinks}
@@ -297,16 +317,38 @@
 %% =================================
 %% ==== Package Private Functions ==
 %% =================================
+%% \__gdx_apply_offset:nnn {<x offset>} {<y offset>} {<content>}
+%% Shift content horizontally and vertically using \hspace* and \raisebox.
+%% #1 - horizontal offset.  #2 - vertical offset.  #3 - content.
 \cs_new:Nn 	\__gdx_apply_offset:nnn {\hspace*{ #1 }\raisebox{ #2 }{ #3 }}
+%% \__ifoffset:nn {<true>} {<false>}
+%% Branch on the cover offset flag.
+%% #1 - code when offset=true.  #2 - code otherwise.
+%% \__ifoffset:n {<code>}
+%% Execute code only when the cover offset flag is enabled.
+%% #1 - conditional code.
 \cs_new:Nn 	\__ifoffset:nn {\bool_if:NTF 	\l__gdx_cover_offset_bool 	{ #1 } { #2 }}
 \cs_new:Nn 	\__ifoffset:n {\bool_if:NT 	\l__gdx_cover_offset_bool 	{ #1 }}
+%% \__ifnoplagi:n {<code>}
+%% Execute code only when the cover no-plagiarism section is enabled.
+%% #1 - conditional code.
 \cs_new:Nn \__ifnoplagi:n {\bool_if:NT \l__gdx_cover_noplagi_bool {#1}}
+%% \__ifdebug:n {<code>}
+%% Execute code only when the pxGDX debug flag is true.
+%% #1 - conditional code.
+%%TODO: \l__gdx_debug_values_bool is not declared in this module.
 \cs_new:Nn \__ifdebug:n {\bool_if:NT \l__gdx_debug_values_bool {#1}}
 %% =================================
 %% ==== API Protected Functions ====
 %% =================================
+%% \__pxgdx_hfill:
+%% Insert stretchable horizontal space; internal implementation of \pxFill.
 \cs_new_protected_nopar:Nn \__pxgdx_hfill: { \hspace*{\fill} }
 %% #1 align right #2(scalar \linewidth) #3(content) #4(max size)
+%% \__pxgdx_grow:nnnn {<star bool>} {<width factor>} {<content>} {<max height>}
+%% Scale content to width factor*\linewidth, falling back to a height-limited resize when too tall.
+%% #1 - xparse star boolean; false inserts leading fill.  #2 - width factor.
+%% #3 - content.  #4 - maximum height.
 \cs_new:Nn	\__pxgdx_grow:nnnn {
 	\IfBlankTF{#3}{\resizebox*{!}{#4}{	NOT SET }}{
 		\sbox0{\resizebox{#2\linewidth}{!}{#3}}
@@ -318,9 +360,17 @@
 		\fi
 	}
 }
+%% \__px_sectionuoc:n {<title>}
+%% Start a new page and emit a primary-colour section heading.
+%% #1 - title text.
 \cs_new:Nn \__px_sectionuoc:n {\newpage\section{\textcolor{primaryColor}{#1}}}
+%% \__px_subsectionuoc:n {<title>} / \__px_subsubsectionuoc:n {<title>}
+%% Emit legacy colour-styled subsection/subsubsection headings.
+%% #1 - title text.
 \cs_new:Nn \__px_subsectionuoc:n {\subsection{\textcolor{black!20!primaryColor!80!}{#1}}}
 \cs_new:Nn \__px_subsubsectionuoc:n {\subsubsection{\textcolor{black!20!primaryColor!70!}{#1}}}
+%% \__gdx_def_styles:
+%% Define/redefine the fancyhdr uocstyle and plain page styles from current gdxSTYLE state.
 \cs_new:Nn \__gdx_def_styles: {
 	\fancypagestyle{uocstyle}{
 		\fancyhf{}
@@ -346,6 +396,8 @@
 	}
 }
 % COVER
+%% \pxGDX_print_cover:
+%% Render the cover from current gdxCOVER state using temporary cover geometry, then restore document geometry.
 \cs_new:Nn \pxGDX_print_cover:{
 	\thispagestyle{empty}
 	\newgeometry{
@@ -479,6 +531,8 @@
 	\end{center}
 	\restoregeometry
 }
+%% \pxGDX_process:
+%% Reprocess gdxSTYLE/gdxCOVER/pxGDX package options, rebuild page styles and apply PDF settings.
 \cs_new:Nn \pxGDX_process: {
 	\ProcessKeysOptions{ gdxSTYLE }
 	\__gdx_def_styles:
@@ -489,14 +543,23 @@
 	\__px_apply_pdf:
 }
 %% Configuration Wrappers
+%% \pxGDX_config:n {<pxGDX keys>}
+%% Apply dispatcher configuration and immediately rebuild pxGDX output state.
+%% #1 - pxGDX key list.
 \cs_gset:Nn \pxGDX_config:n {
 	\keys_set:nn { pxGDX } { #1 }
 	\pxGDX_process:
 }
+%% \pxGDX_cover_config:n {<gdxCOVER keys>}
+%% Apply cover-only configuration and rebuild pxGDX output state.
+%% #1 - gdxCOVER key list.
 \cs_gset:Nn \pxGDX_cover_config:n {
 	\keys_set:nn { gdxCOVER } { #1 }
 	\pxGDX_process:
 }
+%% \pxGDX_page_config:n {<gdxSTYLE keys>}
+%% Apply page-style configuration and rebuild pxGDX output state.
+%% #1 - gdxSTYLE key list.
 \cs_gset:Nn \pxGDX_page_config:n {
 	\keys_set:nn { gdxSTYLE } { #1 }
 	\pxGDX_process:

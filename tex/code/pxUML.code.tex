@@ -54,6 +54,13 @@
 %%	#5 - OBJ-TYPE
 %%	#6 - VISIBILITY
 %%	#7 - IMPLEMENTATION
+%% \__pxuml_newclass:nnnnnnn {<name>}{<attributes>}{<operations>}{<parents>}{<type>}{<visibility>}{<implements>}
+%% Create/replace the pxPRP-backed record for one UML classifier.
+%% #1 - class/interface id.  #2 - attribute clist.  #3 - operation clist.  #4 - inheritance target(s).
+%% #5 - pgf-umlcd environment type.  #6 - stored visibility.  #7 - implementation target.
+%% \__pxuml_newclass:nnn {<name>}{<attributes>}{<operations>}
+%% Convenience constructor for a public class with no inheritance/implementation metadata.
+%% #1 - class id.  #2 - attributes.  #3 - operations.
 \cs_new:Npn \__pxuml_newclass:nnnnnnn #1#2#3#4#5#6#7{
 	\pxPRP_set:nnnN	{#1}{ attributes }	{ #2 } 	\g_pxuml_classREG_prop
 	\pxPRP_set:nnnN	{#1}{ operations }	{ #3 } 	\g_pxuml_classREG_prop
@@ -68,18 +75,27 @@
 %% ADD ATTRIBUTE
 %%	#1 - CLASS NAME
 %%	#2 - ATTRIBUTE
+%% \__pxuml_add_attribute:nn {<class>}{<attribute>}
+%% Append one attribute to an existing UML record.
+%% #1 - class id.  #2 - attribute text.
 \cs_new:Npn \__pxuml_add_attribute:nn #1#2 {
 	\pxPRP_put_items:nnnN {	#1 }{ attributes } {#2} \g_pxuml_classREG_prop
 }
 %% ADD INHERITANCE
 %%	#1 - CLASS NAME
 %%	#2 - INHERITANCE
+%% \__pxuml_add_inherit:nn {<class>}{<parent>}
+%% Append one inheritance target to an existing UML record.
+%% #1 - class id.  #2 - parent classifier.
 \cs_new:Npn \__pxuml_add_inherit:nn #1#2 {
 	\pxPRP_put_items:nnnN {	#1 }{ inheritance } {#2} \g_pxuml_classREG_prop
 }
 %% ADD OPERATION
 %%	#1 - CLASS NAME
 %%	#2 - OPERATION
+%% \__pxuml_add_operation:nn {<class>}{<operation>}
+%% Append one operation to an existing UML record.
+%% #1 - class id.  #2 - operation text.
 \cs_new:Npn \__pxuml_add_operation:nn #1#2 {
 	\pxPRP_put_items:nnnN {	#1 }{ operations } {#2} \g_pxuml_classREG_prop
 }
@@ -87,6 +103,9 @@
 %%	#1 - CLASS NAME
 %%	#2 - ATTRIBUTES
 %%	#3 - OPERATIONS
+%% \__pxuml_drawclass:nnn {<class>}{<position>}{<options>}
+%% Render the complete stored classifier using its attributes, operations, inheritance and implementation metadata.
+%% #1 - class id.  #2 - pgf-umlcd position argument.  #3 - optional environment/TikZ options.
 \cs_new:Npn \__pxuml_drawclass:nnn #1#2#3 {
 	%%%%%%%% ATTRIBUTES
 	\clist_clear_new:N	\l__attributes_clist
@@ -128,6 +147,9 @@
 %%	#1 - CLASS NAME
 %%	#2 - ATTRIBUTES
 %%	#3 - OPERATIONS
+%% \__pxuml_drawsimpleclass:nnn {<class>}{<position>}{<options>}
+%% Render the stored classifier with attributes and inheritance only.
+%% #1 - class id.  #2 - pgf-umlcd position argument.  #3 - optional environment/TikZ options.
 \cs_new:Npn \__pxuml_drawsimpleclass:nnn #1#2#3 {
 	%%%%%%%% ATTRIBUTES
 	\clist_clear_new:N	\l__attributes_clist
@@ -151,6 +173,9 @@
 		\tl_if_blank:VF \l__inheritance_tl {\cs:w inherit \cs_end:{\l__inheritance_tl}}
 	\end{\l__obj_type_tl}
 }
+%% \__pxuml_printclassattributes:nn {<class>}{<item label>}
+%% Print stored attributes as an itemize list.
+%% #1 - class id.  #2 - optional item label inserted for every attribute.
 \cs_new:Npn \__pxuml_printclassattributes:nn #1#2 {
 	%%%%%%%% ATTRIBUTES
 	\clist_clear_new:N	\l__attributes_clist
@@ -160,6 +185,9 @@
 		\foreach \objattr in \l__attributes_clist {\item[#2]{\objattr}}
 	\end{itemize}
 }
+%% \__pxuml_printclassoperations:nn {<class>}{<item label>}
+%% Print stored operations as an itemize list.
+%% #1 - class id.  #2 - optional item label inserted for every operation.
 \cs_new:Npn \__pxuml_printclassoperations:nn #1#2 {
 	%%%%%%%% OPERATIONS
 	\clist_clear_new:N	\l__operations_clist
@@ -170,12 +198,16 @@
 	\end{itemize}
 }
 %% LOAD VARIABLE COLORS
+%% \__pxuml_load_varcolor:
+%% Switch pgf-umlcd colour macros to the alternate/variable palette used by starred draw commands.
 \cs_new:Nn \__pxuml_load_varcolor:{
 	\renewcommand {\umltextcolor }{\l__pxuml_bg_color_tl!}
 	\renewcommand {\umlfillcolor }{\l__pxuml_main_color_tl!40!\l__pxuml_neutral_color_tl!60!}
 	\renewcommand {\umldrawcolor }{\l__pxuml_bg_color_tl!}
 }
 %% LOAD MAIN COLORS
+%% \__pxuml_load_maincolor:
+%% Restore pgf-umlcd colour macros to the configured main palette.
 \cs_new:Nn \__pxuml_load_maincolor:{
 	\renewcommand {\umltextcolor }{\l__pxuml_main_color_tl}
 	\renewcommand {\umlfillcolor }{\l__pxuml_aux_color_tl!20!}
@@ -183,6 +215,9 @@
 }
 %% SHOW CLASS (INTERNAL DATA LOAD)
 %%	#1 - CLASS NAME
+%% \__pxuml_showclass:n {<class>}
+%% Load all stored classifier fields into the module scratch token lists; does not typeset them.
+%% #1 - class id.
 \cs_new:Npn \__pxuml_showclass:n #1 {
 	\pxprp_get_tl:nnNN { #1 }{ attributes } \l__attributes_tl \g_pxuml_classREG_prop
 	\pxprp_get_tl:nnNN { #1 }{ operations } \l__operations_tl \g_pxuml_classREG_prop
@@ -195,16 +230,25 @@
 %% INSPECTION HELPERS (READ-ONLY)
 %%	#1 - CLASS NAME
 %% Expand to stored attributes / operations / inheritance respectively.
+%% \__pxuml_print_attributes:n {<class>}
+%% Expand to the raw stored attributes value.
+%% #1 - class id.
 \cs_new:Npn \__pxuml_print_attributes:n #1 {
 	\tl_clear_new:N \l__pxuml_attrs_out_tl
 	\pxprp_get_tl:nnNN { #1 }{ attributes } \l__pxuml_attrs_out_tl \g_pxuml_classREG_prop
 	\tl_use:N \l__pxuml_attrs_out_tl
 }
+%% \__pxuml_print_operations:n {<class>}
+%% Expand to the raw stored operations value.
+%% #1 - class id.
 \cs_new:Npn \__pxuml_print_operations:n #1 {
 	\tl_clear_new:N \l__pxuml_ops_out_tl
 	\pxprp_get_tl:nnNN { #1 }{ operations } \l__pxuml_ops_out_tl \g_pxuml_classREG_prop
 	\tl_use:N \l__pxuml_ops_out_tl
 }
+%% \__pxuml_print_parents:n {<class>}
+%% Expand to the raw stored inheritance value.
+%% #1 - class id.
 \cs_new:Npn \__pxuml_print_parents:n #1 {
 	\tl_clear_new:N \l__pxuml_inh_out_tl
 	\pxprp_get_tl:nnNN { #1 }{ inheritance } \l__pxuml_inh_out_tl \g_pxuml_classREG_prop

@@ -78,6 +78,8 @@
 \colorlet{pxtype}{dark-type}
 \colorlet{pxfunction}{dark-function}
 \colorlet{pxoperator}{dark-operator}
+%% \pxLSTpalettedark / \pxLSTpalettepastel / \pxLSTpalettelight
+%% Rebind the stable px* role colours to one concrete palette.
 \def\pxLSTpalettedark{%
   \colorlet{pxbg}{dark-bg}%
   \colorlet{pxfg}{dark-fg}%
@@ -115,6 +117,9 @@
   \colorlet{pxoperator}{light-operator}%
 }
 \makeatletter
+%% \pxLSTpaletteSelect{<name>}
+%% Select palette macro \pxLSTpalette<name>; blank or unknown names fall back to dark.
+%% #1 - palette name: dark, pastel or light.
 \def\pxLSTpaletteSelect#1{%
   \edef\pxLST@tmp{#1}%
   \ifx\pxLST@tmp\@empty
@@ -412,6 +417,9 @@
 %% =================================
 %% ===== FILE INPUT FUNCTION ========
 %% =================================
+%% \pxLST_input_file:nn {<language>}{<file>}
+%% Typeset an external source file in the standard pxLST tcolorbox.
+%% #1 - listings language name.  #2 - source filename/path.
 \cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
 	\tcbinputlisting{
 		listing~options={language=#1},
@@ -430,6 +438,9 @@
 %% ===== INLINE CODE RENDER ==========
 %% =================================
 %% Small tcolorbox with lstinline for single-snippet inline code.
+%% \__pxlst_code_render_inline:n {<code>}
+%% Render one inline code fragment inside a compact tcolorbox using \lstinline.
+%% #1 - inline source text.
 \cs_new_protected:Npn \__pxlst_code_render_inline:n #1 {
 	\tcbox[
 	nobeforeafter,
@@ -458,6 +469,9 @@
 %%   At document level, effects are global until overridden or group ends.
 %%   Preset names are registered via \pxLSTsavepreset{name}{option-string}
 %%   and applied via \pxLSTusepreset{name} or key preset=name.
+%% \pxCodeSet[<palette>]{<language>}[<style>]
+%% Select a palette and set the global listings language/style.
+%% #1 - palette (default dark).  #2 - listings language.  #3 - listings style (default pxlst).
 \NewDocumentCommand{\pxCodeSet}{O{dark} m O{pxlst}}{%
   \pxLSTpaletteSelect{#1}%
   \lstset{%
@@ -469,6 +483,9 @@
 %% pxCode -- inline code listing with optional local key overrides.
 %%   #1 = optional key-value options (local to this environment)
 %%   #2 = label string (displayed in title bar)
+%% \begin{pxCode}[<listing options>]{<label>} ... \end{pxCode}
+%% Standard titled code-listing environment.
+%% #1 - optional listings options.  #2 - title/label text shown in the title bar.
 \newtcblisting{pxCode}[2][]{%
 	listing~options={#1},
 	listing~only,%
@@ -480,6 +497,9 @@
 	toptitle=-.1em,%
 	title=\small\hspace*{\fill}\textbf{\ttfamily \color{pxfg!75!} #2}%
 }
+%% \begin{miniCode}[<width>] ... \end{miniCode}
+%% Compact untitled listing box.
+%% #1 - box width, default .8\linewidth.
 \newtcblisting{miniCode}[1][.8\linewidth]{%
 	width=#1,
 	listing~options={},
@@ -496,6 +516,8 @@
 %%     [#1] = language (defaults to pxJava)
 %%      #2 = label shown in the title bar.
 %%   Internally delegates to the pxLST key pipeline via configure.
+%% \begin{pxCode*}[<listing options>]{<label>} ... \end{pxCode*}
+%% Alternate darker code-listing environment with the same argument contract as pxCode.
 \newtcblisting{pxCode*}[2][]{%
 	listing~options={#1},
 	listing~only,%
@@ -514,6 +536,9 @@
 %%   #3 = title text (title bar)
 %%   #4 = short note (comment panel identifier label)
 %%   #5 = caption text (comment panel body)
+%% \begin{CodeBox}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox}
+%% Non-breakable listing with an external comment panel and cross-reference label cdbx:<label>.
+%% #1 - listings options.  #2 - label id.  #3 - title.  #4 - short note id.  #5 - note text.
 \newtcblisting{CodeBox}[5][]{%
 	listing~options={#1},
   enhanced,%
@@ -541,6 +566,8 @@
 %% -----------------------------------------------------------------------
 %% pxCodeBreak -- same as pxCodeBox but forces breakable across pages.
 %%   Arguments identical to pxCodeBox.
+%% \begin{CodeBox*}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox*}
+%% Breakable CodeBox variant; continuation titles refer back to cdbx:<label>.
 \newtcblisting{CodeBox*}[5][]{%
 	listing~options={#1},
   enhanced,%
@@ -566,9 +593,15 @@
   comment~outside~listing,%
   listing~above~comment%
 }
+%% \pxCodeFile[<language>]{<file>}
+%% Typeset an external file through the standard pxLST file renderer.
+%% #1 - optional listings language.  #2 - source filename/path.
 \NewDocumentCommand{\pxCodeFile}{ O{} m }
   { \pxLST_input_file:nn { #1 } { #2 } }
 
+%% \pxCodeIn[<language>]{<code>}[<style>]
+%% Render one inline snippet; optional language/style changes are local to this command.
+%% #1 - optional listings language.  #2 - inline code.  #3 - listings style (default pxlst).
 \NewDocumentCommand{\pxCodeIn}{ O{} m O{pxlst}}
   {
     \group_begin:

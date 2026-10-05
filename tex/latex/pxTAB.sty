@@ -81,14 +81,26 @@
 %% Package configuration (pxTAB key family).
 %%   Options are only processed at load time via \usepackage[options]{pxTAB}.
 %%   \pxTABsetup sets package keys (global in document scope, local in TeX groups).
+%% \pxTABsetup{<key=value,...>}
+%% Set pxTAB defaults for subsequent tables.
+%% #1 - pxTAB key list.
 \NewDocumentCommand{\pxTABsetup}{m}
   { \pxTAB_set_options:n { #1 } }
 %% Preset management.
+%% \pxTABsavepreset{<name>}{<key list>}
+%% Register a user preset.
+%% #1 - preset name.  #2 - pxTAB key list.
 \NewDocumentCommand{\pxTABsavepreset}{mm}
     { \pxTAB_save_preset:nn { #1 } { #2 } }
+%% \pxTABusepreset{<name>}
+%% Apply a named preset to current pxTAB state.
+%% #1 - preset name.
 \NewDocumentCommand{\pxTABusepreset}{m}
     { \pxTAB_use_preset:n { #1 } }
 %% Shared helper: apply table-local options.
+%% \__pxtab_apply_local_options:n {<options>}
+%% Apply table-local options only when the optional argument is nonblank.
+%% #1 - pxTAB key list.
 \cs_new_protected:Npn \__pxtab_apply_local_options:n #1
 {
 	\tl_if_blank:nF { #1 }
@@ -99,6 +111,9 @@
 %%   Each <row> is a comma-separated list of cell contents.
 %%   Options: style=plain|header|striped|boxed|grid, headerbgcolor=...,
 %%   headerfont=..., bodyfont=..., tabcolsep=..., arraystretch=..., etc.
+%% \pxTable[<options>]{<row1>}{<row2>}...{<rowN>}
+%% Render consecutive braced comma-separated rows; collection stops at the first following non-group token.
+%% #1 - local pxTAB options.  #2 - first row; later braced rows are consumed by the collector.
 \NewDocumentCommand{\pxTable}{ O{} m }
 {
 	\seq_clear:N \l__pxtab_rows_seq
@@ -106,12 +121,18 @@
 	\__pxtab_collect_rows:n { #1 }
 }
 %% Internal: collect further braced row arguments, then render table.
+%% \__pxtab_collect_rows:n {<options>}
+%% Look ahead for another braced row; render when no further group immediately follows.
+%% #1 - local option list carried through collection.
 \cs_new:Npn \__pxtab_collect_rows:n #1
 {
 	\@ifnextchar\bgroup
 		{ \__pxtab_collect_rows_aux:n { #1 } }
 		{ \__pxtab_finish_table:n { #1 } }
 }
+%% \__pxtab_collect_rows_aux:n {<options>}{<row>}
+%% Append one collected row and continue look-ahead collection.
+%% #1 - local options.  #2 - next row.
 \cs_new:Npn \__pxtab_collect_rows_aux:n #1#2
 {
 	\seq_put_right:Nn \l__pxtab_rows_seq { #2 }
@@ -119,6 +140,9 @@
 		{ \__pxtab_collect_rows_aux:n { #1 } }
 		{ \__pxtab_finish_table:n { #1 } }
 }
+%% \__pxtab_finish_table:n {<options>}
+%% Group local settings and render the rows accumulated by \pxTable/\pxTableHeadBodyRows.
+%% #1 - local pxTAB options.
 \cs_new_protected:Npn \__pxtab_finish_table:n #1
 {
 	\group_begin:
@@ -130,6 +154,9 @@
 %% \pxTableFromList[<options>]{<data>}
 %%   <data> = rows separated by semicolon (;), cells within a row by comma.
 %%   Example: {Name, Age, City; Alice, 20, Barcelona; Bob, 22, Madrid}
+%% \pxTableFromList[<options>]{<data>}
+%% Render flat list data where rows use rowsep (default `;`) and cells use cellsep (default `,`).
+%% #1 - local pxTAB options.  #2 - flat row-list data.
 \NewDocumentCommand{\pxTableFromList}{ O{} m }
 {
 	\group_begin:
@@ -139,12 +166,18 @@
 }
 %% -----------------------------------------------------------------------
 %% Convenience: one-row table (e.g. a single header or data row).
+%% \pxTableRow[<options>]{<row>}
+%% One-row convenience wrapper around \pxTable.
+%% #1 - local options.  #2 - comma-separated row.
 \NewDocumentCommand{\pxTableRow}{ O{} m }
 {
 	\pxTable[#1]{#2}
 }
 %% -----------------------------------------------------------------------
 %% Header/body split with body as flat list.
+%% \pxTableHeadBody[<options>]{<header row>}{<body data>}
+%% Parse body as row-list data, prepend an explicit header row, then render.
+%% #1 - local options.  #2 - header row.  #3 - body using rowsep/cellsep.
 \NewDocumentCommand{\pxTableHeadBody}{ O{} m m }
 {
 	\group_begin:
@@ -155,6 +188,9 @@
 	\group_end:
 }
 %% Header/body split with body as row arguments.
+%% \pxTableHeadBodyRows[<options>]{<header row>}{<row1>}{<row2>}...
+%% Header/body variant using consecutive braced rows instead of rowsep-delimited flat data.
+%% #1 - local options.  #2 - header row.  #3 - first body row; further braced rows are collected.
 \NewDocumentCommand{\pxTableHeadBodyRows}{ O{} m m }
 {
 	\seq_clear:N \l__pxtab_rows_seq
@@ -163,6 +199,9 @@
 	\__pxtab_collect_rows:n { #1 }
 }
 %% Matrix helper from flat cell list.
+%% \pxTableMatrix[<options>]{<rows>}{<cols>}{<flat cells>}
+%% Repartition a flat cell list into a fixed matrix and render it.
+%% #1 - local options.  #2 - row count.  #3 - column count.  #4 - flat cell list.
 \NewDocumentCommand{\pxTableMatrix}{ O{} m m m }
 {
 	\group_begin:
@@ -172,6 +211,10 @@
 }
 
 %% \pxTBLtop[maxwidth]{numcols}[gap]{headers}[rows prefix]{rows}
+%% \pxTBLtop*[<max width>]{<ncols>}[<gap>]{<header>}[<column prefix>]{<rows>}
+%% Legacy short table API with a separate header row.
+%% * - enable alternating/header row-colour mode.  #1 - max width.  #2 - column count.  #3 - gap.
+%% #4 - header code.  #5 - column prefix (default p).  #6 - body row code.
 \NewDocumentCommand{\pxTBLtop}{s O{\linewidth} m O{\quad} m O{p} +m}
 {
 	\group_begin:
@@ -182,6 +225,10 @@
 		{\__pxtab_pxtbl_tophead:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
 	\group_end:
 }
+%% \pxTBL*[<max width>]{<ncols>}[<gap>]{<headers>}[<column prefix>]{<body cells>}
+%% Legacy comma-list API; converts header/body lists and renders through longtable.
+%% * - enable row-colour mode.  #1 - max width.  #2 - column count.  #3 - gap.
+%% #4 - header clist.  #5 - column prefix.  #6 - body-cell clist.
 \NewDocumentCommand{\pxTBL}{s O{\linewidth} m O{\quad} m O{p} +m}
 {
 	\group_begin:
@@ -190,6 +237,10 @@
 		{\__pxtab_pxtbl_list:nnnnnnn {#5}{#7}{#3}{#2}{#4}{#6}{}}
 	\group_end:
 }
+%% \pxTBLlong*[<max width>]{<ncols>}[<gap>]{<header>}[<column prefix>]{<rows>}
+%% Legacy longtable API with repeated header rows.
+%% * - enable row-colour mode.  #1 - max width.  #2 - column count.  #3 - gap.
+%% #4 - header code.  #5 - column prefix.  #6 - body row code.
 \NewDocumentCommand{\pxTBLlong}{s O{\linewidth} m O{\quad} m O{p} +m}
 {
 	\group_begin:

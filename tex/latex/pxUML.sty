@@ -42,6 +42,11 @@
 % #2 class*/interface
 % #3 ClassName
 % #4
+%% \pxUMLClass*[<type>]{<name>}[<parent>]{<attributes>}[<operations>]<implements>
+%% Register a classifier without drawing it; later use \drawclass or inspection commands by <name>.
+%% * - store visibility as private; unstarred stores public.  #1 - type, default `class` (e.g. `interface`).
+%% #2 - classifier name/id.  #3 - optional inheritance target.  #4 - attribute clist.
+%% #5 - optional operation clist.  #6 - optional implementation target in angle brackets.
 \NewDocumentCommand{\pxUMLClass}{s O{class} m o m o D<>{ } }{
 		\IfBooleanTF{#1}
 		{
@@ -54,22 +59,38 @@
 				{\__pxuml_newclass:nnnnnnn { #3 }{ #5 }{ #6 }{#4}{#2}{public}{#7}}
 		}
 }
+%% \drawclass*[<options>]{<class>}[<position>]
+%% Draw a previously registered classifier with all stored members/relations.
+%% * - use alternate UML colours for this draw.  #1 - pgf/TikZ options.  #2 - class id.  #3 - position, default `0,0`.
 \NewDocumentCommand{\drawclass}{s O{} m O{0,0}}{
 	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
 	\__pxuml_drawclass:nnn {#3} {#4} {#2}
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 }
+%% \drawsimpleclass*[<options>]{<class>}[<position>]
+%% Draw a reduced classifier containing attributes and inheritance only.
+%% * - use alternate UML colours.  #1 - pgf/TikZ options.  #2 - class id.  #3 - position.
 \NewDocumentCommand{\drawsimpleclass}{s O{} m O{0,0}}{
 	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
 	\__pxuml_drawsimpleclass:nnn {#3} {#4} {#2}
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 }
+%% \printAttributes{<class>}[<item label>]
+%% Print a registered class's attributes as an itemize list.
+%% #1 - class id.  #2 - optional item label.
 \NewDocumentCommand{\printAttributes}{ m O{ }}{
 	\__pxuml_printclassattributes:nn {#1}{#2}
 }
+%% \printOperations{<class>}[<item label>]
+%% Print a registered class's operations as an itemize list.
+%% #1 - class id.  #2 - optional item label.
 \NewDocumentCommand{\printOperations}{ m O{ }}{
 	\__pxuml_printclassoperations:nn {#1}{#2}
 }
+%% \drawinstance*[<text width em>]{<instance>}[<position>]{<class>}{<attributes>}[<operations>]
+%% Draw an object instance directly, without registering it in the pxUML class registry.
+%% * - use alternate colours.  #1 - text width in em (default 16).  #2 - instance name.  #3 - position.
+%% #4 - class name for \instanceOf.  #5 - attribute clist.  #6 - optional operation clist.
 \NewDocumentCommand{\drawinstance}{s O{16} m O{0,0} m m o }{
 	\IfBooleanT{#1}{\__pxuml_load_varcolor:}
 	\begin{object}[ text~ width= #2em]{#3}{#4}
@@ -79,6 +100,10 @@
 	\end{object}
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 }
+%% \pxUMLDiagram*[<tikz options>]{<diagram body>}[<width>]<horizontal offset>
+%% Wrap UML drawing commands in a resized tikzpicture.
+%% * - use alternate colours.  #1 - tikzpicture options.  #2 - diagram body.
+%% #3 - output width (default .8\linewidth).  #4 - leading horizontal offset (default -2em).
 \NewDocumentCommand{\pxUMLDiagram}{s O{ } +m O{.8\linewidth} D<>{-2em}}{
 
 	\IfBooleanTF{#1}{\__pxuml_load_varcolor:}{\__pxuml_load_maincolor:}
@@ -92,9 +117,15 @@
 	\IfBooleanT{#1}{\__pxuml_load_maincolor:}
 
 }
+%% \PXshowclass{<class>}
+%% Load a class record into internal scratch fields; this command itself produces no output.
+%% #1 - class id.
 \NewDocumentCommand{\PXshowclass}{m}{
 	\__pxuml_showclass:n {#1}
 }
+%% \pxUMLAttributes{<class>} / \pxUMLOperations{<class>} / \pxUMLParents{<class>}
+%% Expand to the raw stored attributes, operations or inheritance field of a registered classifier.
+%% #1 - class id.
 \NewDocumentCommand{\pxUMLAttributes}{m}{
 	\__pxuml_print_attributes:n {#1}
 }
@@ -104,12 +135,21 @@
 \NewDocumentCommand{\pxUMLParents}{m}{
 	\__pxuml_print_parents:n {#1}
 }
+%% \addAttribute{<class>}{<attribute>}
+%% Append one attribute to an existing classifier.
+%% #1 - class id.  #2 - attribute text.
 \NewDocumentCommand{\addAttribute}{m m}{
 	\__pxuml_add_attribute:nn {#1}{#2}
 }
+%% \addOperation{<class>}{<operation>}
+%% Append one operation to an existing classifier.
+%% #1 - class id.  #2 - operation text.
 \NewDocumentCommand{\addOperation}{m m}{
 	\__pxuml_add_operation:nn {#1}{#2}
 }
+%% \addInheritance{<class>}{<parent>}
+%% Append one inheritance target to an existing classifier.
+%% #1 - class id.  #2 - parent classifier.
 \NewDocumentCommand{\addInheritance}{m m}{
 	\__pxuml_add_inherit:nn {#1}{#2}
 }

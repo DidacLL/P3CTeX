@@ -133,12 +133,21 @@
 
 %% Public LaTeX2e API
 
+%% \pxORLsetup{<key=value,...>}
+%% Set persistent pxORL configuration for subsequent boards.
+%% #1 - pxORL key list.
 \NewDocumentCommand{\pxORLsetup}{m}
 { \pxORL_set_options:n { #1 } }
 
+%% \pxORLsavepreset{<name>}{<key list>}
+%% Register a user preset.
+%% #1 - preset name.  #2 - pxORL key list.
 \NewDocumentCommand{\pxORLsavepreset}{m m}
 { \pxORL_save_preset:nn { #1 } { #2 } }
 
+%% \pxORLusepreset{<name>}
+%% Apply a previously registered preset.
+%% #1 - preset name.
 \NewDocumentCommand{\pxORLusepreset}{m}
 { \pxORL_use_preset:n { #1 } }
 
@@ -151,6 +160,9 @@
 %
 % Empty or missing photos print a P3CTeX-style placeholder when
 % print-placeholders=true.
+%% \pxORLprint[<local keys>]{<students>}
+%% Render an orla; local options are grouped and do not persist after the command.
+%% #1 - optional pxORL keys.  #2 - comma-separated `{Name}/{photo-file}` entries.
 \NewDocumentCommand{\pxORLprint}{ O{} +m }
 {
 	\group_begin:
@@ -160,6 +172,8 @@
 }
 
 % Catalan/Spanish semantic alias, still mapped to the pxORL API.
+%% \pxOrla[<local keys>]{<students>}
+%% Semantic alias of \pxORLprint with identical arguments.
 \NewDocumentCommand{\pxOrla}{ O{} +m }
 { \pxORLprint[#1]{#2} }
 
