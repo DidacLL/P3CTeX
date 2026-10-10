@@ -5,12 +5,14 @@ on:
     paths:
       - 'tex/doc/*.tex'
       - 'tex/latex/*.sty'
+      - 'tex/latex/P3CTeX.cls'
       - 'tex/code/*.code.tex'
       - '.github/workflows/documentation.yml'
   pull_request:
     paths:
       - 'tex/doc/*.tex'
       - 'tex/latex/*.sty'
+      - 'tex/latex/P3CTeX.cls'
       - 'tex/code/*.code.tex'
       - '.github/workflows/documentation.yml'
   workflow_dispatch:
@@ -21,96 +23,90 @@ permissions:
 jobs:
   documentation:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Check out repository and comparison history
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Select affected manuals
-        id: select
+      - name: Get repository revision
         shell: bash
-        env:
-          PUSH_BEFORE: ${{ github.event.before }}
-          PR_BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          declare -A roots=()
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "${GITHUB_SHA}"
+          git checkout --detach FETCH_HEAD
 
-          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]]; then
-            roots["doc/pxMEM.tex"]=1
-            roots["doc/pxTFG.tex"]=1
-          else
-            if [[ "$GITHUB_EVENT_NAME" == pull_request ]]; then
-              base="$PR_BASE"
-            else
-              base="$PUSH_BEFORE"
-            fi
-            if [[ -z "$base" || "$base" =~ ^0+$ ]] || ! git cat-file -e "$base^{commit}"; then
-              base="$(git rev-parse HEAD^)"
-            fi
+      - name: Select affected documentation and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import subprocess
 
-            while IFS= read -r file; do
-              case "$file" in
-                tex/doc/*.tex)
-                  [[ -f "$file" ]] && roots["${file#tex/}"]=1
-                  ;;
-                tex/latex/*.sty)
-                  name="${file##*/}"
-                  name="${name%.sty}"
-                  [[ -f "tex/doc/$name.tex" ]] && roots["doc/$name.tex"]=1
-                  ;;
-                tex/code/*.code.tex)
-                  name="${file##*/}"
-                  name="${name%.code.tex}"
-                  [[ -f "tex/doc/$name.tex" ]] && roots["doc/$name.tex"]=1
-                  ;;
-                .github/workflows/documentation.yml)
-                  # Bootstrap/check the current manuals when changing the CI itself.
-                  roots["doc/pxMEM.tex"]=1
-                  roots["doc/pxTFG.tex"]=1
-                  ;;
-              esac
-            done < <(git diff --name-only "$base" HEAD)
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+
+          event_name = os.environ["GITHUB_EVENT_NAME"]
+          event = json.loads(pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+          targets = set()
+
+          if event_name == "workflow_dispatch":
+              targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
+          else:
+              if event_name == "pull_request":
+                  base = event["pull_request"]["base"]["sha"]
+              else:
+                  base = event.get("before", "")
+
+              if not base or set(base) == {"0"}:
+                  base = "HEAD^"
+              if base != "HEAD^":
+                  subprocess.run(["git", "fetch", "--no-tags", "origin", base],
+                                 stdout=subprocess.DEVNULL, check=False)
+                  if subprocess.run(["git", "cat-file", "-e", base + "^{commit}"],
+                                    stdout=subprocess.DEVNULL,
+                                    stderr=subprocess.DEVNULL).returncode:
+                      base = "HEAD^"
+
+              changed = git("diff", "--name-only", base, "HEAD").splitlines()
+              for path in changed:
+                  if path.startswith("tex/doc/") and path.endswith(".tex"):
+                      targets.add(path)
+                  elif path.startswith("tex/latex/") and path.endswith(".sty"):
+                      name = pathlib.Path(path).stem
+                      targets.add("tex/doc/" + name + ".tex")
+                  elif path.startswith("tex/code/") and path.endswith(".code.tex"):
+                      name = pathlib.Path(path).name.removesuffix(".code.tex")
+                      targets.add("tex/doc/" + name + ".tex")
+                  if path in {".github/workflows/documentation.yml",
+                              "tex/latex/P3CTeX.cls",
+                              "tex/code/P3CTeX.code.tex",
+                              "tex/latex/pxCORE.sty",
+                              "tex/code/pxCORE.code.tex"}:
+                      targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
+
+          selected = sorted(p for p in targets if pathlib.Path(p).is_file())
+          print("Manuals to compile:", selected, flush=True)
+          pathlib.Path(".documentation-targets").write_text(
+              "".join(p.removeprefix("tex/") + "\n" for p in selected)
+          )
+          PY
+
+          if [[ ! -s .documentation-targets ]]; then
+            echo "No affected manuals; nothing to build."
+            exit 0
           fi
 
-          {
-            echo 'roots<<EOF'
-            if (( ${#roots[@]} )); then
-              printf '%s\n' "${!roots[@]}" | sort
-            fi
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Compile selected manuals
-        if: steps.select.outputs.roots != ''
-        uses: xu-cheng/latex-action@v4
-        with:
-          working_directory: tex
-          root_file: ${{ steps.select.outputs.roots }}
-        env:
-          TEXINPUTS: '.:./latex//:./code//:'
-
-      - name: Collect only the PDFs built in this run
-        if: steps.select.outputs.roots != ''
-        shell: bash
-        env:
-          ROOTS: ${{ steps.select.outputs.roots }}
-        run: |
-          set -euo pipefail
-          mkdir -p documentation-artifacts
-          while IFS= read -r source; do
-            [[ -z "$source" ]] && continue
-            name="${source##*/}"
-            name="${name%.tex}"
-            cp "tex/$name.pdf" "documentation-artifacts/$name.pdf"
-          done <<< "$ROOTS"
-
-      - name: Upload compiled manuals
-        if: steps.select.outputs.roots != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: documentation-pdfs
-          path: documentation-artifacts/*.pdf
-          if-no-files-found: error
-          retention-days: 14
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/work" \
+            -w /work/tex \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash -euo pipefail -c '
+              while IFS= read -r source; do
+                echo "::group::Documentation: $source"
+                latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode "$source"
+                echo "::endgroup::"
+              done < /work/.documentation-targets
+            '
