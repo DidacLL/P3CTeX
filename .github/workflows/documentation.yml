@@ -8,6 +8,7 @@ on:
       - 'tex/latex/P3CTeX.cls'
       - 'tex/code/*.code.tex'
       - '.github/workflows/documentation.yml'
+      - '.github/actions/upload-docs/**'
   pull_request:
     paths:
       - 'tex/doc/*.tex'
@@ -15,6 +16,7 @@ on:
       - 'tex/latex/P3CTeX.cls'
       - 'tex/code/*.code.tex'
       - '.github/workflows/documentation.yml'
+      - '.github/actions/upload-docs/**'
   workflow_dispatch:
 
 permissions:
@@ -80,6 +82,8 @@ jobs:
                       name = pathlib.Path(path).name.removesuffix(".code.tex")
                       targets.add("tex/doc/" + name + ".tex")
                   if path in {".github/workflows/documentation.yml",
+                              ".github/actions/upload-docs/action.yml",
+                              ".github/actions/upload-docs/index.js",
                               "tex/latex/P3CTeX.cls",
                               "tex/code/P3CTeX.code.tex",
                               "tex/latex/pxCORE.sty",
@@ -111,43 +115,14 @@ jobs:
               done < /work/.documentation-targets
             '
 
-      - name: Upload only the PDFs compiled by this run
+      - name: Install artifact client if documentation was built
         shell: bash
         run: |
           set -euo pipefail
-          if [[ ! -s .documentation-targets ]]; then
-            echo "No generated documentation to upload."
-            exit 0
+          if [[ -s .documentation-targets ]]; then
+            npm install --prefix "${RUNNER_TEMP}/pxdoc-artifacts" \
+              --no-save --ignore-scripts --silent @actions/artifact@2.3.2
           fi
 
-          # Use the official artifact client directly. Marketplace actions
-          # cannot start in this repository's current Actions configuration.
-          npm install --prefix "${RUNNER_TEMP}/pxdoc-artifacts" \
-            --no-save --ignore-scripts --silent @actions/artifact@2.3.2
-
-          node <<'NODE'
-          const fs = require('node:fs')
-          const path = require('node:path')
-          const { DefaultArtifactClient } = require(
-            path.join(process.env.RUNNER_TEMP, 'pxdoc-artifacts/node_modules/@actions/artifact')
-          )
-
-          const root = path.join(process.env.GITHUB_WORKSPACE, 'tex')
-          const sources = fs.readFileSync('.documentation-targets', 'utf8')
-            .split(/\r?\n/).filter(Boolean)
-          const files = sources.map(source => {
-            const filename = path.basename(source, '.tex') + '.pdf'
-            const file = path.join(root, filename)
-            if (!fs.existsSync(file)) throw new Error('Missing compiled PDF: ' + file)
-            return file
-          })
-
-          new DefaultArtifactClient().uploadArtifact(
-            'documentation-pdfs', files, root, { retentionDays: 14 }
-          ).then(({ id }) => {
-            console.log('Uploaded ' + files.length + ' selected PDF(s); artifact ID: ' + id)
-          }).catch(error => {
-            console.error(error)
-            process.exitCode = 1
-          })
-          NODE
+      - name: Upload only the selected PDF artifacts
+        uses: ./.github/actions/upload-docs
