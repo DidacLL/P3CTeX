@@ -1,0 +1,67 @@
+\ProvidesExplFile{pxTFG.code.tex}{2026/10/10}{v0.1}{UOC TFG data and preliminary pages}
+\keys_define:nn {pxTFG}
+  {
+    tutor   .tl_set:N = \l__pxtfg_tutor_tl,
+    area    .tl_set:N = \l__pxtfg_area_tl,
+    credits .tl_set:N = \l__pxtfg_credits_tl,
+    licence .tl_set:N = \l__pxtfg_licence_tl,
+  }
+\prop_new:N \g__pxtfg_abstracts_prop
+
+% Babel is selected by P3CTeX's existing CAT / ES / EN options.
+\cs_new:Npn \__pxtfg_text:nnn #1#2#3
+  {\iflanguage{catalan}{#1}{\iflanguage{spanish}{#2}{#3}}}
+
+\cs_new_protected:Npn \__pxtfg_heading:n #1
+  {
+    \cs_if_exist:NTF \chapter
+      {\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+      {\section*{\textcolor{primaryColor}{#1}}\addcontentsline{toc}{section}{#1}}
+  }
+\cs_new:Npn \__pxtfg_row:nn #1#2
+  {\textbf{#1} & #2 \\ [0.65ex]}
+\cs_new_protected:Npn \__pxtfg_card:
+  {
+    \__pxtfg_heading:n
+      {\__pxtfg_text:nnn{Fitxa~del~Treball~Final}
+        {Ficha~del~Trabajo~Final}{Final~Project~Information}}
+    \begin{tabular}{@{}p{.27\linewidth}p{.68\linewidth}@{}}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Títol}{Título}{Title}}{\l__pxdata_subj_name_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Estudiant}{Estudiante}{Student}}{\l__pxdata_student_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Titulació}{Titulación}{Degree}}{\l__pxdata_course_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Activitat}{Actividad}{Assessment}}{\l__pxdata_activity_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Tutor/a}{Tutor/a}{Supervisor}}{\l__pxtfg_tutor_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Àrea}{Área}{Area}}{\l__pxtfg_area_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Crèdits}{Créditos}{Credits}}{\l__pxtfg_credits_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Llicència}{Licencia}{Licence}}{\l__pxtfg_licence_tl}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Data}{Fecha}{Date}}{\l__px_date_tl}
+    \end{tabular}
+    \par\bigskip
+  }
+\cs_new_protected:Npn \__pxtfg_abstract:nn #1#2
+  {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1} {#2}}
+\cs_new_protected:Npn \__pxtfg_print_abstract:n #1
+  {
+    \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
+      {
+        \__pxtfg_heading:n
+          {\str_case:nn {#1} {{CAT}{Resum}{ES}{Resumen}{EN}{Abstract}}}
+        \tl_use:N \l_tmpa_tl \par
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_abstracts:
+  {
+    \__pxtfg_print_abstract:n {CAT}
+    \__pxtfg_print_abstract:n {ES}
+    \__pxtfg_print_abstract:n {EN}
+  }
+\endinput

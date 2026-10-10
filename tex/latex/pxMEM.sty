@@ -1,0 +1,29 @@
+% Generic report chapters, annexes and source-region reuse for P3CTeX.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,fancyvrb,graphicx}
+\ProvidesExplPackage{pxMEM}{2026/10/10}{v0.1}{P3CTeX generic memory support}
+
+% Keep the article class and its existing page/cover layout.
+\newcounter{chapter}
+\@addtoreset{section}{chapter}
+\renewcommand\thesection{\thechapter.\arabic{section}}
+\newcommand\chapter{%
+  \clearpage\thispagestyle{plain}%
+  \@startsection{chapter}{0}{\z@}%
+    {-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}%
+    {\normalfont\huge\bfseries\color{primaryColor}}}
+\providecommand*\l@chapter{\@dottedtocline{0}{0em}{2.5em}}
+\renewcommand\appendix{%
+  \setcounter{chapter}{0}%
+  \setcounter{section}{0}%
+  \renewcommand\thechapter{\Alph{chapter}}}
+
+\file_input:n {pxMEM.code.tex}
+
+% Register the original source .tex, not a generated export.
+\NewDocumentCommand\pxMEMsource{mm}{\__pxmem_source:nn {#1}{#2}}
+% Extract on demand, then input the generated snippet as ordinary TeX.
+\NewDocumentCommand\pxMEMinclude{mm}{\__pxmem_include:nn {#1}{#2}}
+% The first annex switches chapter numbering to A, B, ...
+\NewDocumentCommand\pxMEMannex{m +m}{\__pxmem_annex:nn {#1}{#2}}
+\endinput

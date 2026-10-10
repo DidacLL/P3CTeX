@@ -1,0 +1,12 @@
+% UOC TFG-specific semantics, independent of generic MEM support.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse}
+\ProvidesExplPackage{pxTFG}{2026/10/10}{v0.1}{P3CTeX UOC TFG semantics}
+\file_input:n {pxTFG.code.tex}
+
+\NewDocumentCommand\pxTFGsetup{m}{\keys_set:nn {pxTFG} {#1}}
+\NewDocumentCommand\pxTFGabstract{m +m}{\__pxtfg_abstract:nn {#1}{#2}}
+\NewDocumentCommand\pxTFGworkcard{}{\__pxtfg_card:}
+\NewDocumentCommand\pxTFGabstracts{}{\__pxtfg_abstracts:}
+\NewDocumentCommand\pxTFGfrontmatter{}{\pxTFGworkcard\pxTFGabstracts}
+\endinput
