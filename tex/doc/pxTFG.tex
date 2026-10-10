@@ -1,0 +1,142 @@
+% -*- mode: latex; coding: utf-8 -*-
+% pxTFG -- Standalone user manual and public API reference
+% P3CTeX / Scvria. Compile with pdflatex doc/pxTFG.tex from tex/.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{pxTFG}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\title{The \texttt{pxTFG} package\\\large UOC final-work metadata and front matter}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/10/10 -- Version 0.1}
+\begin{document}
+\maketitle
+\begin{abstract}
+\texttt{pxTFG} adds UOC final-project semantics to P3CTeX without
+changing its pxGDX visual style. It is independent from the generic
+\texttt{pxMEM} report and content-reuse package.
+\end{abstract}
+\tableofcontents
+\setlength{\emergencystretch}{4em}
+
+\section{Enable TFG}
+The TFG module loads via pxCORE when the \texttt{TFG} class option is set:
+\begin{verbatim}
+\documentclass[TFG,PR,CAT]{P3CTeX}   % standalone PR
+\documentclass[TFG,MEM,CAT]{P3CTeX}  % final memory
+\end{verbatim}
+Neither \texttt{TFG} nor \texttt{MEM} implies the other. Select them at
+class-loading time; \verb|\PECTeXconfig{TFG}| and
+\verb|\PECTeXconfig{MEM}| do not load modules retroactively.
+The existing PR, PAC, PEC and CA profiles retain their semantics.
+
+\section{Metadata}
+\texttt{pxTFG} reuses P3CTeX data rather than creating duplicates.
+Use the normal class data keys \texttt{student} (author),
+\texttt{grade} (degree), \texttt{subj-fullname} (project title),
+\texttt{ca-fullname}/\texttt{ca-shortname} (deliverable), and
+\texttt{date} (document date). Use the class language option
+\texttt{CAT}, \texttt{ES} or \texttt{EN}; there is no TFG language field.
+
+\subsection{Configuration: \texttt{\textbackslash pxTFGsetup}}
+\verb|\pxTFGsetup{<key=value,...>}| stores four TFG-only fields:
+\begin{description}
+\item[\texttt{tutor}] Final-work supervisor.
+\item[\texttt{area}] Work area/specialisation.
+\item[\texttt{credits}] Credit count (ECTS).
+\item[\texttt{licence}] Licence text for the work card.
+\end{description}
+\begin{verbatim}
+\PECTeXconfig{data={
+  student={Estudiant},grade={Enginyeria Informatica},
+  subj-fullname={Projecte},ca-fullname={Proposta},
+  ca-shortname={PR1},date={\today}
+}}
+\pxTFGsetup{
+  tutor={Tutora},area={Computacio},
+  credits={12},licence={CC BY}
+}
+\end{verbatim}
+
+\section{Public commands}
+\subsection{\texttt{\textbackslash pxTFGworkcard}}
+\verb|\pxTFGworkcard| prints the UOC final-work information card,
+using both the shared class data and the four TFG fields. Its labels
+follow the document language: Fitxa del Treball Final, Ficha del
+Trabajo Final or Final Project Information. It creates an unnumbered
+section in TFG PR documents or an unnumbered chapter in TFG+MEM
+documents, with a table-of-contents entry.
+
+\subsection{\texttt{\textbackslash pxTFGabstract}}
+\verb+\pxTFGabstract{<language>}{<text>}+ registers one abstract for
+a particular language. Re-registering the same language replaces its text.
+It does not print the abstract and does not change Babel's document language.
+\begin{verbatim}
+\pxTFGabstract{CAT}{Resum del treball.}
+\pxTFGabstract{ES}{Resumen del trabajo.}
+\pxTFGabstract{EN}{Project abstract.}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxTFGabstracts}}
+\verb|\pxTFGabstracts| prints the abstracts already registered in
+CAT, ES, EN order, skipping absent entries. Headings are Resum,
+Resumen and Abstract; each appears in the table of contents.
+
+\subsection{\texttt{\textbackslash pxTFGfrontmatter}}
+\verb|\pxTFGfrontmatter| prints the work card followed by the
+registered abstracts. It does not print a cover or TOC; those belong
+to P3CTeX. Place it in the body near the beginning of the document.
+
+\section{Standalone TFG PR example}
+\begin{verbatim}
+\documentclass[TFG,PR,CAT]{P3CTeX}
+\PECTeXconfig{data={
+  student={Estudiant},grade={Enginyeria Informatica},
+  subj-fullname={Projecte},ca-fullname={PR1},
+  ca-shortname={PR1}
+}}
+\pxTFGsetup{tutor={Tutora},area={Computacio},
+  credits={12},licence={CC BY}}
+\begin{document}
+\pxTFGworkcard
+\section{Objectius}
+Text de la PR1.
+\end{document}
+\end{verbatim}
+A normal PR remains independently compilable. Potentially reusable
+sections can be surrounded by selection comments as described in the
+\texttt{pxMEM} manual; no TFG-to-MEM dependency is introduced.
+
+\section{Final TFG memory example}
+\begin{verbatim}
+\documentclass[TFG,MEM,CAT]{P3CTeX}
+\PECTeXconfig{cover=true,toc=false,data={
+  student={Estudiant},grade={Enginyeria Informatica},
+  subj-fullname={Projecte},ca-fullname={Memoria},
+  ca-shortname={MEM}
+}}
+\pxTFGsetup{tutor={Tutora},area={Computacio},
+  credits={12},licence={CC BY}}
+\pxTFGabstract{CAT}{Resum.}
+\pxTFGabstract{ES}{Resumen.}
+\pxTFGabstract{EN}{Abstract.}
+\begin{document}
+\pxTFGfrontmatter
+\tableofcontents
+\pxMEMsource{PR1}{../PR1/PR1.tex}
+\chapter{Introduccio}
+\pxMEMinclude{PR1}{objectius}
+\pxMEMannex{Evidencies}{Material addicional.}
+\end{document}
+\end{verbatim}
+\section{Public API summary}
+\begin{description}
+\item[\texttt{\textbackslash pxTFGsetup\{keys\}}] Set TFG-only metadata.
+\item[\texttt{\textbackslash pxTFGabstract\{lang\}\{text\}}] Store an abstract.
+\item[\texttt{\textbackslash pxTFGworkcard}] Print the UOC work card.
+\item[\texttt{\textbackslash pxTFGabstracts}] Print registered abstracts.
+\item[\texttt{\textbackslash pxTFGfrontmatter}] Print card plus abstracts.
+\end{description}
+\end{document}

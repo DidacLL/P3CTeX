@@ -7,12 +7,18 @@
 \newcounter{chapter}
 \@addtoreset{section}{chapter}
 \renewcommand\thesection{\thechapter.\arabic{section}}
+% \chapter{<title>}
+% Start a numbered, page-breaking chapter in a MEM document. MEM preserves
+% article as its base class and numbers sections within the current chapter.
 \newcommand\chapter{%
   \clearpage\thispagestyle{plain}%
   \@startsection{chapter}{0}{\z@}%
     {-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}%
     {\normalfont\huge\bfseries\color{primaryColor}}}
 \providecommand*\l@chapter{\@dottedtocline{0}{0em}{2.5em}}
+% \appendix
+% Switch subsequent chapter numbers to letters (A, B, ...), starting at A.
+% Normally \pxMEMannex performs this transition on the first annex.
 \renewcommand\appendix{%
   \setcounter{chapter}{0}%
   \setcounter{section}{0}%
@@ -21,9 +27,18 @@
 \file_input:n {pxMEM.code.tex}
 
 % Register the original source .tex, not a generated export.
+%% \pxMEMsource{<id>}{<path-to-tex>}
+%% Register a source document for later reuse without reading it yet.
+%% The consumer supplies the actual source path; source PRs remain unchanged.
 \NewDocumentCommand\pxMEMsource{mm}{\__pxmem_source:nn {#1}{#2}}
 % Extract on demand, then input the generated snippet as ordinary TeX.
+%% \pxMEMinclude{<id>}{<region>}
+%% Insert only the source lines bracketed by %<*region> and %</region>.
+%% Internally creates and inputs a disposable snippet; no manual exports.
 \NewDocumentCommand\pxMEMinclude{mm}{\__pxmem_include:nn {#1}{#2}}
 % The first annex switches chapter numbering to A, B, ...
+%% \pxMEMannex{<title>}{<content>}
+%% Start a letter-numbered appendix chapter, switching to appendix numbering
+%% on its first use, then typeset the supplied content inside that chapter.
 \NewDocumentCommand\pxMEMannex{m +m}{\__pxmem_annex:nn {#1}{#2}}
 \endinput

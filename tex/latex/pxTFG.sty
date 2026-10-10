@@ -4,9 +4,24 @@
 \ProvidesExplPackage{pxTFG}{2026/10/10}{v0.1}{P3CTeX UOC TFG semantics}
 \file_input:n {pxTFG.code.tex}
 
+%% \pxTFGsetup{<key=value,...>}
+%% Set TFG-only metadata: tutor, area, credits and licence. Shared information
+%% (student, degree, project title, activity, date) stays in P3CTeX data keys.
 \NewDocumentCommand\pxTFGsetup{m}{\keys_set:nn {pxTFG} {#1}}
+%% \pxTFGabstract{CAT|ES|EN}{<text>}
+%% Store or replace one language-specific abstract for later printing.
+%% This does not change the document language or immediately typeset it.
 \NewDocumentCommand\pxTFGabstract{m +m}{\__pxtfg_abstract:nn {#1}{#2}}
+%% \pxTFGworkcard
+%% Typeset the UOC final-project information card using the current class
+%% metadata and TFG-specific fields, with headings in the document language.
 \NewDocumentCommand\pxTFGworkcard{}{\__pxtfg_card:}
+%% \pxTFGabstracts
+%% Print the abstracts already supplied by \pxTFGabstract, ordered CAT/ES/EN;
+%% missing languages are omitted.
 \NewDocumentCommand\pxTFGabstracts{}{\__pxtfg_abstracts:}
+%% \pxTFGfrontmatter
+%% Print the work card and all registered abstracts. Does not print
+%% the P3CTeX cover or table of contents.
 \NewDocumentCommand\pxTFGfrontmatter{}{\pxTFGworkcard\pxTFGabstracts}
 \endinput
