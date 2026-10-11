@@ -1,20 +1,19 @@
 name: Documentation CI
 
 on:
-  push:
-    paths:
-      - 'tex/doc/*.tex'
-      - 'tex/latex/*.sty'
-      - 'tex/latex/P3CTeX.cls'
-      - 'tex/code/*.code.tex'
-      - '.github/workflows/documentation.yml'
-      - '.github/actions/upload-docs/**'
   pull_request:
+    branches: [main]
     paths:
-      - 'tex/doc/*.tex'
-      - 'tex/latex/*.sty'
+      - 'tex/doc/pxMEM.tex'
+      - 'tex/doc/pxTFG.tex'
+      - 'tex/latex/pxMEM.sty'
+      - 'tex/latex/pxTFG.sty'
+      - 'tex/code/pxMEM.code.tex'
+      - 'tex/code/pxTFG.code.tex'
       - 'tex/latex/P3CTeX.cls'
-      - 'tex/code/*.code.tex'
+      - 'tex/code/P3CTeX.code.tex'
+      - 'tex/latex/pxCORE.sty'
+      - 'tex/code/pxCORE.code.tex'
       - '.github/workflows/documentation.yml'
       - '.github/actions/upload-docs/**'
   workflow_dispatch:
@@ -33,7 +32,14 @@ jobs:
           set -euo pipefail
           git init .
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --no-tags origin "${GITHUB_SHA}"
+          # Build the actual PR branch, not GitHub's synthetic merge commit.
+          # For a manual run, use the selected branch as usual.
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            revision="$(jq -r '.pull_request.head.sha' "$GITHUB_EVENT_PATH")"
+          else
+            revision="$GITHUB_SHA"
+          fi
+          git fetch --no-tags origin "$revision"
           git checkout --detach FETCH_HEAD
 
       - name: Select affected documentation and compile
@@ -56,10 +62,8 @@ jobs:
           if event_name == "workflow_dispatch":
               targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
           else:
-              if event_name == "pull_request":
-                  base = event["pull_request"]["base"]["sha"]
-              else:
-                  base = event.get("before", "")
+              # PR builds compare the source branch with the merge base.
+              base = event["pull_request"]["base"]["sha"]
 
               if not base or set(base) == {"0"}:
                   base = "HEAD^"
@@ -71,6 +75,8 @@ jobs:
                                     stderr=subprocess.DEVNULL).returncode:
                       base = "HEAD^"
 
+              if event_name == "pull_request":
+                  base = git("merge-base", base, "HEAD")
               changed = git("diff", "--name-only", base, "HEAD").splitlines()
               for path in changed:
                   if path.startswith("tex/doc/") and path.endswith(".tex"):
@@ -129,28 +135,30 @@ jobs:
       - name: Upload only the selected PDF artifacts
         uses: ./.github/actions/upload-docs
 
-      - name: Publish selected PDFs to the branch
+      - name: Include updated PDFs in the pull request
         if: >-
-          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-          (github.ref == 'refs/heads/TFG' || github.ref == 'refs/heads/main')
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BRANCH: ${{ github.head_ref }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           if [[ ! -s .documentation-targets ]]; then
-            echo "No documentation changed; no repository update."
+            echo "No affected PDFs; no PR update."
             exit 0
           fi
 
-          # Avoid publishing PDFs built from a stale branch revision.
-          git fetch --no-tags origin "$GITHUB_REF_NAME"
-          if [[ "$(git rev-parse FETCH_HEAD)" != "$GITHUB_SHA" ]]; then
-            echo "The branch advanced during compilation; skipping stale PDF publication."
+          # The PR may have advanced during compilation. Never overwrite
+          # newer work with PDFs built from an old revision.
+          git fetch --no-tags origin "$PR_BRANCH"
+          if [[ "$(git rev-parse FETCH_HEAD)" != "$PR_HEAD_SHA" ]]; then
+            echo "PR branch advanced; skipping stale PDF update."
             exit 0
           fi
 
-          # Build outputs are in tex/; PDFs tracked in the repo are in tex/doc/.
           while IFS= read -r source; do
             [[ -z "$source" ]] && continue
             name="${source##*/}"
@@ -161,16 +169,13 @@ jobs:
           done < .documentation-targets
 
           if git diff --cached --quiet; then
-            echo "PDFs are already current."
+            echo "Generated PDFs are already current."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "docs: update generated documentation PDFs [skip ci]"
-
-          # The standard GITHUB_TOKEN authenticates the push. Its commits do
-          # not trigger a new push workflow, avoiding recursive CI executions.
+          git commit -m "docs: update affected PDF manuals [skip ci]"
           auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
-            push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+            push origin "HEAD:refs/heads/$PR_BRANCH"
