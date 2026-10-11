@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   documentation:
@@ -90,7 +90,9 @@ jobs:
                               "tex/code/pxCORE.code.tex"}:
                       targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
 
-          selected = sorted(p for p in targets if pathlib.Path(p).is_file())
+          # Only the maintained manuals participate; legacy docs are deprecated.
+          maintained = {"tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"}
+          selected = sorted(p for p in targets if p in maintained and pathlib.Path(p).is_file())
           print("Manuals to compile:", selected, flush=True)
           pathlib.Path(".documentation-targets").write_text(
               "".join(p.removeprefix("tex/") + "\n" for p in selected)
@@ -126,3 +128,49 @@ jobs:
 
       - name: Upload only the selected PDF artifacts
         uses: ./.github/actions/upload-docs
+
+      - name: Publish selected PDFs to the branch
+        if: >-
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+          (github.ref == 'refs/heads/TFG' || github.ref == 'refs/heads/main')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ ! -s .documentation-targets ]]; then
+            echo "No documentation changed; no repository update."
+            exit 0
+          fi
+
+          # Avoid publishing PDFs built from a stale branch revision.
+          git fetch --no-tags origin "$GITHUB_REF_NAME"
+          if [[ "$(git rev-parse FETCH_HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "The branch advanced during compilation; skipping stale PDF publication."
+            exit 0
+          fi
+
+          # Build outputs are in tex/; PDFs tracked in the repo are in tex/doc/.
+          while IFS= read -r source; do
+            [[ -z "$source" ]] && continue
+            name="${source##*/}"
+            name="${name%.tex}"
+            test -f "tex/$name.pdf"
+            cp "tex/$name.pdf" "tex/doc/$name.pdf"
+            git add -- "tex/doc/$name.pdf"
+          done < .documentation-targets
+
+          if git diff --cached --quiet; then
+            echo "PDFs are already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs: update generated documentation PDFs [skip ci]"
+
+          # The standard GITHUB_TOKEN authenticates the push. Its commits do
+          # not trigger a new push workflow, avoiding recursive CI executions.
+          auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
+            push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
