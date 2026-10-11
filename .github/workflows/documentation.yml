@@ -1,0 +1,181 @@
+name: Documentation CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tex/doc/pxMEM.tex'
+      - 'tex/doc/pxTFG.tex'
+      - 'tex/latex/pxMEM.sty'
+      - 'tex/latex/pxTFG.sty'
+      - 'tex/code/pxMEM.code.tex'
+      - 'tex/code/pxTFG.code.tex'
+      - 'tex/latex/P3CTeX.cls'
+      - 'tex/code/P3CTeX.code.tex'
+      - 'tex/latex/pxCORE.sty'
+      - 'tex/code/pxCORE.code.tex'
+      - '.github/workflows/documentation.yml'
+      - '.github/actions/upload-docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Get repository revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          # Build the actual PR branch, not GitHub's synthetic merge commit.
+          # For a manual run, use the selected branch as usual.
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            revision="$(jq -r '.pull_request.head.sha' "$GITHUB_EVENT_PATH")"
+          else
+            revision="$GITHUB_SHA"
+          fi
+          git fetch --no-tags origin "$revision"
+          git checkout --detach FETCH_HEAD
+
+      - name: Select affected documentation and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import subprocess
+
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+
+          event_name = os.environ["GITHUB_EVENT_NAME"]
+          event = json.loads(pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+          targets = set()
+
+          if event_name == "workflow_dispatch":
+              targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
+          else:
+              # PR builds compare the source branch with the merge base.
+              base = event["pull_request"]["base"]["sha"]
+
+              if not base or set(base) == {"0"}:
+                  base = "HEAD^"
+              if base != "HEAD^":
+                  subprocess.run(["git", "fetch", "--no-tags", "origin", base],
+                                 stdout=subprocess.DEVNULL, check=False)
+                  if subprocess.run(["git", "cat-file", "-e", base + "^{commit}"],
+                                    stdout=subprocess.DEVNULL,
+                                    stderr=subprocess.DEVNULL).returncode:
+                      base = "HEAD^"
+
+              if event_name == "pull_request":
+                  base = git("merge-base", base, "HEAD")
+              changed = git("diff", "--name-only", base, "HEAD").splitlines()
+              for path in changed:
+                  if path.startswith("tex/doc/") and path.endswith(".tex"):
+                      targets.add(path)
+                  elif path.startswith("tex/latex/") and path.endswith(".sty"):
+                      name = pathlib.Path(path).stem
+                      targets.add("tex/doc/" + name + ".tex")
+                  elif path.startswith("tex/code/") and path.endswith(".code.tex"):
+                      name = pathlib.Path(path).name.removesuffix(".code.tex")
+                      targets.add("tex/doc/" + name + ".tex")
+                  if path in {".github/workflows/documentation.yml",
+                              ".github/actions/upload-docs/action.yml",
+                              ".github/actions/upload-docs/index.js",
+                              "tex/latex/P3CTeX.cls",
+                              "tex/code/P3CTeX.code.tex",
+                              "tex/latex/pxCORE.sty",
+                              "tex/code/pxCORE.code.tex"}:
+                      targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
+
+          # Only the maintained manuals participate; legacy docs are deprecated.
+          maintained = {"tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"}
+          selected = sorted(p for p in targets if p in maintained and pathlib.Path(p).is_file())
+          print("Manuals to compile:", selected, flush=True)
+          pathlib.Path(".documentation-targets").write_text(
+              "".join(p.removeprefix("tex/") + "\n" for p in selected)
+          )
+          PY
+
+          if [[ ! -s .documentation-targets ]]; then
+            echo "No affected manuals; nothing to build."
+            exit 0
+          fi
+
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/work" \
+            -w /work/tex \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash -euo pipefail -c '
+              while IFS= read -r source; do
+                echo "::group::Documentation: $source"
+                latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode "$source"
+                echo "::endgroup::"
+              done < /work/.documentation-targets
+            '
+
+      - name: Install artifact client if documentation was built
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -s .documentation-targets ]]; then
+            npm install --prefix "${RUNNER_TEMP}/pxdoc-artifacts" \
+              --no-save --ignore-scripts --silent @actions/artifact@2.3.2
+          fi
+
+      - name: Upload only the selected PDF artifacts
+        uses: ./.github/actions/upload-docs
+
+      - name: Include updated PDFs in the pull request
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BRANCH: ${{ github.head_ref }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ ! -s .documentation-targets ]]; then
+            echo "No affected PDFs; no PR update."
+            exit 0
+          fi
+
+          # The PR may have advanced during compilation. Never overwrite
+          # newer work with PDFs built from an old revision.
+          git fetch --no-tags origin "$PR_BRANCH"
+          if [[ "$(git rev-parse FETCH_HEAD)" != "$PR_HEAD_SHA" ]]; then
+            echo "PR branch advanced; skipping stale PDF update."
+            exit 0
+          fi
+
+          while IFS= read -r source; do
+            [[ -z "$source" ]] && continue
+            name="${source##*/}"
+            name="${name%.tex}"
+            test -f "tex/$name.pdf"
+            cp "tex/$name.pdf" "tex/doc/$name.pdf"
+            git add -- "tex/doc/$name.pdf"
+          done < .documentation-targets
+
+          if git diff --cached --quiet; then
+            echo "Generated PDFs are already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs: update affected PDF manuals [skip ci]"
+          auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" \
+            push origin "HEAD:refs/heads/$PR_BRANCH"

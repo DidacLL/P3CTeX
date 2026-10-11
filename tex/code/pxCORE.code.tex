@@ -62,6 +62,12 @@
 	ORL			.bool_set:N = \l_pxcore_orl_use_bool,
 		ORL         .initial:n  = false,
 		ORL         .default:n  = true,
+	TFG			.bool_set:N	= \l_pxcore_tfg_use_bool,
+		TFG			.initial:n	= false,
+		TFG			.default:n	= true,
+	MEM			.bool_set:N	= \l_pxcore_mem_use_bool,
+		MEM			.initial:n	= false,
+		MEM			.default:n	= true,
 	default		.meta:n	=	{
 		PRP		=	true,
 		UML		=	true,
@@ -95,6 +101,8 @@
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
+\bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
+\bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
 \bool_if:NT \l_pxcore_lst_use_bool {}
 
 

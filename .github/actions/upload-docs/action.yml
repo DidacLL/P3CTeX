@@ -1,0 +1,5 @@
+name: Upload selected documentation PDFs
+description: Upload only the documentation PDFs compiled by the workflow
+runs:
+  using: node20
+  main: index.js

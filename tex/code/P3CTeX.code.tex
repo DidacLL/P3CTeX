@@ -49,6 +49,10 @@
 %% Configure at class load (\documentclass[<keys>]{P3CTeX}) or later with \PECTeXconfig{<keys>}.
 %% cover/toc/no-plagi/glossary/preamble control document features; data={...} delegates metadata to P3CTeX/data.
 %% Unrecognised options are stored in \l__pxdoc_unknown_tl and later forwarded to pxCORE.
+\bool_new:N \l__pxdoc_loading_bool
+\bool_new:N \l__pxdoc_tfg_bool
+\bool_new:N \l__pxdoc_mem_bool
+\bool_set_true:N \l__pxdoc_loading_bool
 \keys_define:nn {P3CTeX}
 {
 	cover		.bool_set:N 	=\l_pxdoc_usecover_bool,
@@ -79,6 +83,16 @@
 	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true},cat},
 	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
 	PR		.meta:n	={cover = {true} , toc ={ true }},
+	TFG .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\bool_set_true:N \l__pxdoc_tfg_bool}
+			{\ClassError{P3CTeX}{TFG must be selected at class loading}{Put TFG in \string\documentclass}}
+	},
+	MEM .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\bool_set_true:N \l__pxdoc_mem_bool}
+			{\ClassError{P3CTeX}{MEM must be selected at class loading}{Put MEM in \string\documentclass}}
+	},
 	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
 	fake	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={example}},
 	EN		.meta:n	={en},
@@ -190,6 +204,9 @@
 %% =================================
 \file_input:n {pxTXT.code.tex}%% Load multilanguage text comands
 \ProcessKeysOptions{P3CTeX}
+\bool_set_false:N \l__pxdoc_loading_bool
+\bool_if:NT \l__pxdoc_tfg_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,TFG} }
+\bool_if:NT \l__pxdoc_mem_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM} }
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE

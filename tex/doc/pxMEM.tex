@@ -1,0 +1,153 @@
+% -*- mode: latex; coding: utf-8 -*-
+% pxMEM -- User manual and API reference for generic memory/report documents.
+% P3CTeX / Scvria. Compile from tex/ with TEXINPUTS including latex/ and code/.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\title{The \texttt{pxMEM} package\\\large Chapters, annexes and selective reuse in P3CTeX}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/10/10 -- Version 0.1}
+\begin{document}
+\maketitle
+\begin{abstract}
+\texttt{pxMEM} adds report-like chapter headings, annexes, and selective reuse
+of material from existing \LaTeX{} sources. It is generic: a memory/report does
+not need to be a TFG. Source documents remain independent deliverables.
+\end{abstract}
+\tableofcontents
+\setlength{\emergencystretch}{4em}
+
+\section{Activation and scope}
+Under P3CTeX, select \texttt{MEM} in the class options, before the class
+loads its feature modules:
+\begin{verbatim}
+\documentclass[MEM,CAT]{P3CTeX}       % generic memory
+\documentclass[TFG,MEM,CAT]{P3CTeX}   % final TFG memory
+\end{verbatim}
+\texttt{MEM} does not select \texttt{TFG}; neither option implies the other.
+\texttt{MEM} is a load-time profile. Do not attempt to activate it later through
+\verb|\PECTeXconfig{MEM}|. In non-P3CTeX classes, the module can be
+loaded with \verb|\usepackage{pxMEM}|; its coloured chapter heading assumes the
+\texttt{primaryColor} colour supplied by P3CTeX/pxGDX.
+
+P3CTeX continues to derive from \texttt{article}. Ordinary PR, PAC, PEC and CA
+documents retain their existing section and cover behaviour; \texttt{MEM}
+provides chapters only when selected.
+
+\section{Chapters and annexes}
+\subsection{\texttt{\textbackslash chapter\{title\}}}
+Introduces a numbered, page-breaking chapter. The chapter appears in the table
+of contents; sections are numbered within the chapter (for example,
+\texttt{2.1}). This is a minimal article-based chapter implementation, not a
+complete \texttt{report} or \texttt{book} class.
+\begin{verbatim}
+\chapter{Introduccio}
+\section{Objectius}
+\end{verbatim}
+
+\subsection{\texttt{\textbackslash pxMEMannex\{title\}\{content\}}}
+Starts a titled annex chapter and typesets its content. On the first call it
+switches to appendix chapter numbering (A, B, \ldots); subsequent calls produce
+B, C, \ldots. After this switch, later \verb|\chapter| calls also use appendix
+numbering. Place annexes after the main chapters.
+\begin{verbatim}
+\pxMEMannex{Technical evidence}{
+  \pxMEMinclude{PR2}{evidence}
+}
+\end{verbatim}
+
+The regular \verb|\appendix| command also switches to lettered chapter
+numbers, but \verb|\pxMEMannex| normally handles that transition itself.
+
+\section{Selective content reuse}
+A PR/PAC/PEC/CA can mark potentially reusable material without importing
+\texttt{pxMEM} or knowing which future report might use it.
+
+\subsection{1. Mark a region in the source}
+Use exact comment markers on their own lines, surrounding ordinary \LaTeX{}:
+\begin{verbatim}
+\documentclass[PR,CAT]{P3CTeX}
+\begin{document}
+\section{PR1}
+%<*objectius>
+\subsection{Objectius}
+Text that can also appear in a future memory.
+%</objectius>
+\section{PR-only work}
+Not selected by the memory.
+\end{document}
+\end{verbatim}
+The markers are comments in the source document: they do not change its normal
+output. Only the material between the matching \verb|%<*objectius>| and
+\verb|%</objectius>| markers is selected. The consumer asks for
+\texttt{objectius}. Do not put document-level commands
+(\verb|\documentclass|, \verb|\begin{document}|, etc.) inside a region.
+
+\subsection{2. \texttt{\textbackslash pxMEMsource\{id\}\{source-path\}}}
+Registers the path to an existing source \texttt{.tex} file under a short
+identifier. It does not import any material immediately. The path is written
+explicitly by the consumer, relative to its usual \LaTeX{} working directory;
+no layout, export directory or filesystem search is imposed.
+\begin{verbatim}
+\pxMEMsource{PR1}{../PR1/PR1.tex}
+\pxMEMsource{PR2}{../PR2/PR2.tex}
+\end{verbatim}
+
+\subsection{3. \texttt{\textbackslash pxMEMinclude\{id\}\{region\}}}
+Extracts the named region from the registered source and typesets it at the
+call site. The rest of the PR remains excluded. A registered source may be
+included more than once or used in different chapters or annexes.
+\begin{verbatim}
+\chapter{Introduction}
+\pxMEMinclude{PR1}{objectius}
+\end{verbatim}
+The region is read as ordinary \LaTeX{} after extraction: its macros and
+referenced packages must be available in the memory document, and included
+headings, counters and labels act in the consumer document. Avoid copying
+\verb|\label| names that would conflict with other included material.
+
+\subsection{Resource paths and intermediate files}
+When typesetting reused material, the registered source file's directory is
+prepended to the normal \LaTeX{} input and graphics search paths for the
+duration of that inclusion. For instance, \verb|\input{sections/data.tex}|
+or \verb|\includegraphics{img/chart.png}| may still resolve relative to PR1.
+The consumer supplies the path; \texttt{pxMEM} does not discover it.
+
+Extraction automatically creates a disposable \texttt{<jobname>.pxmem-N.tex}
+file in the compilation working directory, inputs it, and leaves its lifecycle
+to the usual auxiliary-file cleanup. There is no manual export or regeneration
+step. Source selection uses the existing \texttt{fancyvrb} file-reading
+mechanism rather than a custom \LaTeX{} parser.
+
+\section{Complete generic MEM example}
+The following document has no TFG dependency and can select regions from two
+separately compilable assessment documents:
+\begin{verbatim}
+\documentclass[MEM,CAT]{P3CTeX}
+\begin{document}
+\pxMEMsource{PR1}{../PR1/PR1.tex}
+\pxMEMsource{PAC2}{../PAC2/PAC2.tex}
+
+\chapter{Context}
+\pxMEMinclude{PR1}{objectius}
+
+\chapter{Implementation}
+\pxMEMinclude{PAC2}{design}
+
+\pxMEMannex{Detailed evidence}{
+  \pxMEMinclude{PAC2}{evidence}
+}
+\end{document}
+\end{verbatim}
+
+\section{Public API summary}
+\begin{description}
+\item[\texttt{\textbackslash chapter\{title\}}] Numbered report-like chapter in MEM.
+\item[\texttt{\textbackslash pxMEMannex\{title\}\{content\}}] Letter-numbered annex chapter with arbitrary content.
+\item[\texttt{\textbackslash pxMEMsource\{id\}\{path\}}] Register a known source file.
+\item[\texttt{\textbackslash pxMEMinclude\{id\}\{region\}}] Insert a selected tagged region from a registered source.
+\end{description}
+\end{document}

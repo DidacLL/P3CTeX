@@ -1,0 +1,17 @@
+\documentclass[TFG,MEM,CAT]{P3CTeX}
+\input{../TFGPreamble.tex}
+\PECTeXconfig{cover=true,toc=false,data={ca-fullname={Memòria del Treball Final},ca-shortname={MEM}}}
+\pxTFGabstract{CAT}{Resum del treball final.}
+\pxTFGabstract{ES}{Resumen del trabajo final.}
+\pxTFGabstract{EN}{Final project abstract.}
+\begin{document}
+\pxTFGfrontmatter
+\tableofcontents
+\pxMEMsource{PR1}{../PR1/PR1.tex}
+\pxMEMsource{PR2}{../PR2/PR2.tex}
+\chapter{Introducció}
+\pxMEMinclude{PR1}{objectius}
+\chapter{Conclusions}
+Conclusions del projecte.
+\pxMEMannex{Implementació de la PR2}{\pxMEMinclude{PR2}{implementacio}}
+\end{document}

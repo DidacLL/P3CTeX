@@ -1,0 +1,54 @@
+\ProvidesExplFile{pxMEM.code.tex}{2026/10/10}{v0.1}{Generic memory implementation}
+\prop_new:N \g__pxmem_sources_prop
+\int_new:N \g__pxmem_piece_int
+\bool_new:N \g__pxmem_annex_bool
+\newwrite\pxMEMout
+
+\cs_new_protected:Npn \__pxmem_source:nn #1#2
+  { \prop_gput:Nnn \g__pxmem_sources_prop {#1} {#2} }
+
+% fancyvrb copies literal tagged lines to a disposable input file.
+% The original source is never re-tokenized by an expl3 scanner.
+\cs_new_protected:Npn \__pxmem_extract:nnn #1#2#3
+  {
+    \group_begin:
+      \FV@DefineWhiteSpace
+      \def\FV@Space{\space}
+      \FV@DefineTabOut
+      \let\FV@FontScanPrep\relax
+      \let\@noligs\relax
+      \edef\FancyVerbStartString{\@percentchar<*#2>}
+      \edef\FancyVerbStopString{\@percentchar</#2>}
+      \let\FV@FindStartStop\FV@DefineFindStart
+      \def\FV@ProcessLine{\immediate\write\pxMEMout}
+      \immediate\openout\pxMEMout=#3\relax
+      \FV@Input{#1}
+      \immediate\closeout\pxMEMout
+    \group_end:
+  }
+
+\cs_new_protected:Npn \__pxmem_include:nn #1#2
+  {
+    \group_begin:
+      \prop_get:NnN \g__pxmem_sources_prop {#1} \l_tmpa_tl
+      \int_gincr:N \g__pxmem_piece_int
+      \tl_set:Nx \l_tmpb_tl
+        { \c_sys_jobname_str .pxmem-\int_use:N \g__pxmem_piece_int .tex }
+      \exp_args:NV \filename@parse \l_tmpa_tl
+      \providecommand\input@path{}
+      \edef\input@path{{\filename@area}\input@path}
+      \providecommand\Ginput@path{}
+      \edef\Ginput@path{{\filename@area}\Ginput@path}
+      \exp_args:NV \__pxmem_extract:nnn \l_tmpa_tl {#2} {\tl_use:N \l_tmpb_tl}
+      \exp_args:NV \file_input:n \l_tmpb_tl
+    \group_end:
+  }
+
+\cs_new_protected:Npn \__pxmem_annex:nn #1#2
+  {
+    \bool_if:NF \g__pxmem_annex_bool
+      { \appendix \bool_gset_true:N \g__pxmem_annex_bool }
+    \chapter{#1}
+    #2
+  }
+\endinput
