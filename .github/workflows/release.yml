@@ -1,0 +1,66 @@
+name: Package and release
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - VERSION
+      - README.md
+      - scripts/package_release.py
+      - .github/workflows/release.yml
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package sources, documentation and examples
+        run: python3 scripts/package_release.py
+      - name: Upload verified distribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: P3CTeX-distribution
+          path: |
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
+
+  publish:
+    needs: package
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve verified distribution
+        uses: actions/download-artifact@v4
+        with:
+          name: P3CTeX-distribution
+          path: dist
+      - name: Create version tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cat VERSION)"
+          tag="v${version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::Release $tag already exists; increment VERSION for another release."
+            exit 1
+          fi
+          gh release create "$tag" \
+            "dist/P3CTeX-${tag}.zip" \
+            "dist/P3CTeX-${tag}.sha256" \
+            --target "$GITHUB_SHA" \
+            --title "P3CTeX $tag" \
+            --generate-notes
