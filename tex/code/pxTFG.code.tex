@@ -1,35 +1,46 @@
-\ProvidesExplFile{pxTFG.code.tex}{2026/10/10}{v0.1}{UOC TFG data and preliminary pages}
-%% pxTFG public keys (set via \pxTFGsetup):
-%% tutor = final-work supervisor; area = work area; credits = ECTS count;
-%% licence = the final-work licence as displayed on the work card.
-%% Student, degree, title, activity, date and document language use P3CTeX.
+\ProvidesExplFile{pxTFG.code.tex}{2026/10/21}{v0.2}{UOC TFG metadata and preliminary content}
+% TFG-specific information only. P3CTeX owns shared metadata and layout;
+% pxMEM owns chapters and the document structure.
+\tl_new:N \l__pxtfg_tutor_tl
+\tl_new:N \l__pxtfg_pra_tl
+\tl_new:N \l__pxtfg_area_tl
+\tl_new:N \l__pxtfg_credits_tl
+\tl_new:N \l__pxtfg_keywords_tl
+\tl_new:N \l__pxtfg_licence_tl
+\tl_new:N \l__pxtfg_licence_text_tl
+\tl_new:N \l__pxtfg_licence_icon_tl
 \keys_define:nn {pxTFG}
   {
-    tutor   .tl_set:N = \l__pxtfg_tutor_tl,
-    area    .tl_set:N = \l__pxtfg_area_tl,
-    credits .tl_set:N = \l__pxtfg_credits_tl,
-    licence .tl_set:N = \l__pxtfg_licence_tl,
+    tutor        .tl_set:N = \l__pxtfg_tutor_tl,
+    pra          .tl_set:N = \l__pxtfg_pra_tl,
+    area         .tl_set:N = \l__pxtfg_area_tl,
+    credits      .tl_set:N = \l__pxtfg_credits_tl,
+    keywords     .tl_set:N = \l__pxtfg_keywords_tl,
+    licence      .tl_set:N = \l__pxtfg_licence_tl,
+    licence-text .tl_set:N = \l__pxtfg_licence_text_tl,
+    licence-icon .tl_set:N = \l__pxtfg_licence_icon_tl,
   }
 \prop_new:N \g__pxtfg_abstracts_prop
 
-% Babel is selected by P3CTeX's existing CAT / ES / EN options.
+% Babel is selected by P3CTeX's CAT / ES / EN options.
 \cs_new:Npn \__pxtfg_text:nnn #1#2#3
   {\iflanguage{catalan}{#1}{\iflanguage{spanish}{#2}{#3}}}
 
 \cs_new_protected:Npn \__pxtfg_heading:n #1
   {
     \cs_if_exist:NTF \chapter
-      {\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
-      {\section*{\textcolor{primaryColor}{#1}}\addcontentsline{toc}{section}{#1}}
+      {\chapter*{#1}\phantomsection\addcontentsline{toc}{chapter}{#1}}
+      {\section*{\textcolor{primaryColor}{#1}}\phantomsection\addcontentsline{toc}{section}{#1}}
   }
 \cs_new:Npn \__pxtfg_row:nn #1#2
-  {\textbf{#1} & #2 \\ [0.65ex]}
+  {\textbf{#1} & #2 \\[0.65ex]}
+
 \cs_new_protected:Npn \__pxtfg_card:
   {
     \__pxtfg_heading:n
       {\__pxtfg_text:nnn{Fitxa~del~Treball~Final}
         {Ficha~del~Trabajo~Final}{Final~Project~Information}}
-    \begin{tabular}{@{}p{.27\linewidth}p{.68\linewidth}@{}}
+    \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
       \__pxtfg_row:nn
         {\__pxtfg_text:nnn{Títol}{Título}{Title}}{\l__pxdata_subj_name_tl}
       \__pxtfg_row:nn
@@ -41,18 +52,51 @@
       \__pxtfg_row:nn
         {\__pxtfg_text:nnn{Tutor/a}{Tutor/a}{Supervisor}}{\l__pxtfg_tutor_tl}
       \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{PRA}{PRA}{Course~Coordinator}}{\l__pxtfg_pra_tl}
+      \__pxtfg_row:nn
         {\__pxtfg_text:nnn{Àrea}{Área}{Area}}{\l__pxtfg_area_tl}
       \__pxtfg_row:nn
         {\__pxtfg_text:nnn{Crèdits}{Créditos}{Credits}}{\l__pxtfg_credits_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Llicència}{Licencia}{Licence}}{\l__pxtfg_licence_tl}
+        {\__pxtfg_text:nnn{Idioma}{Idioma}{Language}}{\__pxtfg_text:nnn{Català}{Castellà}{English}}
+      \__pxtfg_row:nn
+        {\__pxtfg_text:nnn{Paraules~clau}{Palabras~clave}{Keywords}}{\l__pxtfg_keywords_tl}
       \__pxtfg_row:nn
         {\__pxtfg_text:nnn{Data}{Fecha}{Date}}{\l__px_date_tl}
     \end{tabular}
     \par\bigskip
   }
+
+\cs_new_protected:Npn \__pxtfg_licence_page:
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {
+        \clearpage
+        \thispagestyle{plain}
+        \begingroup
+          \parindent=0pt
+          \vspace*{\fill}
+          \begin{minipage}{.85\linewidth}
+            \tl_if_blank:VF \l__pxtfg_licence_icon_tl
+              {
+                \includegraphics[height=1cm,keepaspectratio]
+                  {\l__pxtfg_licence_icon_tl}\par\medskip
+              }
+            \textbf{\__pxtfg_text:nnn{Drets~i~llicència}
+              {Derechos~y~licencia}{Rights~and~licence}}\par\smallskip
+            \l__pxtfg_licence_tl\par
+            \tl_if_blank:VF \l__pxtfg_licence_text_tl
+              {\medskip\l__pxtfg_licence_text_tl\par}
+          \end{minipage}
+          \par\vspace*{\fill}
+        \endgroup
+        \clearpage
+      }
+  }
+
 \cs_new_protected:Npn \__pxtfg_abstract:nn #1#2
   {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1} {#2}}
+
 \cs_new_protected:Npn \__pxtfg_print_abstract:n #1
   {
     \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
@@ -67,5 +111,24 @@
     \__pxtfg_print_abstract:n {CAT}
     \__pxtfg_print_abstract:n {ES}
     \__pxtfg_print_abstract:n {EN}
+  }
+
+% The information sheet contains the Catalan summary; other supplied
+% summaries follow on separate pages. No content restrictions are imposed.
+\cs_new_protected:Npn \__pxtfg_frontmatter:
+  {
+    \__pxtfg_licence_page:
+    \__pxtfg_card:
+    \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
+      {
+        \par\medskip
+        \noindent\textbf{\__pxtfg_text:nnn{Resum~del~Treball}
+          {Resumen~del~Trabajo}{Project~Summary}}\par\smallskip
+        \tl_use:N \l_tmpa_tl\par
+      }
+    \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
+      {\clearpage\__pxtfg_print_abstract:n {ES}}
+    \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
+      {\clearpage\__pxtfg_print_abstract:n {EN}}
   }
 \endinput
