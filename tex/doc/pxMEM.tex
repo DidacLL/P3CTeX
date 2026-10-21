@@ -37,6 +37,28 @@ P3CTeX continues to derive from \texttt{article}. Ordinary PR, PAC, PEC and CA
 documents retain their existing section and cover behaviour; \texttt{MEM}
 provides chapters only when selected.
 
+\section{Memory preliminary structure}
+\verb|\pxMEMpreliminaries{<content>}| prints caller-supplied
+preliminary content, followed by the table of contents, list of
+figures and list of tables. The payload can be empty or provided by
+another package. \texttt{pxMEM} neither loads nor depends on
+\texttt{pxTFG}. Disable the class's automatic TOC
+(\verb|toc=false|) when using this command.
+
+\begin{verbatim}
+\documentclass[TFG,MEM,CAT]{P3CTeX}
+\PECTeXconfig{cover=true,toc=false}
+\begin{document}
+\pxMEMpreliminaries{\pxTFGfrontmatter}
+\chapter{Introduccio}
+\end{document}
+\end{verbatim}
+
+A generic memory can instead use \verb|\pxMEMpreliminaries{}|.
+Chapters, glossary entries, bibliography and optional content remain
+under the author's control. The complete UOC TFG chapter example is
+in \texttt{examples/UOCTemplates/TFGTemplate/MEM/MEM.tex}.
+
 \section{Chapters and annexes}
 \subsection{\texttt{\textbackslash chapter\{title\}}}
 Introduces a numbered, page-breaking chapter. The chapter appears in the table
@@ -145,6 +167,7 @@ separately compilable assessment documents:
 
 \section{Public API summary}
 \begin{description}
+\item[\texttt{\textbackslash pxMEMpreliminaries\{content\}}] Print memory preliminaries and indexes.
 \item[\texttt{\textbackslash chapter\{title\}}] Numbered report-like chapter in MEM.
 \item[\texttt{\textbackslash pxMEMannex\{title\}\{content\}}] Letter-numbered annex chapter with arbitrary content.
 \item[\texttt{\textbackslash pxMEMsource\{id\}\{path\}}] Register a known source file.
