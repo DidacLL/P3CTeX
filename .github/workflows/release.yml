@@ -1,0 +1,59 @@
+name: Package and release
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - VERSION
+      - README.md
+      - scripts/package_release.py
+      - .github/workflows/release.yml
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            revision="$(jq -r '.pull_request.head.sha' "$GITHUB_EVENT_PATH")"
+          else
+            revision="$GITHUB_SHA"
+          fi
+          git fetch --no-tags origin "$revision"
+          git checkout --detach FETCH_HEAD
+
+      - name: Build and verify distribution
+        run: python3 scripts/package_release.py
+
+      - name: Publish tagged release
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cat VERSION)"
+          tag="v${version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::Release $tag already exists; increment VERSION for the next release."
+            exit 1
+          fi
+          gh release create "$tag" \
+            "dist/P3CTeX-${tag}.zip" \
+            "dist/P3CTeX-${tag}.sha256" \
+            --target "$GITHUB_SHA" \
+            --title "P3CTeX $tag" \
+            --generate-notes

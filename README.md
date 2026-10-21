@@ -15,7 +15,7 @@
   |    based on official LaTeX styles defined by UOC.    |/|
   |    Designed for fastest and convenient lastminute    |/|
   |    performance on PAC or PR overkilling.             |/|
-  |                                         PEC.TeX v0.1 |//
+  |                                         P3CTeX       |//
   |____________________________________________By ScVr!a_|/ 
 ```
 
@@ -34,13 +34,32 @@ P3CTeX/
 ├── tex/
 │   ├── latex/          # .cls and .sty files (document class + packages)
 │   ├── code/           # expl3 internals (.code.tex)
-│   ├── doc/            # Package manuals (LaTeX source)
-│   ├── examples/       # Example documents
-│   └── tests/          # Regression test suites + gate runners
-├── workflow/           # Agentic development workflow documentation
-├── scripts/            # Build utilities
+│   ├── doc/            # Package manuals (sources and PDFs)
+│   └── tests/          # Development tests (not in releases)
+├── examples/           # UOC templates and example documents
+├── workflow/           # Agentic development documentation
+├── scripts/            # Build and release utilities
+├── VERSION             # Version identifier for tagged releases
 ├── LICENSE             # GPL v3
 └── README.md
+```
+
+---
+
+## Releases
+
+Download the installation ZIP from [GitHub Releases](https://github.com/DidacLL/P3CTeX/releases/latest), rather than GitHub's automatically generated source-code archive.
+
+The archive includes `tex/latex/` (class and packages), `tex/code/` (implementation and graphics), `tex/doc/` (manuals and PDFs), `examples/` (templates), `README.md`, `LICENSE` and `VERSION`. It excludes development tests, internal workflows and scripts. A SHA-256 checksum is published alongside it.
+
+### Versioning and publishing
+
+The `VERSION` file controls release labels in `MAJOR.MINOR.PATCH` form. Merging a change to `VERSION` into `main` triggers [Package and release](.github/workflows/release.yml), which checks the archive, creates tag `vX.Y.Z` and publishes `P3CTeX-vX.Y.Z.zip` and its checksum. Other commits do not trigger a release.
+
+To release again, increment `VERSION` in a pull request and merge it. The workflow can also be dispatched manually from `main` if publishing needs to be retried. To build or verify the distribution locally with the Python standard library:
+
+```bash
+python3 scripts/package_release.py
 ```
 
 ---
@@ -58,24 +77,26 @@ Recommended configuration: **MiKTeX** (LaTeX distribution) + **IDE** (VS Code / 
 3. Ensure **Install missing packages on-the-fly** is enabled (default).
 4. Complete the installation and (if prompted) refresh the environment.
 
-#### 2. Clone the P3CTeX repository
+#### 2. Get P3CTeX
+
+Download and extract `P3CTeX-vX.Y.Z.zip` from [Releases](https://github.com/DidacLL/P3CTeX/releases/latest) for installation. To work on the source repository instead:
 
 ```bash
 git clone https://github.com/DidacLL/P3CTeX.git
 cd P3CTeX
 ```
 
-Save the full path to the repository root (e.g. `C:\Users\<you>\P3CTeX` or `~/P3CTeX`).
+Use the extracted archive folder or the cloned repository root (the folder containing `tex/`) in the configuration below.
 
 #### 3. Register P3CTeX with MiKTeX
 
-The repository follows the **TDS (TeX Directory Structure)**: classes and packages live under `tex/latex/`, and auxiliary code under `tex/code/`. To make MiKTeX find them:
+P3CTeX keeps classes and packages in `tex/latex/` and implementation files and images in `tex/code/`. Both directories must be discoverable by TeX. To configure MiKTeX:
 
 **Option A — MiKTeX Console (recommended)**
 
 1. Open **MiKTeX Console** (Start menu or `miktex-console`).
 2. Go to **Settings** → **Directories**.
-3. Click **Add** and select the **root of the cloned repository** (the folder that contains `tex/`).
+3. Click **Add** and select the **extracted archive or repository root** (the folder containing `tex/`).
 4. Click **Apply** and refresh the filename database.
 
 **Option B — Command line (`initexmf`)**
@@ -85,7 +106,7 @@ initexmf --register-root="/path/to/P3CTeX"
 initexmf --update-fndb
 ```
 
-Replace `/path/to/P3CTeX` with your actual repository path.
+Replace `/path/to/P3CTeX` with the extracted archive or repository path.
 
 **Option C — Per-document (portable use)**
 
@@ -157,11 +178,15 @@ If the PDF is generated without errors, the setup is correct.
 |--------|-----------|
 | `P3CTeX.cls` | Classe de document principal |
 | `pxCORE.sty` | Nucli de càrrega i configuració |
-| `pxGDX.sty` | Sistema de disseny (colors corporatius, tipografia) |
+| `pxGDX.code.tex` | Sistema de disseny, carregat per la classe |
 | `pxPRP.sty` | Mapes de propietats |
 | `pxUML.sty` | Diagrames UML |
 | `pxSRC.sty` | Llistats de codi font |
 | `pxTAB.sty` | Taules des de dades amb estils predefinits i presets |
+| `pxLST.sty` | Llistats de codi |
+| `pxORL.sty` | Eines addicionals |
+| `pxTFG.sty` | Fitxa, llicència, metadades i resums de TFG |
+| `pxMEM.sty` | Capítols, annexos i estructura de memòries |
 
 ### Documentació dels paquets
 
@@ -177,8 +202,10 @@ Els manuals (font LaTeX) viuen a `tex/doc/`:
 | `tex/doc/pxUML.tex` | Diagrames UML |
 | `tex/doc/pxSRC.tex` | Llistats de codi font |
 | `tex/doc/pxTAB.tex` | Taules |
+| `tex/doc/pxTFG.tex` | Contingut i metadades de TFG |
+| `tex/doc/pxMEM.tex` | Estructura i reutilització de memòries |
 
-Un document d'exemple complet es troba a `tex/examples/P3CTeX-example.tex` (PDF precompilat a l'arrel: `P3CTeX-example.pdf`).
+Un document d'exemple complet es troba a `examples/P3CTeX-example.tex` (PDF: `examples/P3CTeX-example.pdf`). Les plantilles de treball final viuen a `examples/UOCTemplates/TFGTemplate/`: `TFG` gestiona dades i resums, mentre que `MEM` proporciona l'estructura de la memòria.
 
 ---
 
@@ -208,7 +235,7 @@ powershell -File tests/run-pxTAB-tests.ps1
 # Build documentation (from tex/ directory, with TEXINPUTS=.;./latex;./code)
 pdflatex -interaction=nonstopmode doc/pxTAB.tex
 
-# Build example document (from tex/examples/)
+# Build example document (from examples/)
 pdflatex -interaction=nonstopmode P3CTeX-example.tex
 ```
 
