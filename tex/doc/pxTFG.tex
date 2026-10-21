@@ -90,6 +90,14 @@ It does not print the abstract and does not change Babel's document language.
 CAT, ES, EN order, skipping absent entries. Headings are Resum,
 Resumen and Abstract; each appears in the table of contents.
 
+\subsection{\texttt{\textbackslash pxTFGcoverdetails}}
+\verb|\pxTFGcoverdetails| prints the configured supervisor, PRA and
+area. It can be placed in the existing P3CTeX cover's auxiliary-text
+slot without a separate cover implementation:
+\begin{verbatim}
+\PECTeXcover{text-auxtext={\pxTFGcoverdetails}}
+\end{verbatim}
+
 \subsection{\texttt{\textbackslash pxTFGlicencepage}}
 \verb|\pxTFGlicencepage| prints the configured licence page, including
 optional text and symbol. With no configured licence it does nothing.
@@ -148,6 +156,7 @@ sections can be surrounded by selection comments as described in the
 \item[\texttt{\textbackslash pxTFGabstract\{lang\}\{text\}}] Store an abstract.
 \item[\texttt{\textbackslash pxTFGworkcard}] Print the UOC work card.
 \item[\texttt{\textbackslash pxTFGabstracts}] Print registered abstracts.
+\item[\texttt{\textbackslash pxTFGcoverdetails}] Show TFG metadata on a P3CTeX cover.
 \item[\texttt{\textbackslash pxTFGlicencepage}] Print the optional licence page.
 \item[\texttt{\textbackslash pxTFGfrontmatter}] Print TFG preliminary content.
 \end{description}
