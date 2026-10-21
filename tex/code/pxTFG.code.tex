@@ -82,7 +82,7 @@
     \tl_if_blank:VF \l__pxtfg_licence_tl
       {
         \clearpage
-        \thispagestyle{plain}
+        \thispagestyle{empty}
         \begingroup
           \parindent=0pt
           \vspace*{\fill}
@@ -128,6 +128,7 @@
 \cs_new_protected:Npn \__pxtfg_frontmatter:
   {
     \__pxtfg_licence_page:
+    \setcounter{page}{1}
     \__pxtfg_card:
     \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
       {
