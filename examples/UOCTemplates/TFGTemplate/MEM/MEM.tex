@@ -2,16 +2,68 @@
 \input{../TFGPreamble.tex}
 \PECTeXconfig{cover=true,toc=false,data={ca-fullname={Memòria del Treball Final},ca-shortname={MEM}}}
 \pxTFGabstract{CAT}{Resum del treball final.}
-\pxTFGabstract{ES}{Resumen del trabajo final.}
 \pxTFGabstract{EN}{Final project abstract.}
+
 \begin{document}
-\pxTFGfrontmatter
-\tableofcontents
+% MEM defines the memory structure; TFG supplies the preliminary content.
+\pxMEMpreliminaries{\pxTFGfrontmatter}
 \pxMEMsource{PR1}{../PR1/PR1.tex}
 \pxMEMsource{PR2}{../PR2/PR2.tex}
+
+\chapter{Resum}
+Resum del treball.
+
 \chapter{Introducció}
+\section{Context i justificació del Treball}
+Context del projecte.
+
+\section{Objectius del Treball}
 \pxMEMinclude{PR1}{objectius}
+
+\section{Enfocament i mètode seguit}
+Enfocament del projecte.
+
+\section{Planificació del Treball}
+Planificació i fites del projecte.
+
+\section{Breu sumari de contribucions i productes obtinguts}
+Principals contribucions.
+
+\section{Breu descripció dels altres capítols de la memòria}
+Organització de la memòria.
+
+\chapter{Estat de l'art}
+Estat de l'art del tema.
+
+\chapter{Metodologia}
+Metodologia emprada.
+
+\chapter{Resultats}
+Resultats del projecte.
+
+\chapter{Discussió}
+Discussió dels resultats.
+
+% Si el projecte ho requereix, afegiu:
+% \chapter{Valoració econòmica}
+
 \chapter{Conclusions}
-Conclusions del projecte.
-\pxMEMannex{Implementació de la PR2}{\pxMEMinclude{PR2}{implementacio}}
+\section{Conclusions}
+Conclusions del treball.
+
+\section{Línies de futur}
+Treballs futurs.
+
+\section{Seguiment de la planificació}
+Seguiment del projecte.
+
+\chapter{Glossari}
+Termes i acrònims rellevants.
+
+\chapter{Bibliografia}
+% Afegiu les referències del treball.
+
+\pxMEMannex{Implementació de la PR2}{
+  \pxMEMinclude{PR2}{implementacio}
+}
 \end{document}
