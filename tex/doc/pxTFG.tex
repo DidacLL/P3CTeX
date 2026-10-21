@@ -14,9 +14,9 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-\texttt{pxTFG} adds UOC final-project semantics to P3CTeX without
-changing its pxGDX visual style. It is independent from the generic
-\texttt{pxMEM} report and content-reuse package.
+\texttt{pxTFG} adds UOC final-project metadata, licensing and summaries
+without changing the P3CTeX visual style. The generic \texttt{pxMEM}
+package remains responsible for the structure of a memory.
 \end{abstract}
 \tableofcontents
 \setlength{\emergencystretch}{4em}
@@ -41,12 +41,16 @@ Use the normal class data keys \texttt{student} (author),
 \texttt{CAT}, \texttt{ES} or \texttt{EN}; there is no TFG language field.
 
 \subsection{Configuration: \texttt{\textbackslash pxTFGsetup}}
-\verb|\pxTFGsetup{<key=value,...>}| stores four TFG-only fields:
+\verb|\pxTFGsetup{<key=value,...>}| stores TFG-only fields:
 \begin{description}
 \item[\texttt{tutor}] Final-work supervisor.
+\item[\texttt{pra}] Professor responsible for the subject.
 \item[\texttt{area}] Work area/specialisation.
 \item[\texttt{credits}] Credit count (ECTS).
-\item[\texttt{licence}] Licence text for the work card.
+\item[\texttt{keywords}] Work keywords supplied by the author.
+\item[\texttt{licence}] Licence identifier or copyright notice.
+\item[\texttt{licence-text}] Optional licence declaration.
+\item[\texttt{licence-icon}] Optional path to a licence symbol image.
 \end{description}
 \begin{verbatim}
 \PECTeXconfig{data={
@@ -55,19 +59,21 @@ Use the normal class data keys \texttt{student} (author),
   ca-shortname={PR1},date={\today}
 }}
 \pxTFGsetup{
-  tutor={Tutora},area={Computacio},
-  credits={12},licence={CC BY}
+  tutor={Tutora},pra={Professor responsable},
+  area={Computacio},credits={12},
+  keywords={Projecte, Sistemes},licence={CC BY}
 }
 \end{verbatim}
 
 \section{Public commands}
 \subsection{\texttt{\textbackslash pxTFGworkcard}}
 \verb|\pxTFGworkcard| prints the UOC final-work information card,
-using both the shared class data and the four TFG fields. Its labels
+using the shared class data and the TFG-only fields. Its labels
 follow the document language: Fitxa del Treball Final, Ficha del
 Trabajo Final or Final Project Information. It creates an unnumbered
 section in TFG PR documents or an unnumbered chapter in TFG+MEM
-documents, with a table-of-contents entry.
+documents, with a table-of-contents entry. The sheet includes PRA,
+keywords and the document language; the licence is a separate page.
 
 \subsection{\texttt{\textbackslash pxTFGabstract}}
 \verb+\pxTFGabstract{<language>}{<text>}+ registers one abstract for
@@ -84,10 +90,17 @@ It does not print the abstract and does not change Babel's document language.
 CAT, ES, EN order, skipping absent entries. Headings are Resum,
 Resumen and Abstract; each appears in the table of contents.
 
+\subsection{\texttt{\textbackslash pxTFGlicencepage}}
+\verb|\pxTFGlicencepage| prints the configured licence page, including
+optional text and symbol. With no configured licence it does nothing.
+
 \subsection{\texttt{\textbackslash pxTFGfrontmatter}}
-\verb|\pxTFGfrontmatter| prints the work card followed by the
-registered abstracts. It does not print a cover or TOC; those belong
-to P3CTeX. Place it in the body near the beginning of the document.
+\verb|\pxTFGfrontmatter| prints the licence page if configured, the
+work card with the Catalan summary, and supplied Spanish and English
+abstracts on subsequent pages. It does not print a cover, TOC,
+figure/table lists or any chapters. Use
+\verb|\pxMEMpreliminaries{\pxTFGfrontmatter}| for the complete memory
+preliminaries. The memory structure belongs to \texttt{pxMEM}.
 
 \section{Standalone TFG PR example}
 \begin{verbatim}
@@ -120,11 +133,9 @@ sections can be surrounded by selection comments as described in the
 \pxTFGsetup{tutor={Tutora},area={Computacio},
   credits={12},licence={CC BY}}
 \pxTFGabstract{CAT}{Resum.}
-\pxTFGabstract{ES}{Resumen.}
 \pxTFGabstract{EN}{Abstract.}
 \begin{document}
-\pxTFGfrontmatter
-\tableofcontents
+\pxMEMpreliminaries{\pxTFGfrontmatter}
 \pxMEMsource{PR1}{../PR1/PR1.tex}
 \chapter{Introduccio}
 \pxMEMinclude{PR1}{objectius}
@@ -137,6 +148,7 @@ sections can be surrounded by selection comments as described in the
 \item[\texttt{\textbackslash pxTFGabstract\{lang\}\{text\}}] Store an abstract.
 \item[\texttt{\textbackslash pxTFGworkcard}] Print the UOC work card.
 \item[\texttt{\textbackslash pxTFGabstracts}] Print registered abstracts.
-\item[\texttt{\textbackslash pxTFGfrontmatter}] Print card plus abstracts.
+\item[\texttt{\textbackslash pxTFGlicencepage}] Print the optional licence page.
+\item[\texttt{\textbackslash pxTFGfrontmatter}] Print TFG preliminary content.
 \end{description}
 \end{document}
