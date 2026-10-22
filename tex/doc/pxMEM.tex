@@ -24,8 +24,8 @@ not need to be a TFG. Source documents remain independent deliverables.
 Under P3CTeX, select \texttt{MEM} in the class options, before the class
 loads its feature modules:
 \begin{verbatim}
-\documentclass[MEM,CAT]{P3CTeX}       % generic memory
-\documentclass[TFG,MEM,CAT]{P3CTeX}   % final TFG memory
+\documentclass[MEM,CAT,toc]{P3CTeX}   % generic memory with indexes
+\documentclass[TFG,MEM,PR,CAT]{P3CTeX} % TFG memory with cover and indexes
 \end{verbatim}
 \texttt{MEM} does not select \texttt{TFG}; neither option implies the other.
 \texttt{MEM} is a load-time profile. Do not attempt to activate it later through
@@ -38,26 +38,35 @@ documents retain their existing section and cover behaviour; \texttt{MEM}
 provides chapters only when selected.
 
 \section{Memory preliminary structure}
-\verb|\pxMEMpreliminaries{<content>}| prints caller-supplied
-preliminary content, followed by the table of contents, list of
-figures and list of tables. The payload can be empty or provided by
-another package. \texttt{pxMEM} neither loads nor depends on
-\texttt{pxTFG}. Disable the class's automatic TOC
-(\verb|toc=false|) when using this command.
+When the class TOC is enabled, \texttt{pxMEM} automatically follows it
+with the lists of figures and tables. It does not load or depend on
+\texttt{pxTFG}; a generic memory never displays TFG-specific material.
+The \texttt{MEM} option alone does not enable the class cover or TOC;
+use \texttt{PR} or \texttt{toc} where those are wanted.
 
 \begin{verbatim}
-\documentclass[TFG,MEM,CAT]{P3CTeX}
-\PECTeXconfig{cover=true,toc=false}
+\documentclass[MEM,CAT,toc]{P3CTeX}
 \begin{document}
-\pxMEMpreliminaries{\pxTFGfrontmatter}
+\chapter{Introduction}
+\end{document}
+\end{verbatim}
+
+TFG-specific material is inserted by \texttt{pxTFG} only when TFG is
+selected, independently of generic MEM indexes:
+\begin{verbatim}
+\documentclass[TFG,MEM,PR,CAT]{P3CTeX}
+\begin{document}
 \chapter{Introduccio}
 \end{document}
 \end{verbatim}
 
-A generic memory can instead use \verb|\pxMEMpreliminaries{}|.
-Chapters, glossary entries, bibliography and optional content remain
-under the author's control. The complete UOC TFG chapter example is
-in \texttt{examples/UOCTemplates/TFGTemplate/MEM/MEM.tex}.
+For older or custom documents with automatic TOC disabled, the optional
+\verb|\pxMEMpreliminaries{<content>}| command prints caller-supplied
+preliminary content and the class TOC with MEM indexes. Already printed
+indexes are not printed again. Ordinary documents do not need this call.
+Chapters, glossary entries and bibliography remain under the author's
+control. The complete UOC TFG example is in
+\texttt{examples/UOCTemplates/TFGTemplate/MEM/MEM.tex}.
 
 \section{Chapters and annexes}
 \subsection{\texttt{\textbackslash chapter\{title\}}}
@@ -148,7 +157,7 @@ mechanism rather than a custom \LaTeX{} parser.
 The following document has no TFG dependency and can select regions from two
 separately compilable assessment documents:
 \begin{verbatim}
-\documentclass[MEM,CAT]{P3CTeX}
+\documentclass[MEM,CAT,toc]{P3CTeX}
 \begin{document}
 \pxMEMsource{PR1}{../PR1/PR1.tex}
 \pxMEMsource{PAC2}{../PAC2/PAC2.tex}
@@ -167,7 +176,7 @@ separately compilable assessment documents:
 
 \section{Public API summary}
 \begin{description}
-\item[\texttt{\textbackslash pxMEMpreliminaries\{content\}}] Print memory preliminaries and indexes.
+\item[\texttt{\textbackslash pxMEMpreliminaries\{content\}}] Optional manual preliminaries for custom documents with automatic TOC disabled.
 \item[\texttt{\textbackslash chapter\{title\}}] Numbered report-like chapter in MEM.
 \item[\texttt{\textbackslash pxMEMannex\{title\}\{content\}}] Letter-numbered annex chapter with arbitrary content.
 \item[\texttt{\textbackslash pxMEMsource\{id\}\{path\}}] Register a known source file.
