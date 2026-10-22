@@ -1,0 +1,13 @@
+\documentclass[TFG,CAT]{P3CTeX}
+\PECTeXconfig{data={student={Estudiant},grade={Enginyeria Informàtica},subj-fullname={Projecte},ca-fullname={Proposta},ca-shortname={PR1}}}
+\pxTFGsetup{tutor={Tutor},area={Computació},credits={12}}
+\begin{document}
+\ExplSyntaxOn
+\bool_if:NF \g__pxtfg_card_printed_bool
+  {\PackageError{pxTFG.no-toc.test}{TFG card missing without TOC}{}}
+\cs_if_exist:NT \pxMEMpreliminaries
+  {\PackageError{pxTFG.no-toc.test}{Standalone TFG unexpectedly loaded MEM}{}}
+\ExplSyntaxOff
+\section{Independent TFG document}
+No manual preliminary commands are required.
+\end{document}
