@@ -35,7 +35,7 @@
 \cs_new:Npn \__pxtfg_row:nn #1#2
   {\textbf{#1} & #2 \\[0.65ex]}
 
-\cs_new_protected:Npn \__pxtfg_card:
+\cs_new_protected:Npn \__pxtfg_card_render:
   {
     \__pxtfg_heading:n
       {\__pxtfg_text:nnn{Fitxa~del~Treball~Final}
@@ -125,7 +125,7 @@
 
 % The information sheet contains the Catalan summary; other supplied
 % summaries follow on separate pages.
-\cs_new_protected:Npn \__pxtfg_frontmatter:
+\cs_new_protected:Npn \__pxtfg_frontmatter_render:
   {
     \__pxtfg_licence_page:
     \setcounter{page}{1}
@@ -141,5 +141,25 @@
       {\clearpage\__pxtfg_print_abstract:n {ES}}
     \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
       {\clearpage\__pxtfg_print_abstract:n {EN}}
+  }
+
+% Automatic and legacy explicit calls must not duplicate preliminary material.
+\bool_new:N \g__pxtfg_card_printed_bool
+\bool_new:N \g__pxtfg_frontmatter_printed_bool
+\cs_new_protected:Npn \__pxtfg_card:
+  {
+    \bool_if:NF \g__pxtfg_card_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_card_printed_bool
+        \__pxtfg_card_render:
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_frontmatter:
+  {
+    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
+        \__pxtfg_frontmatter_render:
+      }
   }
 \endinput
