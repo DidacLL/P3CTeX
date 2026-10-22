@@ -41,17 +41,31 @@
 %% Start a letter-numbered appendix chapter, switching to appendix numbering
 %% on its first use, then typeset the supplied content inside that chapter.
 \NewDocumentCommand\pxMEMannex{m +m}{\__pxmem_annex:nn {#1}{#2}}
-% \pxMEMpreliminaries{<content>}
-% Compose preliminary material and its indexes for a memory.
-% Caller-supplied content may be empty or provided by another module.
+% MEM supplies generic indexes after the class TOC; it never loads TFG.
+\bool_new:N \g__pxmem_indexes_done_bool
+\@ifclassloaded{P3CTeX}{%
+  \AddToHook{begindocument/before}{%
+    \NewCommandCopy\__pxmem_saved_toc:\PECTeXprintTOC
+    \RenewDocumentCommand\PECTeXprintTOC{s}{%
+      \IfBooleanTF{#1}{\__pxmem_saved_toc:*}{\__pxmem_saved_toc:}%
+      \bool_gset_true:N \g__pxmem_indexes_done_bool
+      \listoffigures\clearpage
+      \listoftables\clearpage
+    }%
+  }%
+}{}
+
+% Backwards-compatible manual entry point for documents with automatic TOC
+% disabled. It reuses the class TOC command and never prints indexes twice.
 \NewDocumentCommand\pxMEMpreliminaries{+m}{%
   #1%
-  \clearpage
-  \tableofcontents
-  \clearpage
-  \listoffigures
-  \clearpage
-  \listoftables
-  \clearpage
+  \bool_if:NF \g__pxmem_indexes_done_bool{%
+    \clearpage
+    \cs_if_exist:NTF \PECTeXprintTOC
+      {\PECTeXprintTOC}
+      {\tableofcontents\clearpage\listoffigures\clearpage
+       \listoftables\clearpage
+       \bool_gset_true:N \g__pxmem_indexes_done_bool}%
+  }%
 }
 \endinput
