@@ -31,4 +31,17 @@
 %% information sheet with CAT summary, then ES/EN abstracts.
 %% pxMEM is responsible for the complete memory structure and indexes.
 \NewDocumentCommand\pxTFGfrontmatter{}{\__pxtfg_frontmatter:}
+
+% P3CTeX owns the cover and TOC. TFG contributes its own front matter
+% before that TOC, without changing the class or depending on pxMEM.
+\@ifclassloaded{P3CTeX}{%
+  \AddToHook{begindocument/before}{%
+    \NewCommandCopy\__pxtfg_saved_toc:\PECTeXprintTOC
+    \RenewDocumentCommand\PECTeXprintTOC{s}{%
+      \pxTFGfrontmatter
+      \clearpage
+      \IfBooleanTF{#1}{\__pxtfg_saved_toc:*}{\__pxtfg_saved_toc:}%
+    }%
+  }%
+}{}
 \endinput
