@@ -43,5 +43,10 @@
       \IfBooleanTF{#1}{\__pxtfg_saved_toc:*}{\__pxtfg_saved_toc:}%
     }%
   }%
+  % When no TOC is requested, print the TFG content after the class cover.
+  \AddToHook{begindocument/end}{%
+    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
+      {\pxTFGfrontmatter\clearpage}%
+  }%
 }{}
 \endinput
