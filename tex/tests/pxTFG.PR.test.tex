@@ -2,6 +2,10 @@
 \PECTeXconfig{data={student={Estudiant},grade={Enginyeria Informàtica},subj-fullname={Projecte},ca-fullname={Primera PR},ca-shortname={PR1}}}
 \pxTFGsetup{tutor={Tutor},pra={PRA},area={Computació},credits={12},keywords={Programari},licence={CC BY}}
 \begin{document}
+\ExplSyntaxOn
+\bool_if:NF \g__pxtfg_card_printed_bool
+  {\PackageError{pxTFG.PR.test}{TFG card was not printed automatically}{}}
+\ExplSyntaxOff
 \section{PR independent}
 Ordinary assessment content.
 \end{document}
