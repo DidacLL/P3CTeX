@@ -25,7 +25,7 @@ package remains responsible for the structure of a memory.
 The TFG module loads via pxCORE when the \texttt{TFG} class option is set:
 \begin{verbatim}
 \documentclass[TFG,PR,CAT]{P3CTeX}   % standalone PR
-\documentclass[TFG,MEM,CAT]{P3CTeX}  % final memory
+\documentclass[TFG,MEM,PR,CAT]{P3CTeX}  % final memory
 \end{verbatim}
 Neither \texttt{TFG} nor \texttt{MEM} implies the other. Select them at
 class-loading time; \verb|\PECTeXconfig{TFG}| and
@@ -74,6 +74,8 @@ Trabajo Final or Final Project Information. It creates an unnumbered
 section in TFG PR documents or an unnumbered chapter in TFG+MEM
 documents, with a table-of-contents entry. The sheet includes PRA,
 keywords and the document language; the licence is a separate page.
+With P3CTeX and its TOC enabled, the TFG front matter is inserted
+automatically before the TOC. Manual card printing is unnecessary.
 
 \subsection{\texttt{\textbackslash pxTFGabstract}}
 \verb+\pxTFGabstract{<language>}{<text>}+ registers one abstract for
@@ -106,9 +108,10 @@ optional text and symbol. With no configured licence it does nothing.
 \verb|\pxTFGfrontmatter| prints the licence page if configured, the
 work card with the Catalan summary, and supplied Spanish and English
 abstracts on subsequent pages. It does not print a cover, TOC,
-figure/table lists or any chapters. Use
-\verb|\pxMEMpreliminaries{\pxTFGfrontmatter}| for the complete memory
-preliminaries. The memory structure belongs to \texttt{pxMEM}.
+figure/table lists or any chapters. P3CTeX invokes it automatically
+before its TOC when TFG is loaded. Without an automatic TOC, it
+remains available for explicit use. The generic report indexes belong
+to \texttt{pxMEM}, which can also be used without TFG.
 
 \section{Standalone TFG PR example}
 \begin{verbatim}
@@ -121,7 +124,6 @@ preliminaries. The memory structure belongs to \texttt{pxMEM}.
 \pxTFGsetup{tutor={Tutora},area={Computacio},
   credits={12},licence={CC BY}}
 \begin{document}
-\pxTFGworkcard
 \section{Objectius}
 Text de la PR1.
 \end{document}
@@ -133,7 +135,7 @@ sections can be surrounded by selection comments as described in the
 \section{Final TFG memory example}
 \begin{verbatim}
 \documentclass[TFG,MEM,CAT]{P3CTeX}
-\PECTeXconfig{cover=true,toc=false,data={
+\PECTeXconfig{cover=true,toc=true,data={
   student={Estudiant},grade={Enginyeria Informatica},
   subj-fullname={Projecte},ca-fullname={Memoria},
   ca-shortname={MEM}
@@ -143,7 +145,6 @@ sections can be surrounded by selection comments as described in the
 \pxTFGabstract{CAT}{Resum.}
 \pxTFGabstract{EN}{Abstract.}
 \begin{document}
-\pxMEMpreliminaries{\pxTFGfrontmatter}
 \pxMEMsource{PR1}{../PR1/PR1.tex}
 \chapter{Introduccio}
 \pxMEMinclude{PR1}{objectius}
