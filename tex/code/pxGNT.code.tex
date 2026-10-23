@@ -110,8 +110,14 @@
                 {\box_wd:N \l__pxgnt_label_box + \labelsep}}
           }
       }
-    \seq_gput_right:Nn \g__pxgnt_items_seq
-      {\__pxgnt_bar:nnn{#1}{#2}{#3}}
+    \__pxgnt_parse_date:nN {#2} \l__pxgnt_item_start_int
+    \__pxgnt_parse_date:nN {#3} \l__pxgnt_item_end_int
+    \int_compare:nNnTF {\l__pxgnt_item_start_int} > {\l__pxgnt_item_end_int}
+      {\PackageError{pxGNT}{Task end date precedes its start}{Correct the task dates.}}
+      {
+        \seq_gput_right:Nn \g__pxgnt_items_seq
+          {\__pxgnt_bar:nnn{#1}{#2}{#3}}
+      }
   }
 
 \cs_new_protected:Npn \__pxgnt_bar:nnn #1#2#3
