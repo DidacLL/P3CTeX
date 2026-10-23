@@ -124,6 +124,11 @@ jobs:
                 latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode "$source"
                 echo "::endgroup::"
               done < /work/.documentation-targets
+              if grep -qx "doc/pxGNT.tex" /work/.documentation-targets; then
+                echo "::group::Gantt class integration"
+                latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode tests/pxGNT.test.tex
+                echo "::endgroup::"
+              fi
             '
 
       - name: Install artifact client if documentation was built
