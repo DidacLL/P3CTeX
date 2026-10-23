@@ -4,10 +4,13 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'tex/doc/pxGNT.tex'
       - 'tex/doc/pxMEM.tex'
       - 'tex/doc/pxTFG.tex'
+      - 'tex/latex/pxGNT.sty'
       - 'tex/latex/pxMEM.sty'
       - 'tex/latex/pxTFG.sty'
+      - 'tex/code/pxGNT.code.tex'
       - 'tex/code/pxMEM.code.tex'
       - 'tex/code/pxTFG.code.tex'
       - 'tex/latex/P3CTeX.cls'
@@ -60,7 +63,7 @@ jobs:
           targets = set()
 
           if event_name == "workflow_dispatch":
-              targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
+              targets.update(("tex/doc/pxGNT.tex", "tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
           else:
               # PR builds compare the source branch with the merge base.
               base = event["pull_request"]["base"]["sha"]
@@ -97,7 +100,7 @@ jobs:
                       targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
 
           # Only the maintained manuals participate; legacy docs are deprecated.
-          maintained = {"tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"}
+          maintained = {"tex/doc/pxGNT.tex", "tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"}
           selected = sorted(p for p in targets if p in maintained and pathlib.Path(p).is_file())
           print("Manuals to compile:", selected, flush=True)
           pathlib.Path(".documentation-targets").write_text(
