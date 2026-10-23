@@ -1,0 +1,17 @@
+\documentclass[a4paper]{article}
+\usepackage[margin=20mm]{geometry}
+\usepackage{pxGNT}
+\begin{document}
+\section{Daily timeline}
+\pxGantt{start=01/10/2026,end=31/01/2027,days-per-page=35,day-width=6mm}
+\pxGanttItem{Investigació}{01/10/2026}{20/10/2026}
+\pxGanttItem{Disseny}{15/10/2026}{10/11/2026}
+\pxGanttItem{Implementació}{01/11/2026}{15/12/2026}
+\pxGanttItem{Avaluació de models locals}{05/12/2026}{15/01/2027}
+\pxGanttItem{Memòria final}{01/01/2027}{31/01/2027}
+\pxGanttEnd
+\section{Second chart with automatic width}
+\pxGantt{start=01/11/2026,end=05/12/2026,days-per-block=21}
+\pxGanttItem{Prova}{01/11/2026}{20/11/2026}
+\pxGanttEnd
+\end{document}

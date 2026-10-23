@@ -1,0 +1,20 @@
+% P3CTeX optional GNT integration regression.
+% Compile from tex/tests with TEXINPUTS="../latex:../code:".
+\documentclass[PR,CAT,default,GNT]{P3CTeX}
+\makeatletter
+\@ifpackageloaded{pxUML}{}{\PackageError{pxGNT-test}{default module not loaded}{}}
+\@ifpackageloaded{pxGNT}{}{\PackageError{pxGNT-test}{GNT module not loaded}{}}
+\makeatother
+\PECTeXconfig{cover=false,toc=false,data={student={Estudiant},grade={Enginyeria Informàtica},subj-fullname={Projecte Gantt},ca-fullname={Planificació},ca-shortname={PAC1}}}
+\begin{document}
+\section{Pla de treball}
+\pxGantt{start=01/10/2026,end=31/01/2027,days-per-block=35,day-width=6mm}
+\pxGanttItem{Investigació}{01/10/2026}{20/10/2026}
+\pxGanttItem{Disseny}{15/10/2026}{10/11/2026}
+\pxGanttItem{Implementació}{01/11/2026}{15/12/2026}
+\pxGanttItem{Avaluació de models locals}{05/12/2026}{15/01/2027}
+\pxGanttItem{Memòria final}{01/01/2027}{31/01/2027}
+\pxGanttEnd
+\section{Continuació}
+La pàgina manté la seva orientació original.
+\end{document}

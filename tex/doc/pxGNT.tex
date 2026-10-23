@@ -1,0 +1,37 @@
+% pxGNT -- optional P3CTeX Gantt module
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{pxGNT}
+\begin{document}
+\section*{pxGNT: daily Gantt charts}
+The optional \texttt{GNT} module provides a three-command interface to
+\texttt{pgfgantt}; it does not change the document orientation.
+Select it when loading P3CTeX: \verb|\documentclass[GNT,PR,CAT]{P3CTeX}|.
+Outside the class, use \verb|\usepackage{pxGNT}|.
+
+\begin{verbatim}
+\pxGantt{start=01/10/2026,end=31/01/2027,days-per-block=28}
+\pxGanttItem{Investigation}{01/10/2026}{20/10/2026}
+\pxGanttItem{Implementation}{15/10/2026}{15/12/2026}
+\pxGanttEnd
+\end{verbatim}
+
+Options: \texttt{start}, \texttt{end} (required dd/mm/yyyy),
+\texttt{days-per-block} (default 28), \texttt{days-per-page} (alias),
+\texttt{day-width} (optional TeX length), \texttt{label-width} (manual override),
+\texttt{label-max-width} (default \verb|.24\linewidth|),
+\texttt{rotate=true} (optional chart-only rotation).
+
+By default the label column is measured from actual task text and capped
+relative to the available line width. Remaining width is divided among
+calendar days. The date range is balanced into consecutive blocks, and
+bars crossing block boundaries are clipped. P3CTeX colours are reused;
+standalone users receive fallback colours.
+
+\section*{Example}
+\pxGantt{start=01/10/2026,end=25/11/2026,days-per-block=28}
+\pxGanttItem{Investigació}{01/10/2026}{20/10/2026}
+\pxGanttItem{Disseny}{15/10/2026}{10/11/2026}
+\pxGanttItem{Implementació}{01/11/2026}{25/11/2026}
+\pxGanttEnd
+\end{document}
