@@ -78,6 +78,8 @@
 \cs_new_protected:Npn \__pxgnt_begin:n #1
   {
     \seq_gclear:N \g__pxgnt_items_seq
+    \tl_clear:N \l__pxgnt_start_date_tl
+    \tl_clear:N \l__pxgnt_end_date_tl
     \bool_set_false:N \l__pxgnt_fixed_label_width_bool
     \bool_set_false:N \l__pxgnt_fixed_day_width_bool
     \bool_set_false:N \l__pxgnt_rotate_bool
@@ -85,6 +87,10 @@
     \dim_zero:N \l__pxgnt_label_dim
     \dim_set:Nn \l__pxgnt_label_max_dim {.24\linewidth}
     \keys_set:nn {pxGNT}{#1}
+    \tl_if_blank:VT \l__pxgnt_start_date_tl
+      {\PackageError{pxGNT}{Missing required start date}{Set start=dd/mm/yyyy.}}
+    \tl_if_blank:VT \l__pxgnt_end_date_tl
+      {\PackageError{pxGNT}{Missing required end date}{Set end=dd/mm/yyyy.}}
     \int_compare:nNnF {\l__pxgnt_days_int} > {0}
       {\PackageError{pxGNT}{days-per-block must be positive}{Use a positive integer.}}
     \bool_if:NT \l__pxgnt_fixed_day_width_bool
