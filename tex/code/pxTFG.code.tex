@@ -70,11 +70,11 @@
 % Printable metadata for the existing pxGDX cover auxiliary-text slot.
 \cs_new_protected:Npn \__pxtfg_cover_details:
   {
-    \textbf{\__pxtfg_text:nnn{Consultor/a}{Consultor/a}{Supervisor}:}
-      ~\l__pxtfg_tutor_tl\par
-    \textbf{PRA:}~\l__pxtfg_pra_tl\par
-    \textbf{\__pxtfg_text:nnn{Àrea}{Área}{Area}:}
-      ~\l__pxtfg_area_tl
+    \hspace*{-10em}\textbf{\small\__pxtfg_text:nnn{Consultor/a}{Consultor/a}{Supervisor}:}~\hspace{\fill}\par
+      \hspace{\fill}~\l__pxtfg_tutor_tl\par\bigskip
+    \hspace*{-10em}\textbf{\small PRA:}~\hspace{\fill}\par\hspace{\fill}~\l__pxtfg_pra_tl\par
+    \hspace*{-10em}\textbf{\small\__pxtfg_text:nnn{Àrea}{Área}{Area}:}~\par\bigskip
+      \hspace{\fill}~\l__pxtfg_area_tl\par
   }
 
 \cs_new_protected:Npn \__pxtfg_licence_page:
