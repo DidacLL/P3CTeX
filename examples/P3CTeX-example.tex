@@ -685,6 +685,17 @@ pdflatex -halt-on-error main.tex
 echo "Build complet."
 \end{miniCode}
 
+% 4. R — Data Mining & Statistics
+\pxCodeSet[light]{pxR}
+\begin{pxCode}[language=pxR]{lst-r-ex}
+library(cluster)
+data(iris)
+df <- scale(iris[, 1:4])
+pca <- prcomp(df)
+km <- kmeans(df, centers = 3, nstart = 25)
+cat("WSS total:", km$tot.withinss, "\n")
+\end{pxCode}
+
 % 5. Inline code
 \subsection{Exercici: codi inline}
 En aquest exercici es mostren fragments de codi inline.
@@ -693,14 +704,68 @@ Un altre fragment en Bash: \pxCodeIn[pxBash]{echo "fi"}.
 
 % ========== 9. pxCMP - Computation, Compilers & Logic Diagrams ==========
 \newpage
-\section{Compiladors, Autòmats i Lògica (\texttt{pxCMP})}
-Amb l'opció de classe \texttt{CMP} es carrega el mòdul \texttt{pxCMP} per generar diagrames de Tombstone (diagrames en T), esquemes de compiladors, arbres sintàctics, autòmats i gramàtiques BNF.
+\section{Compiladors, Autòmats, Grafs i IA (\texttt{pxCMP})}
+Amb l'opció de classe \texttt{CMP} es carrega el mòdul \texttt{pxCMP} per generar diagrames de Tombstone (diagrames en T), esquemes de compiladors, arbres sintàctics, autòmats, taules de transició, grafs de cerca, arbres de decisió, xarxes neuronals i lògica borrosa.
 
+\subsection{Diagrames de Tombstone i Model de Compilador}
 \pxTombstoneCompile[title={Compilació cap a la JVM}]{Programa}{Java}{JVM}{M}
 
 \pxTombstoneBootstrap[title={Bootstrapping d'Oberon de 486 a P-III}]{Oberon}{486}{P-III}
 
 \pxCompilerModel[title={Estructura interna d'un compilador}]
+
+\subsection{Autòmats: Taules de transició i traces}
+\pxTransitionTable[title={Taula de transició i partició $\Pi_0$}]{a, b}{
+  q_0 / initial   / q_1, q_2 / I;
+  q_1 / normal    / q_3, q_2 / I;
+  q_2 / accepting / q_1, q_3 / II;
+  q_3 / accepting / q_3, q_3 / II
+}
+
+\pxAutomatonTrace[title={Traça de reconeixement de la paraula \texttt{aba}}]{
+  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1
+}[Rebutjat]
+
+\subsection{Grafs de cerca heurística ($A^*$)}
+\pxGraph[title={Graf de cerca heurística $A^*$}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12
+}
+
+\subsection{Intel·ligència Artificial i Mineria de Dades}
+\pxDecisionTree[title={Arbre de decisió (ID3 / C4.5)}]{
+  neu   / Neu          / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via          / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L; neu -> mvia / M; neu -> neuH / H;
+  mvia -> mviaA / A; mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptró Multicapa (MLP)}]{
+  Entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Sortida / Y / Heaviside
+}[x_0 -> h_0 / 1; x_1 -> h_0 / -1; h_0 -> Y / -1; h_2 -> Y / 1]
+
+\pxConfusionMatrix[title={Matriu de confusió i mètriques F1}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisió = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinença borrosa}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)  / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M) / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)   / darkColor              / 30,0 / 40,1 / 50,1
+}
 
 	\newpage
 \nocite{*}

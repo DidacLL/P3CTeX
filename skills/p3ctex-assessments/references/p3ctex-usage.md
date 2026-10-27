@@ -111,6 +111,8 @@ public class Main {
 \end{pxCode}
 ```
 
+Predefined languages include `pxJava`, `pxPython`, `pxR` (Data Mining/Statistics), `pxC`, `pxSTM32C`, `pxASM`, `pxSQL`, `pxJavaScript` (`pxJS`), `pxJLex`, `pxCUP` (`pxYacc`/`pxBison`), `pxWorkflow` (`pxDSL`), `pxTAD`, `pxProlog`, `pxOWL`, `pxYAML`, and `algoritme`.
+
 **UML** (requires `pxUML`; define classes before drawing):
 
 ```latex
@@ -135,8 +137,24 @@ public class Main {
   semi / PUNT\_I\_COMA / 2.0,-1.4 / {;}
 }{exp->id1, exp->semi}
 
-% Finite Automaton & BNF Grammar:
+% Finite Automaton & Transition Table with Minimization:
 \pxAutomaton[title={AFD}]{q0 / $q_0$ / 0,0 / initial; q1 / $q_1$ / 2.8,0 / accepting}{q0 -> q1 / a}
+\pxTransitionTable[title={Taula $\delta$ i partició $\Pi_0$}]{a, b}{
+  q_0 / initial   / q_1, q_2 / I;
+  q_1 / accepting / q_1, q_0 / II
+}
+\pxAutomatonTrace{q_0 / a / q_1; q_1 / b / q_0}[Rebutjat]
+
+% Heuristic Search Graph (A* / Dijkstra with badges and optimal path):
+\pxGraph[title={Cerca A*}]{A / A / 0,0 / start / $h=20$; B / B / 2,1 / path / {$g=4, f=16$}; G / G / 4,0 / goal / $h=0$}{A => B / 4; B => G / 8}
+
+% Machine Learning: Decision Tree, Multi-Layer Perceptron & Confusion Matrix:
+\pxDecisionTree[title={Arbre de decisió}]{root / Neu / 0,0 / root / $IG=0.875$; leaf / Y / 2,0 / leaf}{root -> leaf / L}
+\pxNeuralNet[title={Perceptró Multicapa}]{Entrada / x_0, x_1 / input; Capa oculta / h_0, h_1 / ReLU; Sortida / Y / Heaviside}[x_0 -> h_0 / 1; h_0 -> Y / -1]
+\pxConfusionMatrix[title={Matriu de confusió}]{Positiu, Negatiu}{3 (TP), 2 (FP); 5 (FN), 5 (TN)}[F1 = 0.4615]
+\pxFuzzyPlot[title={Lògica borrosa}, xlabel={Temperatura}]{0, 50}{Baixa / primaryColor / 0,1 / 15,1 / 25,0; Alta / darkColor / 20,0 / 35,1 / 50,1}
+
+% BNF Grammar:
 \pxBNF{exp -> assigna PUNT\_I\_COMA; assigna -> IDENTIFICADOR ASSIGNACIÓ operació}
 ```
 

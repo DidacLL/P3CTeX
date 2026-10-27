@@ -184,7 +184,7 @@ If the PDF is generated without errors, the setup is correct.
 | `pxSRC.sty` | Llistats de codi font |
 | `pxTAB.sty` | Taules des de dades amb estils predefinits i presets |
 | `pxLST.sty` | Llistats de codi |
-| `pxCMP.sty` | Diagrames de Tombstone, compiladors, autòmats, gramàtiques i lògica |
+| `pxCMP.sty` | Diagrames de Tombstone, compiladors, autòmats, grafs de cerca, xarxes neuronals, arbres de decisió i lògica |
 | `pxORL.sty` | Eines addicionals |
 | `pxTFG.sty` | Fitxa, llicència, metadades i resums de TFG |
 | `pxMEM.sty` | Capítols, annexos i estructura de memòries |
@@ -203,7 +203,7 @@ Els manuals (font LaTeX) viuen a `tex/doc/`:
 | `tex/doc/pxUML.tex` | Diagrames UML |
 | `tex/doc/pxSRC.tex` | Llistats de codi font |
 | `tex/doc/pxTAB.tex` | Taules |
-| `tex/doc/pxCMP.tex` | Diagrames de Tombstone, compiladors, autòmats i lògica |
+| `tex/doc/pxCMP.tex` | Diagrames de Tombstone, compiladors, autòmats, grafs de cerca, xarxes neuronals, arbres de decisió i lògica |
 | `tex/doc/pxTFG.tex` | Contingut i metadades de TFG |
 | `tex/doc/pxMEM.tex` | Estructura i reutilització de memòries |
 
