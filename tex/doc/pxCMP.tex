@@ -1,0 +1,485 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxCMP -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (with TEXINPUTS=./latex;./code;./doc;):
+%   pdflatex -interaction=nonstopmode -output-directory=doc doc/pxCMP.tex
+%   pdflatex -interaction=nonstopmode -output-directory=doc doc/pxCMP.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue}{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=22mm]{geometry}
+\usepackage{lmodern}
+\usepackage[catalan]{babel}
+\usepackage[preset=p3c-uoc]{pxCMP}
+\usepackage{hyperref}
+
+\title{El paquet \texttt{pxCMP}\\
+  \large Diagrames de Tombstone, compiladors, aut\`omats i l\`ogica computacional per a \LaTeX2e}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/10/27 -- Versi\'o 0.1}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxCMP} proporciona una interf\'icie \LaTeX2e\ ergon\`omica basada en llistes i claus
+  (\texttt{l3keys}) per construir diagrames de compiladors i computaci\'o dins de l'ecosistema
+  \textbf{P3CTeX} (o de forma independent en classes est\`andard com \texttt{article}).
+  Cobreix cinc grans fam\'ilies: (1) diagrames de Tombstone (diagrames en T),
+  (2) diagrames de blocs de traductors, pipelines i codi intermedi,
+  (3) arbres sint\`actics, aut\`omats finits i grafs de computaci\'o,
+  (4) gram\`atiques BNF, derivacions, taules l\`exiques i comparatives de codi de tres adreces,
+  i (5) regles d'infer\`encia l\`ogica, diagrames de Venn/jerarquies i diagrames de flux.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{C\`arrega i activaci\'o del paquet}
+
+Dins d'un document amb la classe \texttt{P3CTeX}, activeu el m\`odul opcional \texttt{CMP}
+a les opcions de classe (sense perdre els m\`oduls per defecte):
+
+\begin{verbatim}
+\documentclass[CMP,PAC,default]{P3CTeX}
+\end{verbatim}
+
+Tamb\'e es pot carregar a trav\'es de \texttt{pxCORE} o de manera independent en qualsevol
+document est\`andard:
+
+\begin{verbatim}
+% A traves de pxCORE amb opcions:
+\usepackage[CMP,CMPconfig={preset=p3c-blueprint}]{pxCORE}
+
+% O directament de manera independent:
+\usepackage[preset=p3c-uoc]{pxCMP}
+\end{verbatim}
+
+\section{Configuraci\'o i Presets (\texttt{pxCMP})}
+
+ Totes les opcions es poden ajustar globalment (o dins d'un grup) amb \verb|\pxCMPsetup{...}|
+o localment al primer argument opcional \verb|[...]| de qualsevol ordre.
+
+\subsection{Presets predefinits}
+\begin{itemize}
+  \item \texttt{p3c-uoc} (per defecte): Estil inspirat en els m\`oduls did\`actics de la UOC
+    (\texttt{PID\_00215089}), amb peces blanques, ombra tridimensional i panell de fons suau.
+  \item \texttt{p3c-blueprint}: Paleta corporativa blava/cian de P3CTeX.
+  \item \texttt{p3c-minimal}: Disseny net sense marc exterior ni ombres.
+  \item \texttt{p3c-exam}: Alt contrast per a impressi\'o i resoluci\'o d'ex\`amens o PACs.
+\end{itemize}
+
+\begin{verbatim}
+\pxCMPusepreset{p3c-blueprint}
+\pxCMPsavepreset{el-meu-estil}{framed=true, shadow=false, scale=0.9}
+\end{verbatim}
+
+\subsection{Claus principals}
+\begin{itemize}
+  \item \texttt{unit} (per defecte \texttt{1.18cm}): Unitat modular de la graella de Tombstone.
+  \item \texttt{scale} (per defecte \texttt{1}): Factor d'escala del diagrama TikZ.
+  \item \texttt{width} / \texttt{max-width} (per defecte \texttt{\textbackslash linewidth}): Redimensionament autom\`atic.
+  \item \texttt{framed} (\texttt{true}/\texttt{false}): Panell exterior estil UOC.
+  \item \texttt{shadow} (\texttt{true}/\texttt{false}): Ombra de les peces de Tombstone.
+  \item \texttt{title}, \texttt{caption}, \texttt{label}, \texttt{float}: T\'itol del panell i suport per a figures flotants.
+\end{itemize}
+
+\newpage
+\section{Fam\'ilia 1: Diagrames de Tombstone (Diagrames en T)}
+
+\subsection{Peces b\`asiques}
+Les quatre peces fonamentals dels diagrames de Tombstone es poden invocar de manera
+aut\`onoma o col$\cdot$locar-se en coordenades \texttt{[x,y]} dins d'un entorn \texttt{pxCMPDiagram}:
+
+\begin{verbatim}
+\pxTCompiler{Pascal}{EXE-PC}{EXE-PC}
+\pxTProgram{ordenar}{Pascal}
+\pxTMachine{LINUX-PC}
+\pxTInterpreter{Basic}{EXE-PC}
+\end{verbatim}
+
+\pxTCompiler[inline=true]{Pascal}{EXE-PC}{EXE-PC}\quad
+\pxTProgram[inline=true]{ordenar}{Pascal}\quad
+\pxTMachine[inline=true]{LINUX-PC}\quad
+\pxTInterpreter[inline=true]{Basic}{EXE-PC}
+
+\subsection{Composicions autom\`atiques (sense coordenades)}
+
+\subsubsection*{Execuci\'o, interpretaci\'o i compilaci\'o d'un programa}
+Amb l'opci\'o \texttt{show-rules=true} es mostren les fletxes de coher\`encia (\emph{Iguals})
+en els punts d'uni\'o:
+
+\begin{verbatim}
+\pxTombstoneRun[show-rules=true]{P}{M}
+\pxTombstoneInterpret[show-rules=true]{P}{L}{M}
+\pxTombstoneCompile[show-rules=true]{P}{L1}{L2}{M}
+\end{verbatim}
+
+\pxTombstoneRun[show-rules=true,title={Execuci\'o d'un programa}]{P}{M}
+\pxTombstoneInterpret[show-rules=true,title={Interpretaci\'o d'un programa}]{P}{L}{M}
+\pxTombstoneCompile[show-rules=true,title={Compilaci\'o d'un programa}]{P}{L1}{L2}{M}
+
+\subsubsection*{M\`aquina virtual i compiladors interpretatius (Java / JVM)}
+\begin{verbatim}
+\pxTombstoneVM[title={M\`aquina virtual}]{L}{M}
+\end{verbatim}
+\pxTombstoneVM[title={M\`aquina virtual}]{L}{M}
+
+\subsubsection*{Compilador enlla\c{c}ador i cadenes de traducci\'o}
+\begin{verbatim}
+\pxTombstoneChain[title={Compilador enlla\c{c}ador}]{ordenar}{
+  Ada/OBJ/M/Compilador,
+  OBJ/M/M/Enlla\c{c}ador
+}
+\end{verbatim}
+\pxTombstoneChain[title={Compilador enlla\c{c}ador}]{ordenar}{
+  Ada/OBJ/M/Compilador,
+  OBJ/M/M/Enlla\c{c}ador
+}
+
+\subsubsection*{Uni\'o de dos compiladors, compilaci\'o creuada i Bootstrapping}
+\begin{verbatim}
+\pxTombstoneCompileCompiler[id=(1),id2=(2),show-bindings=true]
+  {Pascal}{Pentium}{C}{C}{Pentium}{Pentium}
+\pxTombstoneBootstrap[title={Compilaci\'o creuada / Bootstrapping}]{Pascal}{M4}{M5}
+\end{verbatim}
+
+\pxTombstoneCompileCompiler[id=(1),id2=(2),show-bindings=true,title={Uni\'o de dos compiladors}]{Pascal}{Pentium}{C}{C}{Pentium}{Pentium}
+\pxTombstoneBootstrap[title={Compilaci\'o creuada / Bootstrapping en dues fases}]{Pascal}{M4}{M5}
+
+\subsection{Entorn de llen\c{c} componible (\texttt{pxCMPDiagram})}
+Per a exercicis complets estil UOC (\emph{Tenim / Volem / S'ha de programar / Proc\'es}),
+l'entorn \texttt{pxCMPDiagram} permet combinar peces i notes en una graella exacta on
+dos compiladors encaixen desplacant $\Delta x = 2.0$, $\Delta y = -0.7$:
+
+\begin{verbatim}
+\begin{pxCMPDiagram}[title={Exercici: Compilador de Prolog sobre int\`erpret}]
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 2.7}{Tenim:}
+  \pxTInterpreter{Prolog}{P-IV}[0, 2.2]
+  \pxTMachine{P-IV}[][2.0, 3.1]
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 0.35}{Proc\'es:}
+  \pxTCompiler{Prolog}{P-IV}{Prolog}[][0.5, 0]
+  \pxTCompiler{Prolog}{P-IV}{Prolog}[][2.5, -0.7]
+  \pxTInterpreter{Prolog}{P-IV}[2.5, -2.3]
+  \pxTMachine{P-IV}[][2.5, -2.3]
+  \pxTCompiler{Prolog}{P-IV}{P-IV}[][4.5, 0]
+\end{pxCMPDiagram}
+\end{verbatim}
+
+\begin{pxCMPDiagram}[title={Exercici: Compilador de Prolog sobre int\`erpret}]
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 2.7}{Tenim:}
+  \pxTInterpreter{Prolog}{P-IV}[0, 2.2]
+  \pxTMachine{P-IV}[][2.0, 3.1]
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 0.35}{Proc\'es:}
+  \pxTCompiler{Prolog}{P-IV}{Prolog}[][0.5, 0]
+  \pxTCompiler{Prolog}{P-IV}{Prolog}[][2.5, -0.7]
+  \pxTInterpreter{Prolog}{P-IV}[2.5, -2.3]
+  \pxTMachine{P-IV}[][2.5, -2.3]
+  \pxTCompiler{Prolog}{P-IV}{P-IV}[][4.5, 0]
+\end{pxCMPDiagram}
+
+\newpage
+\section{Fam\'ilia 2: Diagrames de Blocs de Traductors i Pipelines}
+
+\begin{verbatim}
+\pxTranslatorBox{Programa\\font}{Traductor}{Programa\\objecte}[Errors]
+\pxCompileRunFlow{Programa\\font}{Compilador}{Programa\\objecte}
+  {Plataforma\\d'execuci\'o}{Resultats}[Errors][Dades]
+\pxCompilerModel[title={Model d'un compilador}]
+\pxIRHub{Cobol, C, Ada, Modula, Pascal}{Codi\\intermedi}
+  {80x86, Mac, Pentium IV, Linux-PC, Aix-IBM}
+\end{verbatim}
+
+\pxTranslatorBox[title={Funcionament d'un traductor}]{Programa\\font}{Traductor}{Programa\\objecte}[Errors]
+\pxCompileRunFlow[title={Proc\'es de compilaci\'o i execuci\'o}]{Programa\\font}{Compilador}{Programa\\objecte}{Plataforma\\d'execuci\'o}{Resultats}[Errors][Dades]
+\pxCompilerModel[title={Model d'un compilador}]
+\pxIRHub[title={Estrat\`egia d'\'us del codi intermedi}]{Cobol, C, Ada, Modula, Pascal}{Codi\\intermedi}{80x86, Mac, Pentium IV, Linux-PC, Aix-IBM}
+
+\newpage
+\section{Fam\'ilia 3: Arbres Sint\`actics, Aut\`omats i Grafs}
+
+\subsection{Arbres sint\`actics (\texttt{\textbackslash pxSyntaxTree})}
+Els nodes amb tres camps (\texttt{id / etiqueta / x,y}) es dibuixen com a variables sint\`actiques
+no terminals, mentre que els nodes amb quatre camps (\texttt{id / TESTIMONI / x,y / lexema})
+generen autom\`aticament la doble caixa de testimoni i valor l\`exic:
+
+\begin{verbatim}
+\pxSyntaxTree[title={Arbre sint\`actic}]{
+  exp / exp / 0,0;
+  assigna / assigna / -2.2,-1.1;
+  semi / PUNT\_I\_COMA / 2.2,-1.1 / {;};
+  id1 / IDENTIFICADOR / -4.4,-2.4 / ValorX;
+  eq / ASSIGNACI\'O / -2.2,-2.4 / {=};
+  op / operaci\'o / 0.2,-2.4;
+  opd1 / operand / -1.8,-3.7;
+  opr / operador / 0.2,-3.7;
+  opd2 / operand / 2.2,-3.7;
+  id2 / IDENTIFICADOR / -1.8,-4.9 / ValorY;
+  plus / SUMA / 0.2,-4.9 / {+};
+  num / ENTER / 2.2,-4.9 / 1
+}{
+  exp->assigna, exp->semi, assigna->id1, assigna->eq, assigna->op,
+  op->opd1, op->opr, op->opd2, opd1->id2, opr->plus, opd2->num
+}
+\end{verbatim}
+
+\pxSyntaxTree[title={Arbre sint\`actic}]{
+  exp / exp / 0,0;
+  assigna / assigna / -2.2,-1.1;
+  semi / PUNT\_I\_COMA / 2.2,-1.1 / {;};
+  id1 / IDENTIFICADOR / -4.4,-2.4 / ValorX;
+  eq / ASSIGNACI\'O / -2.2,-2.4 / {=};
+  op / operaci\'o / 0.2,-2.4;
+  opd1 / operand / -1.8,-3.7;
+  opr / operador / 0.2,-3.7;
+  opd2 / operand / 2.2,-3.7;
+  id2 / IDENTIFICADOR / -1.8,-4.9 / ValorY;
+  plus / SUMA / 0.2,-4.9 / {+};
+  num / ENTER / 2.2,-4.9 / 1
+}{
+  exp->assigna, exp->semi, assigna->id1, assigna->eq, assigna->op,
+  op->opd1, op->opr, op->opd2, opd1->id2, opr->plus, opd2->num
+}
+
+\subsection{Aut\`omats finits (\texttt{\textbackslash pxAutomaton}) i Grafs (\texttt{\textbackslash pxGraph})}
+\begin{verbatim}
+\pxAutomaton[title={Aut\`omat finit determinista}]{
+  q0 / $q_0$ / 0,0 / initial;
+  q1 / $q_1$ / 3.2,0 / accepting
+}{
+  q0 -> q1 / lletra;
+  q1 -> q1 / {lletra, d\'igit} / loop above
+}
+\end{verbatim}
+
+\pxAutomaton[title={Aut\`omat finit determinista}]{
+  q0 / $q_0$ / 0,0 / initial;
+  q1 / $q_1$ / 3.2,0 / accepting
+}{
+  q0 -> q1 / lletra;
+  q1 -> q1 / {lletra, d\'igit} / loop above
+}
+
+\newpage
+\section{Fam\'ilia 4: Gram\`atiques BNF, Derivacions, Testimonis i Codi Intermedi}
+
+\begin{verbatim}
+\pxLexemeTable[title={An\`alisi l\`exica}][ValorX = ValorY + 1;]{
+  IDENTIFICADOR / ValorX; ASSIGNACI\'O / {=}; IDENTIFICADOR / ValorY;
+  SUMA / {+}; ENTER / 1; PUNT\_I\_COMA / {;}
+}
+\pxBNF[title={Gram\`atica lliure de context}]{
+  exp -> assigna PUNT\_I\_COMA;
+  assigna -> IDENTIFICADOR ASSIGNACI\'O operaci\'o;
+  operaci\'o -> operand operador operand
+}
+\pxIRCompare[title={Optimitzaci\'o sobre codi de tres direccions}]
+  {Codi de tres direccions}
+  {E1: R1 := A + 3; IF R1 > B THEN GO TO E2; E2: A := A + 1}
+  {Codi optimitzat}
+  {E1: R := A + 3; IF R <= 10 THEN GO TO E3; E2: INC (A)}
+\end{verbatim}
+
+\pxLexemeTable[title={An\`alisi l\`exica}][ValorX = ValorY + 1;]{
+  IDENTIFICADOR / ValorX;
+  ASSIGNACI\'O / {=};
+  IDENTIFICADOR / ValorY;
+  SUMA / {+};
+  ENTER / 1;
+  PUNT\_I\_COMA / {;}
+}
+
+\pxBNF[title={Gram\`atica lliure de context}]{
+  exp -> assigna PUNT\_I\_COMA;
+  assigna -> IDENTIFICADOR ASSIGNACI\'O operaci\'o;
+  operaci\'o -> operand operador operand
+}
+
+\pxIRCompare[title={Optimitzaci\'o sobre codi de tres direccions}]
+  {Codi de tres direccions}
+  {E1: R1 := A + 3; IF R1 > B THEN GO TO E2; E2: A := A + 1}
+  {Codi optimitzat}
+  {E1: R := A + 3; IF R <= 10 THEN GO TO E3; E2: INC (A)}
+
+\section{Fam\'ilia 5: L\`ogica, Conjunts i Diagrames de Flux}
+
+\begin{verbatim}
+\pxInferenceRule{\Gamma \vdash e_1 : \tau_1, \Gamma \vdash e_2 : \tau_1}
+  {\Gamma \vdash e_1 = e_2 : \texttt{bool}}[T-Eq]
+\pxLogicGroup[title={Jerarquia de Chomsky}]{
+  Tipus 3 (Regulars), Tipus 2 (Lliures de context),
+  Tipus 1 (Sensibles al context), Tipus 0 (Recursivament enumerables)
+}
+\end{verbatim}
+
+\pxInferenceRule{\Gamma \vdash e_1 : \tau_1, \Gamma \vdash e_2 : \tau_1}{\Gamma \vdash e_1 = e_2 : \texttt{bool}}[T-Eq]
+
+\pxLogicGroup[title={Jerarquia de Chomsky}]{
+  Tipus 3 (Regulars), Tipus 2 (Lliures de context),
+  Tipus 1 (Sensibles al context), Tipus 0 (Recursivament enumerables)
+}
+
+\section{Fam\'ilia 6: Expressions Regulars, Mem\`oria i Endianness (v0.2)}
+
+Per a exercicis d'especificaci\'o l\`exica (JLex/Flex), diagrames de Tombstone amb inc\`ognites ($A, B, C$) i arquitectura de sistemes encastats (SSEE / Estructura de Computadors), \texttt{pxCMP} incorpora:
+
+\begin{verbatim}
+\pxTombstoneCompile[title={Tombstone amb inc\`ognites}]{Prog}{Swift/A}{AMD64}{B}[C]
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*}[Patr\'o JLex per a noms d'usuari]
+\pxEndianCompare[title={Disposici\'o a mem\`oria}]{Paraula de 32 bits: \texttt{0x001C5880}}{
+  0x5AF4 / 0x80 (LSB) / 0x00 (MSB);
+  0x5AF5 / 0x58       / 0x1C;
+  0x5AF6 / 0x1C       / 0x58;
+  0x5AF7 / 0x00 (MSB) / 0x80 (LSB)
+}
+\pxRegisterMap[title={Registre GPIOx\_MODER}]{
+  31:16 / MODER15..8 / 0xAAAA;
+  15:4  / MODER7..2  / 0x555;
+  3:2   / MODER1     / 01;
+  1:0   / MODER0     / 01
+}
+\end{verbatim}
+
+\pxTombstoneCompile[title={Tombstone amb inc\`ognites}]{Prog}{Swift/A}{AMD64}{B}[C]
+
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*}[Patr\'o JLex per a noms d'usuari]
+
+\pxEndianCompare[title={Disposici\'o a mem\`oria}]{Paraula de 32 bits: \texttt{0x001C5880}}{
+  0x5AF4 / 0x80 (LSB) / 0x00 (MSB);
+  0x5AF5 / 0x58       / 0x1C;
+  0x5AF6 / 0x1C       / 0x58;
+  0x5AF7 / 0x00 (MSB) / 0x80 (LSB)
+}
+
+\pxRegisterMap[title={Registre GPIOx\_MODER}]{
+  31:16 / MODER15..8 / 0xAAAA;
+  15:4  / MODER7..2  / 0x555;
+  3:2   / MODER1     / 01;
+  1:0   / MODER0     / 01
+}
+
+\newpage
+\section{Fam\'ilia 7: Grafs de Cerca, Taules d'Aut\`omats, Machine Learning i Mineria de Dades}
+
+Per donar resposta a les assignatures de \emph{Grafs i Complexitat}, \emph{Aut\`omats i Gram\`atiques}, \emph{Intel\textperiodcentered lig\`encia Artificial}, \emph{Aprenentatge Computacional} i \emph{Mineria de Dades}, \texttt{pxCMP} incorpora:
+
+\subsection{Taules de transici\'o i traces d'aut\`omats (\texttt{\textbackslash pxTransitionTable}, \texttt{\textbackslash pxAutomatonTrace})}
+
+\begin{verbatim}
+\pxTransitionTable[title={Taula de transici\'o i partici\'o $\Pi_0$}]{a, b}{
+  q_0 / initial   / q_1, q_2 / I;
+  q_1 / normal    / q_3, q_2 / I;
+  q_2 / accepting / q_1, q_3 / II;
+  q_3 / accepting / q_3, q_3 / II
+}
+\pxAutomatonTrace[title={Tra\c{c}a de la cadena \texttt{aba}}]{
+  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1
+}[Rebutjat]
+\end{verbatim}
+
+\pxTransitionTable[title={Taula de transici\'o i partici\'o $\Pi_0$}]{a, b}{
+  q_0 / initial   / q_1, q_2 / I;
+  q_1 / normal    / q_3, q_2 / I;
+  q_2 / accepting / q_1, q_3 / II;
+  q_3 / accepting / q_3, q_3 / II
+}
+
+\pxAutomatonTrace[title={Tra\c{c}a de la cadena \texttt{aba}}]{
+  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1
+}[Rebutjat]
+
+\subsection{Grafs de cerca heur\'istica i camins \`optims (\texttt{\textbackslash pxGraph})}
+
+\begin{verbatim}
+\pxGraph[title={Graf de cerca heur\'istica $A^*$}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12
+}
+\end{verbatim}
+
+\pxGraph[title={Graf de cerca heur\'istica $A^*$}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12
+}
+
+\subsection{Arbres de decisi\'o i Xarxes Neuronals (\texttt{\textbackslash pxDecisionTree}, \texttt{\textbackslash pxNeuralNet})}
+
+\begin{verbatim}
+\pxDecisionTree[title={Arbre de decisi\'o (ID3 / C4.5)}]{
+  neu   / Neu   / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via   / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L; neu -> mvia / M; neu -> neuH / H;
+  mvia -> mviaA / A; mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptr\'o Multicapa (MLP)}]{
+  Entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Sortida / Y / Heaviside
+}[x_0 -> h_0 / 1; x_1 -> h_0 / -1; h_0 -> Y / -1; h_2 -> Y / 1]
+\end{verbatim}
+
+\pxDecisionTree[title={Arbre de decisi\'o (ID3 / C4.5)}]{
+  neu   / Neu   / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via   / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L; neu -> mvia / M; neu -> neuH / H;
+  mvia -> mviaA / A; mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptr\'o Multicapa (MLP)}]{
+  Entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Sortida / Y / Heaviside
+}[x_0 -> h_0 / 1; x_1 -> h_0 / -1; h_0 -> Y / -1; h_2 -> Y / 1]
+
+\subsection{Matrius de confusi\'o i L\`ogica borrosa (\texttt{\textbackslash pxConfusionMatrix}, \texttt{\textbackslash pxFuzzyPlot})}
+
+\begin{verbatim}
+\pxConfusionMatrix[title={Matriu de confusi\'o i m\`etriques F1}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisi\'o = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinen\c{c}a borrosa}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)  / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M) / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)   / darkColor              / 30,0 / 40,1 / 50,1
+}
+\end{verbatim}
+
+\pxConfusionMatrix[title={Matriu de confusi\'o i m\`etriques F1}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisi\'o = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinen\c{c}a borrosa}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)  / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M) / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)   / darkColor              / 30,0 / 40,1 / 50,1
+}
+
+\end{document}

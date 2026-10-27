@@ -1,0 +1,269 @@
+% !TeX encoding = UTF-8
+% pxCMP standalone regression test (article class)
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=20mm]{geometry}
+\usepackage[catalan]{babel}
+\usepackage[preset=p3c-uoc]{pxCMP}
+
+\begin{document}
+
+\section{Priority 1: Tombstone Diagrams (Diagrames en T)}
+
+\subsection{Primitives}
+\pxTCompiler{Pascal}{EXE-PC}{EXE-PC}[(1)]
+\pxTProgram{ordenar}{Pascal}
+\pxTMachine{LINUX-PC}
+\pxTInterpreter{Basic}{EXE-PC}
+
+\subsection{Auto-Docked Compositions}
+\pxTombstoneRun[show-rules=true]{ordenar}{VAX}
+\pxTombstoneInterpret[show-rules=true]{ordenar}{Basic}{Pentium}
+\pxTombstoneVM{JVM}{Mx}
+\pxTombstoneCompile[show-rules=true]{ordenar}{Pascal}{Pentium}{Pentium}
+\pxTombstoneChain{ordenar}{Ada/OBJ/M/Compilador, OBJ/M/M/Enlla\c{c}ador}
+\pxTombstoneCompileCompiler[id=(1),id2=(2),id-out={},show-bindings=true]{Pascal}{Pentium}{C}{C}{Pentium}{Pentium}
+\pxTombstoneCompileCompiler[interpreter=P-IV]{Prolog}{P-IV}{Prolog}{Prolog}{P-IV}{Prolog}
+\pxTombstoneBootstrap{Pascal}{M4}{M5}
+
+\subsection{Composable Canvas Environment (\texttt{pxCMPDiagram})}
+\begin{pxCMPDiagram}[title={Exercici 2: Compilador de Prolog per a P-IV}]
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 3.0}{Tenim:}
+  \pxTInterpreter{Prolog}{P-IV}[0, 2.5]
+  \pxTMachine{P-IV}[][2.2, 3.4]
+
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 1.35}{Volem:}
+  \pxTCompiler{Prolog}{P-IV}{P-IV}[][0.5, 1.0]
+
+  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, -0.65}{Proc\'es:}
+  \pxTCompiler{Prolog}{P-IV}{Prolog}[][0.5, -1.0]
+  \pxTCompiler{Prolog}{P-IV}{Prolog}[][2.5, -1.7]
+  \pxTInterpreter{Prolog}{P-IV}[2.5, -3.3]
+  \pxTMachine{P-IV}[][2.5, -3.3]
+  \pxTCompiler{Prolog}{P-IV}{P-IV}[][4.5, -1.0]
+\end{pxCMPDiagram}
+
+\section{Priority 2: Translator, Pipeline \& IR Hub Diagrams}
+\pxTranslatorBox{Programa\\font}{Traductor}{Programa\\objecte}[Errors]
+\pxTranslatorBox{Programa\\font}{Int\`erpret}{Resultats}[Errors][Dades]
+\pxCompileRunFlow{Programa\\font}{Compilador}{Programa\\objecte}{Plataforma\\d'execuci\'o}{Resultats}[Errors][Dades]
+\pxCompilerModel
+\pxCompilerPipeline{An\`alisi l\`exica, An\`alisi sint\`actica, An\`alisi sem\`antica, Generaci\'o de codi}[Taula de s\'imbols i Gesti\'o d'errors]
+\pxIRHub{Cobol, C, Ada, Modula, Pascal}{Codi\\intermedi}{80x86, Mac, Pentium IV, Linux-PC, Aix-IBM}
+
+\section{Priority 3: Parse Trees, Automata \& Graphs}
+\pxSyntaxTree[title={Arbre sint\`actic: \texttt{ValorX = ValorY + 1;}}]{
+  exp / exp / 0,0;
+  assigna / assigna / -2.2,-1.1;
+  semi / PUNT\_I\_COMA / 2.2,-1.1 / {;};
+  id1 / IDENTIFICADOR / -4.4,-2.4 / ValorX;
+  eq / ASSIGNACI\'O / -2.2,-2.4 / {=};
+  op / operaci\'o / 0.2,-2.4;
+  opd1 / operand / -1.8,-3.7;
+  opr / operador / 0.2,-3.7;
+  opd2 / operand / 2.2,-3.7;
+  id2 / IDENTIFICADOR / -1.8,-4.9 / ValorY;
+  plus / SUMA / 0.2,-4.9 / {+};
+  num / ENTER / 2.2,-4.9 / 1
+}{
+  exp->assigna, exp->semi,
+  assigna->id1, assigna->eq, assigna->op,
+  op->opd1, op->opr, op->opd2,
+  opd1->id2, opr->plus, opd2->num
+}
+
+\pxAutomaton[title={Aut\`omat finit determinista (AFD) per a identificadors}]{
+  q0 / $q_0$ / 0,0 / initial;
+  q1 / $q_1$ / 3.2,0 / accepting;
+  qerr / $q_{\text{err}}$ / 1.6,-2.0
+}{
+  q0 -> q1 / lletra;
+  q1 -> q1 / {lletra, d\'igit} / loop above;
+  q0 -> qerr / d\'igit / bend right=15
+}
+
+\pxGraph[preset=p3c-blueprint, title={Graf de depend\`encies de blocs b\`asics}]{
+  B1 / $B_1$ / 0,0 / highlight;
+  B2 / $B_2$ / -1.8,-1.6;
+  B3 / $B_3$ / 1.8,-1.6;
+  B4 / $B_4$ / 0,-3.2 / highlight
+}{
+  B1 -> B2 / true;
+  B1 -> B3 / false;
+  B2 -> B4 / 1;
+  B3 -> B4 / 2;
+  B4 -> B2 / loop / bend left=35
+}
+
+\section{Priority 4: BNF Grammars, Derivations, Lexemes \& IR}
+\pxBNF{
+  exp -> assigna PUNT\_I\_COMA;
+  assigna -> IDENTIFICADOR ASSIGNACI\'O operaci\'o;
+  operaci\'o -> operand operador operand;
+  operador -> SUMA;
+  operand -> IDENTIFICADOR | ENTER
+}
+
+\pxDerivation{
+  exp / Regla inicial;
+  assigna PUNT\_I\_COMA / exp $\to$ assigna PUNT\_I\_COMA;
+  IDENTIFICADOR ASSIGNACI\'O operaci\'o PUNT\_I\_COMA / assigna $\to$ ID ASSIGNACI\'O operaci\'o;
+  IDENTIFICADOR ASSIGNACI\'O operand operador operand PUNT\_I\_COMA / operaci\'o $\to$ operand operador operand
+}
+
+\pxLexemeTable[preset=p3c-exam][ValorX = ValorY + 1;]{
+  IDENTIFICADOR / ValorX;
+  ASSIGNACI\'O / {=};
+  IDENTIFICADOR / ValorY;
+  SUMA / {+};
+  ENTER / 1;
+  PUNT\_I\_COMA / {;}
+}
+
+\pxIRCompare
+  {Codi de tres direccions}
+  {
+    E1: R1 := A + 3;
+    \ \ \ \ IF R1 > B THEN GO TO E2;
+    \ \ \ \ R2 := A + B;
+    \ \ \ \ R3 := R2 + C;
+    \ \ \ \ IF R3 > 10 THEN GO TO E2;
+    \ \ \ \ GOTO E3;
+    E2: A := A + 1;
+    E3: ...
+  }
+  {Codi optimitzat}
+  {
+    E1: R := A + 3;
+    \ \ \ \ IF R > B THEN GO TO E2;
+    \ \ \ \ R := A + B;
+    \ \ \ \ R := R + C;
+    \ \ \ \ IF R <= 10 THEN GO TO E3;
+    E2: INC (A);
+    E3: ...
+  }
+
+\section{Priority 5: Logic, Sets \& Flowcharts}
+\pxInferenceRule
+  {\Gamma \vdash e_1 : \texttt{int}, \Gamma \vdash e_2 : \texttt{real}}
+  {\Gamma \vdash e_1 + e_2 : \texttt{real}}
+  [T-Add-Coerce]
+
+\pxVenn{LL(1)}{LR(1)}[LALR(1)][Gram\`atiques\\deterministes]
+\pxLogicGroup{ Tipus 3 (Regulars), Tipus 2 (Lliures de context), Tipus 1 (Sensibles al context), Tipus 0 (Recursivament enumerables) }
+
+\pxFlowchart[preset=p3c-minimal]{
+  st / start / Inici / 0,0;
+  rd / io / Llegir token $t$ / 0,-1.4;
+  dc / decision / {$t = \text{EOF}$?} / 0,-3.1;
+  pr / process / Analitzar $t$ / 3.4,-3.1;
+  en / end / Fi / 0,-5.0
+}{
+  st -> rd;
+  rd -> dc;
+  dc -> en / S\'i;
+  dc -> pr / No;
+  pr -> rd
+}
+
+\section{Priority 6: Regular Expressions, Memory Maps \& Endianness}
+\pxTombstoneCompile[title={Tombstone amb inc\`ognites A, B, C}]{Prog}{Swift/A}{AMD64}{B}[C]
+
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*}[Patr\'o JLex per a noms d'usuari]
+\pxRegEx{([1-9]?[0-9](\.[0-9][0-9]?)?|100(\.00?)?)"%"}[Patr\'o JLex per a percentatges]
+
+\pxRegExList[title={Especificaci\'o l\`exica JLex}]{
+  IDENT    / {[a-zA-Z_][a-zA-Z0-9_]*} / Identificador;
+  INT\_LIT / {[0-9]+}                 / Enter sense signe
+}
+
+\pxMemoryMap[title={Mapa de mem\`oria}]{
+  0x08000000 / 0x20004000 / Initial MSP;
+  0x08000004 / 0x08000145 / Reset\_Handler
+}
+
+\pxEndianCompare[title={Disposici\'o a mem\`oria de \texttt{0x001C5880}}]{Paraula de 32 bits: \texttt{0x001C5880}}{
+  0x5AF4 / 0x80 (LSB) / 0x00 (MSB);
+  0x5AF5 / 0x58       / 0x1C;
+  0x5AF6 / 0x1C       / 0x58;
+  0x5AF7 / 0x00 (MSB) / 0x80 (LSB)
+}
+
+\pxRegisterMap[title={Registre GPIOx\_MODER}]{
+  31:16 / MODER15..8 / 0xAAAA;
+  15:4  / MODER7..2  / 0x555;
+  3:2   / MODER1     / 01;
+  1:0   / MODER0     / 01
+}
+
+\section{Priority 7: Automata Tables, Search Graphs, ML \& Data Mining}
+
+\pxTransitionTable[title={Taula de transici\'o i partici\'o d'equival\`encia $\Pi_0$}]{a, b}{
+  $q_0$ / initial   / $q_1$, $q_2$ / I;
+  $q_1$ / normal    / $q_3$, $q_2$ / I;
+  $q_2$ / accepting / $q_1$, $q_3$ / II;
+  $q_3$ / accepting / $q_3$, $q_3$ / II
+}
+
+\pxAutomatonTrace[title={Tra\c{c}a de reconeixement de la paraula \texttt{aba}}]{
+  $q_0$ / a / $q_1$;
+  $q_1$ / b / $q_2$;
+  $q_2$ / a / $q_1$
+}[Rebutjat]
+
+\pxGraph[title={Graf de cerca heur\'istica $A^*$ (Grafs i IA)}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4;
+  A -> C / 5;
+  B -> D / 6;
+  B => G / 8;
+  C -> G / 12
+}
+
+\pxDecisionTree[title={Arbre de decisi\'o simplificat (IA PAC4 / Mineria de Dades)}]{
+  neu   / Neu   / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via   / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L;
+  neu -> mvia / M;
+  neu -> neuH / H;
+  mvia -> mviaA / A;
+  mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptr\'o Multicapa (MLP) amb ReLU i Heaviside (IA PAC4)}]{
+  Capa d'entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Capa de sortida / Y / Heaviside
+}[
+  x_0 -> h_0 / 1;
+  x_1 -> h_0 / -1;
+  x_2 -> h_0 / 1;
+  h_0 -> Y / -1;
+  h_1 -> Y / -0.5;
+  h_2 -> Y / 1;
+  h_3 -> Y / -0.25
+]
+
+\pxConfusionMatrix[title={Matriu de confusi\'o i m\`etriques F1 (IA / AC / MD)}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisi\'o = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad Exactitud = 0.50 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinen\c{c}a borrosa (IA PAC3)}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)   / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M)  / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)    / darkColor              / 30,0 / 40,1 / 50,1
+}
+
+\end{document}

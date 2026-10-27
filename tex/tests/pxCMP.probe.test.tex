@@ -1,0 +1,82 @@
+% !TeX encoding = UTF-8
+% pxCMP structural & option-scoping probe test
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[CMP,CMPconfig={preset=p3c-blueprint},PRP=false,UML=false,SRC=false,TAB=false,LST=false]{pxCORE}
+
+\makeatletter
+\newcommand{\AssertCommand}[1]{%
+  \ifdefined#1\relax
+    \typeout{PROBE-PASS: \string#1 is defined}%
+  \else
+    \PackageError{pxCMP-probe}{Missing public command \string#1}{}%
+  \fi
+}
+\makeatother
+
+\begin{document}
+
+% 1. Verify all public API entry points exist
+\AssertCommand{\pxCMPsetup}
+\AssertCommand{\pxCMPsavepreset}
+\AssertCommand{\pxCMPusepreset}
+\AssertCommand{\pxCMPNote}
+\AssertCommand{\pxTCompiler}
+\AssertCommand{\pxTProgram}
+\AssertCommand{\pxTMachine}
+\AssertCommand{\pxTInterpreter}
+\AssertCommand{\pxTombstoneRun}
+\AssertCommand{\pxTombstoneInterpret}
+\AssertCommand{\pxTombstoneVM}
+\AssertCommand{\pxTombstoneCompile}
+\AssertCommand{\pxTombstoneChain}
+\AssertCommand{\pxTombstoneCompileCompiler}
+\AssertCommand{\pxTombstoneBootstrap}
+\AssertCommand{\pxTranslatorBox}
+\AssertCommand{\pxCompileRunFlow}
+\AssertCommand{\pxCompilerModel}
+\AssertCommand{\pxCompilerPipeline}
+\AssertCommand{\pxIRHub}
+\AssertCommand{\pxSyntaxTree}
+\AssertCommand{\pxAutomaton}
+\AssertCommand{\pxGraph}
+\AssertCommand{\pxBNF}
+\AssertCommand{\pxDerivation}
+\AssertCommand{\pxLexemeTable}
+\AssertCommand{\pxIRCompare}
+\AssertCommand{\pxInferenceRule}
+\AssertCommand{\pxVenn}
+\AssertCommand{\pxLogicGroup}
+\AssertCommand{\pxFlowchart}
+\AssertCommand{\pxRegEx}
+\AssertCommand{\pxRegExList}
+\AssertCommand{\pxMemoryMap}
+\AssertCommand{\pxEndianCompare}
+\AssertCommand{\pxRegisterMap}
+\AssertCommand{\pxTransitionTable}
+\AssertCommand{\pxAutomatonTrace}
+\AssertCommand{\pxDecisionTree}
+\AssertCommand{\pxNeuralNet}
+\AssertCommand{\pxConfusionMatrix}
+\AssertCommand{\pxFuzzyPlot}
+
+% 2. Verify custom preset registration and local scoping
+\pxCMPsavepreset{custom-probe}{framed=false, shadow=false, scale=0.85}
+\pxCMPusepreset{custom-probe}
+\pxTCompiler[framed=true]{C}{OBJ}{C}
+% Subsequent call should still reflect custom-probe (framed=false)
+\pxTProgram[program-shape=rect]{main}{C}
+\pxTombstoneCompile{Prog}{Swift/A}{AMD64}{B}[C]
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*%}[Usuari]
+\pxMemoryMap{0x5AF4 / 0x80 / LSB; 0x5AF5 / 0x58}
+\pxEndianCompare{0x001C5880}{0x5AF4 / 0x80 / 0x00; 0x5AF5 / 0x58 / 0x1C}
+\pxRegisterMap{31:16 / RESERVED / 0; 15:0 / DATA / 0xFF}
+\pxTransitionTable{a, b}{q_0 / initial / q_1, q_0 / I; q_1 / accepting / q_1, q_0 / II}
+\pxAutomatonTrace{q_0 / a / q_1; q_1 / b / q_0}[Rebutjat]
+\pxDecisionTree{n1 / Neu / 0,0 / root / $IG=0.875$; n2 / Y / -1.5,-1.5 / leaf}{n1 -> n2 / L}
+\pxNeuralNet{Entrada / x_0, x_1 / input; Oculta / h_0, h_1 / ReLU; Sortida / Y / Heaviside}[x_0 -> h_0 / 1; h_0 -> Y / -1]
+\pxConfusionMatrix{Positiu, Negatiu}{3 (TP), 2 (FP); 5 (FN), 5 (TN)}[F1 = 0.4615]
+\pxFuzzyPlot{0, 50}{Baixa / primaryColor / 0,1 / 15,1 / 25,0; Alta / darkColor / 20,0 / 35,1 / 50,1}
+
+\end{document}

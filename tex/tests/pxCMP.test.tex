@@ -1,0 +1,35 @@
+% !TeX encoding = UTF-8
+% P3CTeX optional CMP module integration test with default modules
+\documentclass[CMP,PAC,default]{P3CTeX}
+\PECTeXconfig{
+  cover=false,
+  toc=false,
+  no-plagi=false,
+  data={
+    student={Estudiant UOC},
+    grade={Grau d'Enginyeria Inform\`atica},
+    subj-fullname={Compiladors},
+    subj-shortname={CMP},
+    subj-code={PID\_00215089},
+    ca-fullname={PAC 1: Visi\'o general i diagrames de Tombstone},
+    ca-shortname={PAC1}
+  }
+}
+
+\begin{document}
+
+\section{Coexist\`encia amb els m\`oduls per defecte (\texttt{pxTAB}, \texttt{pxLST})}
+
+\pxTable[style=header]{Fase, Sortida}{An\`alisi l\`exica, Testimonis}{An\`alisi sint\`actica, Arbre sint\`actic}
+
+\section{Diagrames de Tombstone i Compiladors (\texttt{pxCMP})}
+
+\pxTombstoneCompile[title={Compilaci\'o en Java}]{Programa}{Java}{JVM}{M}
+\pxTombstoneVM[title={M\`aquina virtual JVM}]{JVM}{Mx}
+\pxTombstoneRun[title={Execuci\'o sobre la JVM}]{Programa}{Mx}[JVM]
+
+\pxTombstoneBootstrap[title={Bootstrapping d'Oberon de 486 a P-III}]{Oberon}{486}{P-III}
+
+\pxCompilerModel[title={Estructura interna d'un compilador}]
+
+\end{document}

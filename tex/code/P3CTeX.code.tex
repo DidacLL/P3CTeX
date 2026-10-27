@@ -53,6 +53,7 @@
 \bool_new:N \l__pxdoc_tfg_bool
 \bool_new:N \l__pxdoc_mem_bool
 \bool_new:N \l__pxdoc_gnt_bool
+\bool_new:N \l__pxdoc_cmp_bool
 \bool_set_true:N \l__pxdoc_loading_bool
 \keys_define:nn {P3CTeX}
 {
@@ -88,6 +89,11 @@
 		\bool_if:NTF \l__pxdoc_loading_bool
 			{\bool_set_true:N \l__pxdoc_gnt_bool}
 			{\ClassError{P3CTeX}{GNT must be selected at class loading}{Put GNT in \string\documentclass}}
+	},
+	CMP .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\bool_set_true:N \l__pxdoc_cmp_bool}
+			{\ClassError{P3CTeX}{CMP must be selected at class loading}{Put CMP in \string\documentclass}}
 	},
 	TFG .code:n = {
 		\bool_if:NTF \l__pxdoc_loading_bool
@@ -214,6 +220,7 @@
 \bool_if:NT \l__pxdoc_tfg_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,TFG} }
 \bool_if:NT \l__pxdoc_mem_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM} }
 \bool_if:NT \l__pxdoc_gnt_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,GNT} }
+\bool_if:NT \l__pxdoc_cmp_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,CMP} }
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE

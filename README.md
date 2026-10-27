@@ -184,6 +184,7 @@ If the PDF is generated without errors, the setup is correct.
 | `pxSRC.sty` | Llistats de codi font |
 | `pxTAB.sty` | Taules des de dades amb estils predefinits i presets |
 | `pxLST.sty` | Llistats de codi |
+| `pxCMP.sty` | Diagrames de Tombstone, compiladors, autòmats, grafs de cerca, xarxes neuronals, arbres de decisió i lògica |
 | `pxORL.sty` | Eines addicionals |
 | `pxTFG.sty` | Fitxa, llicència, metadades i resums de TFG |
 | `pxMEM.sty` | Capítols, annexos i estructura de memòries |
@@ -202,6 +203,7 @@ Els manuals (font LaTeX) viuen a `tex/doc/`:
 | `tex/doc/pxUML.tex` | Diagrames UML |
 | `tex/doc/pxSRC.tex` | Llistats de codi font |
 | `tex/doc/pxTAB.tex` | Taules |
+| `tex/doc/pxCMP.tex` | Diagrames de Tombstone, compiladors, autòmats, grafs de cerca, xarxes neuronals, arbres de decisió i lògica |
 | `tex/doc/pxTFG.tex` | Contingut i metadades de TFG |
 | `tex/doc/pxMEM.tex` | Estructura i reutilització de memòries |
 
@@ -229,11 +231,13 @@ Un document d'exemple complet es troba a `examples/P3CTeX-example.tex` (PDF: `ex
 Each package has a dedicated test suite under `tex/tests/`. Gate runner scripts validate all tests:
 
 ```bash
-# Run pxTAB tests (from tex/ directory)
+# Run pxTAB and pxCMP tests (from tex/ directory)
 powershell -File tests/run-pxTAB-tests.ps1
+powershell -File tests/run-pxCMP-tests.ps1
 
 # Build documentation (from tex/ directory, with TEXINPUTS=.;./latex;./code)
 pdflatex -interaction=nonstopmode doc/pxTAB.tex
+pdflatex -interaction=nonstopmode doc/pxCMP.tex
 
 # Build example document (from examples/)
 pdflatex -interaction=nonstopmode P3CTeX-example.tex

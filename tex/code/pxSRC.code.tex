@@ -145,7 +145,7 @@
 	\group_end:
 }
 \cs_new:Npn \__px_fancy_shadowbox:nnnnn #1 #2 #3 #4 #5 {
-	\__px_fancy_shadowbox:nnnnnnnnn{#1}{#2}{#3}{#4}{\hspace{-.2em}>>}{<<}{ #5 !75!}{ #5 !50!}{ #5 !25!}
+	\__px_fancy_shadowbox:nnnnnnnnn{#1}{#2}{#3}{#4}{\hspace{-.2em}>>}{<<}{#5!75!}{#5!50!}{#5!25!}
 }
 %% \__px_simple_shadowbox:nnnn {<width>}{<back colour>}{<front colour/text>}{<back text>}
 %% Build the legacy two-layer simple placeholder.
@@ -155,11 +155,11 @@
 	\dim_if_exist:NF \l__pexDEV_api_simpl_tmpHb_dim {	\dim_new:N \l__pexDEV_api_simpl_tmpHb_dim	}
 	\dim_set:Nn \l__pexDEV_api_simpl_tmpHa_dim {#1}
 	\dim_set:Nn \l__pexDEV_api_simpl_tmpHb_dim {\dim_eval:n {.633\l__pexDEV_api_simpl_tmpHa_dim }}
-	\fcolorbox{ #2 !75!}{ #2 !75!}{
+	\fcolorbox{#2!75!}{#2!75!}{
 		\parbox[c][.7\l__pexDEV_api_simpl_tmpHb_dim][c]
 		{\l__pexDEV_api_simpl_tmpHa_dim}{\small \vspace{\fill}\hspace{\fill} #4	}}
 	\hspace{-.9\l__pexDEV_api_simpl_tmpHa_dim}
-	\fcolorbox{ #3 !25!}{ #3 !25!}{
+	\fcolorbox{#3!25!}{#3!25!}{
 		\parbox[b][.6\l__pexDEV_api_simpl_tmpHb_dim][c]{.8\l__pexDEV_api_simpl_tmpHa_dim}{#3}
 	}
 }
@@ -254,7 +254,7 @@
 		}
 		{\textbf{~~~--~To Do~--~}}
 		{	\hspace{-.25ex}	X	}	{!}
-		{ #3 !75!}	{ #3 !50!}	{ #3 !25!}
+		{#3!75!}	{#3!50!}	{#3!25!}
 		\caption{ #4 }
 		\label{#5}
 	\end{figure}
