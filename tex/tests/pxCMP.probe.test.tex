@@ -1,0 +1,60 @@
+% !TeX encoding = UTF-8
+% pxCMP structural & option-scoping probe test
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[CMP,CMPconfig={preset=p3c-blueprint},PRP=false,UML=false,SRC=false,TAB=false,LST=false]{pxCORE}
+
+\makeatletter
+\newcommand{\AssertCommand}[1]{%
+  \ifdefined#1\relax
+    \typeout{PROBE-PASS: \string#1 is defined}%
+  \else
+    \PackageError{pxCMP-probe}{Missing public command \string#1}{}%
+  \fi
+}
+\makeatother
+
+\begin{document}
+
+% 1. Verify all public API entry points exist
+\AssertCommand{\pxCMPsetup}
+\AssertCommand{\pxCMPsavepreset}
+\AssertCommand{\pxCMPusepreset}
+\AssertCommand{\pxCMPNote}
+\AssertCommand{\pxTCompiler}
+\AssertCommand{\pxTProgram}
+\AssertCommand{\pxTMachine}
+\AssertCommand{\pxTInterpreter}
+\AssertCommand{\pxTombstoneRun}
+\AssertCommand{\pxTombstoneInterpret}
+\AssertCommand{\pxTombstoneVM}
+\AssertCommand{\pxTombstoneCompile}
+\AssertCommand{\pxTombstoneChain}
+\AssertCommand{\pxTombstoneCompileCompiler}
+\AssertCommand{\pxTombstoneBootstrap}
+\AssertCommand{\pxTranslatorBox}
+\AssertCommand{\pxCompileRunFlow}
+\AssertCommand{\pxCompilerModel}
+\AssertCommand{\pxCompilerPipeline}
+\AssertCommand{\pxIRHub}
+\AssertCommand{\pxSyntaxTree}
+\AssertCommand{\pxAutomaton}
+\AssertCommand{\pxGraph}
+\AssertCommand{\pxBNF}
+\AssertCommand{\pxDerivation}
+\AssertCommand{\pxLexemeTable}
+\AssertCommand{\pxIRCompare}
+\AssertCommand{\pxInferenceRule}
+\AssertCommand{\pxVenn}
+\AssertCommand{\pxLogicGroup}
+\AssertCommand{\pxFlowchart}
+
+% 2. Verify custom preset registration and local scoping
+\pxCMPsavepreset{custom-probe}{framed=false, shadow=false, scale=0.85}
+\pxCMPusepreset{custom-probe}
+\pxTCompiler[framed=true]{C}{OBJ}{C}
+% Subsequent call should still reflect custom-probe (framed=false)
+\pxTProgram{main}{C}
+
+\end{document}
