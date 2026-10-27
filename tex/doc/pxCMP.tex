@@ -362,4 +362,124 @@ Per a exercicis d'especificaci\'o l\`exica (JLex/Flex), diagrames de Tombstone a
   1:0   / MODER0     / 01
 }
 
+\newpage
+\section{Fam\'ilia 7: Grafs de Cerca, Taules d'Aut\`omats, Machine Learning i Mineria de Dades}
+
+Per donar resposta a les assignatures de \emph{Grafs i Complexitat}, \emph{Aut\`omats i Gram\`atiques}, \emph{Intel\textperiodcentered lig\`encia Artificial}, \emph{Aprenentatge Computacional} i \emph{Mineria de Dades}, \texttt{pxCMP} incorpora:
+
+\subsection{Taules de transici\'o i traces d'aut\`omats (\texttt{\textbackslash pxTransitionTable}, \texttt{\textbackslash pxAutomatonTrace})}
+
+\begin{verbatim}
+\pxTransitionTable[title={Taula de transici\'o i partici\'o $\Pi_0$}]{a, b}{
+  q_0 / initial   / q_1, q_2 / I;
+  q_1 / normal    / q_3, q_2 / I;
+  q_2 / accepting / q_1, q_3 / II;
+  q_3 / accepting / q_3, q_3 / II
+}
+\pxAutomatonTrace[title={Tra\c{c}a de la cadena \texttt{aba}}]{
+  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1
+}[Rebutjat]
+\end{verbatim}
+
+\pxTransitionTable[title={Taula de transici\'o i partici\'o $\Pi_0$}]{a, b}{
+  q_0 / initial   / q_1, q_2 / I;
+  q_1 / normal    / q_3, q_2 / I;
+  q_2 / accepting / q_1, q_3 / II;
+  q_3 / accepting / q_3, q_3 / II
+}
+
+\pxAutomatonTrace[title={Tra\c{c}a de la cadena \texttt{aba}}]{
+  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1
+}[Rebutjat]
+
+\subsection{Grafs de cerca heur\'istica i camins \`optims (\texttt{\textbackslash pxGraph})}
+
+\begin{verbatim}
+\pxGraph[title={Graf de cerca heur\'istica $A^*$}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12
+}
+\end{verbatim}
+
+\pxGraph[title={Graf de cerca heur\'istica $A^*$}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12
+}
+
+\subsection{Arbres de decisi\'o i Xarxes Neuronals (\texttt{\textbackslash pxDecisionTree}, \texttt{\textbackslash pxNeuralNet})}
+
+\begin{verbatim}
+\pxDecisionTree[title={Arbre de decisi\'o (ID3 / C4.5)}]{
+  neu   / Neu   / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via   / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L; neu -> mvia / M; neu -> neuH / H;
+  mvia -> mviaA / A; mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptr\'o Multicapa (MLP)}]{
+  Entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Sortida / Y / Heaviside
+}[x_0 -> h_0 / 1; x_1 -> h_0 / -1; h_0 -> Y / -1; h_2 -> Y / 1]
+\end{verbatim}
+
+\pxDecisionTree[title={Arbre de decisi\'o (ID3 / C4.5)}]{
+  neu   / Neu   / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via   / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L; neu -> mvia / M; neu -> neuH / H;
+  mvia -> mviaA / A; mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptr\'o Multicapa (MLP)}]{
+  Entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Sortida / Y / Heaviside
+}[x_0 -> h_0 / 1; x_1 -> h_0 / -1; h_0 -> Y / -1; h_2 -> Y / 1]
+
+\subsection{Matrius de confusi\'o i L\`ogica borrosa (\texttt{\textbackslash pxConfusionMatrix}, \texttt{\textbackslash pxFuzzyPlot})}
+
+\begin{verbatim}
+\pxConfusionMatrix[title={Matriu de confusi\'o i m\`etriques F1}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisi\'o = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinen\c{c}a borrosa}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)  / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M) / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)   / darkColor              / 30,0 / 40,1 / 50,1
+}
+\end{verbatim}
+
+\pxConfusionMatrix[title={Matriu de confusi\'o i m\`etriques F1}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisi\'o = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinen\c{c}a borrosa}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)  / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M) / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)   / darkColor              / 30,0 / 40,1 / 50,1
+}
+
 \end{document}

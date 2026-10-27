@@ -253,8 +253,18 @@
 \NewDocumentCommand{\pxAutomaton}{ O{} m m }
   { \__pxcmp_automaton:nnn {#1} {#2} {#3} }
 
+%% \pxTransitionTable[<opts>]{<alphabet-clist>}{<state / role / t1, t2, ... [/ partition]; ...>}
+%% Render a formal automaton transition table (\delta) with initial/accepting markers and optional equivalence partition column (\Pi).
+\NewDocumentCommand{\pxTransitionTable}{ O{} m m }
+  { \__pxcmp_transition_table:nnn {#1} {#2} {#3} }
+
+%% \pxAutomatonTrace[<opts>]{<steps-spec>}[<result-badge>]
+%% Render a step-by-step word recognition trace on an automaton with an optional Accepted/Rejected badge.
+\NewDocumentCommand{\pxAutomatonTrace}{ O{} m O{} }
+  { \__pxcmp_automaton_trace:nnn {#1} {#2} {#3} }
+
 %% \pxGraph[<opts>]{<nodes-spec>}{<edges-spec>}
-%% Render a directed, undirected, or weighted computation graph.
+%% Render a directed, undirected, weighted, or heuristic search graph (with start/goal/visited/open/path states and node badges).
 \NewDocumentCommand{\pxGraph}{ O{} m m }
   { \__pxcmp_graph:nnn {#1} {#2} {#3} }
 
@@ -330,5 +340,29 @@
 %% Render a hardware register or instruction encoding bitfield diagram.
 \NewDocumentCommand{\pxRegisterMap}{ O{} m }
   { \__pxcmp_register_map:nn {#1} {#2} }
+
+%% =======================================================
+%% PRIORITY 6: MACHINE LEARNING, AI & DATA MINING
+%% =======================================================
+
+%% \pxDecisionTree[<opts>]{<nodes-spec>}{<edges-spec>}
+%% Render a Decision Tree (ID3 / C4.5 / CART) with attribute nodes, information gain badges, branch labels, and terminal class leaves.
+\NewDocumentCommand{\pxDecisionTree}{ O{} m m }
+  { \__pxcmp_decision_tree:nnn {#1} {#2} {#3} }
+
+%% \pxNeuralNet[<opts>]{<layer1-title / n1, n2, ... [/ role-or-act]; ...>}[<weighted-edges-spec>]
+%% Render a Multi-Layer Perceptron (MLP) or Neural Network with automatic feed-forward connections and optional edge weights.
+\NewDocumentCommand{\pxNeuralNet}{ O{} m O{} }
+  { \__pxcmp_neural_net:nnn {#1} {#2} {#3} }
+
+%% \pxConfusionMatrix[<opts>]{<classes-clist>}{<row1-clist>; <row2-clist>; ...}[<metrics-summary>]
+%% Render a 2x2 or NxN Confusion Matrix with diagonal/off-diagonal highlighting and optional Precision/Recall/F1 summary bar.
+\NewDocumentCommand{\pxConfusionMatrix}{ O{} m m O{} }
+  { \__pxcmp_confusion_matrix:nnnn {#1} {#2} {#3} {#4} }
+
+%% \pxFuzzyPlot[<opts>]{<xmin,xmax>}{<label / color / x1,y1 / x2,y2 / ...; ...>}
+%% Render a Fuzzy Logic membership function plot (\mu(x) \in [0,1]) with trapezoidal and triangular fuzzy sets.
+\NewDocumentCommand{\pxFuzzyPlot}{ O{} m m }
+  { \__pxcmp_fuzzy_plot:nnn {#1} {#2} {#3} }
 
 \endinput

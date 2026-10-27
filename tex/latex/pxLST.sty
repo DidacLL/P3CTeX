@@ -621,6 +621,34 @@
 	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
 	{·}{{$\cdot$}}1,
 }
+%% --- pxR: R Statistical & Data Mining Language (Mineria de Dades, AC, Estadistica) ---
+\lstdefinelanguage{pxR}{
+	alsoletter       = {.},
+	morekeywords     = [1]{function,if,else,for,in,while,repeat,break,next,return,library,require,source},
+	morekeywords     = [2]{c,list,data.frame,tibble,matrix,array,factor,as.factor,as.numeric,as.character,as.integer,as.matrix,as.data.frame,
+		read.csv,read.table,read.delim,write.csv,head,tail,str,summary,dim,nrow,ncol,names,colnames,rownames,length,
+		subset,ifelse,which,is.na,na.omit,complete.cases,unique,table,prop.table,apply,lapply,sapply,tapply,
+		seq,rep,sort,order,rank,rev,paste,paste0,sprintf,grep,grepl,sub,gsub,
+		mean,sd,var,median,quantile,min,max,sum,round,cor,cov,scale,set.seed,sample,
+		lm,glm,predict,residuals,anova,aov,t.test,chisq.test,shapiro.test,wilcox.test,
+		prcomp,princomp,kmeans,hclust,cutree,dist,daisy,pam,clara,agnes,diana,dbscan,silhouette,
+		apriori,eclat,inspect, select,filter,mutate,summarise,summarize,arrange,group_by,ungroup,left_join,inner_join,bind_rows,bind_cols,
+		ggplot,aes,geom_point,geom_line,geom_bar,geom_col,geom_histogram,geom_boxplot,geom_density,geom_smooth,
+		facet_wrap,facet_grid,labs,theme_minimal,theme_bw,theme,coord_flip,
+		fviz_eig,fviz_pca_ind,fviz_pca_var,fviz_pca_biplot,fviz_cluster,fviz_nbclust,fviz_silhouette,fviz_dend,
+		train,trainControl,confusionMatrix,createDataPartition,rpart,rpart.plot,randomForest,knn},
+	morekeywords     = [3]{numeric,integer,character,logical,complex,raw,double,Date,POSIXct,POSIXlt,formula},
+	morekeywords     = [4]{TRUE,FALSE,T,F,NULL,NA,Inf,NaN},
+	sensitive        = true,
+	morecomment      = [l]{\#},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
 
 \makeatletter
 %% Force-load strings aspect from lstmisc.sty and fix upstream listings [b]

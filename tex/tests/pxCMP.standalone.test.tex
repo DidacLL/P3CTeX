@@ -197,4 +197,73 @@
   1:0   / MODER0     / 01
 }
 
+\section{Priority 7: Automata Tables, Search Graphs, ML \& Data Mining}
+
+\pxTransitionTable[title={Taula de transici\'o i partici\'o d'equival\`encia $\Pi_0$}]{a, b}{
+  $q_0$ / initial   / $q_1$, $q_2$ / I;
+  $q_1$ / normal    / $q_3$, $q_2$ / I;
+  $q_2$ / accepting / $q_1$, $q_3$ / II;
+  $q_3$ / accepting / $q_3$, $q_3$ / II
+}
+
+\pxAutomatonTrace[title={Tra\c{c}a de reconeixement de la paraula \texttt{aba}}]{
+  $q_0$ / a / $q_1$;
+  $q_1$ / b / $q_2$;
+  $q_2$ / a / $q_1$
+}[Rebutjat]
+
+\pxGraph[title={Graf de cerca heur\'istica $A^*$ (Grafs i IA)}]{
+  A / A / 0,0 / start / $h=20$;
+  B / B / 2.2,1.1 / path / {$g=4, f=16$};
+  C / C / 2.2,-1.1 / visited / $h=15$;
+  D / D / 4.4,1.1 / open / $h=10$;
+  G / G / 4.4,-1.1 / goal / $h=0$
+}{
+  A => B / 4;
+  A -> C / 5;
+  B -> D / 6;
+  B => G / 8;
+  C -> G / 12
+}
+
+\pxDecisionTree[title={Arbre de decisi\'o simplificat (IA PAC4 / Mineria de Dades)}]{
+  neu   / Neu   / 0,0       / root     / $IG=0.875$;
+  neuL  / {Y\\$100\%$} / -2.8,-1.8 / leaf;
+  mvia  / Via   / 0,-1.8    / decision / $IG=0.722$;
+  neuH  / {N\\$100\%$} / 2.8,-1.8  / leaf;
+  mviaA / {Y\\$100\%$} / -1.4,-3.6 / leaf;
+  mviaC / {N\\$100\%$} / 1.4,-3.6  / leaf
+}{
+  neu -> neuL / L;
+  neu -> mvia / M;
+  neu -> neuH / H;
+  mvia -> mviaA / A;
+  mvia -> mviaC / C
+}
+
+\pxNeuralNet[title={Perceptr\'o Multicapa (MLP) amb ReLU i Heaviside (IA PAC4)}]{
+  Capa d'entrada / x_0, x_1, x_2 / input;
+  Capa oculta / h_0, h_1, h_2, h_3 / ReLU;
+  Capa de sortida / Y / Heaviside
+}[
+  x_0 -> h_0 / 1;
+  x_1 -> h_0 / -1;
+  x_2 -> h_0 / 1;
+  h_0 -> Y / -1;
+  h_1 -> Y / -0.5;
+  h_2 -> Y / 1;
+  h_3 -> Y / -0.25
+]
+
+\pxConfusionMatrix[title={Matriu de confusi\'o i m\`etriques F1 (IA / AC / MD)}]
+  {Positiu (1), Negatiu (0)}
+  {3 (TP), 2 (FP); 5 (FN), 5 (TN)}
+  [Precisi\'o = 0.60 \quad|\quad Sensibilitat = 0.375 \quad|\quad Exactitud = 0.50 \quad|\quad $F_1 = 0.4615$]
+
+\pxFuzzyPlot[title={Funcions de pertinen\c{c}a borrosa (IA PAC3)}, xlabel={Temperatura ($^\circ$C)}]{0, 50}{
+  Baixa (VL)   / primaryColor           / 0,1 / 10,1 / 20,0;
+  Mitjana (M)  / secondaryColor!75!black / 12,0 / 22,1 / 28,1 / 38,0;
+  Alta (VH)    / darkColor              / 30,0 / 40,1 / 50,1
+}
+
 \end{document}

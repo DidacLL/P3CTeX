@@ -57,9 +57,16 @@
 \tl_new:N \l__pxcmp_prog_shape_tl
 \tl_new:N \l__pxcmp_prog_lang_tl
 \tl_new:N \l__pxcmp_out_lang_tl
+\tl_new:N \l__pxcmp_part_header_tl
+\tl_new:N \l__pxcmp_actual_label_tl
+\tl_new:N \l__pxcmp_pred_label_tl
+\tl_new:N \l__pxcmp_xlabel_tl
+\tl_new:N \l__pxcmp_ylabel_tl
 
 \dim_new:N \l__pxcmp_unit_dim
 \dim_new:N \l__pxcmp_linewidth_dim
+\dim_new:N \l__pxcmp_layer_sep_dim
+\dim_new:N \l__pxcmp_node_sep_dim
 
 \bool_new:N \l__pxcmp_framed_bool
 \bool_new:N \l__pxcmp_shadow_bool
@@ -67,16 +74,19 @@
 \bool_new:N \l__pxcmp_show_rules_bool
 \bool_new:N \l__pxcmp_show_bindings_bool
 \bool_new:N \l__pxcmp_directed_bool
+\bool_new:N \l__pxcmp_dense_bool
 \bool_new:N \l__pxcmp_inline_bool
 \bool_new:N \l__pxcmp_in_canvas_bool
 
 \seq_new:N \l__pxcmp_tmpa_seq
 \seq_new:N \l__pxcmp_tmpb_seq
 \seq_new:N \l__pxcmp_tmpc_seq
+\seq_new:N \l__pxcmp_tmpd_seq
 \clist_new:N \l__pxcmp_tmpa_clist
 \clist_new:N \l__pxcmp_tmpb_clist
 \int_new:N \l__pxcmp_tmpa_int
 \int_new:N \l__pxcmp_tmpb_int
+\int_new:N \l__pxcmp_tmpc_int
 \fp_new:N \l__pxcmp_cursor_x_fp
 \fp_new:N \l__pxcmp_cursor_y_fp
 
@@ -188,6 +198,23 @@
     prog-lang       .initial:n    = {},
     out-lang        .tl_set:N     = \l__pxcmp_out_lang_tl,
     out-lang        .initial:n    = {},
+    partition-header .tl_set:N    = \l__pxcmp_part_header_tl,
+    partition-header .initial:n   = { \ensuremath{\Pi} },
+    actual-label    .tl_set:N     = \l__pxcmp_actual_label_tl,
+    actual-label    .initial:n    = { Classes~Reals },
+    pred-label      .tl_set:N     = \l__pxcmp_pred_label_tl,
+    pred-label      .initial:n    = { Prediccions },
+    xlabel          .tl_set:N     = \l__pxcmp_xlabel_tl,
+    xlabel          .initial:n    = { $x$ },
+    ylabel          .tl_set:N     = \l__pxcmp_ylabel_tl,
+    ylabel          .initial:n    = { $\mu(x)$ },
+    dense           .bool_set:N   = \l__pxcmp_dense_bool,
+    dense           .initial:n    = true,
+    dense           .default:n    = true,
+    layer-sep       .dim_set:N    = \l__pxcmp_layer_sep_dim,
+    layer-sep       .initial:n    = { 3.1cm },
+    node-sep        .dim_set:N    = \l__pxcmp_node_sep_dim,
+    node-sep        .initial:n    = { 1.15cm },
   }
 
 %% =======================================================
@@ -1339,10 +1366,232 @@
     \group_end:
   }
 
-% General Computation / Weighted / Directed Graph
+% Helper: auto-wrap tokens containing subscript/superscript in \ensuremath if not already in math mode
+\cs_new_protected:Npn \__pxcmp_auto_math:n #1
+  {
+    \str_if_in:nnTF {#1} {$}
+      {#1}
+      {
+        \str_if_in:nnTF {#1} {_}
+          { \ensuremath{#1} }
+          {
+            \str_if_in:nnTF {#1} {^}
+              { \ensuremath{#1} }
+              {#1}
+          }
+      }
+  }
+
+% Formal Automaton Transition & Equivalence Partition Table (AiG / Compiladors)
 % #1 = opts
-% #2 = semicolon-separated nodes: id / label / x,y [/ style: highlight]
-% #3 = semicolon-separated edges: u -> v [/ weight-or-label [/ edge-opts]]
+% #2 = comma-separated alphabet symbols: a, b, ...
+% #3 = semicolon-separated state rows: state / role (initial, accepting, both, normal) / t1, t2, ... [/ partition]
+\cs_new_protected:Npn \__pxcmp_transition_table:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \clist_set:Nn \l__pxcmp_tmpa_clist {#2}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#3}
+      \int_set:Nn \l__pxcmp_tmpa_int { \clist_count:N \l__pxcmp_tmpa_clist }
+      % Check if any row includes a 4th partition column
+      \int_zero:N \l__pxcmp_tmpb_int
+      \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+        {
+          \tl_if_blank:nF {##1}
+            {
+              \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+              \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 3 }
+                { \int_set:Nn \l__pxcmp_tmpb_int { 1 } }
+            }
+        }
+      % Build header row
+      \tl_set:Nn \l_tmpa_tl { \textbf{$\delta$} }
+      \clist_map_inline:Nn \l__pxcmp_tmpa_clist
+        {
+          \tl_put_right:Nx \l_tmpa_tl
+            { & \exp_not:N \textbf { \exp_not:N \textcolor { \exp_not:V \l__pxcmp_maincolor_tl } { \exp_not:N \__pxcmp_auto_math:n { ##1 } } } }
+        }
+      \int_compare:nNnT { \l__pxcmp_tmpb_int } > { 0 }
+        {
+          \tl_put_right:Nx \l_tmpa_tl
+            { & \exp_not:N \textbf { \exp_not:V \l__pxcmp_part_header_tl } }
+        }
+      \tl_put_right:Nn \l_tmpa_tl { \\ \hline }
+      % Build body rows
+      \tl_clear:N \l_tmpb_tl
+      \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+        {
+          \tl_if_blank:nF {##1}
+            {
+              \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+              \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+              \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+              % Resolve role prefix (->, *, -> *)
+              \str_case_e:nnF { \l__pxcmp_step_id_two_tl }
+                {
+                  { initial }           { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow\,} } }
+                  { start }             { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow\,} } }
+                  { -> }                { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow\,} } }
+                  { accepting }         { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{*\,} } }
+                  { final }             { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{*\,} } }
+                  { * }                 { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{*\,} } }
+                  { initial~accepting } { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow *\,} } }
+                  { accepting~initial } { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow *\,} } }
+                  { both }              { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow *\,} } }
+                  { ->* }               { \tl_set:Nn \l__pxcmp_step_id_out_tl { \ensuremath{\rightarrow *\,} } }
+                }
+                { \tl_clear:N \l__pxcmp_step_id_out_tl }
+              \tl_put_right:Nx \l_tmpb_tl
+                {
+                  \exp_not:V \l__pxcmp_step_id_out_tl
+                  \exp_not:N \textbf { \exp_not:N \__pxcmp_auto_math:n { \exp_not:V \l__pxcmp_step_id_tl } }
+                }
+              \clist_set:Nx \l__pxcmp_tmpb_clist { \seq_item:Nn \l__pxcmp_tmpb_seq {3} }
+              \int_step_inline:nn { \l__pxcmp_tmpa_int }
+                {
+                  \tl_put_right:Nx \l_tmpb_tl
+                    { & \exp_not:N \__pxcmp_auto_math:n { \clist_item:Nn \l__pxcmp_tmpb_clist {####1} } }
+                }
+              \int_compare:nNnT { \l__pxcmp_tmpb_int } > { 0 }
+                {
+                  \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 3 }
+                    {
+                      \tl_put_right:Nx \l_tmpb_tl
+                        { & \exp_not:N \textcolor { \exp_not:V \l__pxcmp_maincolor_tl } { \exp_not:N \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {4} } } }
+                    }
+                    { \tl_put_right:Nn \l_tmpb_tl { & } }
+                }
+              \tl_put_right:Nn \l_tmpb_tl { \\ \hline }
+            }
+        }
+      \__pxcmp_wrap_output:n
+        {
+          \int_compare:nNnTF { \l__pxcmp_tmpb_int } > { 0 }
+            {
+              \use:e
+                {
+                  \exp_not:N \begin{tabular}{|r|*{\int_use:N \l__pxcmp_tmpa_int}{c|}c|}
+                }
+            }
+            {
+              \use:e
+                {
+                  \exp_not:N \begin{tabular}{|r|*{\int_use:N \l__pxcmp_tmpa_int}{c|}}
+                }
+            }
+            \hline
+            \rowcolor{\l__pxcmp_neutralcolor_tl!35}
+            \tl_use:N \l_tmpa_tl
+            \tl_use:N \l_tmpb_tl
+          \end{tabular}
+        }
+    \group_end:
+  }
+
+% Automaton Word / Sequence Evaluation Trace (AiG / Compiladors)
+% #1 = opts
+% #2 = semicolon-separated steps: either "from / sym / to; ..." or "q0; sym1 / q1; sym2 / q2; ..."
+% #3 = optional final evaluation badge (e.g. Acceptat / Rebutjat)
+\cs_new_protected:Npn \__pxcmp_automaton_trace:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#2}
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[
+            scale=\l__pxcmp_scale_tl,
+            every~node/.style={font=\l__pxcmp_font_tl\footnotesize},
+            trstate/.style={
+              circle,
+              draw=\l__pxcmp_maincolor_tl,
+              fill=\l__pxcmp_piecefill_tl,
+              line~width=\l__pxcmp_linewidth_dim,
+              minimum~size=0.72cm,
+              inner~sep=1.5pt,
+              font=\l__pxcmp_font_tl\footnotesize\bfseries
+            }
+          ]
+            \int_zero:N \l__pxcmp_tmpa_int
+            \fp_zero:N \l__pxcmp_cursor_x_fp
+            \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \int_incr:N \l__pxcmp_tmpa_int
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } = { 1 }
+                      {
+                        % Initial state standalone item: "q0"
+                        \node[trstate] (tr-\int_use:N \l__pxcmp_tmpa_int)
+                          at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, 0)
+                          { \exp_args:Ne \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {1} } };
+                        \draw[-{Stealth[length=1.8mm]}, \l__pxcmp_darkcolor_tl, line~width=0.65pt]
+                          (\fp_eval:n { \l__pxcmp_cursor_x_fp - 0.85 }, 0) -- (tr-\int_use:N \l__pxcmp_tmpa_int.west);
+                      }
+                      {
+                        \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } = { 2 }
+                          {
+                            % Step item "sym / next_state"
+                            \int_set:Nn \l__pxcmp_tmpb_int { \l__pxcmp_tmpa_int - 1 }
+                            \fp_add:Nn \l__pxcmp_cursor_x_fp { 1.65 }
+                            \node[trstate] (tr-\int_use:N \l__pxcmp_tmpa_int)
+                              at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, 0)
+                              { \exp_args:Ne \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {2} } };
+                            \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt]
+                              (tr-\int_use:N \l__pxcmp_tmpb_int.east) --
+                              node[above, font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_maincolor_tl]
+                                { \exp_args:Ne \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {1} } }
+                              (tr-\int_use:N \l__pxcmp_tmpa_int.west);
+                          }
+                          {
+                            % Full triple "from / sym / to"
+                            \int_compare:nNnT { \l__pxcmp_tmpa_int } = { 1 }
+                              {
+                                \node[trstate] (tr-0)
+                                  at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, 0)
+                                  { \exp_args:Ne \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {1} } };
+                                \draw[-{Stealth[length=1.8mm]}, \l__pxcmp_darkcolor_tl, line~width=0.65pt]
+                                  (\fp_eval:n { \l__pxcmp_cursor_x_fp - 0.85 }, 0) -- (tr-0.west);
+                              }
+                            \int_set:Nn \l__pxcmp_tmpb_int { \l__pxcmp_tmpa_int - 1 }
+                            \fp_add:Nn \l__pxcmp_cursor_x_fp { 1.65 }
+                            \node[trstate] (tr-\int_use:N \l__pxcmp_tmpa_int)
+                              at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, 0)
+                              { \exp_args:Ne \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {3} } };
+                            \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt]
+                              (tr-\int_use:N \l__pxcmp_tmpb_int.east) --
+                              node[above, font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_maincolor_tl]
+                                { \exp_args:Ne \__pxcmp_auto_math:n { \seq_item:Nn \l__pxcmp_tmpb_seq {2} } }
+                              (tr-\int_use:N \l__pxcmp_tmpa_int.west);
+                          }
+                      }
+                  }
+              }
+            \tl_if_blank:nF {#3}
+              {
+                \fp_add:Nn \l__pxcmp_cursor_x_fp { 1.55 }
+                \node[
+                  draw=\l__pxcmp_maincolor_tl,
+                  fill=\l__pxcmp_accentcolor_tl!35,
+                  rounded~corners=3pt,
+                  line~width=\l__pxcmp_linewidth_dim,
+                  inner~sep=3.5pt,
+                  font=\l__pxcmp_font_tl\scriptsize\bfseries,
+                  text=\l__pxcmp_darkcolor_tl
+                ] (tr-res) at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, 0) {#3};
+                \draw[-{Stealth[length=1.8mm]}, dashed, \l__pxcmp_maincolor_tl, line~width=0.65pt]
+                  (tr-\int_use:N \l__pxcmp_tmpa_int.east) -- (tr-res.west);
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% General Computation / Weighted / Heuristic Search Graph (Grafos i Complexitat / IA)
+% #1 = opts
+% #2 = semicolon-separated nodes: id / label / x,y [/ style: highlight,start,goal,visited,open,path,box [/ badge]]
+% #3 = semicolon-separated edges: u -> v | u -- v | u => v [/ weight-or-label [/ edge-opts]]
 \cs_new_protected:Npn \__pxcmp_graph:nnn #1#2#3
   {
     \group_begin:
@@ -1358,12 +1607,47 @@
               draw=\l__pxcmp_maincolor_tl,
               fill=\l__pxcmp_piecefill_tl,
               line~width=\l__pxcmp_linewidth_dim,
-              minimum~size=0.8cm,
+              minimum~size=0.82cm,
+              align=center,
               font=\l__pxcmp_font_tl\footnotesize\bfseries
             },
             highlight/.style={
               fill=\l__pxcmp_accentcolor_tl!45,
               draw=\l__pxcmp_darkcolor_tl
+            },
+            start/.style={
+              fill=\l__pxcmp_accentcolor_tl!30,
+              draw=\l__pxcmp_maincolor_tl,
+              line~width=1.2pt
+            },
+            initial/.style={start},
+            goal/.style={
+              double,
+              double~distance=1.5pt,
+              fill=\l__pxcmp_accentcolor_tl!45,
+              draw=\l__pxcmp_maincolor_tl
+            },
+            accepting/.style={goal},
+            visited/.style={
+              fill=\l__pxcmp_neutralcolor_tl!35,
+              draw=\l__pxcmp_darkcolor_tl
+            },
+            closed/.style={visited},
+            open/.style={
+              dashed,
+              fill=\l__pxcmp_accentcolor_tl!18,
+              draw=\l__pxcmp_maincolor_tl
+            },
+            frontier/.style={open},
+            path/.style={
+              fill=\l__pxcmp_maincolor_tl!22,
+              draw=\l__pxcmp_maincolor_tl,
+              line~width=1.35pt
+            },
+            box/.style={
+              rounded~rectangle,
+              minimum~width=1.6cm,
+              minimum~height=0.68cm
             }
           ]
             \seq_map_inline:Nn \l__pxcmp_tmpa_seq
@@ -1377,15 +1661,34 @@
                     \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 3 }
                       {
                         \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {4} }
-                        \use:e
+                        \tl_if_blank:VTF \l__pxcmp_step_id_two_tl
                           {
-                            \exp_not:N \node [ pxgnode, \l__pxcmp_step_id_two_tl ]
-                              (\l_tmpa_tl) at (\l__pxcmp_step_id_tl)
+                            \node[pxgnode] (\l_tmpa_tl) at (\l__pxcmp_step_id_tl) {\l_tmpb_tl};
                           }
-                          {\l_tmpb_tl};
+                          {
+                            \use:e
+                              {
+                                \exp_not:N \node [ pxgnode, \l__pxcmp_step_id_two_tl ]
+                                  (\l_tmpa_tl) at (\l__pxcmp_step_id_tl)
+                              }
+                              {\l_tmpb_tl};
+                          }
                       }
                       {
                         \node[pxgnode] (\l_tmpa_tl) at (\l__pxcmp_step_id_tl) {\l_tmpb_tl};
+                      }
+                    % Optional 5th field: heuristic / cost / degree badge (e.g. h=20 or g=4, f=12)
+                    \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 4 }
+                      {
+                        \node[
+                          fill=\l__pxcmp_bgcolor_tl,
+                          draw=\l__pxcmp_neutralcolor_tl!80!black,
+                          rounded~corners=1.5pt,
+                          inner~sep=1.8pt,
+                          font=\l__pxcmp_font_tl\tiny,
+                          text=\l__pxcmp_darkcolor_tl,
+                          above=1.5pt~of~\l_tmpa_tl
+                        ] (\l_tmpa_tl-badge) { \seq_item:Nn \l__pxcmp_tmpb_seq {5} };
                       }
                   }
               }
@@ -1394,19 +1697,40 @@
                 \tl_if_blank:nF {##1}
                   {
                     \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
-                    \seq_set_split:Nnx \l__pxcmp_tmpa_seq {->} { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
-                    \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
-                    \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
                     \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
-                    \bool_if:NTF \l__pxcmp_directed_bool
-                      { \tl_set:Nn \l__pxcmp_step_id_out_tl { -{Stealth[length=2.2mm]} } }
-                      { \tl_set:Nn \l__pxcmp_step_id_out_tl { - } }
+                    % Detect connector type: "=>" (highlighted path), "--" (undirected), or "->" (default)
+                    \seq_set_split:Nnx \l__pxcmp_tmpa_seq {=>} { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                    \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpa_seq } > { 1 }
+                      {
+                        \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
+                        \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
+                        \bool_if:NTF \l__pxcmp_directed_bool
+                          { \tl_set:Nn \l__pxcmp_step_id_out_tl { -{Stealth[length=2.4mm]}, \l__pxcmp_maincolor_tl, line~width=1.45pt } }
+                          { \tl_set:Nn \l__pxcmp_step_id_out_tl { -, \l__pxcmp_maincolor_tl, line~width=1.45pt } }
+                      }
+                      {
+                        \seq_set_split:Nnx \l__pxcmp_tmpa_seq {--} { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                        \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpa_seq } > { 1 }
+                          {
+                            \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
+                            \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
+                            \tl_set:Nn \l__pxcmp_step_id_out_tl { -, \l__pxcmp_darkcolor_tl, line~width=0.7pt }
+                          }
+                          {
+                            \seq_set_split:Nnx \l__pxcmp_tmpa_seq {->} { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                            \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
+                            \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
+                            \bool_if:NTF \l__pxcmp_directed_bool
+                              { \tl_set:Nn \l__pxcmp_step_id_out_tl { -{Stealth[length=2.2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt } }
+                              { \tl_set:Nn \l__pxcmp_step_id_out_tl { -, \l__pxcmp_darkcolor_tl, line~width=0.7pt } }
+                          }
+                      }
                     \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 2 }
                       {
                         \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {3} }
                         \use:e
                           {
-                            \exp_not:N \path [ \l__pxcmp_step_id_out_tl, \l__pxcmp_darkcolor_tl, line~width=0.7pt ]
+                            \exp_not:N \path [ \l__pxcmp_step_id_out_tl ]
                               (\l_tmpa_tl) edge [ \l__pxcmp_step_id_two_tl ]
                           }
                           node[auto, font=\l__pxcmp_font_tl\scriptsize] {\l__pxcmp_step_id_tl} (\l_tmpb_tl);
@@ -1414,7 +1738,7 @@
                       {
                         \use:e
                           {
-                            \exp_not:N \path [ \l__pxcmp_step_id_out_tl, \l__pxcmp_darkcolor_tl, line~width=0.7pt ]
+                            \exp_not:N \path [ \l__pxcmp_step_id_out_tl ]
                               (\l_tmpa_tl) edge
                           }
                           node[auto, font=\l__pxcmp_font_tl\scriptsize] {\l__pxcmp_step_id_tl} (\l_tmpb_tl);
@@ -2011,6 +2335,553 @@
                     \fp_set:Nn \l__pxcmp_cursor_x_fp { \l_tmpa_fp }
                   }
               }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+%% =======================================================
+%% 10. PRIORITY 6: MACHINE LEARNING, AI & DATA MINING
+%% =======================================================
+
+% Decision Tree for AI / Machine Learning / Data Mining (IA PAC4, AC, MD)
+% #1 = opts
+% #2 = semicolon-separated nodes: id / label / x,y [/ role: decision,root,leaf,class,empty [/ metric-badge]]
+% #3 = semicolon-separated edges: parent -> child [/ branch-value [/ edge-opts]]
+\cs_new_protected:Npn \__pxcmp_decision_tree:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#2}
+      \seq_set_split:Nnn \l__pxcmp_tmpc_seq {;} {#3}
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[
+            scale=\l__pxcmp_scale_tl,
+            every~node/.style={font=\l__pxcmp_font_tl\footnotesize, align=center},
+            dt-decision/.style={
+              rounded~rectangle,
+              rounded~corners=3pt,
+              draw=\l__pxcmp_maincolor_tl,
+              fill=\l__pxcmp_piecefill_tl,
+              line~width=\l__pxcmp_linewidth_dim,
+              minimum~width=1.45cm,
+              minimum~height=0.68cm,
+              font=\l__pxcmp_font_tl\footnotesize\bfseries
+            },
+            dt-root/.style={
+              dt-decision,
+              fill=\l__pxcmp_accentcolor_tl!28,
+              line~width=1.05pt
+            },
+            dt-leaf/.style={
+              circle,
+              draw=\l__pxcmp_darkcolor_tl,
+              fill=\l__pxcmp_accentcolor_tl!38,
+              line~width=\l__pxcmp_linewidth_dim,
+              minimum~size=0.84cm,
+              inner~sep=1.5pt,
+              font=\l__pxcmp_font_tl\scriptsize\bfseries
+            },
+            dt-class/.style={dt-leaf},
+            dt-empty/.style={
+              circle,
+              dashed,
+              draw=\l__pxcmp_neutralcolor_tl!85!black,
+              fill=\l__pxcmp_bgcolor_tl,
+              line~width=0.65pt,
+              minimum~size=0.68cm,
+              font=\l__pxcmp_font_tl\scriptsize
+            },
+            dt-null/.style={dt-empty}
+          ]
+            \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                    \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+                    \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {3} }
+                    \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 3 }
+                      {
+                        \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {4} }
+                        \tl_if_blank:VTF \l__pxcmp_step_id_two_tl
+                          { \tl_set:Nn \l__pxcmp_step_id_two_tl { decision } }
+                          {}
+                      }
+                      {
+                        \tl_set:Nn \l__pxcmp_step_id_two_tl { decision }
+                      }
+                    \use:e
+                      {
+                        \exp_not:N \node [ dt-\l__pxcmp_step_id_two_tl ]
+                          (\l_tmpa_tl) at (\l__pxcmp_step_id_tl)
+                      }
+                      {\l_tmpb_tl};
+                    % Optional 5th field: IG / Entropy / Goodness badge
+                    \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 4 }
+                      {
+                        \node[
+                          fill=\l__pxcmp_bgcolor_tl,
+                          draw=\l__pxcmp_neutralcolor_tl!80!black,
+                          rounded~corners=1.5pt,
+                          inner~sep=1.6pt,
+                          font=\l__pxcmp_font_tl\tiny,
+                          text=\l__pxcmp_darkcolor_tl,
+                          right=2.5pt~of~\l_tmpa_tl
+                        ] (\l_tmpa_tl-ig) { \seq_item:Nn \l__pxcmp_tmpb_seq {5} };
+                      }
+                  }
+              }
+            \seq_map_inline:Nn \l__pxcmp_tmpc_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \seq_set_split:Nnx \l__pxcmp_tmpa_seq {->} { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                    \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
+                    \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
+                    \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 1 }
+                      {
+                        \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+                        \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 2 }
+                          {
+                            \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {3} }
+                            \use:e
+                              {
+                                \exp_not:N \path [ -{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt ]
+                                  (\l_tmpa_tl) edge [ \l__pxcmp_step_id_two_tl ]
+                              }
+                              node[
+                                fill=\l__pxcmp_bgcolor_tl,
+                                inner~sep=1.6pt,
+                                rounded~corners=1.5pt,
+                                font=\l__pxcmp_font_tl\scriptsize\bfseries,
+                                text=\l__pxcmp_maincolor_tl
+                              ] {\l__pxcmp_step_id_tl} (\l_tmpb_tl);
+                          }
+                          {
+                            \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt]
+                              (\l_tmpa_tl) --
+                              node[
+                                fill=\l__pxcmp_bgcolor_tl,
+                                inner~sep=1.6pt,
+                                rounded~corners=1.5pt,
+                                font=\l__pxcmp_font_tl\scriptsize\bfseries,
+                                text=\l__pxcmp_maincolor_tl
+                              ] {\l__pxcmp_step_id_tl} (\l_tmpb_tl);
+                          }
+                      }
+                      {
+                        \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt]
+                          (\l_tmpa_tl) -- (\l_tmpb_tl);
+                      }
+                  }
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% Multi-Layer Perceptron / Neural Network Architecture Diagram (IA PAC4, AC)
+% #1 = opts
+% #2 = semicolon-separated layers: layer-title / n1, n2, ... [/ role-or-activation]
+% #3 = optional semicolon-separated weighted edges: u -> v [/ weight [/ edge-opts]]
+\cs_new_protected:Npn \__pxcmp_neural_net:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#2}
+      \seq_clear:N \l__pxcmp_tmpd_seq
+      \int_zero:N \l__pxcmp_tmpc_int
+      % Filter non-blank layers and find max neuron count across layers
+      \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+        {
+          \tl_if_blank:nF {##1}
+            {
+              \seq_put_right:Nn \l__pxcmp_tmpd_seq {##1}
+              \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+              \clist_set:Nx \l__pxcmp_tmpa_clist { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+              \int_compare:nNnT { \clist_count:N \l__pxcmp_tmpa_clist } > { \l__pxcmp_tmpc_int }
+                { \int_set:Nn \l__pxcmp_tmpc_int { \clist_count:N \l__pxcmp_tmpa_clist } }
+            }
+        }
+      \int_set:Nn \l__pxcmp_tmpb_int { \seq_count:N \l__pxcmp_tmpd_seq }
+      \fp_set:Nn \l__pxcmp_cursor_y_fp { (\l__pxcmp_tmpc_int - 1) * 0.5 + 0.88 }
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[
+            scale=\l__pxcmp_scale_tl,
+            x=\l__pxcmp_layer_sep_dim,
+            y=\l__pxcmp_node_sep_dim,
+            every~node/.style={font=\l__pxcmp_font_tl\footnotesize, align=center},
+            nn-input/.style={
+              circle,
+              draw=\l__pxcmp_maincolor_tl,
+              fill=\l__pxcmp_accentcolor_tl!28,
+              line~width=\l__pxcmp_linewidth_dim,
+              minimum~size=0.80cm,
+              font=\l__pxcmp_font_tl\footnotesize\bfseries
+            },
+            nn-hidden/.style={
+              circle,
+              draw=\l__pxcmp_darkcolor_tl,
+              fill=\l__pxcmp_piecefill_tl,
+              line~width=\l__pxcmp_linewidth_dim,
+              minimum~size=0.80cm,
+              font=\l__pxcmp_font_tl\footnotesize\bfseries
+            },
+            nn-output/.style={
+              circle,
+              double,
+              double~distance=1.4pt,
+              draw=\l__pxcmp_maincolor_tl,
+              fill=\l__pxcmp_maincolor_tl!18,
+              line~width=\l__pxcmp_linewidth_dim,
+              minimum~size=0.84cm,
+              font=\l__pxcmp_font_tl\footnotesize\bfseries
+            }
+          ]
+            % Place layer headers and neurons
+            \int_zero:N \l__pxcmp_tmpa_int
+            \seq_map_inline:Nn \l__pxcmp_tmpd_seq
+              {
+                \int_incr:N \l__pxcmp_tmpa_int
+                \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                \clist_set:Nx \l__pxcmp_tmpa_clist { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+                \int_set:Nn \l_tmpa_int { \clist_count:N \l__pxcmp_tmpa_clist }
+                % Determine layer role & optional activation badge
+                \int_compare:nNnTF { \l__pxcmp_tmpa_int } = { 1 }
+                  { \tl_set:Nn \l__pxcmp_step_id_two_tl { nn-input } }
+                  {
+                    \int_compare:nNnTF { \l__pxcmp_tmpa_int } = { \l__pxcmp_tmpb_int }
+                      { \tl_set:Nn \l__pxcmp_step_id_two_tl { nn-output } }
+                      { \tl_set:Nn \l__pxcmp_step_id_two_tl { nn-hidden } }
+                  }
+                \tl_clear:N \l__pxcmp_step_id_out_tl
+                \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 2 }
+                  {
+                    \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {3} }
+                    \str_case_e:nnF { \l_tmpa_tl }
+                      {
+                        { input }  { \tl_set:Nn \l__pxcmp_step_id_two_tl { nn-input } }
+                        { hidden } { \tl_set:Nn \l__pxcmp_step_id_two_tl { nn-hidden } }
+                        { output } { \tl_set:Nn \l__pxcmp_step_id_two_tl { nn-output } }
+                        { }        { }
+                      }
+                      { \tl_set_eq:NN \l__pxcmp_step_id_out_tl \l_tmpa_tl }
+                  }
+                % Layer header
+                \tl_if_blank:VTF \l__pxcmp_step_id_out_tl
+                  {
+                    \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl]
+                      at ( \int_eval:n { \l__pxcmp_tmpa_int - 1 }, \fp_to_decimal:N \l__pxcmp_cursor_y_fp )
+                      { \l__pxcmp_step_id_tl };
+                  }
+                  {
+                    \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl]
+                      at ( \int_eval:n { \l__pxcmp_tmpa_int - 1 }, \fp_to_decimal:N \l__pxcmp_cursor_y_fp )
+                      { \l__pxcmp_step_id_tl \\[-1pt] {\tiny\normalfont\itshape\color{\l__pxcmp_maincolor_tl}(\l__pxcmp_step_id_out_tl)} };
+                  }
+                % Neurons in layer
+                \int_zero:N \l_tmpb_int
+                \clist_map_inline:Nn \l__pxcmp_tmpa_clist
+                  {
+                    \int_incr:N \l_tmpb_int
+                    \fp_set:Nn \l__pxcmp_cursor_x_fp { (\l_tmpa_int + 1) * 0.5 - \l_tmpb_int }
+                    % Sanitize node aliases (both alphanumeric e.g. x0 and underscore e.g. x_0)
+                    \tl_set:Nx \l_tmpa_tl { \tl_to_str:n {####1} }
+                    \regex_replace_all:nnN { [^a-zA-Z0-9-] } {} \l_tmpa_tl
+                    \tl_if_blank:VT \l_tmpa_tl
+                      { \tl_set:Nx \l_tmpa_tl { L\int_use:N \l__pxcmp_tmpa_int N\int_use:N \l_tmpb_int } }
+                    \tl_set:Nx \l_tmpb_tl { \tl_to_str:n {####1} }
+                    \regex_replace_all:nnN { [^a-zA-Z0-9_-] } {} \l_tmpb_tl
+                    \tl_if_blank:VT \l_tmpb_tl
+                      { \tl_set_eq:NN \l_tmpb_tl \l_tmpa_tl }
+                    \use:e
+                      {
+                        \exp_not:N \node [
+                          \l__pxcmp_step_id_two_tl,
+                          alias=L\int_use:N \l__pxcmp_tmpa_int -\int_use:N \l_tmpb_int,
+                          alias=\l_tmpb_tl
+                        ] (\l_tmpa_tl)
+                          at ( \int_eval:n { \l__pxcmp_tmpa_int - 1 }, \fp_to_decimal:N \l__pxcmp_cursor_x_fp )
+                      }
+                      { \tl_if_in:nnTF {####1} {$} {####1} {\ensuremath{####1}} };
+                  }
+              }
+            % Automatic dense feed-forward connections between adjacent layers
+            \bool_if:NT \l__pxcmp_dense_bool
+              {
+                \int_zero:N \l__pxcmp_tmpa_int
+                \seq_map_inline:Nn \l__pxcmp_tmpd_seq
+                  {
+                    \int_incr:N \l__pxcmp_tmpa_int
+                    \int_compare:nNnT { \l__pxcmp_tmpa_int } < { \l__pxcmp_tmpb_int }
+                      {
+                        \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                        \clist_set:Nx \l__pxcmp_tmpa_clist { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+                        \int_set:Nn \l_tmpa_int { \clist_count:N \l__pxcmp_tmpa_clist }
+                        \seq_set_split:Nnx \l__pxcmp_tmpc_seq {/}
+                          { \seq_item:Nn \l__pxcmp_tmpd_seq { \int_eval:n { \l__pxcmp_tmpa_int + 1 } } }
+                        \clist_set:Nx \l__pxcmp_tmpb_clist { \seq_item:Nn \l__pxcmp_tmpc_seq {2} }
+                        \int_set:Nn \l_tmpb_int { \clist_count:N \l__pxcmp_tmpb_clist }
+                        \int_step_inline:nn { \l_tmpa_int }
+                          {
+                            \int_step_inline:nn { \l_tmpb_int }
+                              {
+                                \draw[-{Stealth[length=1.6mm]}, \l__pxcmp_neutralcolor_tl!80!black, line~width=0.5pt]
+                                  (L\int_use:N \l__pxcmp_tmpa_int -####1) --
+                                  (L\int_eval:n { \l__pxcmp_tmpa_int + 1 }-########1);
+                              }
+                          }
+                      }
+                  }
+              }
+            % Optional custom weighted / highlighted edges
+            \tl_if_blank:nF {#3}
+              {
+                \seq_set_split:Nnn \l__pxcmp_tmpc_seq {;} {#3}
+                \seq_map_inline:Nn \l__pxcmp_tmpc_seq
+                  {
+                    \tl_if_blank:nF {##1}
+                      {
+                        \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                        \seq_set_split:Nnx \l__pxcmp_tmpa_seq {->} { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                        \tl_set:Nx \l_tmpa_tl { \tl_to_str:e { \seq_item:Nn \l__pxcmp_tmpa_seq {1} } }
+                        \regex_replace_all:nnN { [^a-zA-Z0-9_-] } {} \l_tmpa_tl
+                        \tl_set:Nx \l_tmpb_tl { \tl_to_str:e { \seq_item:Nn \l__pxcmp_tmpa_seq {2} } }
+                        \regex_replace_all:nnN { [^a-zA-Z0-9_-] } {} \l_tmpb_tl
+                        \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 1 }
+                          {
+                            \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+                            \draw[-{Stealth[length=2mm]}, \l__pxcmp_maincolor_tl, line~width=0.8pt]
+                              (\l_tmpa_tl) --
+                              node[
+                                pos=0.32,
+                                fill=\l__pxcmp_bgcolor_tl,
+                                inner~sep=1.2pt,
+                                rounded~corners=1pt,
+                                font=\l__pxcmp_font_tl\tiny\bfseries,
+                                text=\l__pxcmp_darkcolor_tl
+                              ] {\l__pxcmp_step_id_tl}
+                              (\l_tmpb_tl);
+                          }
+                          {
+                            \draw[-{Stealth[length=2mm]}, \l__pxcmp_maincolor_tl, line~width=0.8pt]
+                              (\l_tmpa_tl) -- (\l_tmpb_tl);
+                          }
+                      }
+                  }
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% Confusion Matrix & Classification Evaluation Block (IA PAC4, AC, MD)
+% #1 = opts
+% #2 = comma-separated class names: Positiu (1), Negatiu (0)
+% #3 = semicolon-separated matrix rows: 3 (TP), 2 (FP); 5 (FN), 5 (TN)
+% #4 = optional metrics summary footer (e.g. Precisio = 0.60 | Sensibilitat = 0.375 | F1 = 0.4615)
+\cs_new_protected:Npn \__pxcmp_confusion_matrix:nnnn #1#2#3#4
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \clist_set:Nn \l__pxcmp_tmpa_clist {#2}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#3}
+      \int_set:Nn \l__pxcmp_tmpc_int { \clist_count:N \l__pxcmp_tmpa_clist }
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[
+            scale=\l__pxcmp_scale_tl,
+            every~node/.style={font=\l__pxcmp_font_tl\footnotesize, align=center}
+          ]
+            % Top spanning header (Actual classes)
+            \fp_set:Nn \l__pxcmp_cursor_x_fp { (\l__pxcmp_tmpc_int - 1) * 1.15 }
+            \node[font=\l__pxcmp_font_tl\footnotesize\bfseries, text=\l__pxcmp_maincolor_tl]
+              at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, 1.35)
+              { \l__pxcmp_actual_label_tl };
+            % Left rotated header (Predicted classes)
+            \fp_set:Nn \l__pxcmp_cursor_y_fp { -(\l__pxcmp_tmpc_int - 1) * 0.525 }
+            \node[font=\l__pxcmp_font_tl\footnotesize\bfseries, text=\l__pxcmp_maincolor_tl, rotate=90]
+              at (-3.15, \fp_to_decimal:N \l__pxcmp_cursor_y_fp)
+              { \l__pxcmp_pred_label_tl };
+
+            % Class column & row headers
+            \int_zero:N \l__pxcmp_tmpa_int
+            \clist_map_inline:Nn \l__pxcmp_tmpa_clist
+              {
+                \int_incr:N \l__pxcmp_tmpa_int
+                \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl]
+                  at ( \fp_eval:n { (\l__pxcmp_tmpa_int - 1) * 2.30 }, 0.78 )
+                  { ##1 };
+                \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl, anchor=east]
+                  at ( -1.25, \fp_eval:n { -(\l__pxcmp_tmpa_int - 1) * 1.05 } )
+                  { ##1 };
+              }
+
+            % Matrix cells
+            \int_zero:N \l__pxcmp_tmpa_int
+            \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \int_incr:N \l__pxcmp_tmpa_int
+                    \clist_set:Nn \l__pxcmp_tmpb_clist {##1}
+                    \int_zero:N \l__pxcmp_tmpb_int
+                    \clist_map_inline:Nn \l__pxcmp_tmpb_clist
+                      {
+                        \int_incr:N \l__pxcmp_tmpb_int
+                        \fp_set:Nn \l_tmpa_fp { (\l__pxcmp_tmpb_int - 1) * 2.30 }
+                        \fp_set:Nn \l_tmpb_fp { -(\l__pxcmp_tmpa_int - 1) * 1.05 }
+                        \int_compare:nNnTF { \l__pxcmp_tmpa_int } = { \l__pxcmp_tmpb_int }
+                          {
+                            \node[
+                              draw=\l__pxcmp_maincolor_tl,
+                              fill=\l__pxcmp_maincolor_tl!20,
+                              line~width=0.9pt,
+                              minimum~width=2.22cm,
+                              minimum~height=0.98cm,
+                              font=\l__pxcmp_font_tl\footnotesize\bfseries,
+                              text=\l__pxcmp_textcolor_tl
+                            ] at (\fp_to_decimal:N \l_tmpa_fp, \fp_to_decimal:N \l_tmpb_fp) {####1};
+                          }
+                          {
+                            \node[
+                              draw=\l__pxcmp_darkcolor_tl,
+                              fill=\l__pxcmp_accentcolor_tl!16,
+                              line~width=0.65pt,
+                              minimum~width=2.22cm,
+                              minimum~height=0.98cm,
+                              font=\l__pxcmp_font_tl\footnotesize,
+                              text=\l__pxcmp_textcolor_tl
+                            ] at (\fp_to_decimal:N \l_tmpa_fp, \fp_to_decimal:N \l_tmpb_fp) {####1};
+                          }
+                      }
+                  }
+              }
+
+            % Optional metrics summary bar
+            \tl_if_blank:nF {#4}
+              {
+                \fp_set:Nn \l_tmpb_fp { -\l__pxcmp_tmpc_int * 1.05 + 0.05 }
+                \node[
+                  draw=\l__pxcmp_neutralcolor_tl!80!black,
+                  fill=\l__pxcmp_piecefill_tl,
+                  rounded~corners=2pt,
+                  line~width=0.55pt,
+                  inner~sep=4pt,
+                  font=\l__pxcmp_font_tl\scriptsize,
+                  text=\l__pxcmp_darkcolor_tl
+                ] at (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, \fp_to_decimal:N \l_tmpb_fp) {#4};
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% Fuzzy Logic Membership Function Plot (IA PAC3)
+% #1 = opts (xlabel, ylabel, etc.)
+% #2 = domain range: xmin,xmax
+% #3 = semicolon-separated fuzzy sets: label / color / x1,y1 / x2,y2 / ...
+\cs_new_protected:Npn \__pxcmp_fuzzy_plot:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {,} {#2}
+      \fp_set:Nn \l_tmpa_fp { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
+      \fp_set:Nn \l_tmpb_fp { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
+      \seq_set_split:Nnn \l__pxcmp_tmpc_seq {;} {#3}
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[
+            scale=\l__pxcmp_scale_tl,
+            every~node/.style={font=\l__pxcmp_font_tl\scriptsize}
+          ]
+            % Grid guidelines at mu = 0.5 and mu = 1.0
+            \draw[dashed, \l__pxcmp_neutralcolor_tl!70, line~width=0.45pt] (0, 1.35) -- (7.6, 1.35);
+            \draw[dashed, \l__pxcmp_neutralcolor_tl!70, line~width=0.45pt] (0, 2.70) -- (7.6, 2.70);
+
+            % Plot each fuzzy set
+            \seq_map_inline:Nn \l__pxcmp_tmpc_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \tl_set:Nx \l__pxcmp_step_id_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+                    \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+                    \tl_if_blank:VT \l__pxcmp_step_id_two_tl
+                      { \tl_set_eq:NN \l__pxcmp_step_id_two_tl \l__pxcmp_maincolor_tl }
+                    \int_set:Nn \l__pxcmp_tmpa_int { \seq_count:N \l__pxcmp_tmpb_seq }
+                    \tl_clear:N \l_tmpa_tl
+                    \fp_zero:N \l__pxcmp_cursor_x_fp
+                    \int_zero:N \l__pxcmp_tmpb_int
+                    \int_step_inline:nnn { 3 } { \l__pxcmp_tmpa_int }
+                      {
+                        \seq_set_split:Nnx \l__pxcmp_tmpd_seq {,} { \seq_item:Nn \l__pxcmp_tmpb_seq {####1} }
+                        \fp_set:Nn \l__pxcmp_cursor_y_fp
+                          { 7.6 * ( (\seq_item:Nn \l__pxcmp_tmpd_seq {1}) - \l_tmpa_fp ) / ( \l_tmpb_fp - \l_tmpa_fp ) }
+                        \tl_if_blank:VTF \l_tmpa_tl
+                          {
+                            \tl_set:Nx \l_tmpa_tl
+                              { ( \fp_to_decimal:N \l__pxcmp_cursor_y_fp , \fp_eval:n { 2.7 * (\seq_item:Nn \l__pxcmp_tmpd_seq {2}) } ) }
+                          }
+                          {
+                            \tl_put_right:Nx \l_tmpa_tl
+                              { -- ( \fp_to_decimal:N \l__pxcmp_cursor_y_fp , \fp_eval:n { 2.7 * (\seq_item:Nn \l__pxcmp_tmpd_seq {2}) } ) }
+                          }
+                        % Track peak (y >= 0.95) x-coordinates to center the fuzzy set label and draw knee drop-line
+                        \fp_compare:nNnT { \seq_item:Nn \l__pxcmp_tmpd_seq {2} } > { 0.95 }
+                          {
+                            \fp_add:Nn \l__pxcmp_cursor_x_fp { \l__pxcmp_cursor_y_fp }
+                            \int_incr:N \l__pxcmp_tmpb_int
+                            \draw[dotted, \l__pxcmp_step_id_two_tl!65, line~width=0.45pt]
+                              (\fp_to_decimal:N \l__pxcmp_cursor_y_fp, 0) -- (\fp_to_decimal:N \l__pxcmp_cursor_y_fp, 2.70);
+                          }
+                      }
+                    % Draw shaded area & membership curve
+                    \use:e
+                      {
+                        \exp_not:N \fill [ \l__pxcmp_step_id_two_tl !12 ]
+                          \exp_not:V \l_tmpa_tl -- cycle;
+                        \exp_not:N \draw [ \l__pxcmp_step_id_two_tl, line~width=1.15pt ]
+                          \exp_not:V \l_tmpa_tl ;
+                      }
+                    % Place fuzzy set label above peak centroid
+                    \int_compare:nNnT { \l__pxcmp_tmpb_int } > { 0 }
+                      {
+                        \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_step_id_two_tl, anchor=south]
+                          at ( \fp_eval:n { \l__pxcmp_cursor_x_fp / \l__pxcmp_tmpb_int }, 2.76 )
+                          { \l__pxcmp_step_id_tl };
+                      }
+                  }
+              }
+
+            % X-axis graduations (6 evenly spaced domain ticks)
+            \int_step_inline:nnn { 0 } { 5 }
+              {
+                \fp_set:Nn \l__pxcmp_cursor_y_fp { 7.6 * ##1 / 5 }
+                \draw[\l__pxcmp_darkcolor_tl, line~width=0.5pt]
+                  (\fp_to_decimal:N \l__pxcmp_cursor_y_fp, 0) -- (\fp_to_decimal:N \l__pxcmp_cursor_y_fp, -0.09)
+                  node[below, font=\l__pxcmp_font_tl\tiny, text=\l__pxcmp_darkcolor_tl]
+                    { \fp_eval:n { round(\l_tmpa_fp + (\l_tmpb_fp - \l_tmpa_fp) * ##1 / 5, 1) } };
+              }
+
+            % Coordinate axes
+            \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.8pt]
+              (0, 0) -- (8.05, 0) node[right, font=\l__pxcmp_font_tl\footnotesize\bfseries] {\l__pxcmp_xlabel_tl};
+            \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.8pt]
+              (0, 0) -- (0, 3.25) node[above, font=\l__pxcmp_font_tl\footnotesize\bfseries] {\l__pxcmp_ylabel_tl};
+
+            % Y-axis ticks (0, 0.5, 1.0)
+            \node[left, font=\l__pxcmp_font_tl\tiny] at (-0.06, 0) {$0$};
+            \draw[\l__pxcmp_darkcolor_tl, line~width=0.5pt] (-0.08, 1.35) -- (0, 1.35)
+              node[left, pos=0, font=\l__pxcmp_font_tl\tiny] {$0.5$};
+            \draw[\l__pxcmp_darkcolor_tl, line~width=0.5pt] (-0.08, 2.70) -- (0, 2.70)
+              node[left, pos=0, font=\l__pxcmp_font_tl\tiny] {$1.0$};
           \end{tikzpicture}
         }
     \group_end:
