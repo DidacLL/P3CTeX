@@ -54,6 +54,9 @@
 \bool_new:N \l__pxdoc_mem_bool
 \bool_new:N \l__pxdoc_gnt_bool
 \bool_new:N \l__pxdoc_cmp_bool
+\bool_new:N \l__pxdoc_orl_bool
+\tl_new:N \l__pxdoc_unknown_tl
+\tl_set:Nn \l__pxdoc_unknown_tl { default }
 \bool_set_true:N \l__pxdoc_loading_bool
 \keys_define:nn {P3CTeX}
 {
@@ -90,6 +93,11 @@
 			{\bool_set_true:N \l__pxdoc_gnt_bool}
 			{\ClassError{P3CTeX}{GNT must be selected at class loading}{Put GNT in \string\documentclass}}
 	},
+	ORL .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\bool_set_true:N \l__pxdoc_orl_bool}
+			{\ClassError{P3CTeX}{ORL must be selected at class loading}{Put ORL in \string\documentclass}}
+	},
 	CMP .code:n = {
 		\bool_if:NTF \l__pxdoc_loading_bool
 			{\bool_set_true:N \l__pxdoc_cmp_bool}
@@ -113,6 +121,7 @@
 	cat	.code		={
 		\RequirePackage[catalan]{babel}
 		\bool_set_true:N \l_pxdoc_language_bool
+		\_pxcore_set_language_catalan
 	},
 	es	.code		={
 		\RequirePackage[spanish]{babel}
@@ -131,8 +140,11 @@
 	print-doc 	.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
 		print-doc	.initial:n 		= 		false,
 		print-doc	.default:n 		= 		true,
-	unknown 	.tl_set:N	 		= 	\l__pxdoc_unknown_tl,
-	unknown 	.initial:n	 		= 	{default}
+	unknown 	.code:n 			= {
+		\tl_if_blank:nTF { #1 }
+			{ \tl_put_right:Nx \l__pxdoc_unknown_tl { , \l_keys_key_str } }
+			{ \tl_put_right:Nx \l__pxdoc_unknown_tl { , \l_keys_key_str = { \exp_not:n { #1 } } } }
+	}
 }
 %% =================================
 %% == P3CTeX/data KEYS DEFINITION ==
@@ -221,6 +233,7 @@
 \bool_if:NT \l__pxdoc_mem_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM} }
 \bool_if:NT \l__pxdoc_gnt_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,GNT} }
 \bool_if:NT \l__pxdoc_cmp_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,CMP} }
+\bool_if:NT \l__pxdoc_orl_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,ORL} }
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE

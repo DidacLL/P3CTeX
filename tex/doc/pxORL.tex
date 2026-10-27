@@ -1,0 +1,107 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxORL -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (with TEXINPUTS=./latex;./code;./doc;):
+%   pdflatex -interaction=nonstopmode -output-directory=doc doc/pxORL.tex
+%   pdflatex -interaction=nonstopmode -output-directory=doc doc/pxORL.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue}{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=22mm]{geometry}
+\usepackage{lmodern}
+\usepackage[catalan]{babel}
+\usepackage{pxORL}
+\usepackage{hyperref}
+
+\title{El paquet \texttt{pxORL}\\
+  \large Generaci\'o d'orles acad\`emiques i taulers de graduaci\'o per a \LaTeX2e\ i P3CTeX}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/10/27 -- Versi\'o 0.1}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxORL} proporciona un sistema complet i automatitzat per generar orles acad\`emiques i
+  taulers de graduaci\'o basats en llistes d'estudiants i fotografies, aprofitant la identitat visual,
+  els colors i la tipografia corporativa de la UOC i del paquet \textbf{P3CTeX}. Ofereix c\`alcul
+  autom\`atic de columnes i dimensions, suport per a marcadors de posici\'o (\emph{placeholders})
+  quan manquen imatges, i diversos presets predefinits.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{C\`arrega i activaci\'o}
+
+Dins d'un document amb la classe \texttt{P3CTeX}, activeu el m\`odul \texttt{ORL} a les opcions de classe:
+
+\begin{verbatim}
+\documentclass[ORL,PAC,default]{P3CTeX}
+\end{verbatim}
+
+Tamb\'e es pot utilitzar en qualsevol document \LaTeX\ independent, habitualment configurat en orientaci\'o apa\"isada (\emph{landscape}):
+
+\begin{verbatim}
+\usepackage[a4paper,landscape]{geometry}
+\usepackage{pxORL}
+\end{verbatim}
+
+\section{Comanda principal: \texttt{\textbackslash pxOrla} i \texttt{\textbackslash pxORLprint}}
+
+La generaci\'o de l'orla es realitza mitjan\c{c}ant la instrucci\'o \texttt{\textbackslash pxOrla} (o la seva variant t\`ecnica \texttt{\textbackslash pxORLprint}):
+
+\begin{verbatim}
+\pxOrla[<opcions locals>]{
+  {Nom Estudiant 1}/fitxer_foto1,
+  {Nom Estudiant 2}/fitxer_foto2,
+  {Nom Estudiant 3}/none
+}
+\end{verbatim}
+
+\begin{itemize}
+  \item Cada entrada s'especifica en el format \texttt{\{Nom\}/foto}.
+  \item Si no es disposa de la fotografia d'un estudiant, utilitzeu \texttt{none} o una ruta inexistent: \texttt{pxORL} dibuixar\`a autom\`aticament un marc silueta professional sense aturar la compilaci\'o.
+  \item Les opcions locals permeten ajustar el t\'itol, el subt\'itol, el peu, les columnes i els colors.
+\end{itemize}
+
+\section{Configuraci\'o i presets}
+
+\subsection{\texttt{\textbackslash pxORLsetup}}
+
+Permet establir la configuraci\'o persistent que s'aplicar\`a a totes les orles posteriors:
+
+\begin{verbatim}
+\pxORLsetup{
+  title       = {Promoció 2022--2026},
+  subtitle    = {Grau en Enginyeria Informàtica},
+  footer      = {Universitat Oberta de Catalunya},
+  columns     = 5,
+  photos-path = {fotos/}
+}
+\end{verbatim}
+
+\subsection{Presets predefinits}
+
+\texttt{pxORL} incorpora quatre configuracions d'estil:
+
+\begin{description}
+  \item[\texttt{p3c-uoc-orla}:] Estil corporatiu de la UOC amb blaus primari i secundari, orles de doble l\'inia i tipografia formal. \'Es el valor per defecte.
+  \item[\texttt{p3c-classic}:] Disseny cl\`assic amb marcs ornamentats suaus i disposici\'o equilibrada.
+  \item[\texttt{p3c-compact}:] Disseny compacte d'alta densitat, idoni per a promocions nombroses amb molts alumnes per p\`agina.
+  \item[\texttt{p3c-formal}:] Disseny d'alt contrast amb tipografia serifa per a actes acad\`emics de cloenda solemne.
+\end{description}
+
+Per activar un preset:
+
+\begin{verbatim}
+\pxORLusepreset{p3c-compact}
+\end{verbatim}
+
+Tamb\'e podeu registrar nous presets amb \texttt{\textbackslash pxORLsavepreset\{<nom>\}\{<claus>\}}.
+
+\end{document}

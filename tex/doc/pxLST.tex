@@ -1,0 +1,217 @@
+% -*- mode: latex; coding: utf-8 -*-
+%-----------------------------------------------------------------------------
+% pxLST -- User manual and API reference
+% Part of P3CTeX. Author: Scvria.
+%
+% Build from directory tex/ (with TEXINPUTS=./latex;./code;./doc;):
+%   pdflatex -interaction=nonstopmode -output-directory=doc doc/pxLST.tex
+%   pdflatex -interaction=nonstopmode -output-directory=doc doc/pxLST.tex
+%-----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\PassOptionsToPackage{colorlinks,urlcolor=blue,linkcolor=blue}{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=22mm]{geometry}
+\usepackage{lmodern}
+\usepackage[catalan]{babel}
+\usepackage{pxLST}
+\usepackage{hyperref}
+
+\title{El paquet \texttt{pxLST}\\
+  \large Llistats de codi font professionals per a \LaTeX2e\ i P3CTeX}
+\author{Scvria\\P3CTeX / UOC PEC Repository}
+\date{2026/10/27 -- Versi\'o 0.2}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \texttt{pxLST} proporciona una interf\'icie \LaTeX2e\ completa, estable i ergon\`omica per a la
+  presentaci\'o de fragments i fitxers de codi font amb ressaltat sint\`actic professional basat en
+  \texttt{listings} i emmarcat en caixes \texttt{tcolorbox}. Est\`a especialment dissenyat per a les
+  assignatures d'Enginyeria Inform\`atica de la UOC (Compiladors, Sistemes Encastats, Algor\'ismica,
+  Bases de Dades, Ci\`encia de Dades, etc.), oferint suport natiu per a 17 llenguatges i accents catalans
+  amb paletes d'estil adaptades tant a pantalla com a impressi\'o.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{C\`arrega i activaci\'o}
+
+En documents basats en la classe \texttt{P3CTeX}, el m\`odul \texttt{pxLST} es carrega autom\`aticament
+en el paquet per defecte:
+
+\begin{verbatim}
+\documentclass[PAC,default]{P3CTeX}
+\end{verbatim}
+
+Tamb\'e es pot emprar en qualsevol classe de document \LaTeX\ est\`andard (com ara \texttt{article} o \texttt{report}):
+
+\begin{verbatim}
+\usepackage{pxLST}
+\end{verbatim}
+
+\section{Configuraci\'o global}
+
+\subsection{\texttt{\textbackslash pxLSTsetup} i \texttt{\textbackslash pxCodeSet}}
+
+La instrucci\'o \texttt{\textbackslash pxLSTsetup} (o el seu sin\`onim \texttt{\textbackslash pxCodeSet})
+permet establir la paleta de colors activa, el llenguatge de programaci\'o per defecte i l'estil de llistat:
+
+\begin{verbatim}
+\pxLSTsetup[<paleta>]{<llenguatge>}[<estil>]
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{<paleta>}: nom de la paleta de colors (opcional, per defecte \texttt{dark}). Les paletes disponibles s\'on \texttt{dark}, \texttt{pastel} i \texttt{light}.
+  \item \texttt{<llenguatge>}: nom del llenguatge \texttt{listings} predefinit (per exemple \texttt{pxJava}, \texttt{pxC}, \texttt{pxPython}, \texttt{pxR}, \texttt{algoritme}, etc.).
+  \item \texttt{<estil>}: estil base de \texttt{listings} (opcional, per defecte \texttt{pxlst}). Altres estils suportats s\'on \texttt{block}, \texttt{framed} i \texttt{plain}.
+\end{itemize}
+
+\paragraph{Exemples:}
+
+\begin{verbatim}
+\pxLSTsetup[dark]{pxJava}
+\pxLSTsetup[pastel]{algoritme}[framed]
+\pxLSTsetup[light]{pxR}
+\end{verbatim}
+
+\subsection{Paletes de colors}
+
+El paquet incorpora tres paletes acuradament calibrades:
+
+\begin{itemize}
+  \item \texttt{dark}: paleta fosca d'alt contrast inspirada en Darcula, ideal per a lectura c\`omoda en pantalla.
+  \item \texttt{pastel}: variant suau de la paleta fosca per a documents electr\`onics de to moderat.
+  \item \texttt{light}: paleta clara amb fons net, optimitzada per a impressi\'o en paper i informes acad\`emics formals.
+\end{itemize}
+
+\section{Entorns de codi}
+
+\subsection{\texttt{pxCode} i l'àlies \texttt{Code}}
+
+L'entorn principal per a blocs de codi amb t\'itol i n\'umeros de l\'inia:
+
+\begin{verbatim}
+\begin{pxCode}[<opcions listings>]{<titol>}
+    ... codi font ...
+\end{pxCode}
+\end{verbatim}
+
+L'àlies \texttt{Code} (i \texttt{CODE}) t\'e exactament el mateix contracte d'arguments i \'es 100\% compatible amb versions anteriors:
+
+\begin{verbatim}
+\begin{Code}[numbers=none]{Funció suma}
+int suma(int a, int b) {
+    return a + b;
+}
+\end{Code}
+\end{verbatim}
+
+\subsection{\texttt{pxCode*}}
+
+Variant amb un fons lleugerament m\'es fosc per distingir blocs alternatius o seccions secund\`aries:
+
+\begin{verbatim}
+\begin{pxCode*}[language=pxPython]{Entrada de dades}
+def processar(dades):
+    return [x * 2 for x in dades]
+\end{pxCode*}
+\end{verbatim}
+
+\subsection{\texttt{miniCode}}
+
+Entorn compacte sense numeraci\'o de l\'inia, dissenyat per a petits fragments de consola o comandes:
+
+\begin{verbatim}
+\begin{miniCode}[.7\linewidth]
+#!/bin/bash
+git status
+pytest -v
+\end{miniCode}
+\end{verbatim}
+
+L'amplada per defecte \'es \texttt{.8\textbackslash linewidth}.
+
+\subsection{\texttt{CodeBox} i \texttt{CodeBox*} (\texttt{pxCodeBox} i \texttt{pxCodeBreak})}
+
+Entorn avan\c{c}at amb panell lateral d'anotacions i peu de comentari:
+
+\begin{verbatim}
+\begin{CodeBox}[<opcions>]{<etiqueta-id>}{<titol>}{<codi-nota>}{<text explicatiu>}
+    ... codi font ...
+\end{CodeBox}
+\end{verbatim}
+
+\begin{itemize}
+  \item \texttt{<etiqueta-id>}: identificador per a refer\`encies creuades. S'insereix autom\`aticament \texttt{\textbackslash label\{cdbx:<etiqueta-id>\}}, accessible amb \texttt{\textbackslash ref\{cdbx:<etiqueta-id>\}}.
+  \item \texttt{<titol>}: t\'itol visible a la cap\c{c}alera superior dreta.
+  \item \texttt{<codi-nota>}: identificador curt que apareix a l'etiqueta esquerra.
+  \item \texttt{<text explicatiu>}: comentari situat a la safata inferior de la caixa.
+\end{itemize}
+
+La variant amb asterisc \texttt{CodeBox*} (i el seu \`alies \texttt{pxCodeBreak}) \'es \emph{divisible} a trav\'es de salts de p\`agina, afegint indicadors autom\`atics de continuaci\'o.
+
+\section{Instruccions d'entrada i codi en l\'inia}
+
+\subsection{Codi en l\'inia: \texttt{\textbackslash pxCodeIn}}
+
+Per incrustar fragments de codi dins del flux de text:
+
+\begin{verbatim}
+\pxCodeIn[<llenguatge>]{<code>}[<estil>]
+\end{verbatim}
+
+Tamb\'e s\'on v\`alids els \`alies \texttt{\textbackslash pxCodeInline} i \texttt{\textbackslash pxInlineCode}:
+
+\begin{verbatim}
+El valor de retorn \pxCodeIn{int n = 0;} s'obté mitjançant \pxCodeIn{return n + 1;}.
+Comanda de terminal: \pxCodeIn[pxBash]{grep -rn "PATATA" .}.
+\end{verbatim}
+
+\subsection{Inclusi\'o de fitxers externs: \texttt{\textbackslash pxCodeFile}}
+
+Permet incloure un fitxer de codi sencer en una caixa divisible:
+
+\begin{verbatim}
+\pxCodeFile[<llenguatge>]{<fitxer>}[<titol>]
+\end{verbatim}
+
+L'\`alies \texttt{\textbackslash pxLSTinput} i la comanda \texttt{\textbackslash pxCodeFileInput} ofereixen la mateixa funcionalitat:
+
+\begin{verbatim}
+\pxCodeFile[pxJava]{src/Main.java}[Classe Principal]
+\pxLSTinput[pxYAML]{config/app.yaml}[Configuració del sistema]
+\end{verbatim}
+
+\section{Llenguatges suportats}
+
+\texttt{pxLST} defineix de s\`erie 17 configuracions sint\`actiques completes:
+
+\begin{description}
+  \item[\texttt{pxJava}:] Java modern amb suport per a \texttt{records}, \texttt{sealed}, \texttt{var}, m\`etodes de \texttt{java.util} i \texttt{System}.
+  \item[\texttt{pxPython}:] Python 3 amb paraules clau, tipus natius, decoradors i funcions integrades.
+  \item[\texttt{pxC}:] C est\`andard (C99/C11) amb tipus \texttt{stdint.h} i funcions cl\`assiques d'E/S i mem\`oria.
+  \item[\texttt{pxSTM32C}:] C especialitzat per a microcontroladors STM32 i la biblioteca HAL (funcions \texttt{HAL\_*}, registres i interrupcions per a assignatures com SSEE).
+  \item[\texttt{pxASM}:] Llenguatge d'acoblador ARM i x86 amb registres (\texttt{r0}--\texttt{r15}, \texttt{eax}, \texttt{rsp}), mnem\`onics i directives.
+  \item[\texttt{pxJLex}:] Especificacions de l'analitzador l\`exic JLex/Lex (directrius \texttt{\%class}, \texttt{\%init}, expressions regulars i codi de retorn de \texttt{Symbol}).
+  \item[\texttt{pxCUP}:] Especificacions de l'analitzador sint\`actic CUP/Yacc (\texttt{terminal}, \texttt{non terminal}, regles de producci\'o \texttt{::=} i codi d'acci\'o).
+  \item[\texttt{pxWorkflow}:] DSL de fluxos de treball, estats, transicions i m\`aquines de decisi\'o.
+  \item[\texttt{pxJavaScript} / \texttt{pxJS}:] JavaScript modern (ES6+) amb \texttt{const}, \texttt{let}, funcions fletxa i promeses.
+  \item[\texttt{pxSQL}:] Consultes SQL ANSI (\texttt{SELECT}, \texttt{JOIN}, \texttt{GROUP BY}, \texttt{HAVING}, etc.).
+  \item[\texttt{pxProlog}:] Programaci\'o l\`ogica amb predicats, fets, regles i operadors \texttt{:-}.
+  \item[\texttt{pxOWL}:] Ontologies en sintaxi Manchester i Turtle (\texttt{Class:}, \texttt{SubClassOf:}, \texttt{Prefix:}).
+  \item[\texttt{pxTAD}:] Especificacions formals de Tipus Abstractes de Dades segons els convenis de la UOC.
+  \item[\texttt{pxYAML}:] Fitxers estructurats YAML per a configuracions de projectes.
+  \item[\texttt{pxBash}:] Scripts d'int\`erpret d'ordres Unix/Linux.
+  \item[\texttt{algoritme}:] Pseudocodi algor\'ismic formal en catal\`a (\texttt{Funcio}, \texttt{Si}, \texttt{Llavors}, \texttt{Mentre}, \texttt{Retornar}).
+  \item[\texttt{pxR}:] Llenguatge R per a computaci\'o estad\'istica, an\`alisi de dades, Machine Learning i Data Mining (funcions \texttt{lm}, \texttt{predict}, \texttt{summary}, biblioteques \texttt{ggplot2}, \texttt{dplyr}, \texttt{caret}).
+\end{description}
+
+\section{Tractament d'accents i car\`acters UTF-8}
+
+El paquet gestiona de manera transparent car\`acters especials catalans i castellans dins dels blocs de codi:
+l'ela geminada (\texttt{l·l}), vocals accentuades (\texttt{à}, \texttt{è}, \texttt{é}, \texttt{í}, \texttt{ò}, \texttt{ó}, \texttt{ú}), ce trencada (\texttt{ç}), e\~ne (\texttt{ñ}) i s\'imbols ordinals (\texttt{º}, \texttt{ª}).
+
+\end{document}

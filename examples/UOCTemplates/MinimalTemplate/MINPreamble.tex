@@ -1,11 +1,11 @@
 \input{../../SharedPreamble.tex} %% Relative to the PAC Document loading them all
 
-%% Minimal version of a preamble loader, it sets the subject information and expects the assessestment short and full name.
-%% #1 Assessement short name
-%% #2 Assessement full name
-%% #3 P3CTeX options (optional, if not present it loads anyway)
-%% Usage: \LoadPreamble{PR1}{Primera Practica de la Evaluacio Continua}{PAC, no-plagi}
-\def\LoadPreamble#1#2#3 {
+%% Minimal version of a preamble loader, it sets the subject information and expects the assessment short and full name.
+%% #1 Assessment short name (mandatory)
+%% #2 Assessment full name (mandatory)
+%% #3 P3CTeX options (optional, default empty)
+%% Usage: \LoadPreamble{PR1}{Primera Practica de la Evaluacio Continua}[PAC, no-plagi]
+\NewDocumentCommand{\LoadPreamble}{m m O{}}{
 	\PECTeXconfig{
 		data= {
 			subj-fullname	= {Minimal Template},
@@ -15,7 +15,7 @@
 			ca-shortname	= {#1},
 			date			= {\today}
 		},
-		PR, %SET PR AS DEFAULT DESIGN, STILL CAN BE OVERWRITED OR SIMPLY QUIT THAT LINE
+		PR, %SET PR AS DEFAULT DESIGN, STILL CAN BE OVERWRITTEN OR SIMPLY REMOVE THIS LINE
 		#3
 	}
 }
@@ -29,4 +29,3 @@
 	\bibliographystyle{abbrvnat}
 	\bibliography{../references} %% Relative to the PAC Document loading them all
 }
-

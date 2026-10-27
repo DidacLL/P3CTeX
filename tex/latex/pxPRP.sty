@@ -46,6 +46,7 @@
 %% Set/replace one scalar property value.
 %% #1 - object id.  #2 - key.  #3 - value.
 \NewDocumentCommand{\pxSetValue}{m m m}{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
+\NewDocumentCommand{\pxSet}{m m m}{\pxSetValue{#1}{#2}{#3}}
 %\def\pxSET#1.#2=#3{\pxPRP_set:nnnN	{#1}{#2}{#3} \g_pxprp__pxPRP_propREG_prop}
 %% Afegeix un element al final de la llista associada a una clau.
 %% La clau es tracta com una llista separada per comes (clist).
@@ -120,6 +121,9 @@
 %% Expand to the scalar token-list value stored at a property.
 %% #1 - object id.  #2 - key.
 \NewDocumentCommand{\pxGetScalar}{m m}{\pxPRP_get_scalar:nn {#1}{#2}}
+\NewDocumentCommand{\pxGet}{m m}{\pxGetScalar{#1}{#2}}
+\NewDocumentCommand{\pxGetValue}{m m}{\pxGetScalar{#1}{#2}}
+\NewDocumentCommand{\pxGetItem}{m m m}{\pxPRP_get_item:nnn {#1}{#2}{#3}}
 %% Test boolean sobre el valor escalar d'una clau.
 %% El valor "false" o buit es considera fals; qualsevol altre, cert.
 %%	 #1 - identificador de l'objecte

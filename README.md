@@ -181,11 +181,11 @@ If the PDF is generated without errors, the setup is correct.
 | `pxGDX.code.tex` | Sistema de disseny, carregat per la classe |
 | `pxPRP.sty` | Mapes de propietats |
 | `pxUML.sty` | Diagrames UML |
-| `pxSRC.sty` | Llistats de codi font |
+| `pxSRC.sty` | Gestor de figures i fonts inclosos (inclusió segura amb marcadors de posició) |
 | `pxTAB.sty` | Taules des de dades amb estils predefinits i presets |
-| `pxLST.sty` | Llistats de codi |
+| `pxLST.sty` | Llistats de codi font professionals amb ressaltat sintàctic, tcolorbox i 17 llenguatges |
 | `pxCMP.sty` | Diagrames de Tombstone, compiladors, autòmats, grafs de cerca, xarxes neuronals, arbres de decisió i lògica |
-| `pxORL.sty` | Eines addicionals |
+| `pxORL.sty` | Generació d'orles acadèmiques i taulers de graduació |
 | `pxTFG.sty` | Fitxa, llicència, metadades i resums de TFG |
 | `pxMEM.sty` | Capítols, annexos i estructura de memòries |
 
@@ -201,9 +201,11 @@ Els manuals (font LaTeX) viuen a `tex/doc/`:
 | `tex/doc/pxGDX.tex` | Sistema de disseny |
 | `tex/doc/pxPRP.tex` | Mapes de propietats |
 | `tex/doc/pxUML.tex` | Diagrames UML |
-| `tex/doc/pxSRC.tex` | Llistats de codi font |
+| `tex/doc/pxSRC.tex` | Inclusió segura de figures i marcadors de posició |
 | `tex/doc/pxTAB.tex` | Taules |
+| `tex/doc/pxLST.tex` | Llistats de codi font professionals i ressaltat sintàctic |
 | `tex/doc/pxCMP.tex` | Diagrames de Tombstone, compiladors, autòmats, grafs de cerca, xarxes neuronals, arbres de decisió i lògica |
+| `tex/doc/pxORL.tex` | Orles acadèmiques i taulers de graduació |
 | `tex/doc/pxTFG.tex` | Contingut i metadades de TFG |
 | `tex/doc/pxMEM.tex` | Estructura i reutilització de memòries |
 
@@ -231,9 +233,13 @@ Un document d'exemple complet es troba a `examples/P3CTeX-example.tex` (PDF: `ex
 Each package has a dedicated test suite under `tex/tests/`. Gate runner scripts validate all tests:
 
 ```bash
-# Run pxTAB and pxCMP tests (from tex/ directory)
+# Run test suites (from tex/ directory)
 powershell -File tests/run-pxTAB-tests.ps1
 powershell -File tests/run-pxCMP-tests.ps1
+powershell -File tests/run-pxLST-tests.ps1
+
+# Run complete quality gate across all modules, templates and examples
+powershell -File tests/run-all-tests.ps1 -CleanArtifacts -IncludeTemplates
 
 # Build documentation (from tex/ directory, with TEXINPUTS=.;./latex;./code)
 pdflatex -interaction=nonstopmode doc/pxTAB.tex

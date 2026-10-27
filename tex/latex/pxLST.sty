@@ -889,4 +889,93 @@
       \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }
+
+%% =================================
+%% ===== CONVENIENCE ALIASES =======
+%% =================================
+%% \pxLSTsetup[<palette>]{<language>}[<style>]
+%% Universal setup alias matching \pxCodeSet.
+\NewDocumentCommand{\pxLSTsetup}{O{dark} m O{pxlst}}{%
+  \pxCodeSet[#1]{#2}[#3]%
+}
+
+%% Code / CODE -- verbatim-safe aliases for pxCode
+\newtcblisting{Code}[2][]{%
+	listing~options={style=pxlst,#1},
+	listing~only,%
+	arc=.25em,outer~arc=.25em,%
+	drop~lifted~shadow,%
+	colback=pxbg!90!,%
+	colframe=pxbg!60!,%
+	coltext=pxfg,%
+	toptitle=-.1em,%
+	title=\color{pxbg!35!pxfg}\small\hspace*{\fill}\textbf{\ttfamily #2}%
+}
+\newtcblisting{CODE}[2][]{%
+	listing~options={style=pxlst,#1},
+	listing~only,%
+	arc=.25em,outer~arc=.25em,%
+	drop~lifted~shadow,%
+	colback=pxbg!90!,%
+	colframe=pxbg!60!,%
+	coltext=pxfg,%
+	toptitle=-.1em,%
+	title=\color{pxbg!35!pxfg}\small\hspace*{\fill}\textbf{\ttfamily #2}%
+}
+
+%% pxCodeBox / pxCodeBreak -- namespaced aliases matching CodeBox / CodeBox*
+\newtcblisting{pxCodeBox}[5][]{%
+	listing~options={style=pxlst,#1},
+  enhanced,%
+  colback=pxbg!90!,
+  colframe=pxbg!60!,
+  coltext=pxfg,
+  listing~and~comment,%
+  comment=\raggedleft\parbox[b]{.1\linewidth}{%
+    \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
+  }\hspace*{.05\linewidth}\parbox[c]{.8\linewidth}{%
+    \centering #5%
+  },%
+  drop~lifted~shadow,%
+  arc=.25em,outer~arc=.25em,%
+  toptitle=-.1em,%
+  title~after~break=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}..continues~from~page~\pageref{cdbx:#2}}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3},%
+  title=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}codebox:\color{gray!80!}#4}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3\label{cdbx:#2}},%
+  comment~outside~listing,%
+  listing~above~comment%
+}
+\newtcblisting{pxCodeBreak}[5][]{%
+	listing~options={style=pxlst,#1},
+  enhanced,%
+  breakable,%
+  listing~and~comment,%
+  comment=\raggedleft\parbox[b]{.1\linewidth}{%
+    \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
+  }\hspace*{.05\linewidth}\parbox[c]{.8\linewidth}{%
+    \centering #5%
+  },%
+  drop~lifted~shadow,%
+  colback=pxbg!90!,
+  colframe=pxbg!60!,
+  coltext=pxfg,
+  arc=.25em,outer~arc=.25em,%
+  toptitle=-.1em,%
+  title~after~break=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}..continues~from~page~\pageref{cdbx:#2}}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3},%
+  title=%
+    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}codebox:\color{gray!80!}#4}%
+    \textbf{\ttfamily\small\hspace*{\fill}#3\label{cdbx:#2}},%
+  comment~outside~listing,%
+  listing~above~comment%
+}
+
+%% Inline and file aliases
+\NewCommandCopy{\pxCodeInline}{\pxCodeIn}
+\NewCommandCopy{\pxInlineCode}{\pxCodeIn}
+\NewCommandCopy{\pxLSTinput}{\pxCodeFile}
 \endinput

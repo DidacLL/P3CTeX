@@ -2,14 +2,14 @@
 % !TeX spellcheck = en_EN-EnglishUnitedKingdom
 %% =======================================================
 %%		P3C.TeX				v0.3
-%%		SCVRIA SOFWARE		Ultimate UOC PEC Repository
+%%		SCVRIA SOFTWARE		Ultimate UOC PEC Repository
 %% =======================================================
 %%	This file is part of the package P3C.TeX
 %%
-%%	Author's name: Scvria
-%%	File: pxUML.code.tex
-%% 	Version: v0.1 (02/2026)
-%%	Description: Provides a UML class diagram implementation based on top of pgf-umlcd and TikZ packages
+%%	Author: Scvria
+%%	File: pxTXT.code.tex
+%% 	Version: v0.3 (10/2026)
+%%	Description: Multilingual public strings and language switching for P3CTeX
 %%
 %%	This file may be distributed and/or modified:
 %%
@@ -19,22 +19,21 @@
 %%	 See the file doc/LICENSE for more details.
 %%
 %% =======================================================
-%%	TODO:	- User level API
-%%			- Add more features to the UML class diagram implementation
-%% =======================================================
 \RequirePackage{expl3}
 \RequirePackage{color,l3keys2e,xparse}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplFile{p3xlang}{2025}{0.1}{P3C.TeX LANGUAGE RELATED DEFINITIONS}
+\ProvidesExplFile{pxTXT.code.tex}{2026/10/27}{v0.3}{P3CTeX language definitions}
 % Define supported languages
 
 %% Language string table.
-%% Catalan values are defined first; the ES/EN setters below replace the same macros after language selection.
+%% Catalan values are defined first; the CA/ES/EN setters below replace the same macros after language selection.
 \newcommand{\pxDEFtocname}{Índex}
+\newcommand{\pxDEFpagename}{Pàg.}
+\newcommand{\pxDEFofname}{de}
 %% \pxDEFnoplagi{<author>}
 %% Print the current-language authorship/no-plagiarism declaration.
 %% #1 - author name inserted in the declaration.
-\newcommand{\pxDEFnoplagi}[1]{	Jo~	\textbf{ #1 } \label{{alumne}}
+\newcommand{\pxDEFnoplagi}[1]{	Jo~	\textbf{ #1 } \label{alumne}
 ,~declaro~que~ostento~l'autoria~total~i~plena~de~totes~les~tasques~que~es~duen~a~terme~al~present~document.~
 Sóc~l'única~persona~que~ha~fet~cada~exercici.~
 No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~través~de~l'aula~de~la~UOC~i~el~seu~professorat.~
@@ -47,11 +46,35 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 \newcommand{\pxDEFpxcodelistname}{Codi~font}
 \newcommand{\pxDEFpxcmdname}{Comanda}
 \newcommand{\pxDEFpxcmdlistname}{Comandes~de~Consola}
+
+%% \_pxcore_set_language_catalan
+%% Restore all pxTXT public strings to their Catalan originals; called by the P3CTeX cat key.
+\newcommand{\_pxcore_set_language_catalan}{
+	\renewcommand{\pxDEFtocname}{Índex}
+	\renewcommand{\pxDEFpagename}{Pàg.}
+	\renewcommand{\pxDEFofname}{de}
+	\renewcommand{\pxDEFnoplagi}[1]{	Jo~	\textbf{ ##1 } \label{alumne}
+		,~declaro~que~ostento~l'autoria~total~i~plena~de~totes~les~tasques~que~es~duen~a~terme~al~present~document.~
+		Sóc~l'única~persona~que~ha~fet~cada~exercici.~
+		No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~través~de~l'aula~de~la~UOC~i~el~seu~professorat.~
+	}
+	\renewcommand{\pxDEFpximgname}{Imatge}
+	\renewcommand{\pxDEFpximglistname}{Imatges}
+	\renewcommand{\pxDEFpxshotname}{Captura}
+	\renewcommand{\pxDEFpxshotlistname}{Captures~de~pantalla}
+	\renewcommand{\pxDEFpxcodename}{Fragment~de~Codi}
+	\renewcommand{\pxDEFpxcodelistname}{Codi~font}
+	\renewcommand{\pxDEFpxcmdname}{Comanda}
+	\renewcommand{\pxDEFpxcmdlistname}{Comandes~de~Consola}
+}
+
 %% \_pxcore_set_language_spanish
 %% Replace all pxTXT public strings with their Spanish translations; called by the P3CTeX es key.
 \newcommand{\_pxcore_set_language_spanish}{
 	\renewcommand{\pxDEFtocname}{Índice}
-	\renewcommand{\pxDEFnoplagi}[1]{ Yo~	\textbf{ ##1 } \label{{alumne}}
+	\renewcommand{\pxDEFpagename}{Pág.}
+	\renewcommand{\pxDEFofname}{de}
+	\renewcommand{\pxDEFnoplagi}[1]{ Yo~	\textbf{ ##1 } \label{alumne}
 		,~declaro~que~ostento~la~autoría~total~y~plena~de~todas~las~tareas~que~se~llevan~a~cabo~en~el~presente~documento.~
 		Soy~la~única~persona~que~ha~elaborado~cada~ejercicio.~
 		No~he~compartido~los~enunciados~con~nadie~y~la~única~ayuda~que~he~recibido~ha~sido~a~través~del~aula~de~la~UOC~y~su~profesorado.~
@@ -65,10 +88,13 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 	\renewcommand{\pxDEFpxcmdname}{Comando}
 	\renewcommand{\pxDEFpxcmdlistname}{Comandos~de~Consola}
 }
+
 %% \_pxcore_set_language_english
 %% Replace all pxTXT public strings with their English translations; called by the P3CTeX en key.
 \newcommand{\_pxcore_set_language_english}{
 	\renewcommand{\pxDEFtocname}{Table~of~Contents}
+	\renewcommand{\pxDEFpagename}{Page}
+	\renewcommand{\pxDEFofname}{of}
 	\renewcommand{\pxDEFnoplagi}[1]{I,~\textbf{ ##1 }	\label{alumne},~declare~that~I~hold~the~total~and~full~authorship~of~all~the~tasks~that~are~carried~out~in~this~document.~I~am~the~only~one~who~has~elaborated~each~exercise.~I~have~not~shared~the~statements~with~anyone~and~the~only~help~I~have~received~has~been~through~the~UOC~classroom~and~teachers~there.}
 	\renewcommand{\pxDEFpximgname}{Picture}
 	\renewcommand{\pxDEFpximglistname}{Pictures}

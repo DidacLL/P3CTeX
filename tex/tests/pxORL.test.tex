@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage[a4paper,landscape]{geometry}
+\usepackage{pxORL}
+
+\begin{document}
+
+\section*{pxORL Test}
+
+% Test default preset with dummy student data
+\pxOrla[columns=3,board-padding=1cm,title={Orla de Prova},subtitle={Grau en Enginyeria Informatica}]{
+  {Anna Garcia}/none,
+  {Bernat Soler}/none,
+  {Clara Puig}/none,
+  {David Mas}/none,
+  {Elena Bosch}/none
+}
+
+\clearpage
+
+% Test preset application and custom setup
+\pxORLusepreset{p3c-compact}
+\pxORLsetup{columns=2,board-padding=1cm,title={Orla Compacta}}
+
+\pxORLprint{
+  {Estudiant Un}/none,
+  {Estudiant Dos}/none
+}
+
+\end{document}
