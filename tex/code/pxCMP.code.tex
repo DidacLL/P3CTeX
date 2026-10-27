@@ -8,20 +8,21 @@
 %%
 %%  Author: Scvria
 %%  File: pxCMP.code.tex
-%%  Version: v0.1 (10/2026)
+%%  Version: v0.2 (10/2026)
 %%  Description:
 %%    Internal expl3 and TikZ implementation for pxCMP:
 %%    1. Tombstone (T-diagrams) primitives, auto-docking & UOC boards
 %%    2. Translator I/O boxes, compile/run flows, Front-End/Back-End pipelines & IR hubs
 %%    3. Syntax/parse trees (with token/lexeme leaf boxes), finite automata & graphs
-%%    4. BNF grammars, derivations, lexical tables & 3-address IR comparison blocks
-%%    5. Inference rules, Venn/Euler sets, nested logic hierarchies & flowcharts
+%%    4. BNF grammars, derivations, regular expressions, lexical tables & 3-address IR blocks
+%%    5. Inference rules, Venn/Euler sets, nested logic hierarchies, flowcharts,
+%%       memory maps, endianness comparisons & hardware register bitfields
 %%
 %%  This file may be distributed and/or modified:
 %%   1. under the LaTeX Project Public License and/or
 %%   2. under the GNU Public License.
 %% =======================================================
-\ProvidesExplFile{pxCMP.code.tex}{2026/10/27}{v0.1}
+\ProvidesExplFile{pxCMP.code.tex}{2026/10/27}{v0.2}
   {P3CTeX computation, compilers and logic diagrams implementation}
 
 %% =======================================================
@@ -53,6 +54,9 @@
 \tl_new:N \l__pxcmp_step_id_out_tl
 \tl_new:N \l__pxcmp_top_left_note_tl
 \tl_new:N \l__pxcmp_top_right_note_tl
+\tl_new:N \l__pxcmp_prog_shape_tl
+\tl_new:N \l__pxcmp_prog_lang_tl
+\tl_new:N \l__pxcmp_out_lang_tl
 
 \dim_new:N \l__pxcmp_unit_dim
 \dim_new:N \l__pxcmp_linewidth_dim
@@ -178,6 +182,12 @@
     left-span       .initial:n    = { Temps~de~compilaci\'o },
     right-span      .tl_set:N     = \l__pxcmp_top_right_note_tl,
     right-span      .initial:n    = { Temps~d'execuci\'o },
+    program-shape   .tl_set:N     = \l__pxcmp_prog_shape_tl,
+    program-shape   .initial:n    = { keyhole },
+    prog-lang       .tl_set:N     = \l__pxcmp_prog_lang_tl,
+    prog-lang       .initial:n    = {},
+    out-lang        .tl_set:N     = \l__pxcmp_out_lang_tl,
+    out-lang        .initial:n    = {},
   }
 
 %% =======================================================
@@ -195,19 +205,20 @@
             \par\medskip
             \group_begin:
               \bool_if:NT \l__pxcmp_centering_bool { \centering }
-              \__pxcmp_frame_and_scale:n {#1}
+              \leavevmode\__pxcmp_frame_and_scale:n {#1}
               \tl_if_blank:VF \l__pxcmp_caption_tl
                 {
                   \par\smallskip
                   {\small\sffamily\color{\l__pxcmp_darkcolor_tl}\l__pxcmp_caption_tl\par}
                 }
+              \par
             \group_end:
-            \par\medskip
+            \medskip
           }
           {
             \exp_args:NnV \begin{figure}[\l__pxcmp_float_tl]
               \bool_if:NT \l__pxcmp_centering_bool { \centering }
-              \__pxcmp_frame_and_scale:n {#1}
+              \leavevmode\__pxcmp_frame_and_scale:n {#1}
               \tl_if_blank:VF \l__pxcmp_caption_tl
                 { \caption{\l__pxcmp_caption_tl} }
               \tl_if_blank:VF \l__pxcmp_label_tl
@@ -216,6 +227,10 @@
           }
       }
   }
+
+\box_new:N \l__pxcmp_title_box
+\box_new:N \l__pxcmp_body_box
+\dim_new:N \l__pxcmp_min_body_wd_dim
 
 \cs_new_protected:Npn \__pxcmp_frame_and_scale:n #1
   {
@@ -228,6 +243,7 @@
                 \begin{tcolorbox}[
                   enhanced,
                   hbox,
+                  nobeforeafter,
                   colback=\l__pxcmp_bgcolor_tl,
                   colframe=\l__pxcmp_neutralcolor_tl!60!black,
                   boxrule=0.45pt,
@@ -243,9 +259,24 @@
                 \end{tcolorbox}
               }
               {
+                \hbox_set:Nn \l__pxcmp_title_box { \sffamily\bfseries\small \l__pxcmp_title_tl }
+                \hbox_set:Nn \l__pxcmp_body_box { \l__pxcmp_font_tl #1 }
+                \dim_set:Nn \l__pxcmp_min_body_wd_dim
+                  {
+                    \dim_min:nn
+                      { \box_wd:N \l__pxcmp_title_box + 12pt }
+                      { 0.85\linewidth }
+                  }
+                \dim_set:Nn \l__pxcmp_min_body_wd_dim
+                  {
+                    \dim_max:nn
+                      { \box_wd:N \l__pxcmp_body_box }
+                      { \l__pxcmp_min_body_wd_dim }
+                  }
                 \begin{tcolorbox}[
                   enhanced,
                   hbox,
+                  nobeforeafter,
                   colback=\l__pxcmp_bgcolor_tl,
                   colframe=\l__pxcmp_neutralcolor_tl!60!black,
                   boxrule=0.45pt,
@@ -255,12 +286,13 @@
                   right=8pt,
                   top=7pt,
                   bottom=7pt,
+                  halign~title=center,
                   title={\sffamily\bfseries\small \l__pxcmp_title_tl},
                   coltitle=white,
                   colbacktitle=\l__pxcmp_maincolor_tl,
                   fontupper=\l__pxcmp_font_tl
                 ]
-                  #1
+                  \makebox[\l__pxcmp_min_body_wd_dim][c]{\box_use:N \l__pxcmp_body_box}
                 \end{tcolorbox}
               }
           }
@@ -308,27 +340,44 @@
     \end{scope}
   }
 
-% Internal helper: draw a Tombstone Program keyhole piece with stem bottom center at (#1, #2)
+% Internal helper: draw a Tombstone Program piece with stem bottom center at (#1, #2)
+% Supports program-shape = keyhole (default, PID_00215089) or rect (PAC1_05580_20261)
 % #1 = x, #2 = y (bottom center of stem)
 % #3 = program name, #4 = language
 \cs_new_protected:Npn \__pxcmp_draw_tprogram:nnnn #1#2#3#4
   {
     \begin{scope}[shift={(#1,#2)}]
-      \bool_if:NT \l__pxcmp_shadow_bool
+      \str_if_eq:VnTF \l__pxcmp_prog_shape_tl { rect }
         {
-          \fill[\l__pxcmp_shadowcolor_tl]
-            (-0.52, -0.06) rectangle (0.40, 0.74);
-          \fill[\l__pxcmp_shadowcolor_tl]
-            (-0.06, 1.22) circle (0.62);
+          \bool_if:NT \l__pxcmp_shadow_bool
+            {
+              \fill[\l__pxcmp_shadowcolor_tl]
+                (-0.70, 1.56) -- (0.54, 1.56) -- (0.54, 0.76) -- (0.40, 0.76)
+                -- (0.40, -0.06) -- (-0.54, -0.06) -- (-0.54, 0.76) -- (-0.70, 0.76) -- cycle;
+            }
+          \filldraw[fill=\l__pxcmp_piecefill_tl, draw=\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+            (-0.62, 1.62) -- (0.62, 1.62) -- (0.62, 0.82) -- (0.46, 0.82)
+            -- (0.46, 0) -- (-0.46, 0) -- (-0.46, 0.82) -- (-0.62, 0.82) -- cycle;
+          \node[font=\l__pxcmp_font_tl, text=\l__pxcmp_textcolor_tl, anchor=center] at (0, 1.24) {#3};
+          \node[font=\l__pxcmp_font_tl, text=\l__pxcmp_textcolor_tl, anchor=center] at (0, 0.35) {#4};
         }
-      \fill[\l__pxcmp_piecefill_tl] (-0.46, 0) rectangle (0.46, 0.82);
-      \fill[\l__pxcmp_piecefill_tl] (0, 1.28) circle (0.62);
-      \draw[\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
-        (-0.46, 0.82) -- (-0.46, 0) -- (0.46, 0) -- (0.46, 0.82);
-      \draw[\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
-        \pxcmpKeyholeArc ;
-      \node[font=\l__pxcmp_font_tl, text=\l__pxcmp_textcolor_tl, anchor=center] at (0, 1.30) {#3};
-      \node[font=\l__pxcmp_font_tl, text=\l__pxcmp_textcolor_tl, anchor=center] at (0, 0.35) {#4};
+        {
+          \bool_if:NT \l__pxcmp_shadow_bool
+            {
+              \fill[\l__pxcmp_shadowcolor_tl]
+                (-0.52, -0.06) rectangle (0.40, 0.74);
+              \fill[\l__pxcmp_shadowcolor_tl]
+                (-0.06, 1.22) circle (0.62);
+            }
+          \fill[\l__pxcmp_piecefill_tl] (-0.46, 0) rectangle (0.46, 0.82);
+          \fill[\l__pxcmp_piecefill_tl] (0, 1.28) circle (0.62);
+          \draw[\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+            (-0.46, 0.82) -- (-0.46, 0) -- (0.46, 0) -- (0.46, 0.82);
+          \draw[\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+            \pxcmpKeyholeArc ;
+          \node[font=\l__pxcmp_font_tl, text=\l__pxcmp_textcolor_tl, anchor=center] at (0, 1.30) {#3};
+          \node[font=\l__pxcmp_font_tl, text=\l__pxcmp_textcolor_tl, anchor=center] at (0, 0.35) {#4};
+        }
     \end{scope}
   }
 
@@ -619,19 +668,42 @@
     \group_end:
   }
 
-% High-level composition: Program Compilation (PID_00215089 p. 31-32)
-% #1 = opts, #2 = prog, #3 = src, #4 = tgt, #5 = impl, #6 = optional machine
+% High-level composition: Program Compilation (PID_00215089 p. 31-32 & PAC1 unknown-port exercises)
+% #1 = opts, #2 = prog, #3 = src (or prog_lang/compiler_src), #4 = tgt (or compiler_tgt/out_lang),
+% #5 = impl, #6 = optional machine
 \cs_new_protected:Npn \__pxcmp_tombstone_compile:nnnnnn #1#2#3#4#5#6
   {
     \group_begin:
       \pxCMP_set_options:n {#1}
+      % Resolve input program language vs compiler source language
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {/} {#3}
+      \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpa_seq } > { 1 }
+        {
+          \tl_set:Nx \l__pxcmp_prog_lang_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {1} }
+          \tl_set:Nx \l_tmpb_tl { \seq_item:Nn \l__pxcmp_tmpa_seq {2} }
+        }
+        {
+          \tl_set:Nn \l_tmpb_tl {#3}
+          \tl_if_blank:VT \l__pxcmp_prog_lang_tl { \tl_set:Nn \l__pxcmp_prog_lang_tl {#3} }
+        }
+      % Resolve compiler target language vs output program language
+      \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {#4}
+      \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 1 }
+        {
+          \tl_set:Nx \l__pxcmp_step_id_two_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {1} }
+          \tl_set:Nx \l__pxcmp_out_lang_tl { \seq_item:Nn \l__pxcmp_tmpb_seq {2} }
+        }
+        {
+          \tl_set:Nn \l__pxcmp_step_id_two_tl {#4}
+          \tl_if_blank:VT \l__pxcmp_out_lang_tl { \tl_set:Nn \l__pxcmp_out_lang_tl {#4} }
+        }
       \tl_set:Nn \l_tmpa_tl {#6}
       \tl_if_blank:VT \l_tmpa_tl { \tl_set:Nn \l_tmpa_tl {#5} }
       \__pxcmp_wrap_output:n
         {
           \begin{tikzpicture}[x=\l__pxcmp_unit_dim, y=\l__pxcmp_unit_dim, scale=\l__pxcmp_scale_tl]
-            \__pxcmp_draw_tprogram:nnnn {-1.96}{0}{#2}{#3}
-            \__pxcmp_draw_tcompiler:nnnnnn {0}{0}{#3}{#4}{#5}{\l__pxcmp_step_id_tl}
+            \__pxcmp_draw_tprogram:nnnn {-1.96}{0}{#2}{\l__pxcmp_prog_lang_tl}
+            \__pxcmp_draw_tcompiler:nnnnnn {0}{0}{\l_tmpb_tl}{\l__pxcmp_step_id_two_tl}{#5}{\l__pxcmp_step_id_tl}
             \tl_if_blank:VTF \l__pxcmp_interpreter_tl
               {
                 \__pxcmp_draw_tmachine:nnnn {0}{-0.70}{\l_tmpa_tl}{}
@@ -640,7 +712,7 @@
                 \__pxcmp_draw_tinterpreter:nnnn {0}{-1.60}{#5}{\l__pxcmp_interpreter_tl}
                 \__pxcmp_draw_tmachine:nnnn {0}{-1.60}{\l__pxcmp_interpreter_tl}{}
               }
-            \__pxcmp_draw_tprogram:nnnn {1.96}{0}{#2}{#4}
+            \__pxcmp_draw_tprogram:nnnn {1.96}{0}{#2}{\l__pxcmp_out_lang_tl}
             \bool_if:NT \l__pxcmp_show_rules_bool
               {
                 \draw[-{Stealth[length=2mm]}, \l__pxcmp_maincolor_tl, line~width=0.6pt]
@@ -1355,7 +1427,7 @@
   }
 
 %% =======================================================
-%% 8. PRIORITY 4: BNF GRAMMARS, DERIVATIONS, LEXEMES & IR
+%% 8. PRIORITY 4: BNF GRAMMARS, DERIVATIONS, REGEX, LEXEMES & IR
 %% =======================================================
 
 % BNF / Context-Free Grammar Production Table (PID_00215089 p. 24)
@@ -1443,6 +1515,76 @@
     \group_end:
   }
 
+% Formal Regular Expression / JLex Pattern Box (Compiladors PAC1 Ex 4)
+% #1 = opts, #2 = verbatim regex pattern, #3 = optional description / token name
+\cs_new_protected:Npn \__pxcmp_regex:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \tl_set:Nx \l_tmpa_tl { \tl_to_str:n {#2} }
+      \regex_replace_all:nnN { \s } { \c{space} } \l_tmpa_tl
+      \__pxcmp_wrap_output:n
+        {
+          \tl_if_blank:nTF {#3}
+            {
+              {\ttfamily\small\bfseries\color{\l__pxcmp_maincolor_tl}\tl_use:N \l_tmpa_tl}
+            }
+            {
+              \begin{tabular}{@{}l@{\qquad}l@{}}
+                {\ttfamily\small\bfseries\color{\l__pxcmp_maincolor_tl}\tl_use:N \l_tmpa_tl}
+                & {\footnotesize\sffamily\color{\l__pxcmp_darkcolor_tl}#3}
+              \end{tabular}
+            }
+        }
+    \group_end:
+  }
+
+% Structured Table of Named Regular Expressions / Lexical Macros
+% #1 = opts, #2 = semicolon-separated rows: name / pattern [/ description]
+\cs_new_protected:Npn \__pxcmp_regex_list:nn #1#2
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#2}
+      \tl_clear:N \l_tmpa_tl
+      \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+        {
+          \tl_if_blank:nF {##1}
+            {
+              \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+              \tl_set:Nx \l_tmpb_tl { \tl_to_str:e { \seq_item:Nn \l__pxcmp_tmpb_seq {1} } }
+              \tl_set:Nx \l__pxcmp_step_id_tl { \tl_to_str:e { \seq_item:Nn \l__pxcmp_tmpb_seq {2} } }
+              \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 2 }
+                {
+                  \tl_put_right:Nx \l_tmpa_tl
+                    {
+                      \exp_not:N \texttt { \exp_not:N \bfseries \exp_not:N \color { \exp_not:V \l__pxcmp_maincolor_tl } \exp_not:V \l_tmpb_tl }
+                      & $=$
+                      & \exp_not:N \texttt { \exp_not:V \l__pxcmp_step_id_tl }
+                      & { \exp_not:N \scriptsize \exp_not:N \itshape \exp_not:N \color { \exp_not:V \l__pxcmp_darkcolor_tl } \seq_item:Nn \l__pxcmp_tmpb_seq {3} }
+                      \exp_not:N \\
+                    }
+                }
+                {
+                  \tl_put_right:Nx \l_tmpa_tl
+                    {
+                      \exp_not:N \texttt { \exp_not:N \bfseries \exp_not:N \color { \exp_not:V \l__pxcmp_maincolor_tl } \exp_not:V \l_tmpb_tl }
+                      & $=$
+                      & \exp_not:N \texttt { \exp_not:V \l__pxcmp_step_id_tl }
+                      & \exp_not:N \\
+                    }
+                }
+            }
+        }
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tabular}{@{}l@{\enspace}c@{\enspace}l@{\qquad}l@{}}
+            \tl_use:N \l_tmpa_tl
+          \end{tabular}
+        }
+    \group_end:
+  }
+
 % Lexical Analyzer Token / Value Table (PID_00215089 p. 23)
 % #1 = opts, #2 = optional source statement, #3 = semicolon-separated TOKEN / value pairs
 \cs_new_protected:Npn \__pxcmp_lexeme_table:nnn #1#2#3
@@ -1521,7 +1663,7 @@
   }
 
 %% =======================================================
-%% 9. PRIORITY 5: LOGIC, SETS & ALGORITHMIC FLOWCHARTS
+%% 9. PRIORITY 5: LOGIC, SETS, FLOWCHARTS & LOW-LEVEL MEMORY
 %% =======================================================
 
 % Formal Inference / Type Deduction Rule
@@ -1711,6 +1853,162 @@
                         \draw[-{Stealth[length=2mm]}, \l__pxcmp_darkcolor_tl, line~width=0.7pt]
                           (\l_tmpa_tl) -- (\l_tmpb_tl);
                       }
+                  }
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% Visual Memory Map (SSEE / Compiladors Stack, Heap & Byte Layout)
+% #1 = opts, #2 = semicolon-separated rows: address / value [/ annotation [/ highlight]]
+\cs_new_protected:Npn \__pxcmp_memory_map:nn #1#2
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#2}
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[scale=\l__pxcmp_scale_tl, every~node/.style={font=\l__pxcmp_font_tl\footnotesize}]
+            \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl, anchor=east]
+              at (-0.25, 0.55) {Adre\c{c}a};
+            \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl, anchor=center]
+              at (1.55, 0.55) {Contingut};
+            \int_zero:N \l__pxcmp_tmpa_int
+            \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \int_incr:N \l__pxcmp_tmpa_int
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \fp_set:Nn \l_tmpa_fp { -(\l__pxcmp_tmpa_int - 1) * 0.68 }
+                    % Address label
+                    \node[font=\l__pxcmp_font_tl\footnotesize\ttfamily, text=\l__pxcmp_maincolor_tl, anchor=east]
+                      at (-0.20, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {1} };
+                    % Cell box
+                    \int_compare:nNnTF { \seq_count:N \l__pxcmp_tmpb_seq } > { 3 }
+                      {
+                        \filldraw[fill=\l__pxcmp_accentcolor_tl!35, draw=\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+                          (0, \fp_eval:n { \l_tmpa_fp - 0.34 }) rectangle (3.1, \fp_eval:n { \l_tmpa_fp + 0.34 });
+                      }
+                      {
+                        \filldraw[fill=\l__pxcmp_piecefill_tl, draw=\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+                          (0, \fp_eval:n { \l_tmpa_fp - 0.34 }) rectangle (3.1, \fp_eval:n { \l_tmpa_fp + 0.34 });
+                      }
+                    \node[font=\l__pxcmp_font_tl\footnotesize\ttfamily\bfseries, text=\l__pxcmp_textcolor_tl, anchor=center]
+                      at (1.55, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {2} };
+                    % Optional right annotation
+                    \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 2 }
+                      {
+                        \draw[{Stealth[length=1.6mm]}-, \l__pxcmp_maincolor_tl, line~width=0.55pt]
+                          (3.20, \fp_to_decimal:N \l_tmpa_fp) -- (3.65, \fp_to_decimal:N \l_tmpa_fp);
+                        \node[font=\l__pxcmp_font_tl\scriptsize, text=\l__pxcmp_darkcolor_tl, anchor=west]
+                          at (3.70, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {3} };
+                      }
+                  }
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% Side-by-Side Little-Endian vs Big-Endian Memory Comparison (SSEE PAC1 Ex 1.4)
+% #1 = opts, #2 = word header label, #3 = semicolon-separated rows: addr / le-val / be-val [/ note]
+\cs_new_protected:Npn \__pxcmp_endian_compare:nnn #1#2#3
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#3}
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[scale=\l__pxcmp_scale_tl, every~node/.style={font=\l__pxcmp_font_tl\footnotesize}]
+            % Top word banner
+            \node[
+              draw=\l__pxcmp_maincolor_tl,
+              fill=\l__pxcmp_accentcolor_tl!25,
+              line~width=\l__pxcmp_linewidth_dim,
+              rounded~corners=2pt,
+              minimum~width=7.8cm,
+              minimum~height=0.62cm,
+              font=\l__pxcmp_font_tl\footnotesize\bfseries,
+              text=\l__pxcmp_maincolor_tl
+            ] at (2.8, 1.35) {#2};
+
+            % Column headers
+            \node[font=\l__pxcmp_font_tl\scriptsize\bfseries, text=\l__pxcmp_darkcolor_tl, anchor=east]
+              at (-0.25, 0.58) {Adre\c{c}a};
+            \node[font=\l__pxcmp_font_tl\footnotesize\bfseries, text=\l__pxcmp_maincolor_tl, anchor=center]
+              at (1.45, 0.58) {Little-Endian};
+            \node[font=\l__pxcmp_font_tl\footnotesize\bfseries, text=\l__pxcmp_maincolor_tl, anchor=center]
+              at (4.85, 0.58) {Big-Endian};
+
+            \int_zero:N \l__pxcmp_tmpa_int
+            \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \int_incr:N \l__pxcmp_tmpa_int
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \fp_set:Nn \l_tmpa_fp { -(\l__pxcmp_tmpa_int - 1) * 0.68 }
+                    % Address
+                    \node[font=\l__pxcmp_font_tl\footnotesize\ttfamily\bfseries, text=\l__pxcmp_maincolor_tl, anchor=east]
+                      at (-0.20, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {1} };
+                    % Little-Endian cell
+                    \filldraw[fill=\l__pxcmp_piecefill_tl, draw=\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+                      (0, \fp_eval:n { \l_tmpa_fp - 0.34 }) rectangle (2.9, \fp_eval:n { \l_tmpa_fp + 0.34 });
+                    \node[font=\l__pxcmp_font_tl\footnotesize\ttfamily, text=\l__pxcmp_textcolor_tl, anchor=center]
+                      at (1.45, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {2} };
+                    % Big-Endian cell
+                    \filldraw[fill=\l__pxcmp_piecefill_tl, draw=\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+                      (3.4, \fp_eval:n { \l_tmpa_fp - 0.34 }) rectangle (6.3, \fp_eval:n { \l_tmpa_fp + 0.34 });
+                    \node[font=\l__pxcmp_font_tl\footnotesize\ttfamily, text=\l__pxcmp_textcolor_tl, anchor=center]
+                      at (4.85, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {3} };
+                    % Optional note
+                    \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 3 }
+                      {
+                        \node[font=\l__pxcmp_font_tl\scriptsize, text=\l__pxcmp_darkcolor_tl, anchor=west]
+                          at (6.50, \fp_to_decimal:N \l_tmpa_fp) { \seq_item:Nn \l__pxcmp_tmpb_seq {4} };
+                      }
+                  }
+              }
+          \end{tikzpicture}
+        }
+    \group_end:
+  }
+
+% Hardware Register / Bitfield Diagram (SSEE / Computer Architecture)
+% #1 = opts, #2 = semicolon-separated fields: bit-range / field-name [/ value]
+\cs_new_protected:Npn \__pxcmp_register_map:nn #1#2
+  {
+    \group_begin:
+      \pxCMP_set_options:n {#1}
+      \seq_set_split:Nnn \l__pxcmp_tmpa_seq {;} {#2}
+      \__pxcmp_wrap_output:n
+        {
+          \begin{tikzpicture}[scale=\l__pxcmp_scale_tl, every~node/.style={font=\l__pxcmp_font_tl\footnotesize}]
+            \fp_zero:N \l__pxcmp_cursor_x_fp
+            \seq_map_inline:Nn \l__pxcmp_tmpa_seq
+              {
+                \tl_if_blank:nF {##1}
+                  {
+                    \seq_set_split:Nnn \l__pxcmp_tmpb_seq {/} {##1}
+                    \fp_set:Nn \l_tmpa_fp { \l__pxcmp_cursor_x_fp + 2.45 }
+                    \fp_set:Nn \l_tmpb_fp { \l__pxcmp_cursor_x_fp + 1.225 }
+                    % Bit-range header above cell
+                    \node[font=\l__pxcmp_font_tl\scriptsize\ttfamily\bfseries, text=\l__pxcmp_maincolor_tl, anchor=south]
+                      at (\fp_to_decimal:N \l_tmpb_fp, 0.42) { \seq_item:Nn \l__pxcmp_tmpb_seq {1} };
+                    % Register field cell
+                    \filldraw[fill=\l__pxcmp_piecefill_tl, draw=\l__pxcmp_darkcolor_tl, line~width=\l__pxcmp_linewidth_dim]
+                      (\fp_to_decimal:N \l__pxcmp_cursor_x_fp, -0.42) rectangle (\fp_to_decimal:N \l_tmpa_fp, 0.42);
+                    \node[font=\l__pxcmp_font_tl\footnotesize\bfseries, text=\l__pxcmp_textcolor_tl, anchor=center]
+                      at (\fp_to_decimal:N \l_tmpb_fp, 0) { \seq_item:Nn \l__pxcmp_tmpb_seq {2} };
+                    % Optional reset/current value below cell
+                    \int_compare:nNnT { \seq_count:N \l__pxcmp_tmpb_seq } > { 2 }
+                      {
+                        \node[font=\l__pxcmp_font_tl\scriptsize\ttfamily, text=\l__pxcmp_darkcolor_tl, anchor=north]
+                          at (\fp_to_decimal:N \l_tmpb_fp, -0.46) { \seq_item:Nn \l__pxcmp_tmpb_seq {3} };
+                      }
+                    \fp_set:Nn \l__pxcmp_cursor_x_fp { \l_tmpa_fp }
                   }
               }
           \end{tikzpicture}

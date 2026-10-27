@@ -323,4 +323,43 @@ generen autom\`aticament la doble caixa de testimoni i valor l\`exic:
   Tipus 1 (Sensibles al context), Tipus 0 (Recursivament enumerables)
 }
 
+\section{Fam\'ilia 6: Expressions Regulars, Mem\`oria i Endianness (v0.2)}
+
+Per a exercicis d'especificaci\'o l\`exica (JLex/Flex), diagrames de Tombstone amb inc\`ognites ($A, B, C$) i arquitectura de sistemes encastats (SSEE / Estructura de Computadors), \texttt{pxCMP} incorpora:
+
+\begin{verbatim}
+\pxTombstoneCompile[title={Tombstone amb inc\`ognites}]{Prog}{Swift/A}{AMD64}{B}[C]
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*}[Patr\'o JLex per a noms d'usuari]
+\pxEndianCompare[title={Disposici\'o a mem\`oria}]{Paraula de 32 bits: \texttt{0x001C5880}}{
+  0x5AF4 / 0x80 (LSB) / 0x00 (MSB);
+  0x5AF5 / 0x58       / 0x1C;
+  0x5AF6 / 0x1C       / 0x58;
+  0x5AF7 / 0x00 (MSB) / 0x80 (LSB)
+}
+\pxRegisterMap[title={Registre GPIOx\_MODER}]{
+  31:16 / MODER15..8 / 0xAAAA;
+  15:4  / MODER7..2  / 0x555;
+  3:2   / MODER1     / 01;
+  1:0   / MODER0     / 01
+}
+\end{verbatim}
+
+\pxTombstoneCompile[title={Tombstone amb inc\`ognites}]{Prog}{Swift/A}{AMD64}{B}[C]
+
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*}[Patr\'o JLex per a noms d'usuari]
+
+\pxEndianCompare[title={Disposici\'o a mem\`oria}]{Paraula de 32 bits: \texttt{0x001C5880}}{
+  0x5AF4 / 0x80 (LSB) / 0x00 (MSB);
+  0x5AF5 / 0x58       / 0x1C;
+  0x5AF6 / 0x1C       / 0x58;
+  0x5AF7 / 0x00 (MSB) / 0x80 (LSB)
+}
+
+\pxRegisterMap[title={Registre GPIOx\_MODER}]{
+  31:16 / MODER15..8 / 0xAAAA;
+  15:4  / MODER7..2  / 0x555;
+  3:2   / MODER1     / 01;
+  1:0   / MODER0     / 01
+}
+
 \end{document}

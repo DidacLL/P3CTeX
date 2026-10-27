@@ -49,12 +49,22 @@
 \AssertCommand{\pxVenn}
 \AssertCommand{\pxLogicGroup}
 \AssertCommand{\pxFlowchart}
+\AssertCommand{\pxRegEx}
+\AssertCommand{\pxRegExList}
+\AssertCommand{\pxMemoryMap}
+\AssertCommand{\pxEndianCompare}
+\AssertCommand{\pxRegisterMap}
 
 % 2. Verify custom preset registration and local scoping
 \pxCMPsavepreset{custom-probe}{framed=false, shadow=false, scale=0.85}
 \pxCMPusepreset{custom-probe}
 \pxTCompiler[framed=true]{C}{OBJ}{C}
 % Subsequent call should still reflect custom-probe (framed=false)
-\pxTProgram{main}{C}
+\pxTProgram[program-shape=rect]{main}{C}
+\pxTombstoneCompile{Prog}{Swift/A}{AMD64}{B}[C]
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*%}[Usuari]
+\pxMemoryMap{0x5AF4 / 0x80 / LSB; 0x5AF5 / 0x58}
+\pxEndianCompare{0x001C5880}{0x5AF4 / 0x80 / 0x00; 0x5AF5 / 0x58 / 0x1C}
+\pxRegisterMap{31:16 / RESERVED / 0; 15:0 / DATA / 0xFF}
 
 \end{document}

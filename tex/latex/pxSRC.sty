@@ -52,13 +52,12 @@
 }
 %% Legacy default setters: \pxDEFimagewidth{...}, \pxDEFimagepairwidth{...}, \pxDEFimageplaceholdercolor{...},
 %% \pxDEFimageposition{...}, \pxDEFimagepairgap{...}, \pxDEFimagelabelprefix{...}.
-%%TODO: each command currently ignores its argument and restores a hard-coded default; prefer \pxSRCsetup.
-\NewDocumentCommand{\pxDEFimagewidth}{m}{\tl_set:Nn \l__pxsrc_default_width_tl { .8\linewidth }}
-\NewDocumentCommand{\pxDEFimagepairwidth}{m}{\tl_set:Nn \l__pxsrc_pair_width_tl { .4\linewidth }}
-\NewDocumentCommand{\pxDEFimageplaceholdercolor}{m}{\tl_set:Nn \l__pxsrc_placeholder_color_tl { gray }}
-\NewDocumentCommand{\pxDEFimageposition}{m}{\tl_set:Nn \l__pxsrc_float_spec_tl { H }}
-\NewDocumentCommand{\pxDEFimagepairgap}{m}{\tl_set:Nn \l__pxsrc_pair_gap_tl { 4em }}
-\NewDocumentCommand{\pxDEFimagelabelprefix}{m}{\tl_set:Nn \l__pxsrc_label_prefix_tl { img: }}
+\NewDocumentCommand{\pxDEFimagewidth}{O{.8\linewidth} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_default_width_tl {#1}}{\tl_set:Nn \l__pxsrc_default_width_tl {#2}}}
+\NewDocumentCommand{\pxDEFimagepairwidth}{O{.4\linewidth} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_pair_width_tl {#1}}{\tl_set:Nn \l__pxsrc_pair_width_tl {#2}}}
+\NewDocumentCommand{\pxDEFimageplaceholdercolor}{O{primaryColor} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_placeholder_color_tl {#1}}{\tl_set:Nn \l__pxsrc_placeholder_color_tl {#2}}}
+\NewDocumentCommand{\pxDEFimageposition}{O{H} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_float_spec_tl {#1}}{\tl_set:Nn \l__pxsrc_float_spec_tl {#2}}}
+\NewDocumentCommand{\pxDEFimagepairgap}{O{4em} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_pair_gap_tl {#1}}{\tl_set:Nn \l__pxsrc_pair_gap_tl {#2}}}
+\NewDocumentCommand{\pxDEFimagelabelprefix}{O{img:} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_label_prefix_tl {#1}}{\tl_set:Nn \l__pxsrc_label_prefix_tl {#2}}}
 
 %% SAFE INCLUDE IMAGES OR PLACEHOLDER
 %% [#1] IMAGE WIDTH *optional
@@ -140,3 +139,4 @@
 		\pxIMG[#1]{#2\i}{\IfBlankF{#3}{#3}\captionItem}[img:#2\i]
 	}
 }
+\endinput

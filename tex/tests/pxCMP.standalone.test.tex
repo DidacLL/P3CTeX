@@ -167,4 +167,34 @@
   pr -> rd
 }
 
+\section{Priority 6: Regular Expressions, Memory Maps \& Endianness}
+\pxTombstoneCompile[title={Tombstone amb inc\`ognites A, B, C}]{Prog}{Swift/A}{AMD64}{B}[C]
+
+\pxRegEx{"@"[a-zA-Z][a-zA-Z0-9_]*}[Patr\'o JLex per a noms d'usuari]
+\pxRegEx{([1-9]?[0-9](\.[0-9][0-9]?)?|100(\.00?)?)"%"}[Patr\'o JLex per a percentatges]
+
+\pxRegExList[title={Especificaci\'o l\`exica JLex}]{
+  IDENT    / {[a-zA-Z_][a-zA-Z0-9_]*} / Identificador;
+  INT\_LIT / {[0-9]+}                 / Enter sense signe
+}
+
+\pxMemoryMap[title={Mapa de mem\`oria}]{
+  0x08000000 / 0x20004000 / Initial MSP;
+  0x08000004 / 0x08000145 / Reset\_Handler
+}
+
+\pxEndianCompare[title={Disposici\'o a mem\`oria de \texttt{0x001C5880}}]{Paraula de 32 bits: \texttt{0x001C5880}}{
+  0x5AF4 / 0x80 (LSB) / 0x00 (MSB);
+  0x5AF5 / 0x58       / 0x1C;
+  0x5AF6 / 0x1C       / 0x58;
+  0x5AF7 / 0x00 (MSB) / 0x80 (LSB)
+}
+
+\pxRegisterMap[title={Registre GPIOx\_MODER}]{
+  31:16 / MODER15..8 / 0xAAAA;
+  15:4  / MODER7..2  / 0x555;
+  3:2   / MODER1     / 01;
+  1:0   / MODER0     / 01
+}
+
 \end{document}

@@ -8,21 +8,25 @@
 %%
 %%  Author: Scvria
 %%  File: pxCMP.sty
-%%  Version: v0.1 (10/2026)
+%%  Version: v0.2 (10/2026)
 %%  Description:
 %%    P3CTeX Computation, Compilers & Logic Diagrams module.
 %%    Provides an ergonomic, list-driven and key-value LaTeX2e API for:
-%%      1. Tombstone (T-diagrams): compilers, programs, machines, interpreters,
-%%         virtual machines, auto-docked compilation, linker chains,
+%%      1. Tombstone (T-diagrams): compilers, programs (keyhole & rect),
+%%         machines, interpreters, virtual machines, auto-docked compilation
+%%         (including unknown/mismatched port exercises), linker chains,
 %%         cross-compilation, bootstrapping, and UOC exercise boards.
 %%      2. Translator & Pipeline Blocks: I/O translator boxes, compile/run
 %%         flows, Front-End/Back-End compiler architecture & M-to-N IR hubs.
 %%      3. Parse Trees, Automata & Graphs: syntax/semantic trees with
 %%         terminal token/lexeme badges, finite automata & computation graphs.
-%%      4. Grammar, BNF & IR Helpers: BNF productions, formal derivations,
-%%         lexical token tables & side-by-side 3-address IR optimization blocks.
-%%      5. Logic, Sets & Flowcharts: Gentzen inference rules, Venn/Euler sets,
-%%         nested language hierarchies & algorithmic flowcharts.
+%%      4. Grammar, BNF, Regex & IR Helpers: BNF productions, formal derivations,
+%%         regular expression blocks/tables, lexical token tables & side-by-side
+%%         3-address IR optimization blocks.
+%%      5. Logic, Sets, Flowcharts & Low-Level Memory/Registers: Gentzen
+%%         inference rules, Venn/Euler sets, nested language hierarchies,
+%%         algorithmic flowcharts, memory maps, endianness comparisons &
+%%         hardware register bitfield diagrams.
 %%
 %%  This file may be distributed and/or modified:
 %%   1. under the LaTeX Project Public License and/or
@@ -41,7 +45,7 @@
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins,xparse}
 
-\ProvidesExplPackage{pxCMP}{2026/10/27}{v0.1}
+\ProvidesExplPackage{pxCMP}{2026/10/27}{v0.2}
   {P3CTeX computation, compilers and logic diagrams module}
 
 % Fallback P3CTeX palette colors for standalone usage outside P3CTeX.cls
@@ -154,7 +158,7 @@
   { \__pxcmp_tcompiler:nnnnnn {#1} {#2} {#3} {#4} {#5} {#6} }
 
 %% \pxTProgram[<opts>]{<name>}{<lang>}[<x,y>]
-%% Render a Tombstone Program keyhole piece (standalone or at <x,y> inside pxCMPDiagram).
+%% Render a Tombstone Program piece (standalone or at <x,y> inside pxCMPDiagram).
 \NewDocumentCommand{\pxTProgram}{ O{} m m O{} }
   { \__pxcmp_tprogram:nnnn {#1} {#2} {#3} {#4} }
 
@@ -185,6 +189,8 @@
 
 %% \pxTombstoneCompile[<opts>]{<prog>}{<src>}{<tgt>}{<impl>}[<mach>]
 %% Auto-docked compilation of Program <prog> from <src> to <tgt> via Compiler <src>-><tgt>/<impl>.
+%% Supports <src> = {prog_lang/compiler_src} (e.g. {Swift/A}) and <tgt> = {compiler_tgt/out_lang}
+%% for unknown-variable Tombstone exercises.
 \NewDocumentCommand{\pxTombstoneCompile}{ O{} m m m m O{} }
   { \__pxcmp_tombstone_compile:nnnnnn {#1} {#2} {#3} {#4} {#5} {#6} }
 
@@ -253,7 +259,7 @@
   { \__pxcmp_graph:nnn {#1} {#2} {#3} }
 
 %% =======================================================
-%% PRIORITY 4: BNF GRAMMARS, DERIVATIONS, LEXEMES & IR
+%% PRIORITY 4: BNF GRAMMARS, DERIVATIONS, REGEX, LEXEMES & IR
 %% =======================================================
 
 %% \pxBNF[<opts>]{<lhs1> -> <rhs1>; <lhs2> -> <rhs2>; ...}
@@ -266,6 +272,16 @@
 \NewDocumentCommand{\pxDerivation}{ O{} m }
   { \__pxcmp_derivation:nn {#1} {#2} }
 
+%% \pxRegEx[<opts>]{<pattern>}[<description>]
+%% Render a formal regular expression or JLex pattern verbatim with literal ASCII characters and zero space-markers.
+\NewDocumentCommand{\pxRegEx}{ O{} +v O{} }
+  { \__pxcmp_regex:nnn {#1} {#2} {#3} }
+
+%% \pxRegExList[<opts>]{<name1> / <pattern1> [/ <desc1>]; <name2> / <pattern2> [/ <desc2>]; ...}
+%% Render a structured table of named regular expressions / lexical definitions.
+\NewDocumentCommand{\pxRegExList}{ O{} m }
+  { \__pxcmp_regex_list:nn {#1} {#2} }
+
 %% \pxLexemeTable[<opts>][<input-statement>]{<TOKEN1> / <val1>; <TOKEN2> / <val2>; ...}
 %% Render a lexical analysis token/value table.
 \NewDocumentCommand{\pxLexemeTable}{ O{} O{} m }
@@ -277,7 +293,7 @@
   { \__pxcmp_ir_compare:nnnnn {#1} {#2} {#3} {#4} {#5} }
 
 %% =======================================================
-%% PRIORITY 5: LOGIC, SETS & ALGORITHMIC FLOWCHARTS
+%% PRIORITY 5: LOGIC, SETS, FLOWCHARTS & LOW-LEVEL MEMORY
 %% =======================================================
 
 %% \pxInferenceRule[<opts>]{<premise1, premise2, ...>}{<conclusion>}[<rule-name>]
@@ -299,5 +315,20 @@
 %% Render an algorithmic flowchart with start/process/decision/io/end blocks.
 \NewDocumentCommand{\pxFlowchart}{ O{} m m }
   { \__pxcmp_flowchart:nnn {#1} {#2} {#3} }
+
+%% \pxMemoryMap[<opts>]{<addr1> / <val1> [/ <note1>]; <addr2> / <val2> [/ <note2>]; ...}
+%% Render a visual byte/word memory layout diagram with addresses, cell values, and annotations.
+\NewDocumentCommand{\pxMemoryMap}{ O{} m }
+  { \__pxcmp_memory_map:nn {#1} {#2} }
+
+%% \pxEndianCompare[<opts>]{<word-header>}{<addr1> / <le1> / <be1> [/ <note1>]; ...}
+%% Render a side-by-side Little-Endian vs. Big-Endian memory layout comparison diagram.
+\NewDocumentCommand{\pxEndianCompare}{ O{} m m }
+  { \__pxcmp_endian_compare:nnn {#1} {#2} {#3} }
+
+%% \pxRegisterMap[<opts>]{<bits1> / <name1> [/ <val1>]; <bits2> / <name2> [/ <val2>]; ...}
+%% Render a hardware register or instruction encoding bitfield diagram.
+\NewDocumentCommand{\pxRegisterMap}{ O{} m }
+  { \__pxcmp_register_map:nn {#1} {#2} }
 
 \endinput

@@ -32,8 +32,8 @@
 \RequirePackage{graphicx}
 % Colored boxes
 \RequirePackage{tcolorbox}
-% Hyperlinks configuration
-\RequirePackage{hyperref}
+% Hyperlinks configuration (pass load-time options once here to avoid repeated \hypersetup warnings)
+\RequirePackage[bookmarks=true,hyperfootnotes=true,colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
 % --- FIX cleveref must be loaded after hyperref
 \RequirePackage{cleveref}
 %allow ref to total pages and link to last page
@@ -143,7 +143,7 @@
 	noplagi				.bool_set:N		=	\l__gdx_cover_noplagi_bool,
 		noplagi				.initial:n	=			false,
 		noplagi				.default:n	=			true,
-	 				.bool_set:N		=	\l__gdx_cover_offset_bool,
+	offset 				.bool_set:N		=	\l__gdx_cover_offset_bool,
 		offset				.initial:n	=			false,
 		offset				.default:n	=			true,
 	clip-author			.bool_set:N		=	\l__gdx_cover_clip_author_bool,
@@ -294,7 +294,6 @@
 %% Apply the current gdxPDF state to hyperref with a single \hypersetup call.
 \cs_new_protected_nopar:Nn \__px_apply_pdf:
 {
-	\keys_set:nn { gdxPDF} {colorlinks}
 	\hypersetup{
 		pdftitle		= {\l__px_pdf_title_tl},
 		pdfauthor	 = {\l__px_pdf_author_tl},
@@ -306,12 +305,9 @@
 		citecolor	 = {\l__px_citecolor_tl},
 		urlcolor		= {\l__px_urlcolor_tl},
 		filecolor	 = {\l__px_filecolor_tl},
-		bookmarks	 = {\l__px_bookmarks_bool},
 		bookmarkstype = toc,
-		colorlinks	=	true,
 		breaklinks	= true,
-		linktoc		 = {all},
-		hyperfootnotes = true
+		linktoc		 = {all}
 	}
 }
 %% =================================
@@ -430,7 +426,7 @@
 				\bool_if:NT		\l__gdx_cover_white_backtitle_bool
 				{
 					\vspace{-1em}
-					\begin{minipage}[t][\l__gdx_cover_fontmax][t]{1.02\linewidth}
+					\begin{minipage}[t][\l__gdx_cover_fontmax][t]{\linewidth}
 						\__pxgdx_hfill:\__gdx_apply_offset:nnn {1em} {2em} {
 							\textcolor{\l__gdx_cover_text_aux_color_tl}{
 								\pxGrow[0.75]{\textbf{\text_uppercase:n {\l__gdx_cover_backtitle_tl}}}[\l__gdx_cover_fontmax]
@@ -440,17 +436,17 @@
 					\par\vspace{-.6\l__gdx_cover_fontmax}
 				}
 				\par\vspace{-.5\l__gdx_cover_fontmax}% --- SHORT TITLE ---
-				\begin{minipage}[b][\l__gdx_cover_header_height][b]{.3\textwidth}
+				\begin{minipage}[b][\l__gdx_cover_header_height][b]{.3\textwidth}%
 					\centering	% --- TÍTULO SUPERIOR (Opcional) ---
 					\bool_if:NT \l__gdx_cover_upper_title_bool
-					{	\par\vspace*{\fill}\hspace*{\baselineskip}
-						\parbox[b][\height][t]{.85\textwidth}{\raggedright\large\l__gdx_cover_uppertitle_tl}
-						\hspace*{\baselineskip}\par
+					{	\par\vspace*{\fill}\hspace*{\baselineskip}%
+						\parbox[b][\height][t]{.85\textwidth}{\raggedright\large\l__gdx_cover_uppertitle_tl}%
+						\hspace*{\fill}\par
 					}
 					\vspace*{\fill}\scalebox{1.3}[1.8]{\pxGrow*[0.7]{\bfseries\l__gdx_cover_minititle_tl}}
 					\vspace{\baselineskip}\bool_if:NT\l__gdx_cover_subsubtitle_bool {\vspace*{1cm}}
-				\end{minipage}
-				\begin{minipage}[b][\l__gdx_cover_subheader_height][b]{.7\textwidth}
+				\end{minipage}%
+				\begin{minipage}[b][\l__gdx_cover_subheader_height][b]{.7\textwidth}%
 					% --- TÍTULO PRINCIPAL Y SUBTÍTULO ---
 					\parbox[b][\l__gdx_cover_subheader_height][t]{\linewidth} {
 						\centering\Huge\bfseries\l__gdx_cover_title_tl\par

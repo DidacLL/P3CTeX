@@ -8,13 +8,15 @@
 %%
 %%	Author: Scvria
 %%	File: pxLST.sty
-%%	Version: v0.1 (03/2026)
+%%	Version: v0.2 (10/2026)
 %%	Description:
 %%		Professional code listing environments and commands
 %%		for P3CTeX: syntax-highlighted code blocks with
 %%		Darcula-style tcolorbox frames, named preset system,
 %%		multi-language support (Java, Prolog, OWL, TAD,
-%%		YAML, Algorithm, Bash), and UTF-8 accent handling.
+%%		YAML, Algorithm, Bash, Python, C, STM32C, ASM,
+%%		JLex/Lex, CUP/Yacc, Workflow/DSL, JS, SQL),
+%%		and UTF-8 accent handling.
 %%
 %%	This file may be distributed and/or modified:
 %%
@@ -31,7 +33,7 @@
 \RequirePackage[table]{xcolor}
 \RequirePackage{tcolorbox}
 \tcbuselibrary{listings,listingsutf8,breakable,xparse,skins}
-\ProvidesExplPackage{pxLST}{2026/03/04}{v0.1}{P3CTeX professional code listings}
+\ProvidesExplPackage{pxLST}{2026/10/27}{v0.2}{P3CTeX professional code listings}
 
 \definecolor{dark-bg}      {RGB}{40,  44,  52 }
 \definecolor{dark-fg}      {RGB}{250, 250, 250}
@@ -158,21 +160,19 @@
 	showlines        = false,
 	breaklines       = true,
 	breakatwhitespace= true,
-	breakindent      = 4em,
+	breakindent      = 2em,
 	breakautoindent  = false,
 	keepspaces       = true,
 	tabsize          = 4,
 	escapeinside     = {\%*}{*)},
 	captionpos       = b,
 	numbers          = left,
-	numbersep		 = .8em,
+	numbersep        = .8em,
+	xleftmargin      = 1.4em,
+	xrightmargin     = 0.4em,
 	numberstyle      = \tiny\ttfamily\color{gray},
-	prebreak  = \parbox[t][.1em][c]{\fill}{%
-		\vspace{.5em}\raggedleft
-		\scalebox{-.8}[1.2]{$\hookrightarrow$}
-	},
-	postbreak = \parbox[b][1em][c]{2em}{\scalebox{.8}{%
-			$\hookrightarrow$\hspace{2em}}},
+	prebreak         = \raisebox{0ex}[0ex][0ex]{\scalebox{-.8}[1.2]{\ensuremath{\hookrightarrow}}},
+	postbreak        = \raisebox{0ex}[0ex][0ex]{\scalebox{.8}{\ensuremath{\hookrightarrow}}\space},
 	literate =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
@@ -183,13 +183,13 @@
 	{â}{{\^a}}1  {ê}{{\^e}}1  {î}{{\^i}}1  {ô}{{\^o}}1  {û}{{\^u}}1
 	{Â}{{\^A}}1  {Ê}{{\^E}}1  {Î}{{\^I}}1  {Ô}{{\^O}}1  {Û}{{\^U}}1
 	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1 {º}{{\textordmasculine}}1 {ª}{{\textordfeminine}}1
 	{¿}{{?`}}1   {¡}{{!`}}1,
-
 }
 
-
-
-
+%% Activate default dark palette and base pxlst style at package load
+\pxLSTpalettedark
+\lstset{style=pxlst}
 
 %% =================================
 %% ===== STYLE DEFINITIONS ==========
@@ -247,7 +247,8 @@
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% --- pxOWL: Manchester OWL Syntax ---
 \lstdefinelanguage{pxOWL}{
@@ -273,7 +274,7 @@
 	morekeywords     = [3]{rdf,owl},
 	keywordstyle     = \color{pxkeyword}\bfseries,
 	keywordstyle     = [3]\color{pxfunction}\bfseries,
-	morecomment      = [l]{\#},
+	morecomment      = [l]\#,
 	morestring       = [b]",
 	literate         =
 	{.}{{\color{pxoperator}\bfseries.\color{pxfg}}}1
@@ -298,7 +299,8 @@
 	{>}{{\color{pxoperator}>\color{pxfg}}}1
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% --- pxYAML: YAML configuration files ---
 \lstdefinelanguage{pxYAML}{
@@ -306,7 +308,7 @@
 	morestring       = [b]',
 	morestring       = [b]",
 	sensitive        = false,
-	comment          = [l]{\#},
+	morecomment      = [l]\#,
 	literate         =
 	{:}{{\color{pxoperator} :}}1
 	{,}{{\color{pxoperator} ,}}1
@@ -335,7 +337,8 @@
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% --- pxBash: Bash/shell scripts ---
 \lstdefinelanguage{pxBash}{
@@ -351,14 +354,15 @@
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% --- pxPython: Python with Darcula styles and extended built-ins ---
 \lstdefinelanguage{pxPython}{
 	language         = Python,
 	morekeywords     = [2]{print,range,len,str,int,float,def,class,self,True,False,
 		None,and,or,not,in,is,lambda,yield,async,await,list,dict,set},
-	morecomment      = [l]{\#},
+	morecomment      = [l]\#,
 	morestring       = [b]',
 	morestring       = [b]",
 	morestring       = [s]{"""}{"""},
@@ -366,19 +370,138 @@
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
-%% --- pxC: C with Darcula styles and common stdlib ---
+%% --- pxC: C with Darcula styles, stdint/stdbool types, and common stdlib ---
 \lstdefinelanguage{pxC}{
 	language         = C,
-	morekeywords     = [2]{printf,scanf,malloc,free,sizeof,typedef,struct,enum,include,define},
+	morekeywords     = [2]{printf,scanf,fprintf,fscanf,snprintf,malloc,calloc,realloc,free,
+		memcpy,memset,strlen,strcmp,strncmp,strcpy,strncpy,sizeof,typedef,struct,enum,union,include,define},
+	morekeywords     = [3]{uint8_t,uint16_t,uint32_t,uint64_t,int8_t,int16_t,int32_t,int64_t,
+		size_t,ssize_t,uintptr_t,intptr_t,bool,true,false,NULL,FILE},
+	morecomment      = [l]{//},
+	morecomment      = [s]{/*}{*/},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+%% --- pxSTM32C: Embedded C for STM32 / ARM Cortex-M / CMSIS / HAL (SSEE) ---
+\lstdefinelanguage{pxSTM32C}{
+	language         = C,
+	morekeywords     = [1]{uint8_t,uint16_t,uint32_t,uint64_t,int8_t,int16_t,int32_t,int64_t,
+		size_t,bool,true,false,__IO,__I,__O,volatile},
+	morekeywords     = [2]{GPIO_TypeDef,TIM_HandleTypeDef,UART_HandleTypeDef,I2C_HandleTypeDef,
+		SPI_HandleTypeDef,ADC_HandleTypeDef,DMA_HandleTypeDef,EXTI_HandleTypeDef,
+		HAL_StatusTypeDef,GPIO_PinState,GPIO_InitTypeDef,TIM_Base_InitTypeDef},
+	morekeywords     = [3]{HAL_OK,HAL_ERROR,HAL_BUSY,HAL_TIMEOUT,GPIO_PIN_SET,GPIO_PIN_RESET,
+		GPIO_PIN_0,GPIO_PIN_1,GPIO_PIN_2,GPIO_PIN_3,GPIO_PIN_4,GPIO_PIN_5,GPIO_PIN_6,GPIO_PIN_7,
+		GPIO_PIN_8,GPIO_PIN_9,GPIO_PIN_10,GPIO_PIN_11,GPIO_PIN_12,GPIO_PIN_13,GPIO_PIN_14,GPIO_PIN_15,
+		GPIOA,GPIOB,GPIOC,GPIOD,GPIOE,GPIOF,GPIOG,GPIOH,
+		LED_0_Pin,LED_0_GPIO_Port,LED_1_Pin,LED_1_GPIO_Port,LED_2_Pin,LED_2_GPIO_Port,
+		LED_3_Pin,LED_3_GPIO_Port,LED_4_Pin,LED_4_GPIO_Port,LED_5_Pin,LED_5_GPIO_Port,
+		JOYSTICK_UP_Pin,JOYSTICK_UP_GPIO_Port,JOYSTICK_DO_Pin,JOYSTICK_DO_GPIO_Port,
+		JOYSTICK_RI_Pin,JOYSTICK_RI_GPIO_Port,JOYSTICK_LE_Pin,JOYSTICK_LE_GPIO_Port},
+	morekeywords     = [4]{HAL_Init,HAL_Delay,HAL_GetTick,HAL_GPIO_Init,HAL_GPIO_DeInit,
+		HAL_GPIO_WritePin,HAL_GPIO_TogglePin,HAL_GPIO_ReadPin,HAL_GPIO_EXTI_Callback,
+		HAL_TIM_Base_Init,HAL_TIM_Base_Start,HAL_TIM_Base_Stop,HAL_TIM_Base_Start_IT,
+		HAL_TIM_Base_Stop_IT,HAL_TIM_PeriodElapsedCallback,HAL_UART_Transmit,HAL_UART_Receive,
+		HAL_NVIC_SetPriority,HAL_NVIC_EnableIRQ,HAL_NVIC_DisableIRQ,UOC_GPIO_Init,__NOP,__WFI},
+	sensitive        = true,
+	morecomment      = [s]{/*}{*/},
+	morecomment      = [l]{//},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+%% --- pxJLex: JLex / Lex / Flex lexical analyzer specification (Compiladors) ---
+\lstdefinelanguage{pxJLex}{
+	language         = Java,
+	otherkeywords    = {\%class,\%function,\%type,\%integer,\%intwrap,\%init,\%initthrow,
+		\%eofval,\%eofthrow,\%yylexthrow,\%ignorecase,\%state,\%char,\%line,\%full,
+		\%notunix,\%cup,\%\%,\%\{,\%\}},
+	morekeywords     = [2]{yylex,yytext,yylength,yyline,yychar,yybegin,initLex,endLex},
+	morekeywords     = [3]{Symbol,Eval,Lexer,Keyword,Separator,Operator,Token,Yytoken},
+	morekeywords     = [4]{YYINITIAL,YYEOF},
+	sensitive        = true,
+	morecomment      = [s]{/*}{*/},
+	morecomment      = [l]{//},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+\lstdefinelanguage{pxLex}{language=pxJLex}
+\lstdefinelanguage{pxFlex}{language=pxJLex}
+%% --- pxCUP: CUP / Yacc / Bison parser specification (Compiladors) ---
+\lstdefinelanguage{pxCUP}{
+	language         = Java,
+	otherkeywords    = {::=,|,{:,:},\%prec},
+	morekeywords     = [1]{package,import,terminal,non,nonterminal,precedence,left,right,nonassoc,start,with},
+	morekeywords     = [2]{action,code,parser,init,scan,RESULT},
+	morekeywords     = [3]{Symbol,sym,lr_parser,Scanner},
+	sensitive        = true,
+	morecomment      = [s]{/*}{*/},
+	morecomment      = [l]{//},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+\lstdefinelanguage{pxYacc}{language=pxCUP}
+\lstdefinelanguage{pxBison}{language=pxCUP}
+%% --- pxWorkflow: Declarative workflow / multi-agent DSL specification (Compiladors) ---
+\lstdefinelanguage{pxWorkflow}{
+	morekeywords     = [1]{WORKFLOW,DATA,TOOL,AGENT,DECISION,USES,FORMAT,URL,METHOD,MODEL,
+		PROMPT,INPUT,OUTPUT,TEXT,IMAGE,AUDIO,VIDEO,IF,THEN,ELSE,ABORT},
+	morekeywords     = [2]{true,false,TRUE,FALSE,POST,GET,PUT,DELETE,JSON,HTML,XML,CSV},
+	morekeywords     = [3]{AND,OR,NOT},
+	sensitive        = false,
+	morecomment      = [l]{--},
+	morestring       = [b]",
+	morestring       = [s]{'''}{'''},
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+\lstdefinelanguage{pxDSL}{language=pxWorkflow}
+%% --- pxASM: Assembly & Low-Level IR (ARM Cortex-M, x86/AMD64, 3-Address IR) ---
+\lstdefinelanguage{pxASM}{
+	morekeywords     = [1]{MOV,MOVS,MOVW,MOVT,LDR,LDRB,LDRH,STR,STRB,STRH,PUSH,POP,
+		ADD,ADDS,SUB,SUBS,MUL,DIV,AND,ORR,EOR,BIC,LSL,LSR,ASR,CMP,TST,
+		B,BL,BX,BLX,BEQ,BNE,BGT,BGE,BLT,BLE,NOP,WFI,CPSID,CPSIE,
+		CALL,RET,JMP,JE,JNE,JG,JGE,JL,JLE,LEA,XOR,SHL,SHR,
+		GOTO,IF,IFZ,IFNZ,PARAM,RETURN},
+	morekeywords     = [2]{R0,R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,SP,LR,PC,PSR,
+		r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,sp,lr,pc,
+		EAX,EBX,ECX,EDX,ESI,EDI,ESP,EBP,RAX,RBX,RCX,RDX,RSI,RDI,RSP,RBP},
+	morekeywords     = [3]{.text,.data,.bss,.global,.extern,.word,.byte,.half,.align,.thumb,.syntax},
+	sensitive        = false,
+	morecomment      = [l]{;},
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% --- pxJavaScript: JavaScript/ECMAScript (listings has no built-in; define keywords) ---
 \lstdefinelanguage{pxJavaScript}{
@@ -393,7 +516,8 @@
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% pxJS: alias for pxJavaScript (language=pxJS or language=pxJavaScript)
 \lstdefinelanguage{pxJS}{
@@ -412,27 +536,48 @@
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
 }
 %% =================================
 %% ===== FILE INPUT FUNCTION ========
 %% =================================
-%% \pxLST_input_file:nn {<language>}{<file>}
-%% Typeset an external source file in the standard pxLST tcolorbox.
-%% #1 - listings language name.  #2 - source filename/path.
+%% \pxLST_input_file:nnn {<language>}{<file>}{<title>}
+%% Typeset an external source file in a breakable pxLST tcolorbox.
+%% #1 - listings language name.  #2 - source filename/path.  #3 - header title.
+\cs_new_protected:Npn \pxLST_input_file:nnn #1 #2 #3 {
+	\tl_if_blank:nTF {#1}
+		{
+			\tcbinputlisting{
+				listing~options={style=pxlst},
+				colback=pxbg!90!,
+				colframe=pxbg!60!,
+				coltext=pxfg,
+				listing~file=#2,
+				listing~only,
+				breakable,
+				arc=.25em, outer~arc=.25em,
+				toptitle=-.1em,
+				title=\small\hspace*{\fill}\textbf{\ttfamily #3}
+			}
+		}
+		{
+			\tcbinputlisting{
+				listing~options={style=pxlst,language=#1},
+				colback=pxbg!90!,
+				colframe=pxbg!60!,
+				coltext=pxfg,
+				listing~file=#2,
+				listing~only,
+				breakable,
+				arc=.25em, outer~arc=.25em,
+				toptitle=-.1em,
+				title=\small\hspace*{\fill}\textbf{\ttfamily #3}
+			}
+		}
+}
 \cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
-	\tcbinputlisting{
-		listing~options={language=#1},
-		colback=pxbg!90!,
-		colframe=pxbg!60!,
-		coltext=pxfg,
-		listing~file=#2,
-		listing~only,
-		arc=.25em, outer~arc=.25em,
-		drop~lifted~shadow,
-		toptitle=-.1em,
-		title=\small\hspace*{\fill}\textbf{\ttfamily #2}
-	}
+	\pxLST_input_file:nnn {#1} {#2} {#2}
 }
 %% =================================
 %% ===== INLINE CODE RENDER ==========
@@ -487,7 +632,7 @@
 %% Standard titled code-listing environment.
 %% #1 - optional listings options.  #2 - title/label text shown in the title bar.
 \newtcblisting{pxCode}[2][]{%
-	listing~options={#1},
+	listing~options={style=pxlst,#1},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	drop~lifted~shadow,%
@@ -502,7 +647,7 @@
 %% #1 - box width, default .8\linewidth.
 \newtcblisting{miniCode}[1][.8\linewidth]{%
 	width=#1,
-	listing~options={},
+	listing~options={style=pxlst,numbers=none,xleftmargin=0.4em},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	drop~lifted~shadow,%
@@ -519,7 +664,7 @@
 %% \begin{pxCode*}[<listing options>]{<label>} ... \end{pxCode*}
 %% Alternate darker code-listing environment with the same argument contract as pxCode.
 \newtcblisting{pxCode*}[2][]{%
-	listing~options={#1},
+	listing~options={style=pxlst,#1},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	colback=pxbg!70!gray,
@@ -540,7 +685,7 @@
 %% Non-breakable listing with an external comment panel and cross-reference label cdbx:<label>.
 %% #1 - listings options.  #2 - label id.  #3 - title.  #4 - short note id.  #5 - note text.
 \newtcblisting{CodeBox}[5][]{%
-	listing~options={#1},
+	listing~options={style=pxlst,#1},
   enhanced,%
   colback=pxbg!90!,
   colframe=pxbg!60!,
@@ -569,7 +714,7 @@
 %% \begin{CodeBox*}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox*}
 %% Breakable CodeBox variant; continuation titles refer back to cdbx:<label>.
 \newtcblisting{CodeBox*}[5][]{%
-	listing~options={#1},
+	listing~options={style=pxlst,#1},
   enhanced,%
   breakable,%
   listing~and~comment,%
@@ -593,11 +738,16 @@
   comment~outside~listing,%
   listing~above~comment%
 }
-%% \pxCodeFile[<language>]{<file>}
-%% Typeset an external file through the standard pxLST file renderer.
-%% #1 - optional listings language.  #2 - source filename/path.
-\NewDocumentCommand{\pxCodeFile}{ O{} m }
-  { \pxLST_input_file:nn { #1 } { #2 } }
+%% \pxCodeFile[<language>]{<file>}[<title>]
+%% Typeset an external file through the standard breakable pxLST file renderer.
+%% #1 - optional listings language.  #2 - source filename/path.  #3 - optional header title (defaults to #2).
+\NewDocumentCommand{\pxCodeFile}{ O{} m O{#2} }
+  { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
+
+%% \pxCodeFileInput[<language>]{<file>}[<title>]
+%% Convenience alias for \pxCodeFile (defaults to pxJLex when language is omitted).
+\NewDocumentCommand{\pxCodeFileInput}{ O{pxJLex} m O{#2} }
+  { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
 
 %% \pxCodeIn[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
@@ -605,8 +755,10 @@
 \NewDocumentCommand{\pxCodeIn}{ O{} m O{pxlst}}
   {
     \group_begin:
-      \tl_if_blank:nF { #1 }
+      \tl_if_blank:nTF { #1 }
+        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, style=#3 } }
         { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, language=#1, style=#3 } }
       \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }
+\endinput
