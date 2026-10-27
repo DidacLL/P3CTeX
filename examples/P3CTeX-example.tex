@@ -9,7 +9,7 @@
 %%  and run from tex/tests/ (or adjust image paths).
 %% =======================================================
 
-\documentclass[cover,toc,default]{P3CTeX} %set P3CTeX as document class
+\documentclass[cover,toc,default,CMP]{P3CTeX} %set P3CTeX as document class
 \PECTeXcover{fullcover, text-uppertitle=EXAMPLE} %additional cover config, overrides default text for uppertitle
 \PECTeXconfig{
 	data= {%% set user data
@@ -690,6 +690,18 @@ echo "Build complet."
 En aquest exercici es mostren fragments de codi inline.
 Fragment en Java: \pxCodeIn{int n = 0;} i \pxCodeIn{return n + 1;}.
 Un altre fragment en Bash: \pxCodeIn[pxBash]{echo "fi"}.
+
+% ========== 9. pxCMP - Computation, Compilers & Logic Diagrams ==========
+\newpage
+\section{Compiladors, Autòmats i Lògica (\texttt{pxCMP})}
+Amb l'opció de classe \texttt{CMP} es carrega el mòdul \texttt{pxCMP} per generar diagrames de Tombstone (diagrames en T), esquemes de compiladors, arbres sintàctics, autòmats i gramàtiques BNF.
+
+\pxTombstoneCompile[title={Compilació cap a la JVM}]{Programa}{Java}{JVM}{M}
+
+\pxTombstoneBootstrap[title={Bootstrapping d'Oberon de 486 a P-III}]{Oberon}{486}{P-III}
+
+\pxCompilerModel[title={Estructura interna d'un compilador}]
+
 	\newpage
 \nocite{*}
 \addcontentsline{toc}{section}{Referències}

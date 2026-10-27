@@ -12,7 +12,7 @@ Use `\documentclass[options]{P3CTeX}`. Frequently used options:
 - `CAT`, `ES`, `EN`: language options.
 - `default`: loads common modules `pxPRP`, `pxUML`, `pxSRC`, `pxTAB`, `pxLST`.
 - `cover`, `no-cover`, `toc`, `no-toc`, `no-plagi`: output controls.
-- `TFG`, `MEM`: special modules; select at class-load time when needed.
+- `CMP`, `GNT`, `TFG`, `MEM`: special modules; select at class-load time when needed (e.g., `\documentclass[CMP,PAC,default]{P3CTeX}`).
 
 Set academic details using `\PECTeXconfig{data={...}}` in the preamble. Data keys: `student`, `grade`, `subj-fullname`, `subj-shortname`, `subj-code`, `ca-fullname`, `ca-shortname`, `date`. Existing preambles may already supply some or all keys. Cover and TOC are automatically generated according to class options; do not insert them again by default.
 
@@ -120,11 +120,31 @@ public class Main {
 }
 ```
 
+**Compilers, Automata & Logic Diagrams** (requires `CMP` class option or `\usepackage{pxCMP}`):
+
+```latex
+% Auto-docked Tombstone compilation & 2-stage bootstrapping:
+\pxTombstoneCompile[title={Compilació en Java}]{Programa}{Java}{JVM}{M}
+\pxTombstoneBootstrap[title={Bootstrapping d'Oberon}]{Oberon}{486}{P-III}
+
+% Front-End / Back-End compiler architecture & Parse Tree with token/lexeme leaves:
+\pxCompilerModel[title={Estructura interna d'un compilador}]
+\pxSyntaxTree[title={Arbre sintàctic}]{
+  exp / exp / 0,0;
+  id1 / IDENTIFICADOR / -2.0,-1.4 / ValorX;
+  semi / PUNT\_I\_COMA / 2.0,-1.4 / {;}
+}{exp->id1, exp->semi}
+
+% Finite Automaton & BNF Grammar:
+\pxAutomaton[title={AFD}]{q0 / $q_0$ / 0,0 / initial; q1 / $q_1$ / 2.8,0 / accepting}{q0 -> q1 / a}
+\pxBNF{exp -> assigna PUNT\_I\_COMA; assigna -> IDENTIFICADOR ASSIGNACIÓ operació}
+```
+
 Use ordinary LaTeX for math, paragraphs, lists, references, and simple tables when it is clearer. Custom `\itembf` and similar commands exist only when defined by the user's preamble.
 
 ## Checks when authoring
 
-- Confirm package/module activation before using `pxIMG`, `pxTable`, `pxCode`, or `pxUMLDiagram`.
+- Confirm package/module activation before using `pxIMG`, `pxTable`, `pxCode`, `pxUMLDiagram`, or `pxCMP` commands.
 - Keep a section response free of `\documentclass`, `\begin{document}`, and repeated setup.
 - Reuse existing bibliography entries and image paths; do not fabricate citations, measurements, or build results.
 - Existing user documents and definitions override sample conventions in this reference.
