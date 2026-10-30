@@ -11,11 +11,29 @@
 <body class="home">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Header with Full Demopack CRT Banner -->
+  <!-- Header with Hardware Telemetry Masthead & CRT Demopack Screen Mount -->
   <header class="site-header">
+    <!-- Top Telemetry Status Bar -->
+    <div class="telemetry-ticker-bar" aria-label="Hardware telemetry diagnostics">
+      <div class="telemetry-left">
+        <span class="led-indicator"><span class="led-dot green"></span> SYS: ONLINE</span>
+        <span class="led-indicator"><span class="led-dot amber"></span> LATEX: READY</span>
+        <span>KERNEL: <strong>P3CTeX.cls v1.1</strong></span>
+        <span>ARCH: <strong>pdfTeX / Overleaf</strong></span>
+      </div>
+      <div class="telemetry-right">
+        <span>LOC: <strong>UOC BARCELONA</strong></span>
+        <span>DIST: <strong>GPL v3.0</strong></span>
+        <span class="led-indicator"><span class="led-dot rust"></span> BY ScVr!a</span>
+      </div>
+    </div>
+
+    <!-- Authentic Demopack CRT Screen -->
     <a class="brand" href="index.html" aria-label="P3CTeX — Ultimate UOC Template Generator">
       <img src="assets/images/brand-banner.jpg" alt="P3CTeX Authentic CRT Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" width="1024" height="338" fetchpriority="high">
     </a>
+
+    <!-- Retro Mechanical Function-Key Navigation Deck -->
     <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html" aria-current="page">[F1 // HOME]</a>
       <a href="tutorials.html">[F2 // TUTORIALS]</a>
@@ -27,23 +45,56 @@
   </header>
 
   <main id="main">
-    <!-- Hero Section (Clean Split Grid: Copy Left, Artwork Right) -->
-    <section class="hero" aria-label="P3CTeX Overview">
-      <div class="hero-copy">
-        <p class="eyebrow">// SUBSYSTEM: P3CTEX.CLS · UOC ENGINEERING TOOLKIT</p>
-        <h1>Skip the boilerplate.<br>Keep the format.<br>Submit on time.</h1>
-        <p class="lede">
-          An open-source LaTeX document class and modular toolkit built for UOC students. Standardizes official university styles, resilient figure fallbacks, comma-separated tables, and native compiler diagrams — so you can focus on the coursework instead of fighting LaTeX formatting at midnight.
-        </p>
+    <!-- Hero Command Station (Integrated Viewport + Emergency Dispatch Terminal) -->
+    <section class="hero" aria-label="P3CTeX Command Station">
+      <!-- Atmospheric Workshop Panoramic Viewport -->
+      <div class="hero-viewport-frame">
+        <img class="hero-art" src="assets/images/hero-workshop.jpg" alt="P3CTeX engineering workshop: late-night desk with compiler design textbooks and retro CRT terminal" width="1024" height="434" fetchpriority="high">
+        <div class="viewport-hud">
+          <div class="viewport-hud-top">
+            <span class="viewport-badge">// VIEWPORT: NIGHT STUDY LAB · TIME: 23:45:12</span>
+            <span class="viewport-badge">// TARGET: UOC CAMPUS DELIVERABLE</span>
+          </div>
+          <div class="viewport-hud-bottom">
+            <span class="viewport-badge">// "PROCRASTINAR ES LA ÚNICA ESPERANZA" · BY ScVr!a</span>
+            <span class="viewport-badge">// DEADLINE: IMMINENT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency Dispatch Console -->
+      <div class="hero-dispatch-console">
+        <div class="terminal-prompt">
+          <span>sys@p3ctex:~$</span>
+          <span>./uoc-assessment-triage --urgent</span>
+        </div>
+        <h1>IT'S 23:45. YOUR PAC IS DUE AT MIDNIGHT.</h1>
+        <div class="student-reality-box">
+          <strong>THE HARSH REALITY:</strong> You don't have time to debug a 200-line broken preamble copy-pasted from three semesters ago that crashes with cryptic TeX errors. You don't have time to fight <code>&amp; &amp; \\ \hline</code> table alignment or spend 40 minutes drawing TikZ state machines by hand. You need a clean, compilable, official UOC PDF right now.
+        </div>
+
+        <div class="core-guarantees-grid">
+          <div class="guarantee-item">
+            <span class="tag">[01] ONE UNIFIED CLASS</span>
+            <p><code>\documentclass[PAC]{P3CTeX}</code> replaces your entire preamble. Official UOC geometry, headers, Arev typography, and anti-plagiarism declarations configured instantly.</p>
+          </div>
+          <div class="guarantee-item">
+            <span class="tag">[02] ZERO COMPILATION CRASHES</span>
+            <p>Missing image path at midnight? <code>\pxSRC</code> generates a calibrated fallback placeholder instead of crashing <code>pdflatex</code> with fatal errors.</p>
+          </div>
+          <div class="guarantee-item">
+            <span class="tag">[03] PAINLESS CS MACROS</span>
+            <p>Comma-separated data tables (<code>\pxTable</code>), dark IDE code listings (<code>\begin{pxCode}</code>), and instant compiler Tombstones/automata (<code>pxCMP</code>).</p>
+          </div>
+        </div>
+
         <div class="actions">
-          <a href="generator.html" class="button">[&gt;&gt; LAUNCH GENERATOR]</a>
-          <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="button secondary">[OFFLINE TOOL (.HTML)]</a>
-          <a href="tutorials.html" class="button secondary">[DOCUMENTATION &amp; GUIDE]</a>
+          <a href="generator.html" class="button">[⏵ LAUNCH INTERACTIVE GENERATOR]</a>
+          <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="button secondary">[⬇ OFFLINE TOOL (.HTML - ZERO NETWORK)]</a>
+          <a href="tutorials.html" class="button secondary">[🕮 TUTORIALS &amp; ZERO-GIT SETUP]</a>
         </div>
         <p class="hero-note">One unified class for PACs, PRs &amp; TFGs · Works with MiKTeX, TeX Live &amp; Overleaf · GPL v3.0</p>
       </div>
-
-      <img class="hero-art" src="assets/images/hero-workshop.jpg" alt="P3CTeX engineering workshop: late-night desk with compiler design textbooks and retro CRT terminal" width="1024" height="434" fetchpriority="high">
     </section>
 
     <!-- Main Content Container -->
@@ -51,7 +102,7 @@
       <!-- Section 1: One Class, Simple Delivery Profiles -->
       <section class="section" aria-label="Document Class Architecture">
         <div class="section-heading">
-          <span class="eyebrow">// SUBSYSTEM.01: UNIFIED CLASS &amp; DELIVERY PROFILES</span>
+          <span class="eyebrow">// BAY 01: UNIFIED CLASS &amp; DELIVERY PROFILES</span>
           <h2>One unified class. Simple delivery profiles.</h2>
           <p>
             In standard LaTeX, students often copy bloated 200-line preambles between semesters. P3CTeX centralizes page geometry, Arev typography, headers, footers, and official UOC formatting into a single class: <code>P3CTeX.cls</code>.
@@ -150,7 +201,7 @@
       <!-- Section 2: Minimal Ready-to-Compile Skeleton -->
       <section class="section" aria-label="Minimal Document Skeleton">
         <div class="section-heading">
-          <span class="eyebrow">// SUBSYSTEM.02: INSTANT COMPILE SKELETON</span>
+          <span class="eyebrow">// BAY 02: INSTANT COMPILE SKELETON</span>
           <h2>Minimal Working Skeleton</h2>
           <p>
             Student and subject metadata is defined declaratively through <code>\PECTeXconfig{ data = { ... } }</code>. The engine automatically routes these values to page headers, footers, cover pages, and PDF properties:
@@ -201,7 +252,7 @@ Resolució del primer apartat del document...
       <!-- Section 3: Modular Engineering Toolkits -->
       <section class="section" aria-label="Modular Toolkits">
         <div class="section-heading">
-          <span class="eyebrow">// SUBSYSTEM.03: MODULAR ENGINEERING ARSENAL</span>
+          <span class="eyebrow">// BAY 03: THE STUDENT ARSENAL (MODULAR PAINKILLERS)</span>
           <h2>Macros for the challenging parts of technical coursework.</h2>
           <p>
             P3CTeX bundles specialized toolkits designed to eliminate the most time-consuming LaTeX tasks in technical and scientific coursework:
@@ -250,7 +301,7 @@ Resolució del primer apartat del document...
       <!-- Section 4: Setup Without Git -->
       <section class="section" aria-label="Setup &amp; Distribution">
         <div class="section-heading">
-          <span class="eyebrow">// SUBSYSTEM.04: ZERO-GIT DEPLOYMENT</span>
+          <span class="eyebrow">// BAY 04: ZERO-GIT DEPLOYMENT</span>
           <h2>Install once. Use across all semesters.</h2>
           <p>
             You don't need Git or package managers to use P3CTeX. It is distributed as a clean TeX directory tree:
@@ -272,7 +323,7 @@ Resolució del primer apartat del document...
 
       <!-- Visual Artwork Pipeline (Required by Test Suite) -->
       <section class="section" aria-label="Visual illustration slots">
-        <span class="panel-number">VISUAL ASSET SPECIFICATIONS</span>
+        <span class="panel-number">BAY 05 // VISUAL ASSET SPECIFICATIONS</span>
         <h3>Illustration Slots &amp; Artwork Pipeline</h3>
         <p>Asset references indexed in <a href="IMAGE_PROMPTS.md">IMAGE_PROMPTS.md</a>:</p>
 

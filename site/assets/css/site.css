@@ -1,47 +1,55 @@
 /* ==========================================================================
    P3CTeX — Academic Coursework & Engineering Tooling Suite
    Visual Identity: Retrofuturistic Indie Engineering Terminal
-   Aesthetic: Hardware Console · Demopack ANSI · Tactile Industrial Workstation
+   Aesthetic: 100% Monospace · Demopack ANSI · Tactile Hardware Workstation
    "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
    ========================================================================== */
 
 :root {
-  /* Vintage Hardware Chassis Palette (Sampled from Demopack #262C36) */
-  --chassis-bg: #14181f;
-  --chassis-surface: #1b212b;
-  --chassis-panel: #222935;
-  --chassis-card: #262e3b;
-  --chassis-raised: #2f3846;
-  --chassis-recessed: #0e1217;
+  /* Vintage Hardware Chassis Palette (Demopack Slate #262C36 Baseline) */
+  --chassis-void: #090c10;
+  --chassis-bg: #10141b;
+  --chassis-surface: #161c24;
+  --chassis-deck: #1c2430;
+  --chassis-card: #222b38;
+  --chassis-raised: #2c3748;
+  --chassis-recessed: #0a0e14;
+  --chassis-demopack: #262c36;
 
-  /* Industrial Border & Mechanical Bevels */
-  --line-dark: #2a3341;
-  --line-mid: #3b4759;
-  --line-light: #52637a;
-  --line-accent: #6b829e;
+  /* Industrial Hardware Borders & Metal Seams */
+  --border-dim: #252f3d;
+  --border-base: #374659;
+  --border-bright: #546882;
+  --border-accent: #7a94b5;
 
-  /* High-Contrast Technical Typography */
-  --text-bright: #ffffff;
-  --text-main: #e2e8f0;
-  --text-dim: #9aa8b8;
-  --text-dark: #627284;
+  /* High-Contrast Technical Monospace Typography */
+  --text-white: #ffffff;
+  --text-primary: #e6edf5;
+  --text-secondary: #a4b4c7;
+  --text-muted: #6e7f94;
+  --text-dim: #445162;
 
-  /* Retro Analog Hardware Telemetry Tokens */
+  /* Telemetry Indicators & Analog Filament Lamps */
   --btn-rust: #c84630;
-  --btn-rust-hover: #db533c;
-  --btn-rust-active: #a13420;
-  --led-amber: #d49b42;
-  --led-green: #3ecf8e;
-  --crt-teal: #6b9e9e;
-  --crt-teal-bright: #89c4c4;
+  --btn-rust-bevel: #e0543c;
+  --btn-rust-shadow: #5a180b;
+  --btn-rust-hover: #d64e37;
+  
+  --lamp-amber: #e5a93c;
+  --lamp-amber-glow: rgba(229, 169, 60, 0.4);
+  --lamp-green: #3ecf8e;
+  --lamp-green-glow: rgba(62, 207, 142, 0.45);
+  --lamp-cyan: #6ea8a8;
+  --lamp-cyan-bright: #8ed8d8;
+  --lamp-cyan-glow: rgba(142, 216, 216, 0.35);
 
-  /* Typography */
-  --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+  /* Strict Monospace Typography Stack (Consolas, JetBrains Mono, Courier) */
+  --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Lucida Console', 'Courier New', monospace;
+  --font-sans: var(--font-mono);
+  --font-heading: var(--font-mono);
 
-  /* Dimensions */
-  --page-width: min(1360px, calc(100% - clamp(20px, 4vw, 64px)));
+  /* Viewport Constraints */
+  --page-width: min(1360px, calc(100% - clamp(16px, 3.5vw, 56px)));
 }
 
 * {
@@ -59,28 +67,30 @@ body {
   background-image: 
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 32px 32px;
-  color: var(--text-main);
-  font-family: var(--font-sans);
+  background-size: 24px 24px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
   line-height: 1.6;
-  font-size: 16px;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
 }
 
 button, input, select, textarea {
-  font: inherit;
+  font-family: var(--font-mono);
+  font-size: inherit;
 }
 
 a {
-  color: var(--crt-teal-bright);
+  color: var(--lamp-cyan-bright);
   text-decoration: none;
   text-underline-offset: 0.22em;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 a:hover {
   color: #ffffff;
   text-decoration: underline;
+  text-shadow: 0 0 8px var(--lamp-cyan-glow);
 }
 
 button {
@@ -94,65 +104,70 @@ img {
 }
 
 /* ==========================================================================
-   Typography Hierarchy (Technical & Grounded)
+   Typography Hierarchy (Strict Monospace Hardware Terminal)
    ========================================================================== */
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  line-height: 1.18;
-  letter-spacing: -0.025em;
-  color: var(--text-bright);
+  font-family: var(--font-mono);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-white);
   margin-top: 0;
+  text-transform: uppercase;
 }
 
 h1 {
-  font-size: clamp(2rem, 3.2vw, 2.85rem);
+  font-size: clamp(1.8rem, 2.8vw, 2.5rem);
   font-weight: 800;
-  margin: 0.15em 0 0.4em;
+  margin: 0.15em 0 0.45em;
+  letter-spacing: 0.02em;
 }
 
 h2 {
-  font-size: clamp(1.45rem, 2.2vw, 2.1rem);
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem);
   font-weight: 750;
   margin: 0 0 0.55em;
+  border-bottom: 1px dashed var(--border-base);
+  padding-bottom: 6px;
+  letter-spacing: 0.02em;
 }
 
 h3 {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  margin: 0 0 0.5em;
-  color: var(--text-bright);
-  letter-spacing: -0.015em;
+  margin: 0 0 0.45em;
+  color: var(--text-white);
+  letter-spacing: 0.03em;
 }
 
 p {
   margin: 0 0 1.1em;
-  color: var(--text-main);
+  color: var(--text-primary);
 }
 
 ul, ol {
-  padding-left: 1.5em;
+  padding-left: 1.4em;
   margin: 0 0 1.2em;
-  color: var(--text-main);
+  color: var(--text-primary);
 }
 
 li {
-  margin-bottom: 0.45em;
+  margin-bottom: 0.4em;
 }
 
 code {
   font-family: var(--font-mono);
-  font-size: 0.88em;
+  font-size: 0.9em;
   background: var(--chassis-recessed);
-  color: var(--crt-teal-bright);
-  border: 1px solid var(--line-mid);
+  color: var(--lamp-cyan-bright);
+  border: 1px solid var(--border-dim);
   padding: 2px 6px;
-  border-radius: 2px;
+  border-radius: 0;
   overflow-wrap: anywhere;
 }
 
 :focus-visible {
-  outline: 2px solid var(--crt-teal-bright);
+  outline: 2px solid var(--lamp-cyan-bright);
   outline-offset: 3px;
 }
 
@@ -162,11 +177,12 @@ code {
   left: 12px;
   z-index: 50;
   background: var(--chassis-raised);
-  color: var(--text-bright);
+  color: var(--text-white);
   padding: 10px 16px;
   font-weight: 700;
-  border: 1px solid var(--line-light);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--border-bright);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  font-family: var(--font-mono);
 }
 
 .skip-link:focus {
@@ -174,23 +190,79 @@ code {
 }
 
 /* ==========================================================================
-   Header & Uncropped Demopack Banner Station
+   Header & Hardware Telemetry Masthead
    ========================================================================== */
 
 .site-header {
   background: var(--chassis-recessed);
-  border-bottom: 2px solid var(--line-mid);
+  border-bottom: 2px solid var(--border-base);
 }
 
+/* Top Telemetry Status Bar */
+.telemetry-ticker-bar {
+  background: #090d12;
+  border-bottom: 1px solid var(--border-dim);
+  padding: 6px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  letter-spacing: 0.06em;
+}
+
+.telemetry-left, .telemetry-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.led-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.led-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.led-dot.green {
+  background: var(--lamp-green);
+  box-shadow: 0 0 6px var(--lamp-green);
+}
+
+.led-dot.amber {
+  background: var(--lamp-amber);
+  box-shadow: 0 0 6px var(--lamp-amber);
+}
+
+.led-dot.rust {
+  background: var(--btn-rust);
+  box-shadow: 0 0 6px var(--btn-rust);
+}
+
+/* Authentic CRT Demopack Screen Mount */
 .brand {
   display: block;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1040px;
   margin: 0 auto;
   aspect-ratio: 1024 / 338;
   overflow: hidden;
   text-decoration: none;
-  background: #090e15;
+  background: #000000;
+  border-inline: 2px solid var(--border-dim);
+  position: relative;
 }
 
 .brand img {
@@ -200,176 +272,291 @@ code {
   display: block;
 }
 
-/* Retro Function-Key Navigation Bar */
+/* Retro Mechanical Function-Key Navigation Deck */
 .site-nav {
   display: flex;
   justify-content: center;
   align-items: stretch;
   flex-wrap: nowrap;
-  background: #171d26;
-  border-block: 1px solid var(--line-mid);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: #111720;
+  border-top: 1px solid var(--border-dim);
+  border-bottom: 2px solid var(--border-base);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
   overflow-x: auto;
+  padding: 4px 8px;
+  gap: 4px;
 }
 
 .site-nav a {
-  color: var(--text-dim);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
   white-space: nowrap;
   text-decoration: none;
-  font-weight: 650;
-  font-size: 0.88rem;
-  letter-spacing: 0.05em;
-  padding: 12px 22px;
-  border-inline: 1px solid rgba(255, 255, 255, 0.04);
-  min-height: 48px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  padding: 9px 16px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  background: #19212c;
+  border: 1px solid var(--border-dim);
+  border-top: 1px solid var(--border-bright);
+  box-shadow: 0 3px 0 #0b0f14, 0 4px 6px rgba(0, 0, 0, 0.4);
+  transition: all 0.08s ease;
 }
 
 .site-nav a:hover {
-  background: var(--chassis-surface);
-  color: var(--text-bright);
+  background: var(--chassis-raised);
+  color: #ffffff;
+  border-color: var(--border-bright);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #0b0f14, 0 6px 8px rgba(0, 0, 0, 0.5);
+}
+
+.site-nav a:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #0b0f14;
 }
 
 .site-nav a[aria-current=page] {
-  background: var(--chassis-surface);
-  color: var(--text-bright);
-  box-shadow: inset 0 -3px var(--btn-rust);
+  background: #242e3d;
+  color: #ffffff;
+  border-top: 2px solid var(--lamp-amber);
+  border-color: var(--border-bright);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 2px 0 #0b0f14;
 }
 
 .site-nav a.nav-action {
-  background: rgba(200, 70, 48, 0.2);
-  color: #ffffff;
-  border-inline-color: rgba(200, 70, 48, 0.4);
+  background: #2a1b1a;
+  color: #ffb8ad;
+  border-color: rgba(200, 70, 48, 0.5);
+  border-top-color: var(--btn-rust-bevel);
 }
 
 .site-nav a.nav-action:hover {
   background: var(--btn-rust);
+  color: #ffffff;
+  border-color: var(--btn-rust-bevel);
 }
 
 /* ==========================================================================
-   Hero Console Station (Clean Split Grid: Copy Left, Artwork Right)
+   Hero Command Station (Full Workshop Viewport + Emergency Dispatch Terminal)
    ========================================================================== */
 
 .hero {
   width: var(--page-width);
-  margin: 24px auto 0;
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  margin: 20px auto 0;
+  display: flex;
+  flex-direction: column;
   background: var(--chassis-surface);
-  border: 1px solid var(--line-mid);
-  border-bottom: 3px solid var(--btn-rust);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  border: 2px solid var(--border-base);
+  border-top: 4px solid var(--btn-rust);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
   overflow: hidden;
 }
 
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-}
-
-.hero-copy {
-  padding: clamp(28px, 4vw, 44px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.hero-copy h1 {
-  color: var(--text-bright);
-  margin: 0.15em 0 0.45em;
-  font-size: clamp(2rem, 3.2vw, 2.85rem);
-  line-height: 1.15;
-}
-
-.hero-copy .lede {
-  color: var(--text-main);
-  font-size: 1.08rem;
-  line-height: 1.62;
-  margin-bottom: 1.4em;
+/* Atmospheric Workshop Panoramic Viewport */
+.hero-viewport-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  max-height: 460px;
+  min-height: 260px;
+  overflow: hidden;
+  background: #000000;
+  border-bottom: 2px solid var(--border-base);
 }
 
 .hero-art {
   width: 100%;
   height: 100%;
-  min-height: 380px;
   object-fit: cover;
   object-position: center;
   display: block;
-  border-left: 1px solid var(--line-mid);
+  filter: contrast(1.08) brightness(0.92);
 }
 
-@media (max-width: 900px) {
-  .hero-art {
-    border-left: none;
-    border-top: 1px solid var(--line-mid);
-    min-height: 250px;
-  }
+.viewport-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: 
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px),
+    radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.65) 100%);
 }
 
+.viewport-hud-top {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.viewport-hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  color: var(--lamp-amber);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+.viewport-badge {
+  background: rgba(16, 20, 27, 0.85);
+  border: 1px solid var(--border-bright);
+  padding: 3px 8px;
+  backdrop-filter: blur(2px);
+}
+
+/* Emergency Dispatch Console (Student-Focused Copy) */
+.hero-dispatch-console {
+  padding: clamp(20px, 3vw, 36px);
+  background: var(--chassis-deck);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero-dispatch-console .terminal-prompt {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--lamp-green);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-dispatch-console h1 {
+  font-size: clamp(1.8rem, 2.7vw, 2.4rem);
+  line-height: 1.2;
+  margin: 0;
+  color: #ffffff;
+}
+
+.hero-dispatch-console .student-reality-box {
+  background: var(--chassis-recessed);
+  border-left: 3px solid var(--lamp-amber);
+  padding: 14px 18px;
+  margin: 4px 0 8px;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.hero-dispatch-console .student-reality-box strong {
+  color: #ffffff;
+}
+
+.hero-dispatch-console .core-guarantees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-block: 4px 8px;
+}
+
+.guarantee-item {
+  background: var(--chassis-surface);
+  border: 1px solid var(--border-dim);
+  border-top: 2px solid var(--lamp-cyan);
+  padding: 12px 14px;
+}
+
+.guarantee-item .tag {
+  color: var(--lamp-cyan-bright);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.guarantee-item p {
+  font-size: 0.88rem;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* Mechanical Pushbuttons (Tactile Hardware Rockers) */
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-top: 6px;
 }
 
-/* Tactile Hardware Buttons */
 .button {
-  background: var(--btn-rust);
+  background: linear-gradient(180deg, var(--btn-rust-bevel) 0%, var(--btn-rust) 100%);
   color: #ffffff;
   font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.88rem;
-  letter-spacing: 0.04em;
-  padding: 10px 20px;
-  border-radius: 2px;
+  font-weight: 800;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 11px 20px;
+  border-radius: 0;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--btn-rust-active);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: all 0.15s ease;
+  border: 1px solid var(--btn-rust-bevel);
+  box-shadow: 0 4px 0 var(--btn-rust-shadow), 0 5px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.06s ease;
 }
 
 .button:hover {
-  background: var(--btn-rust-hover);
+  background: linear-gradient(180deg, #ea634b 0%, var(--btn-rust-hover) 100%);
   color: #ffffff;
   text-decoration: none;
   transform: translateY(-1px);
+  box-shadow: 0 5px 0 var(--btn-rust-shadow), 0 7px 12px rgba(0, 0, 0, 0.6);
 }
 
 .button:active {
-  background: var(--btn-rust-active);
-  transform: translateY(1px);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--btn-rust-shadow);
 }
 
 .button.secondary {
-  background: var(--chassis-card);
-  color: var(--text-main);
-  border: 1px solid var(--line-mid);
+  background: linear-gradient(180deg, #2d3848 0%, #1f2733 100%);
+  color: var(--text-white);
+  border: 1px solid var(--border-bright);
+  box-shadow: 0 4px 0 #0d1218, 0 5px 10px rgba(0, 0, 0, 0.4);
 }
 
 .button.secondary:hover {
-  background: var(--chassis-raised);
-  border-color: var(--line-light);
-  color: #ffffff;
+  background: linear-gradient(180deg, #374457 0%, #26303f 100%);
+  border-color: var(--border-accent);
+  box-shadow: 0 5px 0 #0d1218, 0 7px 12px rgba(0, 0, 0, 0.5);
+}
+
+.button.secondary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0d1218;
 }
 
 .hero-note {
-  font-size: 0.82rem;
-  color: var(--text-dim);
+  font-size: 0.78rem;
+  color: var(--text-muted);
   font-family: var(--font-mono);
   margin: 0;
+  letter-spacing: 0.04em;
 }
 
 /* ==========================================================================
-   Main Terminal Chassis Container
+   Main Terminal Chassis Container (Industrial Monospace Framework)
    ========================================================================== */
 
 .container {
@@ -378,16 +565,16 @@ code {
 }
 
 main.container, .home main > .container {
-  padding-inline: clamp(22px, 3vw, 48px);
-  margin-block: 24px;
+  padding-inline: clamp(20px, 3vw, 40px);
+  margin-block: 20px;
   background: var(--chassis-surface);
-  border: 1px solid var(--line-mid);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--border-base);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
 }
 
 .section {
-  padding-block: 36px;
-  border-bottom: 1px solid var(--line-dark);
+  padding-block: 32px;
+  border-bottom: 2px dashed var(--border-dim);
 }
 
 .section:last-child {
@@ -395,32 +582,32 @@ main.container, .home main > .container {
 }
 
 .section-heading {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .eyebrow, .panel-number {
-  color: var(--led-amber);
-  font-size: 0.75rem;
-  font-weight: 750;
+  color: var(--lamp-amber);
+  font-size: 0.76rem;
+  font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   display: block;
   font-family: var(--font-mono);
 }
 
 .lede {
-  font-size: 1.1rem;
-  line-height: 1.62;
-  color: var(--text-main);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-primary);
 }
 
-/* Hardware Instrument Panels */
+/* Hardware Equipment Bays & Instrument Panels (Replacing Generic Cards) */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-block: 20px;
+  gap: 18px;
+  margin-block: 18px;
 }
 
 .cards.col-2 {
@@ -429,230 +616,175 @@ main.container, .home main > .container {
 
 .panel {
   background: var(--chassis-card);
-  border: 1px solid var(--line-dark);
-  border-top: 3px solid var(--line-mid);
-  padding: 22px;
+  border: 1px solid var(--border-dim);
+  border-top: 3px solid var(--border-bright);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: all 0.12s ease;
+  position: relative;
 }
 
 .panel:hover {
-  transform: translateY(-2px);
-  border-color: var(--crt-teal-bright);
+  border-color: var(--lamp-cyan-bright);
+  background: #273140;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .panel h2, .panel h3 {
   margin: 0 0 0.5em;
-  color: var(--text-bright);
+  color: var(--text-white);
+  font-size: 1.08rem;
+  letter-spacing: 0.02em;
 }
 
 .panel p {
-  color: var(--text-dim);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin-bottom: 1em;
   flex-grow: 1;
 }
 
-.panel a {
-  margin-top: 10px;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
+.panel code {
+  align-self: flex-start;
+  font-size: 0.84rem;
+  background: var(--chassis-recessed);
+  border: 1px solid var(--border-dim);
+  color: var(--lamp-cyan-bright);
 }
 
-/* Split Sections */
-.section.split {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 36px;
-  align-items: center;
-}
-
-@media (max-width: 860px) {
-  .section.split {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Steps list */
-.steps {
-  list-style: none;
-  padding-left: 0;
-  counter-reset: step-counter;
-}
-
-.steps li {
-  counter-increment: step-counter;
-  position: relative;
-  padding-left: 42px;
-  margin-bottom: 1.4em;
-}
-
-.steps li::before {
-  content: counter(step-counter, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-family: var(--font-mono);
-  font-weight: 800;
-  color: var(--led-amber);
-  font-size: 0.95rem;
-}
-
-/* Technical Data Matrix Table */
+/* Technical Monospace Data Matrix Table */
 .data-matrix-table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-mono);
-  font-size: 0.84rem;
-  margin-top: 16px;
+  font-size: 0.85rem;
+  margin-block: 22px 14px;
   background: var(--chassis-recessed);
-  border: 1px solid var(--line-mid);
+  border: 1px solid var(--border-base);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
 .data-matrix-table th {
-  background: #19202a;
-  color: var(--led-amber);
-  padding: 10px 14px;
+  background: #1e2634;
+  color: var(--lamp-amber);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-align: left;
-  border-bottom: 1px solid var(--line-mid);
-  letter-spacing: 0.05em;
+  padding: 10px 14px;
+  border: 1px solid var(--border-base);
+  font-size: 0.78rem;
 }
 
 .data-matrix-table td {
   padding: 10px 14px;
-  border-bottom: 1px solid var(--line-dark);
-  color: var(--text-main);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  line-height: 1.5;
 }
 
-.data-matrix-table tr:hover td {
+.data-matrix-table tbody tr:nth-child(even) {
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* Jump Navigation (TOC) */
-nav.toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  background: var(--chassis-panel);
-  border: 1px solid var(--line-dark);
-  padding: 12px 18px;
-  margin-block: 20px;
-  border-radius: var(--radius-sm);
+.data-matrix-table tbody tr:hover {
+  background: rgba(110, 168, 168, 0.08);
 }
 
-nav.toc a {
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
-  font-weight: 650;
-  color: var(--text-dim);
-  padding: 5px 12px;
-  border-radius: 2px;
-  background: var(--chassis-recessed);
-  border: 1px solid var(--line-dark);
+.data-matrix-table td code {
+  color: var(--lamp-cyan-bright);
+  font-weight: 700;
+  background: #111620;
 }
 
-nav.toc a:hover {
-  color: #ffffff;
-  border-color: var(--crt-teal-bright);
-  text-decoration: none;
-}
-
-/* ==========================================================================
-   Code Boxes (Technical Terminal Inserts)
-   ========================================================================== */
-
+/* Code Buffer Terminals */
 .code-box {
   background: var(--chassis-recessed);
-  border: 1px solid var(--line-mid);
-  border-radius: 2px;
-  margin: 18px 0;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-base);
+  border-top: 3px solid var(--border-accent);
+  margin-block: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .code-box-header {
-  background: #18202b;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: #131922;
+  border-bottom: 1px solid var(--border-dim);
   padding: 8px 14px;
-  border-bottom: 1px solid var(--line-dark);
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--text-dim);
 }
 
 .code-badge {
-  background: rgba(107, 158, 158, 0.15);
-  color: var(--crt-teal-bright);
-  border: 1px solid rgba(107, 158, 158, 0.35);
-  padding: 2px 7px;
-  border-radius: 2px;
-  font-weight: 750;
+  background: rgba(110, 168, 168, 0.15);
+  color: var(--lamp-cyan-bright);
+  border: 1px solid rgba(110, 168, 168, 0.4);
+  padding: 2px 6px;
+  font-weight: 800;
   margin-right: 8px;
+  letter-spacing: 0.08em;
 }
 
 .code-filename {
-  font-weight: 600;
-  color: var(--text-main);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .copy-btn {
-  background: var(--chassis-panel);
-  color: var(--text-main);
-  border: 1px solid var(--line-mid);
-  padding: 4px 12px;
-  border-radius: 2px;
+  background: var(--chassis-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-bright);
+  padding: 4px 10px;
   font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.1s ease;
 }
 
 .copy-btn:hover {
   background: var(--btn-rust);
   color: #ffffff;
-  border-color: var(--btn-rust-active);
+  border-color: var(--btn-rust-bevel);
 }
 
 .code-box pre {
   margin: 0;
-  padding: 16px 20px;
+  padding: 16px;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 0.88rem;
   line-height: 1.55;
-  color: var(--text-main);
+  color: var(--text-primary);
   background: var(--chassis-recessed);
 }
 
 .code-box code {
   background: transparent;
-  color: inherit;
-  padding: 0;
-  font-size: inherit;
   border: none;
-  border-radius: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
 }
 
-/* Syntax Highlighting (Muted Retro Tones) */
-.syn-kw { color: var(--led-amber); font-weight: bold; }
-.syn-cmd { color: var(--crt-teal-bright); font-weight: bold; }
+/* Syntax Highlighting Tokens */
+.syn-kw { color: var(--lamp-amber); font-weight: bold; }
+.syn-cmd { color: var(--lamp-cyan-bright); font-weight: bold; }
 .syn-opt { color: #d69850; }
 .syn-arg { color: #8ec09b; }
 .syn-comment { color: #5c6c7e; font-style: italic; }
 
-/* ==========================================================================
-   Image Placeholder Cards (Compact, Collapsible)
-   ========================================================================== */
-
+/* Image Placeholder Diagnostic Cards */
 .image-placeholder-card {
-  background: var(--chassis-panel);
-  border: 1px dashed var(--line-light);
-  border-radius: 2px;
+  background: var(--chassis-card);
+  border: 1px dashed var(--border-bright);
   padding: 12px 16px;
-  margin: 20px 0;
+  margin: 18px 0;
 }
 
 .slot-header {
@@ -660,60 +792,105 @@ nav.toc a:hover {
   align-items: center;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 
 .slot-id {
-  font-weight: 750;
-  color: var(--led-amber);
+  font-weight: 800;
+  color: var(--lamp-amber);
 }
 
 .slot-ratio {
-  color: var(--text-dim);
+  color: var(--text-muted);
   font-size: 0.74rem;
 }
 
 .prompt-expander {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .prompt-expander summary {
   cursor: pointer;
-  color: var(--crt-teal-bright);
+  color: var(--lamp-cyan-bright);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 650;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .prompt-text {
   background: var(--chassis-recessed);
   color: #b5cdd6;
   padding: 10px 14px;
-  border-radius: 2px;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   line-height: 1.5;
   margin: 8px 0 0;
-  border: 1px solid var(--line-dark);
+  border: 1px solid var(--border-dim);
   user-select: all;
 }
 
+/* Jump Navigation Table of Contents */
+nav.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 24px;
+  padding: 12px;
+  background: var(--chassis-deck);
+  border: 1px solid var(--border-base);
+}
+
+nav.toc a {
+  background: var(--chassis-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-dim);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: all 0.1s ease;
+}
+
+nav.toc a:hover {
+  background: var(--chassis-raised);
+  color: #ffffff;
+  border-color: var(--lamp-cyan-bright);
+  text-decoration: none;
+}
+
+/* Numbered Steps List */
+ol.steps {
+  padding-left: 1.8em;
+  margin-block: 16px;
+}
+
+ol.steps li {
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+ol.steps strong {
+  color: #ffffff;
+}
+
 /* ==========================================================================
-   Site Footer
+   Footer (Technical Monospace Diagnostics)
    ========================================================================== */
 
 .site-footer {
-  background: #0f1318;
-  border-top: 2px solid var(--line-mid);
-  padding: 40px 0 28px;
-  color: var(--text-dim);
-  font-size: 0.88rem;
+  background: #090d12;
+  border-top: 2px solid var(--border-base);
+  padding: 36px 0 24px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
 }
 
 .footer-inner {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 36px;
+  gap: 32px;
 }
 
 @media (max-width: 800px) {
@@ -726,21 +903,23 @@ nav.toc a:hover {
 .footer-brand h4 {
   color: #ffffff;
   font-family: var(--font-mono);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   margin-bottom: 8px;
+  letter-spacing: 0.05em;
 }
 
 .footer-brand p {
-  color: var(--text-dim);
-  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  margin-bottom: 0.6em;
 }
 
 .footer-links h5 {
-  color: var(--led-amber);
+  color: var(--lamp-amber);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   letter-spacing: 0.08em;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   text-transform: uppercase;
 }
 
@@ -751,12 +930,13 @@ nav.toc a:hover {
 }
 
 .footer-links li {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .footer-links a {
-  color: var(--text-dim);
+  color: var(--text-secondary);
   text-decoration: none;
+  font-size: 0.84rem;
 }
 
 .footer-links a:hover {
@@ -765,13 +945,14 @@ nav.toc a:hover {
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--line-dark);
-  margin-top: 30px;
-  padding-top: 16px;
+  border-top: 1px solid var(--border-dim);
+  margin-top: 26px;
+  padding-top: 14px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-dark);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
 }
