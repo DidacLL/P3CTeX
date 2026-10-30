@@ -11,34 +11,26 @@
 <body class="showcases">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Header & Navigation -->
+  <!-- Header -->
   <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand-wrapper">
-        <a href="index.html" class="brand-title" aria-label="P3CTeX Home">
-          <span>P3CTeX</span>
-          <span class="slash">//</span>
-          <span class="brand-badge">v1.1.0</span>
-          <span class="motto">"Procrastinar és l'única esperança"</span>
-        </a>
-      </div>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a href="index.html">01/Home</a>
-        <a href="tutorials.html">02/Tutorials</a>
-        <a href="showcases.html" aria-current="page">03/Showcases</a>
-        <a href="generator.html">04/Generator</a>
-        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="nav-cta">GitHub</a>
-      </nav>
-    </div>
+    <a class="brand" href="index.html" aria-label="P3CTeX Home">
+      <img src="assets/images/pec-tex-banner.png" alt="P3CTeX Banner: Procrastinar es la unica esperanza" width="672" height="428">
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="showcases.html" aria-current="page">Showcases</a>
+      <a href="generator.html">Generator Tool</a>
+      <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">Download ZIP</a>
+      <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </header>
 
   <main id="main" class="container">
-    <section class="section">
-      <div class="section-header">
-        <p class="eyebrow">Arsenal Demonstrations</p>
-        <h1>P3CTeX Feature Showcases &amp; Advanced Blobs</h1>
-        <p class="sublead">Production-ready, reproducible code templates for the most powerful and demanding LaTeX constructs in engineering coursework: multipage tables, recursive loops, compiler diagrams, and resilient figure handling.</p>
-      </div>
+    <div class="page-intro">
+      <span class="eyebrow">ARSENAL DEMONSTRATIONS</span>
+      <h1>P3CTeX Feature Showcases &amp; Complex Blobs</h1>
+      <p>Production-ready, reproducible code templates for the most powerful and demanding LaTeX constructs in engineering coursework: multipage tables, recursive loops, compiler diagrams, and resilient figure handling.</p>
 
       <!-- Complete Skeleton with \documentclass and \begin{document} -->
       <div class="code-box">
@@ -59,8 +51,8 @@ Procrastinar és l'única esperança.
       </div>
 
       <!-- Jump Navigation Bar -->
-      <nav class="toc-bar" aria-label="Jump to package showcase">
-        <span class="toc-label">SHOWCASES:</span>
+      <nav class="toc" aria-label="Jump to package showcase">
+        <span class="toc-title">MODULES:</span>
         <a href="#pxcmp">pxCMP // Compilers &amp; Automata</a>
         <a href="#pxtab">pxTAB // Multipage Tables</a>
         <a href="#foreach">Recursive // \foreach Blobs</a>
@@ -70,45 +62,45 @@ Procrastinar és l'única esperança.
         <a href="#pxreq">pxREQ // Requirements &amp; SWOT</a>
         <a href="#pxuml">pxUML // Class Diagrams</a>
       </nav>
+    </div>
 
-      <!-- 1. pxCMP Showcase -->
-      <section class="section" id="pxcmp">
-        <h2><span class="panel-number">MOD // 01</span> pxCMP — Compilers, Automata &amp; AI Diagrams</h2>
-        <div class="prose">
-          <p>The <code>pxCMP</code> module provides declarative macros to generate Tombstone (T-diagrams) for compilers, finite state transition tables, execution traces, heuristic search graphs, and neural networks.</p>
+    <!-- 1. pxCMP Showcase -->
+    <section class="section" id="pxcmp">
+      <span class="panel-number">MOD // 01</span>
+      <h2>pxCMP — Compilers, Automata &amp; AI Diagrams</h2>
+      <div class="prose">
+        <p>The <code>pxCMP</code> module provides declarative macros to generate Tombstone (T-diagrams) for compilers, finite state transition tables, execution traces, heuristic search graphs, and neural networks.</p>
 
-          <div class="cards-grid col-2">
-            <!-- Tombstone Diagram -->
-            <article class="panel">
-              <span class="panel-number">pxCMP // TOMBSTONE</span>
-              <h3>Compiler T-Diagrams</h3>
-              <p>Represent source languages, implementation languages, and target host architectures:</p>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Tombstone Compilation</div>
-                  <button class="copy-btn" data-copy-target="#code-tombstone">COPY</button>
-                </div>
-                <pre><code id="code-tombstone"><span class="syn-comment">% Compile Java to JVM Bytecode using an x86 compiler</span>
+        <div class="cards col-2">
+          <!-- Tombstone Diagram -->
+          <article class="panel">
+            <h3>Compiler T-Diagrams</h3>
+            <p>Represent source languages, implementation languages, and target host architectures:</p>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Tombstone Compilation</div>
+                <button class="copy-btn" data-copy-target="#code-tombstone">COPY</button>
+              </div>
+              <pre><code id="code-tombstone"><span class="syn-comment">% Compile Java to JVM Bytecode using an x86 compiler</span>
 <span class="syn-cmd">\pxTombstoneCompile</span><span class="syn-opt">[title={Compilador Java cap a Bytecode JVM}]</span>
   {Programa}{Java}{JVM}{x86}
 
 <span class="syn-comment">% Bootstrapping an Oberon compiler from 486 to Pentium-III</span>
 <span class="syn-cmd">\pxTombstoneBootstrap</span><span class="syn-opt">[title={Bootstrapping d'Oberon}]</span>
   {Oberon}{486}{P-III}</code></pre>
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <!-- State Machine & Trace -->
-            <article class="panel">
-              <span class="panel-number">pxCMP // AUTOMATA</span>
-              <h3>DFA Transition Tables &amp; Traces</h3>
-              <p>Define state machines and word validation traces with formatted verdicts:</p>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Transition Table &amp; Trace</div>
-                  <button class="copy-btn" data-copy-target="#code-dfa">COPY</button>
-                </div>
-                <pre><code id="code-dfa"><span class="syn-comment">% Taula de transició d'estats</span>
+          <!-- State Machine & Trace -->
+          <article class="panel">
+            <h3>DFA Transition Tables &amp; Traces</h3>
+            <p>Define state machines and word validation traces with formatted verdicts:</p>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Transition Table &amp; Trace</div>
+                <button class="copy-btn" data-copy-target="#code-dfa">COPY</button>
+              </div>
+              <pre><code id="code-dfa"><span class="syn-comment">% Taula de transició d'estats</span>
 <span class="syn-cmd">\pxTransitionTable</span><span class="syn-opt">[title={Taula de transició del Lexer}]</span>{a, b}{
   q_0 / initial   / q_1, q_2 / I;
   q_1 / normal    / q_3, q_2 / I;
@@ -120,21 +112,20 @@ Procrastinar és l'única esperança.
 <span class="syn-cmd">\pxAutomatonTrace</span><span class="syn-opt">[title={Traça de la paraula \texttt{aba}}]</span>{
   q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1
 }<span class="syn-opt">[Rebutjat]</span></code></pre>
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
+        </div>
 
-          <!-- A* Search & Neural Net -->
-          <div class="cards-grid col-2" style="margin-top: 16px;">
-            <article class="panel">
-              <span class="panel-number">pxCMP // HEURISTIC SEARCH</span>
-              <h3>A* Search Graph</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> A* Graph Specification</div>
-                  <button class="copy-btn" data-copy-target="#code-astar">COPY</button>
-                </div>
-                <pre><code id="code-astar"><span class="syn-cmd">\pxGraph</span><span class="syn-opt">[title={Graf de cerca heurística $A^*$}]</span>{
+        <!-- A* Search & Neural Net -->
+        <div class="cards col-2" style="margin-top: 16px;">
+          <article class="panel">
+            <h3>A* Search Graph</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> A* Graph Specification</div>
+                <button class="copy-btn" data-copy-target="#code-astar">COPY</button>
+              </div>
+              <pre><code id="code-astar"><span class="syn-cmd">\pxGraph</span><span class="syn-opt">[title={Graf de cerca heurística $A^*$}]</span>{
   A / A / 0,0    / start   / $h=20$;
   B / B / 2.2,1.1/ path    / {$g=4, f=16$};
   C / C / 2.2,-1.1/ visited/ $h=15$;
@@ -142,55 +133,55 @@ Procrastinar és l'única esperança.
 }{
   A =&gt; B / 4; A -&gt; C / 5; B =&gt; G / 8; C -&gt; G / 12
 }</code></pre>
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <article class="panel">
-              <span class="panel-number">pxCMP // NEURAL NETS</span>
-              <h3>Multilayer Perceptron (MLP)</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Neural Network Schema</div>
-                  <button class="copy-btn" data-copy-target="#code-mlp">COPY</button>
-                </div>
-                <pre><code id="code-mlp"><span class="syn-cmd">\pxNeuralNet</span><span class="syn-opt">[title={Perceptró Multicapa (MLP)}]</span>{
+          <article class="panel">
+            <h3>Multilayer Perceptron (MLP)</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Neural Network Schema</div>
+                <button class="copy-btn" data-copy-target="#code-mlp">COPY</button>
+              </div>
+              <pre><code id="code-mlp"><span class="syn-cmd">\pxNeuralNet</span><span class="syn-opt">[title={Perceptró Multicapa (MLP)}]</span>{
   Entrada     / x_0, x_1, x_2     / input;
   Capa Oculta / h_0, h_1, h_2, h_3 / ReLU;
   Sortida     / y_0               / Sigmoid
 }[x_0 -&gt; h_0 / 1; x_1 -&gt; h_0 / -1; h_0 -&gt; y_0 / 2]</code></pre>
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot pxCMP -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-CMP-05" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-CMP-05</span> · Computer Science Diagram Infographic
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-cmp-05">Vector illustration of computer science compiler pipeline and automata, glowing Tombstone compilation blocks connected by glowing wires, DFA state nodes floating in dark space, A-star search heuristic nodes connected by glowing green optimal path vectors, retro industrial cyberpunk style, dark slate blueprint background, amber and cyan accents, clean crisp lines --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-cmp-05">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-CMP-05" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-CMP-05 · Computer Science Diagram Infographic</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-cmp-05">Vector illustration of computer science compiler pipeline and automata, glowing Tombstone compilation blocks connected by glowing wires, DFA state nodes floating in dark space, A-star search heuristic nodes connected by glowing green optimal path vectors, retro industrial cyberpunk style, dark slate blueprint background, amber and cyan accents, clean crisp lines --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- 2. pxTAB Showcase & Multipage Tables -->
-      <section class="section" id="pxtab">
-        <h2><span class="panel-number">MOD // 02</span> pxTAB — Multipage Tables &amp; Composed Styles</h2>
-        <div class="prose">
-          <p>Tables in LaTeX are notoriously tedious. <code>pxTAB</code> offers clean comma-separated syntax, zebra striping, and the dedicated <code>\pxTBLlong</code> macro for tables that comfortably span multiple pages without breaking headers or footers.</p>
+    <!-- 2. pxTAB Showcase & Multipage Tables -->
+    <section class="section" id="pxtab">
+      <span class="panel-number">MOD // 02</span>
+      <h2>pxTAB — Multipage Tables &amp; Composed Styles</h2>
+      <div class="prose">
+        <p>Tables in LaTeX are notoriously tedious. <code>pxTAB</code> offers clean comma-separated syntax, zebra striping, and the dedicated <code>\pxTBLlong</code> macro for tables that comfortably span multiple pages without breaking headers or footers.</p>
 
-          <article class="panel">
-            <span class="panel-number">BLOB // MULTIPAGE TABLE</span>
-            <h3>Huge Multipage Table with Repeated Running Headers</h3>
-            <p>Automatically repeats column headers across page breaks, shows a continuation notice at intermediate page bottoms, and presents a final summary at the table's end.</p>
-            <div class="code-box">
-              <div class="code-box-header">
-                <div class="code-box-title"><span class="tag">LATEX</span> pxTBLlong Multipage Table</div>
-                <button class="copy-btn" data-copy-target="#code-longtable">COPY</button>
-              </div>
-              <pre><code id="code-longtable"><span class="syn-cmd">\pxTBLlong</span><span class="syn-opt">[.95\linewidth]</span>{6}{
+        <article class="panel">
+          <h3>Huge Multipage Table with Repeated Running Headers</h3>
+          <p>Automatically repeats column headers across page breaks, shows a continuation notice at intermediate page bottoms, and presents a final summary at the table's end.</p>
+          <div class="code-box">
+            <div class="code-box-header">
+              <div class="code-box-title"><span class="tag">LATEX</span> pxTBLlong Multipage Table</div>
+              <button class="copy-btn" data-copy-target="#code-longtable">COPY</button>
+            </div>
+            <pre><code id="code-longtable"><span class="syn-cmd">\pxTBLlong</span><span class="syn-opt">[.95\linewidth]</span>{6}{
   <span class="syn-comment">% Header Row (Repeated on every page)</span>
   \textbf{ID} &amp; \textbf{Mòdul} &amp; \textbf{Funció} &amp; \textbf{Entrada} &amp; \textbf{Temps} &amp; \textbf{Estat}
 }{
@@ -206,39 +197,40 @@ Procrastinar és l'única esperança.
   TC-009 &amp; pxUML  &amp; Herència de classes   &amp; 12 classes OOP        &amp; 1.95 ms &amp; \textbf{PASS} \\
   TC-010 &amp; pxMEM  &amp; Resum de memòria      &amp; Capítols 1 a 6        &amp; 0.90 ms &amp; \textbf{PASS} \\
 }</code></pre>
-            </div>
-          </article>
-        </div>
-      </section>
+          </div>
+        </article>
 
-      <!-- Image Placeholder Slot pxTAB -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-TAB-09" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-TAB-09</span> · Tabular Typography Artwork
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-tab-09">Futuristic multidimensional data grid and academic tabular typography, alternating glowing zebra stripes, clean monospaced font headers, holographic data streams on vintage dark CRT monitor, industrial drafting table, technical diagram aesthetic --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-tab-09">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-TAB-09" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-TAB-09 · Tabular Typography Artwork</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-tab-09">Futuristic multidimensional data grid and academic tabular typography, alternating glowing zebra stripes, clean monospaced font headers, holographic data streams on vintage dark CRT monitor, industrial drafting table, technical diagram aesthetic --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- 3. Recursive Executions (\foreach) -->
-      <section class="section" id="foreach">
-        <h2><span class="panel-number">BLOB // 03</span> Recursive &amp; Iterative Executions with <code>\foreach</code></h2>
-        <div class="prose">
-          <p>Eliminate copy-paste repetition. Using LaTeX's PGF/TikZ <code>\foreach</code> engine, you can generate batch image galleries, automated test case tables, and benchmark comparisons with a single loop.</p>
+    <!-- 3. Recursive Executions (\foreach) -->
+    <section class="section" id="foreach">
+      <span class="panel-number">BLOB // 03</span>
+      <h2>Recursive &amp; Iterative Executions with <code>\foreach</code></h2>
+      <div class="prose">
+        <p>Eliminate copy-paste repetition. Using LaTeX's PGF/TikZ <code>\foreach</code> engine, you can generate batch image galleries, automated test case tables, and benchmark comparisons with a single loop.</p>
 
-          <div class="cards-grid col-2">
-            <!-- Batch Subfigure Loop -->
-            <article class="panel">
-              <span class="panel-number">LOOP // SUBFIGURES</span>
-              <h3>Batch Subfigure Iteration</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Automated Image Gallery</div>
-                  <button class="copy-btn" data-copy-target="#code-loop-fig">COPY</button>
-                </div>
-                <pre><code id="code-loop-fig"><span class="syn-comment">% Generació automàtica de 4 figures de benchmarks</span>
+        <div class="cards col-2">
+          <!-- Batch Subfigure Loop -->
+          <article class="panel">
+            <h3>Batch Subfigure Iteration</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Automated Image Gallery</div>
+                <button class="copy-btn" data-copy-target="#code-loop-fig">COPY</button>
+              </div>
+              <pre><code id="code-loop-fig"><span class="syn-comment">% Generació automàtica de 4 figures de benchmarks</span>
 <span class="syn-cmd">\noindent\foreach</span> \idx/\nomFiltre in {
   1/Original,
   2/Filtre-Sobel,
@@ -252,19 +244,18 @@ Procrastinar és l'única esperança.
   <span class="syn-kw">\end</span><span class="syn-arg">{minipage}</span>%
   <span class="syn-cmd">\hfill\ifnum</span>\idx=2 <span class="syn-cmd">\par\vspace</span>{1em}<span class="syn-cmd">\fi</span>
 }</code></pre>
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <!-- Automated Test Matrix -->
-            <article class="panel">
-              <span class="panel-number">LOOP // TEST MATRIX</span>
-              <h3>Automated Benchmark Runner Loop</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Loop Over Test Vectors</div>
-                  <button class="copy-btn" data-copy-target="#code-loop-test">COPY</button>
-                </div>
-                <pre><code id="code-loop-test"><span class="syn-comment">% Iteració sobre vectors de prova del lexer</span>
+          <!-- Automated Test Matrix -->
+          <article class="panel">
+            <h3>Automated Benchmark Runner Loop</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Loop Over Test Vectors</div>
+                <button class="copy-btn" data-copy-target="#code-loop-test">COPY</button>
+              </div>
+              <pre><code id="code-loop-test"><span class="syn-comment">% Iteració sobre vectors de prova del lexer</span>
 <span class="syn-cmd">\pxTABsetup</span>{style=striped, tabwidth=\linewidth}
 <span class="syn-cmd">\pxTable</span>{ID Prova, Cadena d'Entrada, Resultat Esperat}{
   \foreach \id/\str/\res in {
@@ -275,28 +266,28 @@ Procrastinar és l'única esperança.
     \id, \str, \res \par
   }
 }</code></pre>
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 4. pxLST Showcase -->
-      <section class="section" id="pxlst">
-        <h2><span class="panel-number">MOD // 04</span> pxLST — Professional Codeboxes &amp; Themes</h2>
-        <div class="prose">
-          <p>Syntax highlighting with custom color themes (dark, pastel, light) and line numbering for Java, Python, C++, Bash, SQL, and pseudocode.</p>
+    <!-- 4. pxLST Showcase -->
+    <section class="section" id="pxlst">
+      <span class="panel-number">MOD // 04</span>
+      <h2>pxLST — Professional Codeboxes &amp; Themes</h2>
+      <div class="prose">
+        <p>Syntax highlighting with custom color themes (dark, pastel, light) and line numbering for Java, Python, C++, Bash, SQL, and pseudocode.</p>
 
-          <div class="cards-grid col-2">
-            <article class="panel">
-              <span class="panel-number">THEME // DARK</span>
-              <h3>Java Snippet in Dark Theme</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Dark Style pxLST</div>
-                  <button class="copy-btn" data-copy-target="#code-lst-dark">COPY</button>
-                </div>
-                <pre><code id="code-lst-dark"><span class="syn-cmd">\pxCodeSet</span><span class="syn-opt">[dark]</span><span class="syn-arg">{pxJava}</span>
+        <div class="cards col-2">
+          <article class="panel">
+            <h3>Java Snippet in Dark Theme</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Dark Style pxLST</div>
+                <button class="copy-btn" data-copy-target="#code-lst-dark">COPY</button>
+              </div>
+              <pre><code id="code-lst-dark"><span class="syn-cmd">\pxCodeSet</span><span class="syn-opt">[dark]</span><span class="syn-arg">{pxJava}</span>
 <span class="syn-kw">\begin</span><span class="syn-arg">{pxCode}</span><span class="syn-opt">[language=pxJava]</span><span class="syn-arg">{Fibonacci}</span>
 public class Fibonacci {
     public static int compute(int n) {
@@ -310,18 +301,17 @@ public class Fibonacci {
     }
 }
 <span class="syn-kw">\end</span><span class="syn-arg">{pxCode}</span></code></pre>
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <article class="panel">
-              <span class="panel-number">THEME // FRAMED PASTEL</span>
-              <h3>Iterative Algorithm in Pastel Frame</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> Framed CodeBox</div>
-                  <button class="copy-btn" data-copy-target="#code-lst-pastel">COPY</button>
-                </div>
-                <pre><code id="code-lst-pastel"><span class="syn-cmd">\pxCodeSet</span><span class="syn-opt">[pastel]</span><span class="syn-arg">{algoritme}</span><span class="syn-opt">[framed]</span>
+          <article class="panel">
+            <h3>Iterative Algorithm in Pastel Frame</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> Framed CodeBox</div>
+                <button class="copy-btn" data-copy-target="#code-lst-pastel">COPY</button>
+              </div>
+              <pre><code id="code-lst-pastel"><span class="syn-cmd">\pxCodeSet</span><span class="syn-opt">[pastel]</span><span class="syn-arg">{algoritme}</span><span class="syn-opt">[framed]</span>
 <span class="syn-kw">\begin</span><span class="syn-arg">{CodeBox}</span>{lst-alg}{Algorisme: Factorial}{[lst:fact]}{Càlcul iteratiu}
 Funcio factorial(n: Integer): Integer
   Si n &lt;= 0 Llavors
@@ -335,35 +325,37 @@ Funcio factorial(n: Integer): Integer
   Fi Si
 Fi Funcio
 <span class="syn-kw">\end</span><span class="syn-arg">{CodeBox}</span></code></pre>
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot pxLST -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-LST-08" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-LST-08</span> · Codebox Theme Comparison
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-lst-08">Isometric triple monitor setup displaying code listings in dark, pastel, and light typography themes, elegant syntax highlighted tokens in amber, cyan and mint green, vintage mechanical keyboard and glowing oscilloscope in background, cozy hacker studio atmosphere --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-lst-08">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-LST-08" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-LST-08 · Codebox Theme Comparison</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-lst-08">Isometric triple monitor setup displaying code listings in dark, pastel, and light typography themes, elegant syntax highlighted tokens in amber, cyan and mint green, vintage mechanical keyboard and glowing oscilloscope in background, cozy hacker studio atmosphere --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- 5. pxSRC Showcase -->
-      <section class="section" id="pxsrc">
-        <h2><span class="panel-number">MOD // 05</span> pxSRC — Resilient Image &amp; Fallback System</h2>
-        <div class="prose">
-          <p>Never suffer compilation failure due to a missing graphic. <code>\pxIMG</code> inspects asset availability and renders an accurate dimensional placeholder if the image file is absent.</p>
+    <!-- 5. pxSRC Showcase -->
+    <section class="section" id="pxsrc">
+      <span class="panel-number">MOD // 05</span>
+      <h2>pxSRC — Resilient Image &amp; Fallback System</h2>
+      <div class="prose">
+        <p>Never suffer compilation failure due to a missing graphic. <code>\pxIMG</code> inspects asset availability and renders an accurate dimensional placeholder if the image file is absent.</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> pxSRC Fallback &amp; Multi-Image Inclusions</div>
-              <button class="copy-btn" data-copy-target="#code-pxsrc">COPY</button>
-            </div>
-            <pre><code id="code-pxsrc"><span class="syn-comment">% Single resilient figure with fallback color</span>
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> pxSRC Fallback &amp; Multi-Image Inclusions</div>
+            <button class="copy-btn" data-copy-target="#code-pxsrc">COPY</button>
+          </div>
+          <pre><code id="code-pxsrc"><span class="syn-comment">% Single resilient figure with fallback color</span>
 <span class="syn-cmd">\pxIMG</span><span class="syn-opt">[0.8\linewidth]</span>{img/system-architecture}<span class="syn-opt">[primaryColor]</span>{Diagrama de l'arquitectura global}[fig:arch]
 
 <span class="syn-comment">% Pair of figures side by side with single caption</span>
@@ -375,85 +367,87 @@ Fi Funcio
   Pas 2: Filtrat i neteja,
   Pas 3: Exportació final
 }</code></pre>
-          </div>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot pxSRC -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-SRC-07" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-SRC-07</span> · Resilient Graphics Hologram
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-src-07">Holographic wireframe image placeholder floating above an engineering blueprint desk, glowing cyan calibration bounding boxes with aspect ratio dimensions, dark background with subtle amber grid, futuristic scientific document formatting illustration --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-src-07">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-SRC-07" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-SRC-07 · Resilient Graphics Hologram</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-src-07">Holographic wireframe image placeholder floating above an engineering blueprint desk, glowing cyan calibration bounding boxes with aspect ratio dimensions, dark background with subtle amber grid, futuristic scientific document formatting illustration --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- 6. pxCALC Showcase -->
-      <section class="section" id="pxcalc">
-        <h2><span class="panel-number">MOD // 06</span> pxCALC — Automated Worked Calculations</h2>
-        <div class="prose">
-          <p>Define variables, state equations, and format step-by-step mathematical solutions directly in your continuous assessment exercises.</p>
+    <!-- 6. pxCALC Showcase -->
+    <section class="section" id="pxcalc">
+      <span class="panel-number">MOD // 06</span>
+      <h2>pxCALC — Automated Worked Calculations</h2>
+      <div class="prose">
+        <p>Define variables, state equations, and format step-by-step mathematical solutions directly in your continuous assessment exercises.</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> pxCALC Step-by-Step Resolution</div>
-              <button class="copy-btn" data-copy-target="#code-pxcalc-showcase">COPY</button>
-            </div>
-            <pre><code id="code-pxcalc-showcase"><span class="syn-cmd">\pxDefVar</span>{Vcc}{5}[V]
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> pxCALC Step-by-Step Resolution</div>
+            <button class="copy-btn" data-copy-target="#code-pxcalc-showcase">COPY</button>
+          </div>
+          <pre><code id="code-pxcalc-showcase"><span class="syn-cmd">\pxDefVar</span>{Vcc}{5}[V]
 <span class="syn-cmd">\pxDefVar</span>{R1}{1000}[\Omega]
 <span class="syn-cmd">\pxDefVar</span>{R2}{2000}[\Omega]
 <span class="syn-cmd">\pxDefFormula</span>{Vout}{[Vcc] * ([R2] / ([R1] + [R2]))}[symbol=V_{out}, unit=\volt, prec=2]
 <span class="syn-cmd">\pxSolve</span><span class="syn-opt">[steps=true]</span>{Vout}</code></pre>
-          </div>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot pxCALC -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-CALC-04" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-CALC-04</span> · Mathematical Engine Infographic
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-calc-04">Complex mathematical calculation schematic on a glowing electronic chalkboard, green phosphor formulas and mechanical gear overlays, step by step equation solving diagrams, retro scientific aesthetic, high tech academic laboratory --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-calc-04">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-CALC-04" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-CALC-04 · Mathematical Engine Infographic</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-calc-04">Complex mathematical calculation schematic on a glowing electronic chalkboard, green phosphor formulas and mechanical gear overlays, step by step equation solving diagrams, retro scientific aesthetic, high tech academic laboratory --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- 7. pxREQ Showcase -->
-      <section class="section" id="pxreq">
-        <h2><span class="panel-number">MOD // 07</span> pxREQ — Software Requirements &amp; SWOT Matrix</h2>
-        <div class="prose">
-          <p>Formal IEEE 830 requirement cards, user stories, and strategic SWOT / DAFO matrices for software engineering documentation.</p>
+    <!-- 7. pxREQ Showcase -->
+    <section class="section" id="pxreq">
+      <span class="panel-number">MOD // 07</span>
+      <h2>pxREQ — Software Requirements &amp; SWOT Matrix</h2>
+      <div class="prose">
+        <p>Formal IEEE 830 requirement cards, user stories, and strategic SWOT / DAFO matrices for software engineering documentation.</p>
 
-          <div class="cards-grid col-2">
-            <article class="panel">
-              <span class="panel-number">REQ // USER STORY</span>
-              <h3>Agile User Story Card</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> pxUserStory Environment</div>
-                  <button class="copy-btn" data-copy-target="#code-pxreq-story">COPY</button>
-                </div>
-                <pre><code id="code-pxreq-story"><span class="syn-kw">\begin</span><span class="syn-arg">{pxUserStory}</span>{US-01}
+        <div class="cards col-2">
+          <article class="panel">
+            <h3>Agile User Story Card</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> pxUserStory Environment</div>
+                <button class="copy-btn" data-copy-target="#code-pxreq-story">COPY</button>
+              </div>
+              <pre><code id="code-pxreq-story"><span class="syn-kw">\begin</span><span class="syn-arg">{pxUserStory}</span>{US-01}
   <span class="syn-cmd">\pxAsA</span>{Desenvolupador de LaTeX}
   <span class="syn-cmd">\pxIWant</span>{Mòduls desacoblats i explorables}
   <span class="syn-cmd">\pxSoThat</span>{Puc integrar només el que necessito a la PAC}
   <span class="syn-cmd">\pxAcceptanceCriteria</span>{Càrrega independent sense requerir P3CTeX.cls}
 <span class="syn-kw">\end</span><span class="syn-arg">{pxUserStory}</span></code></pre>
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <article class="panel">
-              <span class="panel-number">REQ // DAFO MATRIX</span>
-              <h3>Strategic SWOT / DAFO Matrix</h3>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">LATEX</span> pxSWOT Command</div>
-                  <button class="copy-btn" data-copy-target="#code-pxreq-swot">COPY</button>
-                </div>
-                <pre><code id="code-pxreq-swot"><span class="syn-cmd">\pxSWOT</span><span class="syn-opt">[tabwidth=\linewidth]</span>{
+          <article class="panel">
+            <h3>Strategic SWOT / DAFO Matrix</h3>
+            <div class="code-box">
+              <div class="code-box-header">
+                <div class="code-box-title"><span class="tag">LATEX</span> pxSWOT Command</div>
+                <button class="copy-btn" data-copy-target="#code-pxreq-swot">COPY</button>
+              </div>
+              <pre><code id="code-pxreq-swot"><span class="syn-cmd">\pxSWOT</span><span class="syn-opt">[tabwidth=\linewidth]</span>{
   <span class="syn-comment">% Fortaleses</span>
   Sintaxi expl3 moderna, suport resilient d'imatges
 }{
@@ -466,35 +460,37 @@ Fi Funcio
   <span class="syn-comment">% Amenaces</span>
   Canvis en la normativa de formats universitaris
 }</code></pre>
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot pxREQ -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-REQ-13" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-REQ-13</span> · Requirements Engineering Matrix
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-req-13">Software architecture requirements schematic and SWOT quadrant diagram, floating technical cards with user story icons, crisp typography, dark cyber slate workbench with glowing cyan and amber lines --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-req-13">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-REQ-13" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-REQ-13 · Requirements Engineering Matrix</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-req-13">Software architecture requirements schematic and SWOT quadrant diagram, floating technical cards with user story icons, crisp typography, dark cyber slate workbench with glowing cyan and amber lines --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- 8. pxUML Showcase -->
-      <section class="section" id="pxuml">
-        <h2><span class="panel-number">MOD // 08</span> pxUML — Object-Oriented Class Modeling</h2>
-        <div class="prose">
-          <p>Declare classes, attributes, methods, inheritance, and associations cleanly, separating data models from visual placement.</p>
+    <!-- 8. pxUML Showcase -->
+    <section class="section" id="pxuml">
+      <span class="panel-number">MOD // 08</span>
+      <h2>pxUML — Object-Oriented Class Modeling</h2>
+      <div class="prose">
+        <p>Declare classes, attributes, methods, inheritance, and associations cleanly, separating data models from visual placement.</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> Object-Oriented UML Modeling</div>
-              <button class="copy-btn" data-copy-target="#code-pxuml">COPY</button>
-            </div>
-            <pre><code id="code-pxuml"><span class="syn-comment">% 1. Definició de classes i mètodes</span>
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> Object-Oriented UML Modeling</div>
+            <button class="copy-btn" data-copy-target="#code-pxuml">COPY</button>
+          </div>
+          <pre><code id="code-pxuml"><span class="syn-comment">% 1. Definició de classes i mètodes</span>
 <span class="syn-cmd">\pxUMLClass</span>{Persona}{- nom : String}[+ getNom() : String]
 <span class="syn-cmd">\addAttribute</span>{Persona}{- edat : Integer}
 <span class="syn-cmd">\addOperation</span>{Persona}{+ setNom(nouNom : String) : void}
@@ -508,29 +504,29 @@ Fi Funcio
   \drawclass[text width=14em]{Persona}[0,0]
   \drawclass[text width=14em]{Estudiant}[0,-4]
 }[0.85\linewidth]</code></pre>
-          </div>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot pxUML -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-UML-10" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-UML-10</span> · Object-Oriented Modeling Blueprint
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-uml-10">Isometric 3D software engineering UML class hierarchy diagram floating above a dark glowing blueprint grid, solid class boxes with attributes and methods connected by clean inheritance arrows, phosphor cyan glowing borders, technical CAD aesthetic --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-uml-10">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-UML-10" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-UML-10 · Object-Oriented Modeling Blueprint</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-uml-10">Isometric 3D software engineering UML class hierarchy diagram floating above a dark glowing blueprint grid, solid class boxes with attributes and methods connected by clean inheritance arrows, phosphor cyan glowing borders, technical CAD aesthetic --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Site Footer -->
+  <!-- Site Footer (AAAAT Structure) -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <h4>P3CTeX // Ultimate UOC Template Generator</h4>
-        <p>Created by ScVr!a (DidacLL). Built for Computer Engineering students and researchers seeking peak LaTeX ergonomics under strict deadlines.</p>
+        <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
+        <p>Created by ScVr!a (DidacLL). Designed for Computer Engineering students and researchers seeking peak LaTeX ergonomics under strict deadlines.</p>
         <p>Licensed under GNU General Public License v3.0.</p>
       </div>
       <div class="footer-links">
@@ -538,12 +534,13 @@ Fi Funcio
         <ul>
           <li><a href="generator.html">Interactive Web Generator</a></li>
           <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Standalone Offline Tool</a></li>
-          <li><a href="tutorials.html">Field Manual &amp; Tutorials</a></li>
+          <li><a href="tutorials.html">Field Guide &amp; Tutorials</a></li>
         </ul>
       </div>
       <div class="footer-links">
         <h5>Source Code</h5>
         <ul>
+          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
           <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub: P3CTeX</a></li>
           <li><a href="https://github.com/DidacLL/AAAAT" target="_blank" rel="noopener">Reference: AAAAT Workshop</a></li>
         </ul>
@@ -551,7 +548,7 @@ Fi Funcio
     </div>
     <div class="container footer-bottom">
       <span>© 2026 DidacLL / ScVr!a · "Procrastinar és l'única esperança"</span>
-      <span>Indie Retrofuturistic Alternative Tooling</span>
+      <span>P3CTeX Documentation &amp; Generator Studio</span>
     </div>
   </footer>
 </body>

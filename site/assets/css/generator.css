@@ -1,46 +1,40 @@
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet
-   Pirate Old-School Software & Retrofuturistic Alternative Tooling
+   P3CTeX LaTeX Generator Stylesheet (AAAAT Workshop Ergonomics)
    ========================================================================== */
 
 .generator-app {
   display: grid;
   grid-template-columns: 1fr;
   gap: 28px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 @media (min-width: 1024px) {
   .generator-app {
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.1fr 0.9fr;
     align-items: start;
   }
 }
 
-/* Preset Selector Toolbar */
+/* Preset Toolbar */
 .preset-bar {
-  background: var(--bg-surface);
-  border: 1px solid var(--machine-border);
-  border-left: 4px solid var(--pirate-amber);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  margin-bottom: 24px;
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--rust);
+  padding: 14px 18px;
+  margin-bottom: 22px;
 }
 
 .preset-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
-  font-family: var(--font-mono);
-}
-
-.preset-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--pirate-amber);
-  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: var(--rust-dark);
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .preset-buttons {
@@ -50,79 +44,65 @@
 }
 
 .preset-btn {
-  background: #0f1620;
-  border: 1px solid var(--machine-edge);
-  color: var(--ink-body);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 8px 14px;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 650;
+  padding: 7px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .preset-btn:hover {
-  background: var(--bg-surface-raised);
-  border-color: var(--pirate-cyan);
-  color: #fff;
+  background: var(--sheet);
+  border-color: var(--rust);
 }
 
 .preset-btn.active {
-  background: rgba(115, 237, 255, 0.15);
-  border-color: var(--pirate-cyan);
-  color: var(--pirate-cyan);
-  box-shadow: 0 0 10px var(--pirate-cyan-glow);
+  background: var(--rust);
+  color: var(--sheet);
+  border-color: var(--rust-dark);
 }
 
-/* Config Accordions / Panels */
+/* Config Groups */
 .config-group {
-  background: var(--bg-surface);
-  border: 1px solid var(--machine-border);
-  border-radius: var(--radius-sm);
+  background: var(--sheet);
+  border: 1px solid var(--line);
   margin-bottom: 16px;
-  overflow: hidden;
 }
 
 .config-group-header {
-  background: #111a24;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--machine-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  user-select: none;
-}
-
-.config-group-title {
-  font-family: var(--font-mono);
+  background: rgba(56, 67, 58, 0.1);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 750;
   font-size: 0.92rem;
-  font-weight: 700;
   color: var(--ink);
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.config-group-title span.badge {
-  background: var(--bg-surface-raised);
-  border: 1px solid var(--machine-edge);
-  color: var(--pirate-green);
+.config-group-header span.badge {
+  background: var(--machine-deep);
+  color: var(--sheet);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   padding: 2px 6px;
   border-radius: 2px;
 }
 
 .config-group-body {
-  padding: 18px;
+  padding: 16px;
 }
 
 /* Form Controls */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 14px;
 }
 
 @media (min-width: 640px) {
@@ -137,42 +117,32 @@
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .form-label {
-  font-family: var(--font-mono);
   font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ink-muted);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  font-weight: 700;
+  color: var(--muted);
 }
 
-.form-label span.req {
-  color: var(--pirate-crimson);
-}
-
-.form-input, .form-select, .form-textarea {
-  background: #090e14;
-  border: 1px solid var(--machine-border);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
+.form-input, .form-select {
+  background: #fff;
+  border: 1px solid var(--edge);
+  padding: 8px 10px;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  transition: all 0.15s ease;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.form-input:focus, .form-select:focus {
   outline: none;
-  border-color: var(--pirate-cyan);
-  box-shadow: 0 0 10px var(--pirate-cyan-glow);
-  background: #0d141e;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 2px rgba(36, 125, 121, 0.2);
 }
 
-/* Checkbox & Switch Toggles */
+/* Toggles */
 .toggle-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -183,90 +153,53 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #0d141d;
-  border: 1px solid var(--machine-border);
-  padding: 10px 12px;
+  background: #fbf8f0;
+  border: 1px solid var(--line);
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s ease;
   user-select: none;
 }
 
 .toggle-label:hover {
-  border-color: var(--machine-edge);
-  background: #121c27;
+  background: #fff;
+  border-color: var(--edge);
 }
 
 .toggle-label input[type="checkbox"] {
-  accent-color: var(--pirate-green);
+  accent-color: var(--rust);
   width: 16px;
   height: 16px;
-  cursor: pointer;
 }
 
-.toggle-label span.toggle-name {
-  font-family: var(--font-mono);
+.toggle-name {
+  font-weight: 700;
   font-size: 0.85rem;
-  font-weight: 600;
   color: var(--ink);
 }
 
-.toggle-label span.toggle-desc {
+.toggle-desc {
   display: block;
   font-size: 0.72rem;
-  color: var(--ink-muted);
+  color: var(--muted);
 }
 
-/* ==========================================================================
-   Advanced Usable Blobs Builder Cards
-   ========================================================================== */
-
-.blob-card {
-  background: #0d151f;
-  border: 1px solid var(--machine-edge);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  margin-bottom: 14px;
-}
-
-.blob-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--machine-border);
-  padding-bottom: 8px;
-}
-
-.blob-card-title {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--pirate-amber);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ==========================================================================
-   Live Preview & Export Panel (Sticky Sidepane)
-   ========================================================================== */
-
+/* Sticky Preview Panel */
 .preview-pane {
   position: sticky;
-  top: 80px;
-  background: #070b10;
-  border: 2px solid var(--machine-edge);
+  top: 24px;
+  background: var(--machine-deep);
+  border: 1px solid #1a221a;
   border-radius: var(--radius-sm);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 16px rgba(10, 18, 10, 0.4);
   display: flex;
   flex-direction: column;
 }
 
 .preview-header {
-  background: #0f1622;
-  border-bottom: 1px solid var(--machine-border);
-  padding: 12px 16px;
+  background: #171e17;
+  border-bottom: 1px solid #2e382e;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -274,72 +207,44 @@
 
 .preview-title {
   font-family: var(--font-mono);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: var(--pirate-green);
+  color: var(--cyan);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.preview-title span.pulse-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--pirate-green);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--pirate-green);
-}
-
-.preview-actions {
-  display: flex;
-  gap: 8px;
-}
-
 .preview-editor-box {
-  background: #06090d;
-  padding: 16px;
+  background: #141b14;
+  padding: 14px 16px;
   margin: 0;
   max-height: 540px;
   overflow-y: auto;
   font-family: var(--font-mono);
   font-size: 0.84rem;
-  line-height: 1.55;
-  color: #c9d7e6;
+  line-height: 1.5;
+  color: #e2ecd9;
   white-space: pre;
   tab-size: 2;
-  border-bottom: 1px solid var(--machine-border);
+  border-bottom: 1px solid #2e382e;
 }
 
 .preview-footer-bar {
-  background: #0f1722;
-  padding: 14px 16px;
+  background: #171e17;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.action-row {
-  display: flex;
   gap: 10px;
-  flex-wrap: wrap;
-}
-
-.action-row .button {
-  flex: 1;
 }
 
 .standalone-download-banner {
-  background: rgba(174, 72, 39, 0.15);
-  border: 1px dashed var(--pirate-rust);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
+  background: rgba(255, 249, 237, 0.05);
+  border: 1px dashed #475448;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: var(--font-mono);
   font-size: 0.8rem;
-}
-
-.standalone-download-banner span {
-  color: var(--ink);
+  color: var(--sheet);
 }

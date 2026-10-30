@@ -8,68 +8,64 @@
     /* ==========================================================================
        P3CTeX Standalone Offline Generator Stylesheet
        100% Self-Contained · Zero External Fonts, Stylesheets, or Scripts
-       Aesthetic: Pirate Old School Software · Indie Retrofuturistic Tooling
+       Aesthetic: AAAAT Workshop Surface & Ergonomics
        ========================================================================== */
 
     :root {
-      --bg-dark: #0a0f14;
-      --bg-deep: #0f1720;
-      --bg-surface: #141f2b;
-      --bg-surface-raised: #1c2b3a;
-      --machine-deep: #16202c;
-      --machine-border: #2a3d52;
-      --machine-edge: #435e7a;
-      --ink: #e6edf3;
-      --ink-body: #c5d1de;
-      --ink-muted: #8397ab;
-      --pirate-cyan: #73edff;
-      --pirate-cyan-glow: rgba(115, 237, 255, 0.25);
-      --pirate-green: #38ef7d;
-      --pirate-green-glow: rgba(56, 239, 125, 0.25);
-      --pirate-amber: #ffb454;
-      --pirate-amber-glow: rgba(255, 180, 84, 0.25);
-      --pirate-crimson: #ff5555;
-      --pirate-rust: #ae4827;
-      --page-width: min(1380px, calc(100% - clamp(20px, 4vw, 64px)));
+      --paper: #cfc9b3;
+      --sheet: #eee5d0;
+      --machine: #38433a;
+      --machine-raised: #50594b;
+      --machine-deep: #202920;
+      --ink: #24342e;
+      --muted: #475448;
+      --line: #9d9d83;
+      --edge: #778176;
+      --rust: #ae4827;
+      --rust-dark: #85331e;
+      --focus: #247d79;
+      --cyan: #a2e8da;
+      --green: #2e8b57;
+      --page-width: min(1380px, calc(100% - clamp(24px, 4vw, 80px)));
       --radius-sm: 3px;
-      --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
+      --font-sans: 'Segoe UI', Arial, sans-serif;
+      --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
       --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(ellipse at 50% 0%, #1a2a3d 0%, transparent 70%),
-        linear-gradient(rgba(115, 237, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(115, 237, 255, 0.03) 1px, transparent 1px);
-      background-size: 100% 100%, 32px 32px, 32px 32px;
-      color: var(--ink-body);
+      background: #171e19;
+      background-image: radial-gradient(ellipse at top, #455044 0%, transparent 65%);
       font-family: var(--font-sans);
-      line-height: 1.6;
+      color: var(--ink);
+      line-height: 1.55;
       font-size: 16px;
     }
 
     h1, h2, h3 { font-family: var(--font-heading); color: var(--ink); margin-top: 0; }
-    h1 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; }
+    h1 { font-size: clamp(1.8rem, 2.6vw, 2.4rem); font-weight: 800; }
     h2 { font-size: 1.3rem; font-weight: 700; color: var(--ink); }
-    h3 { font-size: 1.1rem; font-weight: 600; color: var(--pirate-cyan); }
-    p { margin: 0 0 1rem; }
-    a { color: var(--pirate-cyan); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    h3 { font-size: 1.15rem; font-weight: 600; }
+    p { margin: 0 0 1rem; color: #31443c; }
 
     .container {
       width: var(--page-width);
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0 16px;
+      margin-inline: auto;
+    }
+
+    main.container {
+      padding: clamp(20px, 3vw, 40px);
+      margin-block: 24px;
+      background: linear-gradient(110deg, #d6cdb5, #c4c3ac);
+      border: 1px solid #8a8d75;
+      box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
     }
 
     .offline-header {
-      background: var(--bg-deep);
-      border-bottom: 2px solid var(--machine-border);
+      background: var(--machine-deep);
+      border-bottom: 1px solid #81876b;
       padding: 14px 0;
     }
 
@@ -80,34 +76,29 @@
     }
 
     .brand-title {
-      font-family: var(--font-mono);
-      font-size: 1.2rem;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
       font-weight: 800;
-      color: var(--ink);
+      color: var(--sheet);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .brand-badge {
-      background: var(--bg-surface-raised);
-      border: 1px solid var(--machine-edge);
-      color: var(--pirate-amber);
-      font-size: 0.75rem;
+      background: var(--machine-raised);
+      border: 1px solid var(--edge);
+      color: var(--sheet);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
       padding: 2px 6px;
       border-radius: var(--radius-sm);
     }
 
-    .offline-nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
     .offline-pill {
-      background: rgba(56, 239, 125, 0.15);
-      border: 1px solid var(--pirate-green);
-      color: var(--pirate-green);
+      background: rgba(46, 139, 87, 0.2);
+      border: 1px solid var(--green);
+      color: var(--cyan);
       font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 700;
@@ -115,39 +106,24 @@
       border-radius: var(--radius-sm);
     }
 
-    .generator-app {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 28px;
-      margin-top: 24px;
-      padding-bottom: 48px;
-    }
-
-    @media (min-width: 1024px) {
-      .generator-app {
-        grid-template-columns: 1.15fr 0.85fr;
-        align-items: start;
-      }
-    }
-
     .preset-bar {
-      background: var(--bg-surface);
-      border: 1px solid var(--machine-border);
-      border-left: 4px solid var(--pirate-amber);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-      margin: 24px 0;
+      background: var(--sheet);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--rust);
+      padding: 14px 18px;
+      margin-bottom: 22px;
     }
 
     .preset-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--pirate-amber);
+      margin-bottom: 10px;
+      font-size: 0.82rem;
+      font-weight: 750;
+      color: var(--rust-dark);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .preset-buttons {
@@ -157,35 +133,45 @@
     }
 
     .preset-btn {
-      background: #0f1620;
-      border: 1px solid var(--machine-edge);
-      color: var(--ink-body);
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 8px 14px;
+      background: var(--paper);
+      border: 1px solid var(--edge);
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 650;
+      padding: 7px 12px;
       border-radius: var(--radius-sm);
       cursor: pointer;
     }
 
-    .preset-btn:hover { background: var(--bg-surface-raised); border-color: var(--pirate-cyan); color: #fff; }
-    .preset-btn.active { background: rgba(115, 237, 255, 0.15); border-color: var(--pirate-cyan); color: var(--pirate-cyan); }
+    .preset-btn:hover { background: var(--sheet); border-color: var(--rust); }
+    .preset-btn.active { background: var(--rust); color: var(--sheet); border-color: var(--rust-dark); }
+
+    .generator-app {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-top: 20px;
+    }
+
+    @media (min-width: 1024px) {
+      .generator-app {
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: start;
+      }
+    }
 
     .config-group {
-      background: var(--bg-surface);
-      border: 1px solid var(--machine-border);
-      border-radius: var(--radius-sm);
+      background: var(--sheet);
+      border: 1px solid var(--line);
       margin-bottom: 16px;
-      overflow: hidden;
     }
 
     .config-group-header {
-      background: #111a24;
-      padding: 12px 18px;
-      border-bottom: 1px solid var(--machine-border);
-      font-family: var(--font-mono);
+      background: rgba(56, 67, 58, 0.1);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 750;
       font-size: 0.92rem;
-      font-weight: 700;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -193,32 +179,32 @@
     }
 
     .config-group-header span.badge {
-      background: var(--bg-surface-raised);
-      border: 1px solid var(--machine-edge);
-      color: var(--pirate-green);
+      background: var(--machine-deep);
+      color: var(--sheet);
+      font-family: var(--font-mono);
       font-size: 0.72rem;
       padding: 2px 6px;
       border-radius: 2px;
     }
 
-    .config-group-body { padding: 18px; }
+    .config-group-body { padding: 16px; }
 
-    .form-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 640px) {
       .form-grid.col-2 { grid-template-columns: repeat(2, 1fr); }
       .form-grid.col-3 { grid-template-columns: repeat(3, 1fr); }
     }
 
-    .form-field { display: flex; flex-direction: column; gap: 6px; }
-    .form-label { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--ink-muted); }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
     .form-input, .form-select {
-      background: #090e14;
-      border: 1px solid var(--machine-border);
-      border-radius: var(--radius-sm);
-      padding: 9px 12px;
+      background: #fff;
+      border: 1px solid var(--edge);
+      padding: 8px 10px;
       color: var(--ink);
-      font-family: var(--font-mono);
-      font-size: 0.88rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      border-radius: var(--radius-sm);
     }
 
     .toggle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
@@ -226,32 +212,33 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background: #0d141d;
-      border: 1px solid var(--machine-border);
-      padding: 10px 12px;
+      background: #fbf8f0;
+      border: 1px solid var(--line);
+      padding: 8px 12px;
       border-radius: var(--radius-sm);
       cursor: pointer;
     }
 
-    .toggle-label:hover { border-color: var(--machine-edge); background: #121c27; }
-    .toggle-label input[type="checkbox"] { accent-color: var(--pirate-green); width: 16px; height: 16px; }
-    .toggle-name { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--ink); }
-    .toggle-desc { display: block; font-size: 0.72rem; color: var(--ink-muted); }
+    .toggle-label:hover { background: #fff; border-color: var(--edge); }
+    .toggle-label input[type="checkbox"] { accent-color: var(--rust); width: 16px; height: 16px; }
+    .toggle-name { font-weight: 700; font-size: 0.85rem; color: var(--ink); }
+    .toggle-desc { display: block; font-size: 0.72rem; color: var(--muted); }
 
     .preview-pane {
       position: sticky;
       top: 24px;
-      background: #070b10;
-      border: 2px solid var(--machine-edge);
+      background: var(--machine-deep);
+      border: 1px solid #1a221a;
       border-radius: var(--radius-sm);
+      box-shadow: 0 4px 16px rgba(10, 18, 10, 0.4);
       display: flex;
       flex-direction: column;
     }
 
     .preview-header {
-      background: #0f1622;
-      border-bottom: 1px solid var(--machine-border);
-      padding: 12px 16px;
+      background: #171e17;
+      border-bottom: 1px solid #2e382e;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -259,83 +246,86 @@
 
     .preview-title {
       font-family: var(--font-mono);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: var(--pirate-green);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: var(--cyan);
     }
 
     .preview-editor-box {
-      background: #06090d;
-      padding: 16px;
+      background: #141b14;
+      padding: 14px 16px;
       margin: 0;
       max-height: 560px;
       overflow-y: auto;
       font-family: var(--font-mono);
       font-size: 0.84rem;
-      line-height: 1.55;
-      color: #c9d7e6;
+      line-height: 1.5;
+      color: #e2ecd9;
       white-space: pre;
       tab-size: 2;
-      border-bottom: 1px solid var(--machine-border);
+      border-bottom: 1px solid #2e382e;
     }
 
-    .preview-footer-bar { background: #0f1722; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .preview-footer-bar { background: #171e17; padding: 12px 14px; }
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 0.92rem;
+      min-height: 44px;
+      padding: 9px 18px;
+      background: var(--rust);
+      border: 1px solid var(--rust-dark);
+      color: var(--sheet);
       font-weight: 700;
-      padding: 10px 18px;
-      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
       cursor: pointer;
-      border: 1px solid var(--pirate-cyan);
-      background: var(--bg-surface-raised);
-      color: var(--pirate-cyan);
+      width: 100%;
     }
 
-    .button.primary { background: var(--pirate-rust); color: #fff; border-color: #d15632; }
-    .button.green { background: rgba(56, 239, 125, 0.15); color: var(--pirate-green); border-color: var(--pirate-green); }
-    .button.sm { padding: 6px 12px; font-size: 0.8rem; }
+    .button:hover { background: var(--rust-dark); }
+    .copy-btn {
+      background: var(--machine-raised);
+      border: 1px solid var(--edge);
+      color: var(--sheet);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
 
+    .copy-btn:hover { background: var(--focus); }
     .offline-footer {
-      background: var(--bg-deep);
-      border-top: 2px solid var(--machine-border);
+      background: var(--machine-deep);
+      border-top: 1px solid #81876b;
       padding: 24px 0;
       margin-top: 48px;
       text-align: center;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--ink-muted);
+      font-size: 0.82rem;
+      color: #8c9684;
     }
   </style>
 </head>
 <body>
-  <!-- Header with Semantic Nav Landmark -->
   <header class="offline-header">
     <div class="container header-inner">
       <div class="brand-title">
         <span>P3CTeX</span>
-        <span style="color: var(--pirate-green);">//</span>
+        <span style="color: var(--cyan);">//</span>
         <span>LATEX GENERATOR</span>
         <span class="brand-badge">STANDALONE OFFLINE EDITION</span>
       </div>
-      <nav class="offline-nav" aria-label="Offline actions">
+      <nav aria-label="Offline actions">
         <span class="offline-pill">● 100% OFFLINE LOCAL EXECUTION</span>
       </nav>
     </div>
   </header>
 
   <main class="container" id="main">
-    <!-- Presets Toolbar -->
     <div class="preset-bar">
       <div class="preset-header">
-        <span>&gt;&gt;&gt; CURATED ACADEMIC PRESETS</span>
-        <span style="color: var(--ink-muted); font-size: 0.8rem;">Click to load configuration</span>
+        <span>CURATED ACADEMIC PRESETS</span>
+        <span style="color: var(--muted); font-size: 0.78rem; text-transform: none; font-weight: 500;">Click to load configuration</span>
       </div>
       <div class="preset-buttons">
         <button type="button" class="preset-btn active" data-preset="pac">[PAC] Continuous Evaluation</button>
@@ -346,7 +336,6 @@
       </div>
     </div>
 
-    <!-- Generator App -->
     <div class="generator-app">
       <div class="form-column" id="generator-form">
         <!-- 1. Metadata -->
@@ -505,13 +494,16 @@
           </div>
         </div>
 
-        <!-- 4. Blobs -->
+        <!-- 4. Advanced Usable Blobs -->
         <div class="config-group">
           <div class="config-group-header">
             <span class="badge">04</span>
             Advanced Usable Blobs Generator
           </div>
           <div class="config-group-body">
+            <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 12px;">
+              Inject complex LaTeX boilerplate that is tedious or error-prone to write by hand:
+            </p>
             <div class="toggle-grid">
               <label class="toggle-label">
                 <input type="checkbox" name="blob.multipageTable">
@@ -558,16 +550,15 @@
         <div class="preview-pane">
           <div class="preview-header">
             <div class="preview-title">
-              <span style="width: 8px; height: 8px; background: var(--pirate-green); border-radius: 50%; box-shadow: 0 0 8px var(--pirate-green);"></span>
               <span>LIVE LATEX PREVIEW</span>
             </div>
-            <button type="button" class="button sm green" id="btn-copy-tex">COPY TEX RAW</button>
+            <button type="button" class="copy-btn" id="btn-copy-tex">COPY TEX RAW</button>
           </div>
 
           <pre class="preview-editor-box" id="latex-preview"></pre>
 
           <div class="preview-footer-bar">
-            <button type="button" class="button primary" id="btn-download-tex">
+            <button type="button" class="button" id="btn-download-tex">
               DOWNLOAD .TEX FILE
             </button>
           </div>
@@ -576,7 +567,6 @@
     </div>
   </main>
 
-  <!-- Semantic Footer Landmark -->
   <footer class="offline-footer">
     <div class="container">
       <p>P3CTeX Standalone Offline LaTeX Tooling · "Procrastinar és l'única esperança" · GPL v3.0</p>

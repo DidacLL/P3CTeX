@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>P3CTeX · Ultimate UOC Template Generator &amp; Indie LaTeX Arsenal</title>
+  <title>P3CTeX · Ultimate UOC Template Generator &amp; LaTeX Engineering Suite</title>
   <meta name="description" content="P3CTeX is an open-source LaTeX repository and document class based on official styles defined by UOC. Designed for lastminute PAC or PR overkilling.">
   <link rel="stylesheet" href="assets/css/site.css">
   <script src="assets/js/site.js" defer></script>
@@ -11,224 +11,202 @@
 <body class="home">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Header & Navigation -->
+  <!-- Header with Authentic Banner Image -->
   <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand-wrapper">
-        <a href="index.html" class="brand-title" aria-label="P3CTeX Home">
-          <span>P3CTeX</span>
-          <span class="slash">//</span>
-          <span class="brand-badge">v1.1.0</span>
-          <span class="motto">"Procrastinar és l'única esperança"</span>
-        </a>
-      </div>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a href="index.html" aria-current="page">01/Home</a>
-        <a href="tutorials.html">02/Tutorials</a>
-        <a href="showcases.html">03/Showcases</a>
-        <a href="generator.html">04/Generator</a>
-        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="nav-cta">GitHub</a>
-      </nav>
-    </div>
+    <a class="brand" href="index.html" aria-label="P3CTeX Home — Procrastinar és l'única esperança">
+      <img src="assets/images/pec-tex-banner.png" alt="P3CTeX Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" width="672" height="428">
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="showcases.html">Showcases</a>
+      <a href="generator.html">Generator Tool</a>
+      <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">Download ZIP</a>
+      <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </header>
 
   <main id="main">
-    <!-- Hero Masthead with Authentic Banner Image -->
-    <section class="hero-masthead">
-      <div class="container">
-        <div class="masthead-card">
-          <div class="banner-graphic-container">
-            <img src="assets/images/pec-tex-banner.png" alt="P3CTeX Authentic ANSI Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" class="banner-graphic" width="672" height="428">
-          </div>
+    <!-- Hero Section (AAAAT Workshop Architecture) -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Academic Coursework &amp; Engineering Tooling</p>
+        <h1>Keep the deadline.<br>Format with ease.<br>Ace the evaluation.</h1>
+        <p class="lede">
+          Built from the trenches of Computer Science at UOC. Stop wrestling with archaic LaTeX boilerplate at 23:45 on deadline night. P3CTeX delivers official university templates, resilient figure fallbacks, and compiler diagrams in seconds.
+        </p>
+        <div class="actions">
+          <a href="generator.html" class="button">Launch Web Generator</a>
+          <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="button secondary">Offline Tool (.html)</a>
+          <a href="tutorials.html" class="button secondary">See How It Works</a>
+        </div>
+        <p class="hero-note">Official UOC styles · Pre-configured for MiKTeX, TeX Live &amp; Overleaf · GPL v3.0</p>
+      </div>
 
-          <div class="hero-content">
-            <div class="hero-copy">
-              <p class="eyebrow">Indie Retrofuturistic Alternative Tooling</p>
-              <h1 class="hero-title">
-                The Ultimate <span class="glitch-accent">UOC Template Generator</span> &amp; LaTeX Engineering Arsenal.
-              </h1>
-              <p class="hero-lede">
-                Built from the trenches of Computer Science at UOC. Stop wrestling with archaic LaTeX boilerplate at 23:45 on PAC deadline night. P3CTeX delivers automated preambles, resilient figure fallbacks, compiler diagrams, and professional formatting in seconds.
-              </p>
-              <div class="hero-actions">
-                <a href="generator.html" class="button primary">Launch Web Generator</a>
-                <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="button amber">Download Offline Tool (.html)</a>
-                <a href="tutorials.html" class="button">Read Battle Manual</a>
-              </div>
-              <div class="hero-status-ribbon">
-                <span class="status-indicator"><span class="dot"></span> Production Ready</span>
-                <span>•</span>
-                <span>GPL v3.0 Open Source</span>
-                <span>•</span>
-                <span>Standalone &amp; Offline Compatible</span>
-              </div>
+      <div class="hero-art-side">
+        <!-- Quickstart Skeleton Box -->
+        <div class="code-box" style="margin: 0; width: 100%;">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="tag">LATEX</span>
+              <span>minimal-pac.tex</span>
             </div>
-
-            <!-- Terminal Hero Box -->
-            <div class="code-box">
-              <div class="code-box-header">
-                <div class="code-box-title">
-                  <span class="tag">LATEX</span>
-                  <span>minimal-pac.tex</span>
-                </div>
-                <button class="copy-btn" data-copy-target="#hero-quickstart">COPY</button>
-              </div>
-              <pre><code id="hero-quickstart"><span class="syn-comment">% Instant UOC PAC Skeleton</span>
+            <button class="copy-btn" data-copy-target="#hero-quickstart">COPY</button>
+          </div>
+          <pre><code id="hero-quickstart"><span class="syn-comment">% Instant UOC PAC Skeleton</span>
 <span class="syn-kw">\documentclass</span><span class="syn-opt">[cover,CMP,11pt]</span><span class="syn-arg">{P3CTeX}</span>
 <span class="syn-cmd">\PECTeXcover</span><span class="syn-arg">{fullcover, text-uppertitle=PAC 1}</span>
 <span class="syn-kw">\begin{document}</span>
 <span class="syn-kw">\section*</span><span class="syn-arg">{PAC 1: Solució Oficial}</span>
 Procrastinar és l'única esperança.
 <span class="syn-kw">\end{document}</span></code></pre>
-            </div>
-          </div>
         </div>
       </div>
     </section>
 
-    <!-- Key Pillars Section (AAAAT Workshop Architecture) -->
+    <!-- Main Parchment Content Sheet -->
     <div class="container">
-      <section class="section" aria-label="Why P3CTeX">
-        <div class="section-header">
-          <p class="eyebrow">Operational Capabilities</p>
-          <h2>Engineered for Last-Minute Academic Overkilling</h2>
-          <p class="sublead">Everything you need to deliver high-scoring continuous assessment activities (PAC / PEC) and laboratory implementations (PR) without getting bogged down by LaTeX quirks.</p>
-        </div>
-
-        <div class="cards-grid col-3">
+      <!-- 3 Key Practical Benefits (AAAAT Structure) -->
+      <section class="section" aria-label="Three practical benefits">
+        <div class="cards col-3">
           <article class="panel">
-            <span class="panel-number">01 / LASTMINUTE WIN</span>
-            <h3>Official UOC Templates</h3>
-            <p>Ready-to-compile document classes conforming to UOC standards. Pre-configured student metadata, cover pages, and formal evaluation rubrics.</p>
-            <a href="tutorials.html#pac" class="panel-footer-link">PAC Setup Guide →</a>
+            <span class="panel-number">01 / DEPLOY</span>
+            <h2>Install Once, Use Everywhere</h2>
+            <p>Download the official release ZIP or register P3CTeX as a local TeXMF tree in MiKTeX / TeX Live. Once registered, <code>\documentclass{P3CTeX}</code> works immediately from any assignment directory on your machine.</p>
+            <a href="tutorials.html#bootstrap">How to install &amp; register →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">02 / RESILIENT GRAPHICS</span>
-            <h3>Zero-Crash Image Fallbacks</h3>
-            <p>Missing screenshots or placeholder graphs will never halt compilation. <code>\pxIMG</code> generates calibrated visual fallback cards until real assets arrive.</p>
-            <a href="showcases.html#pxsrc" class="panel-footer-link">Inspect pxSRC Module →</a>
+            <span class="panel-number">02 / RESILIENT</span>
+            <h2>Zero-Crash Fallback Figures</h2>
+            <p>Pending benchmark screenshots or missing images will never break your build 10 minutes before submission. <code>\pxIMG</code> generates calibrated visual fallback cards preserving exact layout dimensions.</p>
+            <a href="showcases.html#pxsrc">Explore pxSRC module →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">03 / COMPILER ARSENAL</span>
-            <h3>Built-In CS Diagrams</h3>
-            <p>Generate Tombstone compiler T-diagrams, DFA/NFA state transition tables, heuristic search trees, and neural nets using declarative macros in <code>pxCMP</code>.</p>
-            <a href="showcases.html#pxcmp" class="panel-footer-link">Explore pxCMP Diagrams →</a>
+            <span class="panel-number">03 / ARSENAL</span>
+            <h2>Built-in Engineering Diagrams</h2>
+            <p>Generate compiler Tombstone T-diagrams, DFA/NFA state transition tables, search graphs, and neural networks without fiddling with low-level TikZ coordinate math.</p>
+            <a href="showcases.html#pxcmp">Inspect pxCMP diagrams →</a>
           </article>
         </div>
       </section>
 
-      <!-- Image Placeholder Cards (Slot 1 & 2) -->
-      <section class="section" aria-label="Visual Art Placeholders">
-        <div class="cards-grid col-2">
-          <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-HERO-01" data-aspect-ratio="21:9">
-            <div class="prompt-card-badge">
-              <span class="id">IMG-HERO-01</span> · Hero Masthead Artwork
+      <!-- Practical Workflow Overview -->
+      <section class="section">
+        <span class="panel-number">HOW IT WORKS</span>
+        <h2>From Assignment to Formatted Submission</h2>
+        <p>You don't need to manually configure preambles or write repetitive boilerplate for every university delivery.</p>
+
+        <ol class="steps">
+          <li>
+            <strong>Get P3CTeX:</strong> Download <code>P3CTeX-vX.Y.Z.zip</code> from <a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Releases</a> and extract it, or use the interactive Web Generator.
+          </li>
+          <li>
+            <strong>Configure your metadata:</strong> Set your name, NIU, and subject code using <code>\PECTeXconfig</code>. Headers, footers, and official covers generate automatically.
+          </li>
+          <li>
+            <strong>Compile with ease:</strong> Build with <code>pdflatex -interaction=nonstopmode PAC1.tex</code> in VS Code, TeXstudio, or your terminal.
+          </li>
+        </ol>
+      </section>
+
+      <!-- Compact Image Placeholder Slots (Non-Intrusive) -->
+      <section class="section" aria-label="Visual illustration slots">
+        <span class="panel-number">VISUAL ASSET SPECIFICATIONS</span>
+        <h3>Illustration Slots &amp; Artwork Pipeline</h3>
+        <p>Contextual illustrations designed for the public site, with descriptive prompts ready for rendering:</p>
+
+        <div class="cards col-2">
+          <div class="image-placeholder-card" data-slot-id="IMG-HERO-01" data-aspect-ratio="21:9">
+            <div class="slot-header">
+              <span class="slot-id">IMG-HERO-01 · Hero Masthead Artwork</span>
+              <span class="slot-ratio">Aspect Ratio: 21:9</span>
             </div>
-            <p class="prompt-text prompt-text-block" id="prompt-hero-01">Retrofuturistic engineering workshop of a hacker academic, late night study desk overlooking a dystopian neon cityscape, vintage CRT terminal displaying glowing amber and cyan LaTeX code with ASCII logo "P3CTeX", stacked textbooks on compiler design and automata, blueprint schematics, soldering iron and coffee mug, high contrast cyberpunk lighting, warm matte paper textures, photorealistic industrial dieselpunk atmosphere --ar 21:9 --style raw --v 6.0</p>
-            <div class="prompt-action-bar">
-              <button class="button sm amber copy-btn" data-copy-target="#prompt-hero-01">COPY PROMPT</button>
-            </div>
+            <details class="prompt-expander">
+              <summary>View generation prompt</summary>
+              <p class="prompt-text" id="prompt-hero-01">Retrofuturistic engineering workshop of a hacker academic, late night study desk overlooking a dystopian neon cityscape, vintage CRT terminal displaying glowing amber and cyan LaTeX code with ASCII logo "P3CTeX", stacked textbooks on compiler design and automata, blueprint schematics, soldering iron and coffee mug, high contrast cyberpunk lighting, warm matte paper textures, photorealistic industrial dieselpunk atmosphere --ar 21:9 --style raw --v 6.0</p>
+            </details>
           </div>
 
-          <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-BRAND-02" data-aspect-ratio="3:1">
-            <div class="prompt-card-badge">
-              <span class="id">IMG-BRAND-02</span> · Brand Banner Artwork
+          <div class="image-placeholder-card" data-slot-id="IMG-BRAND-02" data-aspect-ratio="3:1">
+            <div class="slot-header">
+              <span class="slot-id">IMG-BRAND-02 · Brand Banner Artwork</span>
+              <span class="slot-ratio">Aspect Ratio: 3:1</span>
             </div>
-            <p class="prompt-text prompt-text-block" id="prompt-brand-02">Retrofuturistic demopack banner with glowing vector typography, wide panoramic banner for P3CTeX open source software repository, dark navy background with glowing cyan and phosphor green isometric lines, subtle CRT curvature and scanlines, minimalist cyberpunk terminal aesthetic --ar 3:1 --style raw</p>
-            <div class="prompt-action-bar">
-              <button class="button sm amber copy-btn" data-copy-target="#prompt-brand-02">COPY PROMPT</button>
-            </div>
+            <details class="prompt-expander">
+              <summary>View generation prompt</summary>
+              <p class="prompt-text" id="prompt-brand-02">Retrofuturistic demopack banner with glowing vector typography, wide panoramic banner for P3CTeX open source software repository, dark navy background with glowing cyan and phosphor green isometric lines, subtle CRT curvature and scanlines, minimalist cyberpunk terminal aesthetic --ar 3:1 --style raw</p>
+            </details>
           </div>
         </div>
       </section>
 
-      <!-- Module Arsenal Grid -->
-      <section class="section" aria-label="P3CTeX Module Inventory">
-        <div class="section-header">
-          <p class="eyebrow">Arsenal Inventory</p>
-          <h2>Modular Package Ecosystem</h2>
-          <p class="sublead">Each package can be loaded together via the <code>P3CTeX.cls</code> document class or used individually inside standard LaTeX2e documents.</p>
-        </div>
+      <!-- Module Arsenal Section -->
+      <section class="section" aria-label="Package modules">
+        <span class="panel-number">ARSENAL</span>
+        <h2>Modular Package Capabilities</h2>
+        <p>Every module is decoupled. Use them together via <code>P3CTeX.cls</code> or load individual <code>.sty</code> files inside your own document classes.</p>
 
-        <div class="cards-grid col-2">
+        <div class="cards col-2">
           <article class="panel">
-            <span class="panel-number">MOD // 01</span>
             <h3>pxCALC — Worked Calculations</h3>
-            <p>Define variables, state mathematical formulas, and automatically render step-by-step arithmetic and algebra solutions directly in your PAC exercises.</p>
-            <a href="showcases.html#pxcalc" class="panel-footer-link">View pxCALC Showcase →</a>
+            <p>Define variables, declare formulas, and format step-by-step arithmetic and algebraic evaluations directly in your continuous assessment answers.</p>
+            <a href="showcases.html#pxcalc">View pxCALC showcase →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">MOD // 02</span>
             <h3>pxCMP — Compilers &amp; Automata</h3>
-            <p>Specialized diagrams for computer engineering: Tombstone bootstrapping models, DFA/NFA state machines, $A^*$ search graphs, and decision trees.</p>
-            <a href="showcases.html#pxcmp" class="panel-footer-link">View pxCMP Showcase →</a>
+            <p>Tombstone compilation T-diagrams, DFA/NFA state transition tables, heuristic search trees ($A^*$), and multilayer neural networks.</p>
+            <a href="showcases.html#pxcmp">View pxCMP showcase →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">MOD // 03</span>
-            <h3>pxTAB — High-Performance Tables</h3>
-            <p>Zebra-striped tables, multi-page data lists (<code>\pxTBLlong</code>), paragraph auto-wrapping, and a declarative preset system that makes tabular layouts effortless.</p>
-            <a href="showcases.html#pxtab" class="panel-footer-link">View pxTAB Showcase →</a>
+            <h3>pxTAB — Multipage Tables &amp; Presets</h3>
+            <p>Declarative comma-separated table syntax, zebra striping, and <code>\pxTBLlong</code> for seamless multi-page data tables with running repeated headers.</p>
+            <a href="showcases.html#pxtab">View pxTAB showcase →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">MOD // 04</span>
             <h3>pxLST — Codebox Formatting</h3>
-            <p>Professional syntax highlighting with line numbering, framed containers, and curated themes (dark, pastel, light) for Java, Python, C++, Bash, and pseudocode.</p>
-            <a href="showcases.html#pxlst" class="panel-footer-link">View pxLST Showcase →</a>
-          </article>
-
-          <article class="panel">
-            <span class="panel-number">MOD // 05</span>
-            <h3>pxREQ — Software Requirements</h3>
-            <p>IEEE 830 compliant user story cards, BDD Given-When-Then scenario blocks, and structured SWOT / DAFO matrices for software engineering coursework.</p>
-            <a href="showcases.html#pxreq" class="panel-footer-link">View pxREQ Showcase →</a>
-          </article>
-
-          <article class="panel">
-            <span class="panel-number">MOD // 06</span>
-            <h3>pxMEM &amp; pxTFG — Degree Theses</h3>
-            <p>Comprehensive memory and thesis structures with multi-chapter management, official tribunal assessment pages, multilingual abstracts, and Creative Commons licensing.</p>
-            <a href="tutorials.html#tfg" class="panel-footer-link">View TFG Setup Guide →</a>
+            <p>Code listings with custom themes (dark, pastel, light) and line numbering for Java, Python, C++, Bash, SQL, and pseudocode algorithms.</p>
+            <a href="showcases.html#pxlst">View pxLST showcase →</a>
           </article>
         </div>
       </section>
     </div>
   </main>
 
-  <!-- Site Footer -->
+  <!-- Site Footer (AAAAT Structure) -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <h4>P3CTeX // Ultimate UOC Template Generator</h4>
-        <p>Created by ScVr!a (DidacLL). Built for Computer Engineering students and researchers seeking peak LaTeX ergonomics under strict deadlines.</p>
+        <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
+        <p>Created by ScVr!a (DidacLL). Designed for Computer Engineering students and researchers seeking peak LaTeX ergonomics under strict deadlines.</p>
         <p>Licensed under GNU General Public License v3.0.</p>
       </div>
       <div class="footer-links">
         <h5>Documentation</h5>
         <ul>
-          <li><a href="tutorials.html#bootstrap">Toolchain Setup</a></li>
+          <li><a href="tutorials.html#bootstrap">Installation &amp; Setup</a></li>
           <li><a href="tutorials.html#pac">PAC / PEC Workflow</a></li>
-          <li><a href="tutorials.html#pr">PR Laboratory Workflow</a></li>
-          <li><a href="tutorials.html#tfg">TFG Bachelor Thesis</a></li>
+          <li><a href="tutorials.html#pr">PR Laboratory Guide</a></li>
+          <li><a href="tutorials.html#tfg">TFG Thesis Memory</a></li>
         </ul>
       </div>
       <div class="footer-links">
-        <h5>Tools &amp; Repositories</h5>
+        <h5>Tools &amp; Downloads</h5>
         <ul>
-          <li><a href="generator.html">Interactive Web Generator</a></li>
-          <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Standalone Offline Tool</a></li>
+          <li><a href="generator.html">Web LaTeX Generator</a></li>
+          <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Offline Generator (.html)</a></li>
+          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
           <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub Repository</a></li>
-          <li><a href="https://github.com/DidacLL/AAAAT" target="_blank" rel="noopener">Reference: AAAAT Workshop</a></li>
         </ul>
       </div>
     </div>
     <div class="container footer-bottom">
       <span>© 2026 DidacLL / ScVr!a · "Procrastinar és l'única esperança"</span>
-      <span>Indie Retrofuturistic Alternative Tooling</span>
+      <span>P3CTeX Documentation &amp; Generator Studio</span>
     </div>
   </footer>
 </body>

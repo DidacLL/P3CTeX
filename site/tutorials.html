@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tutorials &amp; Battle Manual · P3CTeX</title>
+  <title>Tutorials &amp; Field Guide · P3CTeX</title>
   <meta name="description" content="Step-by-step engineering tutorials for P3CTeX: toolchain setup, UOC PAC/PR workflows, thesis memories, and emergency survival guides.">
   <link rel="stylesheet" href="assets/css/site.css">
   <script src="assets/js/site.js" defer></script>
@@ -11,91 +11,84 @@
 <body class="tutorials">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Header & Navigation -->
+  <!-- Header -->
   <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand-wrapper">
-        <a href="index.html" class="brand-title" aria-label="P3CTeX Home">
-          <span>P3CTeX</span>
-          <span class="slash">//</span>
-          <span class="brand-badge">v1.1.0</span>
-          <span class="motto">"Procrastinar és l'única esperança"</span>
-        </a>
-      </div>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a href="index.html">01/Home</a>
-        <a href="tutorials.html" aria-current="page">02/Tutorials</a>
-        <a href="showcases.html">03/Showcases</a>
-        <a href="generator.html">04/Generator</a>
-        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="nav-cta">GitHub</a>
-      </nav>
-    </div>
+    <a class="brand" href="index.html" aria-label="P3CTeX Home">
+      <img src="assets/images/pec-tex-banner.png" alt="P3CTeX Banner: Procrastinar es la unica esperanza" width="672" height="428">
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="tutorials.html" aria-current="page">Tutorials</a>
+      <a href="showcases.html">Showcases</a>
+      <a href="generator.html">Generator Tool</a>
+      <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">Download ZIP</a>
+      <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </header>
 
   <main id="main" class="container">
-    <section class="section">
-      <div class="section-header">
-        <p class="eyebrow">Battle-Tested Operations</p>
-        <h1>P3CTeX Field Manual &amp; Structured Tutorials</h1>
-        <p class="sublead">A comprehensive, no-nonsense guide designed for UOC students and engineering authors. From setting up your TeX compiler to delivering flawless PACs, PR labs, and Bachelor Theses under tight deadlines.</p>
-      </div>
+    <div class="page-intro">
+      <span class="eyebrow">FIELD GUIDE &amp; TUTORIALS</span>
+      <h1>Making P3CTeX Work for You.</h1>
+      <p>A structured, no-nonsense guide designed for UOC students and engineering authors. From setting up your TeX environment once to delivering high-scoring PACs, PR lab reports, and Bachelor Theses under tight deadlines.</p>
 
       <!-- Jump Navigation Bar -->
-      <nav class="toc-bar" aria-label="Jump to tutorial section">
-        <span class="toc-label">OPERATIONS:</span>
-        <a href="#bootstrap">01 // Toolchain Setup</a>
+      <nav class="toc" aria-label="Jump to tutorial section">
+        <span class="toc-title">OPERATIONS:</span>
+        <a href="#bootstrap">01 // Installation &amp; Setup</a>
         <a href="#preamble">02 // Preamble Anatomy</a>
         <a href="#pac">03 // PAC / PEC Workflow</a>
         <a href="#pr">04 // PR Lab &amp; Code</a>
         <a href="#tfg">05 // TFG Thesis &amp; Memory</a>
         <a href="#survival">06 // Deadline Survival Guide</a>
       </nav>
+    </div>
 
-      <!-- Section 01: Toolchain Bootstrap -->
-      <section class="section" id="bootstrap">
-        <h2><span class="panel-number">01 / BOOTSTRAP</span> Local Toolchain &amp; Compiler Setup</h2>
-        <div class="prose">
-          <p>P3CTeX requires a standard LaTeX distribution and functions seamlessly across Windows, macOS, and Linux. The repository structures classes in <code>tex/latex/</code> and expl3 internals in <code>tex/code/</code>.</p>
-          <ol class="steps">
-            <li>
-              <strong>Install your TeX Engine:</strong> Install <strong>MiKTeX</strong> (Windows) or <strong>TeX Live</strong> / <strong>MacTeX</strong> (Linux/macOS). Enable "Install missing packages on-the-fly".
-            </li>
-            <li>
-              <strong>Clone the Repository:</strong>
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">SHELL</span> Clone P3CTeX</div>
-                  <button class="copy-btn" data-copy-target="#code-clone">COPY</button>
-                </div>
-                <pre><code id="code-clone">git clone https://github.com/DidacLL/P3CTeX.git
-cd P3CTeX</code></pre>
-              </div>
-            </li>
-            <li>
-              <strong>Configure Directory Access:</strong> Tell your LaTeX engine where to locate P3CTeX's classes and styles. Set the environment variable:
-              <div class="code-box">
-                <div class="code-box-header">
-                  <div class="code-box-title"><span class="tag">SHELL</span> Windows / Linux TEXINPUTS</div>
-                  <button class="copy-btn" data-copy-target="#code-texinputs">COPY</button>
-                </div>
-                <pre><code id="code-texinputs"><span class="syn-comment"># Windows (PowerShell)</span>
-$env:TEXINPUTS = ".;./tex/latex;./tex/code;"
+    <!-- Section 01: Toolchain Bootstrap -->
+    <section class="section" id="bootstrap">
+      <span class="panel-number">01 / SETUP</span>
+      <h2>Installation &amp; Environment Setup</h2>
+      <div class="prose">
+        <p>P3CTeX is distributed as a packaged TeX tree. You do not need to clone Git repositories to use it in your daily coursework. Once registered in your TeX distribution, <code>\documentclass{P3CTeX}</code> is available system-wide across all your assignments.</p>
 
-<span class="syn-comment"># Linux / macOS (Bash / Zsh)</span>
-export TEXINPUTS=".:./tex/latex:./tex/code:"</code></pre>
-              </div>
-            </li>
-          </ol>
+        <ol class="steps">
+          <li>
+            <strong>Install MiKTeX or TeX Live:</strong> Install a standard LaTeX distribution on your computer (<a href="https://miktex.org/download" target="_blank" rel="noopener">MiKTeX</a> on Windows, or <a href="https://tug.org/texlive/" target="_blank" rel="noopener">TeX Live</a> / MacTeX on Linux/macOS). Enable "Install missing packages on-the-fly".
+          </li>
+          <li>
+            <strong>Download the Release Package:</strong> Download <code>P3CTeX-vX.Y.Z.zip</code> from <a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">GitHub Releases</a> and extract it to a permanent folder on your system (e.g. <code>C:\LaTeX\P3CTeX</code> or <code>~/texmf/p3ctex</code>).
+          </li>
+          <li>
+            <strong>Register with your TeX Distribution (One-Time Step):</strong>
+            <ul>
+              <li><strong>MiKTeX:</strong> Open <em>MiKTeX Console</em> → <em>Settings</em> → <em>Directories</em> tab → Click <em>Add</em> → Select the extracted P3CTeX folder → Click <em>Tasks</em> → <em>Refresh file name database (FNDB)</em>.</li>
+              <li><strong>TeX Live:</strong> Place the files into your personal <code>TEXMFHOME</code> directory or set <code>TEXINPUTS=".:/path/to/p3ctex//:"</code> in your shell.</li>
+              <li><strong>Coursework Directory:</strong> Alternatively, you can simply extract the release ZIP directly into your assignment folder next to your <code>.tex</code> file.</li>
+            </ul>
+          </li>
+        </ol>
 
-          <details class="guide-detail">
-            <summary>Configuring VS Code &amp; LaTeX Workshop for Instant Build</summary>
-            <p>In your VS Code <code>settings.json</code>, configure the LaTeX Workshop recipe to pass the include paths directly to <code>pdflatex</code>:</p>
-            <div class="code-box">
-              <div class="code-box-header">
-                <div class="code-box-title"><span class="tag">JSON</span> settings.json</div>
-                <button class="copy-btn" data-copy-target="#code-vscode">COPY</button>
-              </div>
-              <pre><code id="code-vscode">{
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-DOC-12" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-DOC-12 · Toolchain &amp; Workflow Infographic</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-doc-12">Detailed isometric technical diagram of the P3CTeX LaTeX compilation pipeline, showing pdflatex compiling P3CTeX.cls and modular packages into publication-ready PDF, technical schematic blueprint style, dark slate backdrop, glowing cyan data conduits, phosphor amber terminal boxes, pixelated icons, retrofuturistic engineer workstation --ar 16:9 --style raw</p>
+          </details>
+        </div>
+
+        <details class="guide-detail">
+          <summary>Configuring VS Code &amp; LaTeX Workshop for One-Click Compilation</summary>
+          <p>In VS Code with the LaTeX Workshop extension, use this clean build recipe in your <code>settings.json</code>:</p>
+          <div class="code-box">
+            <div class="code-box-header">
+              <div class="code-box-title"><span class="tag">JSON</span> settings.json</div>
+              <button class="copy-btn" data-copy-target="#code-vscode">COPY</button>
+            </div>
+            <pre><code id="code-vscode">{
   "latex-workshop.latex.tools": [
     {
       "name": "pdflatex-p3ctex",
@@ -104,41 +97,29 @@ export TEXINPUTS=".:./tex/latex:./tex/code:"</code></pre>
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
-        "-include-directory=./tex/latex",
-        "-include-directory=./tex/code",
         "%DOC%"
       ]
     }
   ]
 }</code></pre>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <!-- Image Placeholder Slot 1 -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-DOC-12" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-DOC-12</span> · Toolchain &amp; Workflow Infographic
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-doc-12">Detailed isometric technical diagram of the P3CTeX LaTeX compilation pipeline, showing pdflatex compiling P3CTeX.cls and modular packages into publication-ready PDF, technical schematic blueprint style, dark slate backdrop, glowing cyan data conduits, phosphor amber terminal boxes, pixelated icons, retrofuturistic engineer workstation --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-doc-12">COPY PROMPT</button>
-        </div>
+          </div>
+        </details>
       </div>
+    </section>
 
-      <!-- Section 02: Preamble Anatomy -->
-      <section class="section" id="preamble">
-        <h2><span class="panel-number">02 / PREAMBLE</span> Preamble Anatomy &amp; UOC Metadata</h2>
-        <div class="prose">
-          <p>A compliant P3CTeX document begins with the <code>P3CTeX</code> document class and a single declarative metadata configuration block. This guarantees that all header ribbons, footers, cover sheets, and title bars match official university standards.</p>
+    <!-- Section 02: Preamble Anatomy -->
+    <section class="section" id="preamble">
+      <span class="panel-number">02 / PREAMBLE</span>
+      <h2>Preamble Anatomy &amp; UOC Metadata</h2>
+      <div class="prose">
+        <p>A compliant P3CTeX document begins with the <code>P3CTeX</code> document class and a single declarative metadata configuration block. This guarantees that all header ribbons, footers, cover sheets, and title bars match official university standards.</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> Minimal Compliant Preamble</div>
-              <button class="copy-btn" data-copy-target="#code-preamble-min">COPY</button>
-            </div>
-            <pre><code id="code-preamble-min"><span class="syn-comment">% Document class with cover, toc, and computer science diagrams enabled</span>
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> Minimal Compliant Preamble</div>
+            <button class="copy-btn" data-copy-target="#code-preamble-min">COPY</button>
+          </div>
+          <pre><code id="code-preamble-min"><span class="syn-comment">% Document class with cover, toc, and computer science diagrams enabled</span>
 <span class="syn-kw">\documentclass</span><span class="syn-opt">[cover,toc,CMP,11pt]</span><span class="syn-arg">{P3CTeX}</span>
 
 <span class="syn-comment">% Official Cover Configuration</span>
@@ -162,60 +143,58 @@ export TEXINPUTS=".:./tex/latex:./tex/code:"</code></pre>
 <span class="syn-kw">\section</span><span class="syn-arg">{Introducció}</span>
 El contingut de la PAC comença aquí...
 <span class="syn-kw">\end{document}</span></code></pre>
-          </div>
         </div>
-      </section>
 
-      <!-- Image Placeholder Slot 2 -->
-      <div class="image-placeholder-card image-prompt-card" data-slot-id="IMG-PACPR-03" data-aspect-ratio="16:9">
-        <div class="prompt-card-badge">
-          <span class="id">IMG-PACPR-03</span> · Academic Workflow Schematic
-        </div>
-        <p class="prompt-text prompt-text-block" id="prompt-pacpr-03">Indie software development workflow diagram for academic student coursework, showing student solving engineering challenges on a dual-monitor setup with terminal on left and formatted PDF report on right, retrofuturistic lo-fi anime tech aesthetic, dark moody tones, amber highlights, detailed desk clutter with mechanical keyboard and papers --ar 16:9 --style raw</p>
-        <div class="prompt-action-bar">
-          <button class="button sm amber copy-btn" data-copy-target="#prompt-pacpr-03">COPY PROMPT</button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-PACPR-03" data-aspect-ratio="16:9">
+          <div class="slot-header">
+            <span class="slot-id">IMG-PACPR-03 · Academic Workflow Schematic</span>
+            <span class="slot-ratio">Aspect Ratio: 16:9</span>
+          </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-pacpr-03">Indie software development workflow diagram for academic student coursework, showing student solving engineering challenges on a dual-monitor setup with terminal on left and formatted PDF report on right, retrofuturistic lo-fi anime tech aesthetic, dark moody tones, amber highlights, detailed desk clutter with mechanical keyboard and papers --ar 16:9 --style raw</p>
+          </details>
         </div>
       </div>
+    </section>
 
-      <!-- Section 03: PAC / PEC Workflow -->
-      <section class="section" id="pac">
-        <h2><span class="panel-number">03 / PAC WORKFLOW</span> Delivering Continuous Assessment (PAC / PEC)</h2>
-        <div class="prose">
-          <p>Continuous assessment activities at UOC require clear structure: statement of each question, explicit methodology, worked calculations, and tabulated comparisons.</p>
+    <!-- Section 03: PAC / PEC Workflow -->
+    <section class="section" id="pac">
+      <span class="panel-number">03 / PAC WORKFLOW</span>
+      <h2>Delivering Continuous Assessment (PAC / PEC)</h2>
+      <div class="prose">
+        <p>Continuous assessment activities at UOC require clear structure: statement of each question, explicit methodology, worked calculations, and tabulated comparisons.</p>
 
-          <h3>Exercise Setup &amp; Worked Calculations with <code>pxCALC</code></h3>
-          <p>Instead of manually typing error-prone intermediate algebra, <code>pxCALC</code> defines parameters and formats step-by-step arithmetic:</p>
+        <h3>Worked Mathematical Calculations with <code>pxCALC</code></h3>
+        <p>Instead of manually typing error-prone intermediate algebra, <code>pxCALC</code> defines parameters and formats step-by-step arithmetic automatically:</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> Mathematical Resolution with pxCALC</div>
-              <button class="copy-btn" data-copy-target="#code-pac-calc">COPY</button>
-            </div>
-            <pre><code id="code-pac-calc"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxCALC}</span>
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> Mathematical Resolution with pxCALC</div>
+            <button class="copy-btn" data-copy-target="#code-pac-calc">COPY</button>
+          </div>
+          <pre><code id="code-pac-calc"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxCALC}</span>
 
 <span class="syn-kw">\section</span><span class="syn-arg">{Exercici 1: Càlcul de Rendiment del Sistema}</span>
 En aquest exercici calculem la latència mitjana segons el model M/M/1.
 
-<span class="syn-comment">% Definició de variables amb símbol i valor</span>
 <span class="syn-cmd">\pxDefVar</span>{lambda}{120}[\lambda]  <span class="syn-comment">% Taxa d'arribada (req/s)</span>
 <span class="syn-cmd">\pxDefVar</span>{mu}{150}[\mu]          <span class="syn-comment">% Taxa de servei (req/s)</span>
 
-<span class="syn-comment">% Definició de la fórmula del temps de resposta W</span>
 <span class="syn-cmd">\pxDefFormula</span>{tempsW}{1 / ([mu] - [lambda])}[symbol=W, unit=\second]
-
-<span class="syn-comment">% Resolució pas a pas automàtica</span>
 <span class="syn-cmd">\pxSolve</span><span class="syn-opt">[steps=true]</span>{tempsW}</code></pre>
+        </div>
+
+        <h3>Tabulated Comparisons with <code>pxTAB</code></h3>
+        <p>Produce clean evaluation matrices with zebra striping and custom column headers:</p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> Evaluation Matrix with pxTAB</div>
+            <button class="copy-btn" data-copy-target="#code-pac-tab">COPY</button>
           </div>
-
-          <h3>Tabulated Comparisons with <code>pxTAB</code></h3>
-          <p>Produce beautifully styled evaluation matrices with zebra striping and custom column headers:</p>
-
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> Evaluation Matrix with pxTAB</div>
-              <button class="copy-btn" data-copy-target="#code-pac-tab">COPY</button>
-            </div>
-            <pre><code id="code-pac-tab"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxTAB}</span>
+          <pre><code id="code-pac-tab"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxTAB}</span>
 
 <span class="syn-cmd">\pxTABsetup</span>{
   <span class="syn-opt">style</span>           = header-striped,
@@ -229,25 +208,26 @@ En aquest exercici calculem la latència mitjana segons el model M/M/1.
   Dijkstra    , $\mathcal{O}((V + E)\log V)$, $\mathcal{O}(V)$ , \textbf{Adequat} }{
   Bellman-Ford, $\mathcal{O}(VE)$           , $\mathcal{O}(V)$ , Massa lent }{
   A* (Heurístic), $\mathcal{O}(b^d)$         , $\mathcal{O}(b^d)$, \textbf{Recomanat} }</code></pre>
-          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Section 04: PR Lab Workflow -->
-      <section class="section" id="pr">
-        <h2><span class="panel-number">04 / PR LABS</span> Laboratory Implementations &amp; Code Showcases</h2>
-        <div class="prose">
-          <p>Laboratory reports (PR) require code excerpts, compiler pipeline representations, and screenshots of execution runs.</p>
+    <!-- Section 04: PR Lab Workflow -->
+    <section class="section" id="pr">
+      <span class="panel-number">04 / PR LABS</span>
+      <h2>Laboratory Implementations &amp; Code Showcases</h2>
+      <div class="prose">
+        <p>Laboratory reports (PR) require code excerpts, compiler pipeline representations, and screenshots of execution runs.</p>
 
-          <h3>Syntax-Highlighted Code with <code>pxLST</code></h3>
-          <p>P3CTeX provides the <code>\begin{pxCode}</code> environment with dark, pastel, and light themes for all primary computer science languages:</p>
+        <h3>Syntax-Highlighted Code with <code>pxLST</code></h3>
+        <p>P3CTeX provides the <code>\begin{pxCode}</code> environment with dark, pastel, and light themes for all primary computer science languages:</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> Java Codebox with pxLST</div>
-              <button class="copy-btn" data-copy-target="#code-pr-lst">COPY</button>
-            </div>
-            <pre><code id="code-pr-lst"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxLST}</span>
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> Java Codebox with pxLST</div>
+            <button class="copy-btn" data-copy-target="#code-pr-lst">COPY</button>
+          </div>
+          <pre><code id="code-pr-lst"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxLST}</span>
 
 <span class="syn-cmd">\pxCodeSet</span><span class="syn-opt">[dark]</span><span class="syn-arg">{pxJava}</span>
 <span class="syn-kw">\begin</span><span class="syn-arg">{pxCode}</span><span class="syn-opt">[language=pxJava]</span><span class="syn-arg">{ScannerLexer}</span>
@@ -266,39 +246,37 @@ public class ScannerLexer {
     }
 }
 <span class="syn-kw">\end</span><span class="syn-arg">{pxCode}</span></code></pre>
-          </div>
-
-          <h3>Resilient Figures with <code>pxSRC</code></h3>
-          <p>If a teammate or benchmark script hasn't generated a screenshot yet, standard LaTeX halts with a fatal file error. P3CTeX's <code>\pxIMG</code> generates an inline fallback card preserving the exact aspect ratio:</p>
-
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> Resilient Figures with pxSRC</div>
-              <button class="copy-btn" data-copy-target="#code-pr-src">COPY</button>
-            </div>
-            <pre><code id="code-pr-src"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxSRC}</span>
-
-<span class="syn-comment">% Fallback gracefully if img/benchmark-graph.png does not exist yet</span>
-<span class="syn-cmd">\pxIMG</span><span class="syn-opt">[0.8\linewidth]</span><span class="syn-arg">{img/benchmark-graph}</span><span class="syn-opt">[primaryColor]</span>{Gr\`afica comparativa de rendiment i temps d'execuci\'o}<span class="syn-opt">[fig:benchmark]</span>
-
-<span class="syn-comment">% Pair two images side by side with a shared caption</span>
-<span class="syn-cmd">\pxIMGpair</span><span class="syn-arg">{img/heap-before}</span><span class="syn-arg">{img/heap-after}</span>{Estat del Heap abans i despr\'es del Garbage Collection}<span class="syn-opt">[fig:gc-heap]</span></code></pre>
-          </div>
         </div>
-      </section>
 
-      <!-- Section 05: TFG Thesis -->
-      <section class="section" id="tfg">
-        <h2><span class="panel-number">05 / TFG THESIS</span> Bachelor Thesis &amp; Memory Architecture</h2>
-        <div class="prose">
-          <p>The Bachelor Thesis (Treball Final de Grau / TFG) requires front matter including tribunal records, Creative Commons licensing declarations, multilingual abstracts, chapter partitioning, and formal appendices.</p>
+        <h3>Resilient Figures with <code>pxSRC</code></h3>
+        <p>If a teammate or benchmark script hasn't generated a screenshot yet, standard LaTeX halts with a fatal file error. P3CTeX's <code>\pxIMG</code> generates an inline fallback card preserving the exact aspect ratio:</p>
 
-          <div class="code-box">
-            <div class="code-box-header">
-              <div class="code-box-title"><span class="tag">LATEX</span> TFG Thesis Document Structure</div>
-              <button class="copy-btn" data-copy-target="#code-tfg-struct">COPY</button>
-            </div>
-            <pre><code id="code-tfg-struct"><span class="syn-kw">\documentclass</span><span class="syn-opt">[TFG,MEM,11pt]</span><span class="syn-arg">{P3CTeX}</span>
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> Resilient Figures with pxSRC</div>
+            <button class="copy-btn" data-copy-target="#code-pr-src">COPY</button>
+          </div>
+          <pre><code id="code-pr-src"><span class="syn-kw">\usepackage</span><span class="syn-arg">{pxSRC}</span>
+
+<span class="syn-cmd">\pxIMG</span><span class="syn-opt">[0.8\linewidth]</span><span class="syn-arg">{img/benchmark-graph}</span><span class="syn-opt">[primaryColor]</span>{Gr\`afica comparativa de rendiment i temps d'execuci\'o}<span class="syn-opt">[fig:benchmark]</span>
+<span class="syn-cmd">\pxIMGpair</span><span class="syn-arg">{img/heap-before}</span><span class="syn-arg">{img/heap-after}</span>{Estat del Heap abans i despr\'es del Garbage Collection}<span class="syn-opt">[fig:gc-heap]</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 05: TFG Thesis -->
+    <section class="section" id="tfg">
+      <span class="panel-number">05 / TFG THESIS</span>
+      <h2>Bachelor Thesis &amp; Memory Architecture</h2>
+      <div class="prose">
+        <p>The Bachelor Thesis (Treball Final de Grau / TFG) requires front matter including tribunal records, Creative Commons licensing declarations, multilingual abstracts, chapter partitioning, and formal appendices.</p>
+
+        <div class="code-box">
+          <div class="code-box-header">
+            <div class="code-box-title"><span class="tag">LATEX</span> TFG Thesis Document Structure</div>
+            <button class="copy-btn" data-copy-target="#code-tfg-struct">COPY</button>
+          </div>
+          <pre><code id="code-tfg-struct"><span class="syn-kw">\documentclass</span><span class="syn-opt">[TFG,MEM,11pt]</span><span class="syn-arg">{P3CTeX}</span>
 
 <span class="syn-kw">\usepackage</span><span class="syn-arg">{pxTFG}</span>  <span class="syn-comment">% Fitxa del TFG, tribunals i metadades</span>
 <span class="syn-kw">\usepackage</span><span class="syn-arg">{pxMEM}</span>  <span class="syn-comment">% Estructura de capítols i annexos</span>
@@ -314,7 +292,7 @@ public class ScannerLexer {
   }
 }
 
-<span class="syn-kw">\begin</span><span class="syn-arg">{document}</span>
+<span class="syn-kw">\begin{document}</span>
 <span class="syn-cmd">\makeTFGcover</span>         <span class="syn-comment">% Portada oficial de TFG</span>
 <span class="syn-cmd">\makeTFGtribunal</span>      <span class="syn-comment">% Full d'avaluació de tribunal</span>
 <span class="syn-cmd">\makeTFGlicence</span>       <span class="syn-comment">% Declaració de llicència Creative Commons</span>
@@ -333,58 +311,54 @@ English project abstract...
 
 <span class="syn-kw">\chapter</span><span class="syn-arg">{Introducció i Objectius}</span>
 ...
-<span class="syn-kw">\chapter</span><span class="syn-arg">{Anàlisi de l'Estat de l'Art}</span>
-...
-<span class="syn-kw">\chapter</span><span class="syn-arg">{Disseny i Arquitectura del Sistema}</span>
-...
-<span class="syn-kw">\end</span><span class="syn-arg">{document}</span></code></pre>
-          </div>
+<span class="syn-kw">\end{document}</span></code></pre>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Section 06: Procrastination Survival Guide -->
-      <section class="section" id="survival">
-        <h2><span class="panel-number">06 / SURVIVAL</span> "Procrastinar és l'Única Esperança" Emergency Guide</h2>
-        <div class="prose">
-          <p>It is 23:45 on submission Sunday. The UOC Virtual Campus deadline is 23:59. Your document refuses to compile. Follow these emergency triage protocols:</p>
+    <!-- Section 06: Procrastination Survival Guide -->
+    <section class="section" id="survival">
+      <span class="panel-number">06 / SURVIVAL</span>
+      <h2>"Procrastinar és l'Única Esperança" Emergency Guide</h2>
+      <div class="prose">
+        <p>It is 23:45 on submission Sunday. The UOC Virtual Campus deadline is 23:59. Your document refuses to compile. Follow these emergency triage protocols:</p>
 
-          <div class="cards-grid col-2">
-            <article class="panel">
-              <span class="panel-number">TRIAGE // 01</span>
-              <h3>Runaway Compilation Loop</h3>
-              <p>Did pdflatex freeze waiting for user input on error? Terminate with <code>Ctrl + C</code> and always pass non-blocking arguments:</p>
-              <code>pdflatex -interaction=nonstopmode -halt-on-error main.tex</code>
-            </article>
+        <div class="cards col-2">
+          <article class="panel">
+            <span class="panel-number">TRIAGE // 01</span>
+            <h3>Runaway Compilation Loop</h3>
+            <p>Did pdflatex freeze waiting for user input on error? Terminate with <code>Ctrl + C</code> and always pass non-blocking arguments:</p>
+            <code>pdflatex -interaction=nonstopmode -halt-on-error main.tex</code>
+          </article>
 
-            <article class="panel">
-              <span class="panel-number">TRIAGE // 02</span>
-              <h3>Missing Images Halting the Build</h3>
-              <p>Replace broken <code>\includegraphics</code> with <code>\pxIMG</code>. It instantly suppresses missing file exceptions and emits fallback placeholders.</p>
-            </article>
+          <article class="panel">
+            <span class="panel-number">TRIAGE // 02</span>
+            <h3>Missing Images Halting the Build</h3>
+            <p>Replace broken <code>\includegraphics</code> with <code>\pxIMG</code>. It instantly suppresses missing file exceptions and emits fallback placeholders.</p>
+          </article>
 
-            <article class="panel">
-              <span class="panel-number">TRIAGE // 03</span>
-              <h3>Table Running Off the Page</h3>
-              <p>If your tabular overflows the margin, switch immediately to <code>\pxTBLlong</code> or set <code>\pxTABsetup{tabwidth=\linewidth}</code> to enforce strict margins.</p>
-            </article>
+          <article class="panel">
+            <span class="panel-number">TRIAGE // 03</span>
+            <h3>Table Running Off the Page</h3>
+            <p>If your tabular overflows the margin, switch immediately to <code>\pxTBLlong</code> or set <code>\pxTABsetup{tabwidth=\linewidth}</code> to enforce strict margins.</p>
+          </article>
 
-            <article class="panel">
-              <span class="panel-number">TRIAGE // 04</span>
-              <h3>Undefined Control Sequence</h3>
-              <p>Missing module package! Check if you used <code>\pxTable</code> without loading <code>pxTAB</code>, or <code>\pxCode</code> without loading <code>pxLST</code>.</p>
-            </article>
-          </div>
+          <article class="panel">
+            <span class="panel-number">TRIAGE // 04</span>
+            <h3>Undefined Control Sequence</h3>
+            <p>Missing module package! Check if you used <code>\pxTable</code> without loading <code>pxTAB</code>, or <code>\pxCode</code> without loading <code>pxLST</code>.</p>
+          </article>
         </div>
-      </section>
+      </div>
     </section>
   </main>
 
-  <!-- Site Footer -->
+  <!-- Site Footer (AAAAT Structure) -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <h4>P3CTeX // Ultimate UOC Template Generator</h4>
-        <p>Created by ScVr!a (DidacLL). Built for Computer Engineering students and researchers seeking peak LaTeX ergonomics under strict deadlines.</p>
+        <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
+        <p>Created by ScVr!a (DidacLL). Designed for Computer Engineering students and researchers seeking peak LaTeX ergonomics under strict deadlines.</p>
         <p>Licensed under GNU General Public License v3.0.</p>
       </div>
       <div class="footer-links">
@@ -399,6 +373,7 @@ English project abstract...
       <div class="footer-links">
         <h5>External Repositories</h5>
         <ul>
+          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
           <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub: P3CTeX</a></li>
           <li><a href="https://github.com/DidacLL/AAAAT" target="_blank" rel="noopener">Reference: AAAAT Workshop</a></li>
         </ul>
@@ -406,7 +381,7 @@ English project abstract...
     </div>
     <div class="container footer-bottom">
       <span>© 2026 DidacLL / ScVr!a · "Procrastinar és l'única esperança"</span>
-      <span>Indie Retrofuturistic Alternative Tooling</span>
+      <span>P3CTeX Documentation &amp; Generator Studio</span>
     </div>
   </footer>
 </body>

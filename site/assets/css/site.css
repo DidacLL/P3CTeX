@@ -1,53 +1,42 @@
 /* ==========================================================================
-   P3CTeX — Public Web & Indie Documentation Suite
-   Aesthetic: Pirate Old School Software · Indie Retrofuturistic Alternative Tooling
-   Inspired by DidacLL/AAAAT Workshop Architecture & P3CTeX Demopack ANSI Culture
+   P3CTeX — Public Documentation & Technical Workshop Suite
+   Design: Faithful to DidacLL/AAAAT Workshop Architecture & P3CTeX Heritage
+   High-Contrast · Academic Parchment Surface · Deep Machine Accents
    ========================================================================== */
 
 :root {
-  /* Color Tokens */
-  --bg-dark: #0a0f14;
-  --bg-deep: #0f1720;
-  --bg-surface: #141f2b;
-  --bg-surface-raised: #1c2b3a;
-  --bg-surface-highlight: #243547;
-  
+  /* AAAAT Authentic Palette Tokens */
   --paper: #cfc9b3;
   --sheet: #eee5d0;
-  --machine-deep: #16202c;
-  --machine-border: #2a3d52;
-  --machine-edge: #435e7a;
+  --paper-strong: #bdb79f;
   
-  --ink: #e6edf3;
-  --ink-body: #c5d1de;
-  --ink-muted: #8397ab;
-  --ink-dim: #546a80;
-
-  /* Accent Phosphor Palette */
-  --pirate-cyan: #73edff;
-  --pirate-cyan-glow: rgba(115, 237, 255, 0.25);
-  --pirate-green: #38ef7d;
-  --pirate-green-glow: rgba(56, 239, 125, 0.25);
-  --pirate-amber: #ffb454;
-  --pirate-amber-glow: rgba(255, 180, 84, 0.25);
-  --pirate-crimson: #ff5555;
-  --pirate-rust: #ae4827;
-  --pirate-purple: #bd93f9;
+  --machine: #38433a;
+  --machine-raised: #50594b;
+  --machine-deep: #202920;
+  --machine-darker: #171e19;
   
-  /* P3CTeX & UOC Academic Signatures */
-  --uoc-indigo: #000078;
-  --uoc-indigo-light: #1e3a8a;
-  --uoc-cyan: #73edff;
+  --ink: #24342e;
+  --ink-body: #31443c;
+  --muted: #475448;
+  --line: #9d9d83;
+  --edge: #778176;
   
-  /* Dimensions & Spacing */
-  --page-width: min(1380px, calc(100% - clamp(20px, 4vw, 64px)));
+  --rust: #ae4827;
+  --rust-dark: #85331e;
+  --rust-glow: rgba(174, 72, 39, 0.25);
+  
+  --focus: #247d79;
+  --cyan: #a2e8da;
+  --amber: #e6a73c;
+  --green: #2e8b57;
+  
+  --page-width: min(1380px, calc(100% - clamp(24px, 4vw, 80px)));
   --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+  --radius-md: 5px;
 
   /* Typography */
-  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
+  --font-sans: 'Segoe UI', Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
 }
 
@@ -56,84 +45,88 @@
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-behavior: auto;
+  scroll-padding-top: 40px;
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-dark);
-  background-image: 
-    radial-gradient(ellipse at 50% 0%, #1a2a3d 0%, transparent 70%),
-    linear-gradient(rgba(115, 237, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(115, 237, 255, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 32px 32px, 32px 32px;
-  color: var(--ink-body);
+  background: #171e19;
+  background-image: radial-gradient(ellipse at top, #455044 0%, transparent 65%);
   font-family: var(--font-sans);
-  line-height: 1.6;
+  color: var(--ink);
+  line-height: 1.55;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Typography Defaults */
+/* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: var(--ink);
-  line-height: 1.2;
-  letter-spacing: -0.025em;
   margin-top: 0;
 }
 
 h1 {
-  font-size: clamp(2rem, 3.5vw, 2.9rem);
+  font-size: clamp(2rem, 3vw, 2.7rem);
   font-weight: 800;
-  margin-bottom: 0.4em;
+  margin: 0.18em 0 0.42em;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-size: clamp(1.5rem, 2vw, 2rem);
   font-weight: 700;
-  margin-bottom: 0.5em;
+  margin: 0 0 0.6em;
   color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 0.4em;
-  color: var(--pirate-cyan);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.02em;
 }
 
 p {
-  margin: 0 0 1rem;
+  margin: 0 0 1em;
+  color: var(--ink-body);
 }
 
 a {
-  color: var(--pirate-cyan);
-  text-decoration: none;
-  transition: color 0.15s ease, text-shadow 0.15s ease;
+  color: var(--rust-dark);
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease;
 }
 
 a:hover {
-  color: #a6f4ff;
-  text-decoration: underline;
-  text-shadow: 0 0 8px var(--pirate-cyan-glow);
+  color: var(--rust);
+  text-decoration-thickness: 2px;
 }
 
-code, kbd, samp, pre {
-  font-family: var(--font-mono);
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 code {
-  background: rgba(115, 237, 255, 0.08);
-  color: var(--pirate-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: rgba(48, 60, 50, 0.12);
+  color: var(--ink);
   padding: 0.15em 0.4em;
   border-radius: var(--radius-sm);
-  font-size: 0.9em;
-  border: 1px solid rgba(115, 237, 255, 0.18);
+  border: 1px solid rgba(157, 157, 131, 0.4);
 }
 
 pre code {
@@ -143,9 +136,8 @@ pre code {
   color: inherit;
 }
 
-/* Focus Visibility */
 :focus-visible {
-  outline: 2px solid var(--pirate-cyan);
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 
@@ -154,585 +146,355 @@ pre code {
   top: -100px;
   left: 16px;
   z-index: 1000;
-  background: var(--pirate-green);
-  color: #000;
+  background: var(--sheet);
+  color: var(--ink);
   font-weight: 700;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  border: 1px solid var(--line);
 }
 
 .skip-link:focus {
   top: 16px;
 }
 
-/* Layout Container */
-.container {
-  width: var(--page-width);
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
 /* ==========================================================================
-   Header & Navigation
+   Header & Navigation (AAAAT Structure)
    ========================================================================== */
 
 .site-header {
-  background: var(--bg-deep);
-  border-bottom: 2px solid var(--machine-border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  position: sticky;
-  top: 0;
-  z-index: 500;
+  background: var(--machine-deep);
+  border-bottom: 1px solid #81876b;
 }
 
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
+.brand {
+  display: block;
+  width: 100%;
+  aspect-ratio: 6.4;
+  min-height: 120px;
+  max-height: 220px;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  background: #111822;
+  text-align: center;
 }
 
-.brand-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.brand-badge {
-  background: var(--bg-surface-raised);
-  border: 1px solid var(--machine-edge);
-  color: var(--pirate-amber);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  box-shadow: inset 0 0 8px rgba(255, 180, 84, 0.1);
-}
-
-.brand-title {
-  font-family: var(--font-mono);
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.03em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.brand-title span.slash {
-  color: var(--pirate-green);
-}
-
-.brand-title span.motto {
-  font-size: 0.75rem;
-  font-weight: 450;
-  color: var(--ink-muted);
-  border-left: 1px solid var(--machine-border);
-  padding-left: 10px;
-  margin-left: 6px;
-  display: none;
-}
-
-@media (min-width: 860px) {
-  .brand-title span.motto {
-    display: inline-block;
-  }
+.brand img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
 }
 
 .site-nav {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  background: linear-gradient(#4c5748, #303c32);
+  border-block: 1px solid #81876b;
+  box-shadow: 0 4px 8px rgba(10, 18, 10, 0.4);
 }
 
 .site-nav a {
-  color: var(--ink-muted);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  transition: all 0.15s ease;
+  color: var(--sheet);
+  white-space: nowrap;
   text-decoration: none;
+  font-weight: 650;
+  font-size: 0.95rem;
+  padding: 11px 22px;
+  border-inline: 1px solid rgba(255, 249, 237, 0.1);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .site-nav a:hover {
-  color: var(--pirate-cyan);
-  background: rgba(115, 237, 255, 0.08);
-  border-color: rgba(115, 237, 255, 0.2);
-  text-shadow: none;
+  background: var(--machine-raised);
+  color: #fff;
 }
 
 .site-nav a[aria-current="page"] {
-  color: var(--pirate-green);
-  background: rgba(56, 239, 125, 0.1);
-  border-color: rgba(56, 239, 125, 0.3);
-  font-weight: 700;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: inset 0 -4px var(--rust);
 }
 
-.site-nav a.nav-cta {
-  background: var(--pirate-rust);
-  color: #fff;
-  font-weight: 700;
-  border-color: #d15632;
-  box-shadow: 0 2px 8px rgba(174, 72, 39, 0.4);
+.site-nav a.nav-action {
+  background: var(--rust);
+  color: var(--sheet);
 }
 
-.site-nav a.nav-cta:hover {
-  background: #c24018;
-  color: #fff;
+.site-nav a.nav-action:hover {
+  background: var(--rust-dark);
 }
 
 /* ==========================================================================
-   Hero & Masthead (Pirate Retrofuturistic Demopack Banner)
+   Main Parchment Container (AAAAT Workshop Surface)
    ========================================================================== */
 
-.hero-masthead {
-  padding: 32px 0 24px;
-  background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-dark) 100%);
-  border-bottom: 2px solid var(--machine-border);
-  position: relative;
-  overflow: hidden;
+.container {
+  width: var(--page-width);
+  margin-inline: auto;
 }
 
-.hero-masthead::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--pirate-cyan), var(--pirate-green), var(--pirate-amber), var(--pirate-crimson));
+main.container, .home main > .container {
+  padding-inline: clamp(22px, 3vw, 48px);
+  padding-block: 28px 48px;
+  margin-block: 24px 48px;
+  background: linear-gradient(110deg, #d6cdb5, #c4c3ac);
+  border: 1px solid #8a8d75;
+  box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
 }
 
-.masthead-card {
-  background: var(--bg-surface);
-  border: 2px solid var(--machine-edge);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.4);
-  position: relative;
-}
+/* ==========================================================================
+   Hero Section (AAAAT Industrial Workshop Style)
+   ========================================================================== */
 
-.masthead-card::after {
-  content: "RETROFUTURISTIC ENGINEERING TOOLKIT // INDIE UOC LATEX GENERATOR";
-  position: absolute;
-  top: -10px;
-  right: 20px;
-  background: var(--bg-dark);
-  border: 1px solid var(--machine-edge);
-  color: var(--pirate-amber);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 2px;
-  letter-spacing: 0.08em;
-}
-
-.banner-graphic-container {
-  text-align: center;
-  margin-bottom: 20px;
-  background: #111822;
-  border: 1px solid var(--machine-border);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.banner-graphic {
-  max-width: 100%;
-  height: auto;
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  image-rendering: pixelated;
-}
-
-.hero-content {
+.hero {
+  width: var(--page-width);
+  margin: 24px auto 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: center;
+  background: linear-gradient(120deg, #424d40, #26352c);
+  color: var(--sheet);
+  border: 1px solid #81876b;
+  border-bottom: 3px solid var(--rust);
+  box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
 }
 
-@media (min-width: 900px) {
-  .hero-content {
-    grid-template-columns: 1.3fr 1fr;
+@media (min-width: 860px) {
+  .hero {
+    grid-template-columns: 1.15fr 0.85fr;
   }
 }
 
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--pirate-green);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.4rem;
+.hero .hero-inner {
+  padding: 32px clamp(24px, 3vw, 44px);
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.eyebrow::before {
-  content: ">>>";
-  color: var(--pirate-amber);
-}
-
-.hero-title {
-  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
-  font-weight: 800;
+.hero h1 {
   color: #fff;
-  line-height: 1.15;
-  margin-bottom: 0.7rem;
+  font-size: clamp(1.9rem, 2.6vw, 2.5rem);
+  line-height: 1.1;
+  margin-bottom: 0.4em;
 }
 
-.hero-title span.glitch-accent {
-  color: var(--pirate-cyan);
-  text-shadow: 0 0 12px var(--pirate-cyan-glow);
+.eyebrow {
+  color: #e7a982;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
 }
 
-.hero-lede {
+.lede {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--ink-body);
-  margin-bottom: 1.5rem;
+  color: var(--sheet);
+  max-width: 640px;
+  margin-bottom: 1.4rem;
 }
 
-.hero-actions {
+.actions {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 1.5rem;
+  margin: 18px 0;
 }
-
-.hero-status-ribbon {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--ink-muted);
-  border-top: 1px solid var(--machine-border);
-  padding-top: 12px;
-}
-
-.hero-status-ribbon .status-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.status-indicator span.dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--pirate-green);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--pirate-green);
-}
-
-/* ==========================================================================
-   Buttons & Interactive Controls
-   ========================================================================== */
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.92rem;
+  min-height: 44px;
+  padding: 9px 18px;
+  background: var(--rust);
+  border: 1px solid var(--rust-dark);
+  color: var(--sheet);
   font-weight: 700;
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--pirate-cyan);
-  background: var(--bg-surface-raised);
-  color: var(--pirate-cyan);
-  cursor: pointer;
   text-decoration: none;
+  font-size: 0.92rem;
   transition: all 0.15s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
 .button:hover {
-  background: rgba(115, 237, 255, 0.15);
+  background: var(--rust-dark);
   color: #fff;
-  border-color: #a6f4ff;
-  text-shadow: 0 0 10px var(--pirate-cyan-glow);
-  transform: translateY(-1px);
+  text-decoration: none;
 }
 
-.button.primary {
-  background: var(--pirate-rust);
-  color: #fff;
-  border-color: #d15632;
-  box-shadow: 0 4px 15px rgba(174, 72, 39, 0.4);
+.button.secondary {
+  background: transparent;
+  border-color: #a0aa91;
+  color: var(--sheet);
 }
 
-.button.primary:hover {
-  background: #c63f16;
-  border-color: #ff6e42;
-  box-shadow: 0 4px 20px rgba(174, 72, 39, 0.6);
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+.button.secondary:hover {
+  background: var(--machine-raised);
 }
 
 .button.green {
-  background: rgba(56, 239, 125, 0.15);
-  color: var(--pirate-green);
-  border-color: var(--pirate-green);
+  background: var(--green);
+  border-color: #22633e;
+  color: #fff;
 }
 
 .button.green:hover {
-  background: var(--pirate-green);
-  color: #000;
-  box-shadow: 0 0 15px var(--pirate-green-glow);
+  background: #236c43;
 }
 
-.button.amber {
-  background: rgba(255, 180, 84, 0.15);
-  color: var(--pirate-amber);
-  border-color: var(--pirate-amber);
+.hero-note {
+  font-size: 0.82rem;
+  color: #d4d3bb;
+  margin: 0;
 }
 
-.button.amber:hover {
-  background: var(--pirate-amber);
-  color: #000;
-  box-shadow: 0 0 15px var(--pirate-amber-glow);
+.hero-art-side {
+  background: #111822;
+  border-left: 1px solid #81876b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
 
-.button.sm {
-  padding: 6px 12px;
-  font-size: 0.8rem;
+.hero-art-side img {
+  max-height: 280px;
+  width: auto;
+  border: 1px solid #81876b;
 }
 
 /* ==========================================================================
-   Terminal Panels & Technical Cards (AAAAT Workshop Architecture)
+   Sections, Panels & Cards
    ========================================================================== */
 
 .section {
-  padding: 48px 0;
-  position: relative;
+  padding-block: 28px;
+  border-bottom: 1px solid var(--line);
 }
 
-.section-header {
-  margin-bottom: 28px;
+.section:last-child {
+  border-bottom: none;
 }
 
-.section-header p.sublead {
-  font-size: 1.1rem;
-  color: var(--ink-muted);
-  max-width: 800px;
+.panel-number {
+  color: var(--rust-dark);
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
 }
 
-.cards-grid {
+.cards {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 24px;
 }
 
 @media (min-width: 768px) {
-  .cards-grid.col-2 {
+  .cards.col-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-  .cards-grid.col-3 {
+  .cards.col-3 {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .panel {
-  background: var(--bg-surface);
-  border: 1px solid var(--machine-border);
-  border-top: 3px solid var(--machine-edge);
-  border-radius: var(--radius-sm);
-  padding: 24px;
-  position: relative;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  border-top: 1px solid var(--line);
+  padding: 16px 0 0;
 }
 
-.panel:hover {
-  border-top-color: var(--pirate-cyan);
-  border-color: var(--machine-edge);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-}
-
-.panel-number {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--pirate-amber);
-  display: block;
-  margin-bottom: 12px;
-  letter-spacing: 0.08em;
+@media (min-width: 768px) {
+  .panel {
+    border-top: none;
+    border-left: 1px solid var(--line);
+    padding: 0 0 0 20px;
+  }
+  .panel:first-child {
+    border-left: none;
+    padding-left: 0;
+  }
 }
 
 .panel h2, .panel h3 {
-  margin-bottom: 10px;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
 }
 
 .panel p {
-  color: var(--ink-body);
-  font-size: 0.96rem;
-  margin-bottom: 16px;
-}
-
-.panel-footer-link {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--pirate-cyan);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.panel-footer-link:hover {
-  gap: 10px;
-}
-
-/* ==========================================================================
-   Code Boxes & Syntax Display
-   ========================================================================== */
-
-.code-box {
-  background: #090e13;
-  border: 1px solid var(--machine-border);
-  border-radius: var(--radius-sm);
-  margin: 18px 0;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.code-box-header {
-  background: #111822;
-  border-bottom: 1px solid var(--machine-border);
-  padding: 8px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-}
-
-.code-box-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--ink-muted);
-}
-
-.code-box-title span.tag {
-  background: var(--bg-surface-raised);
-  color: var(--pirate-cyan);
-  padding: 2px 6px;
-  border-radius: 2px;
-  font-size: 0.75rem;
-  border: 1px solid rgba(115, 237, 255, 0.2);
-}
-
-.copy-btn {
-  background: var(--bg-surface-raised);
-  border: 1px solid var(--machine-border);
-  color: var(--ink-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.copy-btn:hover {
-  background: var(--machine-edge);
-  color: var(--pirate-cyan);
-  border-color: var(--pirate-cyan);
-}
-
-.copy-btn.copied {
-  background: var(--pirate-green);
-  color: #000;
-  border-color: var(--pirate-green);
-}
-
-.code-box pre {
-  margin: 0;
-  padding: 16px;
-  overflow-x: auto;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   line-height: 1.5;
-  color: #d1dbe6;
+  margin-bottom: 12px;
 }
 
-/* Syntax Highlighting Tokens */
-.syn-kw { color: #ff7b72; font-weight: 700; }        /* LaTeX keywords \documentclass, \begin */
-.syn-cmd { color: #79c0ff; }                          /* Commands \pxTable, \pxIMG */
-.syn-opt { color: #ffb454; }                          /* Options [style=header] */
-.syn-arg { color: #a5d6ff; }                          /* Arguments {Name, Age} */
-.syn-comment { color: #8b949e; font-style: italic; }  /* Comments % explanation */
-.syn-math { color: #7ee787; }                         /* Math $h=20$ */
+.panel a {
+  font-weight: 700;
+  font-size: 0.88rem;
+}
 
 /* ==========================================================================
    Table of Contents & Guide Steps
    ========================================================================== */
 
-.toc-bar {
-  background: var(--bg-surface);
-  border: 1px solid var(--machine-border);
-  border-radius: var(--radius-sm);
-  padding: 12px 18px;
-  margin-bottom: 32px;
+.toc {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+  gap: 8px 16px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  margin-bottom: 28px;
 }
 
-.toc-bar span.toc-label {
-  color: var(--pirate-amber);
-  font-weight: 700;
-  margin-right: 6px;
+.toc span.toc-title {
+  font-weight: 750;
+  color: var(--rust-dark);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.toc-bar a {
-  background: #101720;
-  border: 1px solid var(--machine-border);
-  color: var(--ink-muted);
-  padding: 4px 10px;
-  border-radius: 2px;
-  transition: all 0.15s ease;
-}
-
-.toc-bar a:hover {
-  color: var(--pirate-cyan);
-  border-color: var(--pirate-cyan);
-  background: rgba(115, 237, 255, 0.08);
+.toc a {
+  color: var(--ink);
+  font-size: 0.9rem;
   text-decoration: none;
+  border-bottom: 1px dotted var(--edge);
+}
+
+.toc a:hover {
+  color: var(--rust-dark);
+  border-bottom-style: solid;
 }
 
 ol.steps {
   padding-left: 0;
   list-style: none;
   counter-reset: step-counter;
-  margin: 20px 0;
+  margin: 16px 0;
 }
 
 ol.steps > li {
   counter-increment: step-counter;
   position: relative;
-  padding-left: 48px;
-  margin-bottom: 20px;
+  padding-left: 44px;
+  margin-bottom: 18px;
+  color: var(--ink-body);
 }
 
 ol.steps > li::before {
@@ -740,14 +502,13 @@ ol.steps > li::before {
   position: absolute;
   left: 0;
   top: 0;
-  width: 34px;
-  height: 34px;
-  background: var(--bg-surface-raised);
-  border: 1px solid var(--machine-edge);
-  color: var(--pirate-cyan);
+  width: 30px;
+  height: 30px;
+  background: var(--machine-deep);
+  color: var(--sheet);
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -755,122 +516,166 @@ ol.steps > li::before {
 }
 
 details.guide-detail {
-  background: #111a24;
-  border: 1px solid var(--machine-border);
-  border-radius: var(--radius-sm);
-  padding: 14px 18px;
-  margin: 16px 0;
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  padding: 12px 16px;
+  margin: 14px 0;
 }
 
 details.guide-detail summary {
-  font-family: var(--font-mono);
   font-weight: 700;
-  color: var(--pirate-amber);
+  color: var(--rust-dark);
   cursor: pointer;
 }
 
-details.guide-detail summary:hover {
-  color: #ffc97a;
-}
-
-details.guide-detail[open] summary {
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--machine-border);
-  padding-bottom: 8px;
-}
-
 /* ==========================================================================
-   Image Placeholder Prompt Cards (Pirate / Retrofuturistic Edition)
+   Code Boxes (Crisp, High-Contrast Terminal Styling)
    ========================================================================== */
 
-.image-prompt-card {
-  background: #0f161f;
-  border: 2px dashed var(--machine-edge);
+.code-box {
+  background: var(--machine-deep);
+  border: 1px solid #1a221a;
   border-radius: var(--radius-sm);
-  padding: 20px;
-  margin: 24px 0;
-  position: relative;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+  margin: 16px 0;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(10, 18, 10, 0.4);
 }
 
-.image-prompt-card:hover {
-  border-color: var(--pirate-cyan);
-}
-
-.prompt-card-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(115, 237, 255, 0.1);
-  border: 1px solid var(--pirate-cyan);
-  color: var(--pirate-cyan);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 2px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-
-.prompt-card-badge span.id {
-  color: var(--pirate-amber);
-}
-
-.prompt-meta {
+.code-box-header {
+  background: #171e17;
+  border-bottom: 1px solid #2e382e;
+  padding: 7px 12px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--ink-muted);
-  margin-bottom: 10px;
 }
 
-.prompt-meta span {
-  display: inline-flex;
-  gap: 4px;
+.code-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a0aa9a;
 }
 
-.prompt-meta span strong {
-  color: var(--ink);
-}
-
-.prompt-text-block {
-  background: #080d12;
-  border: 1px solid #1f2c3d;
+.code-box-title span.tag {
+  background: var(--machine-raised);
+  color: var(--cyan);
+  padding: 2px 6px;
   border-radius: 2px;
-  padding: 12px;
+  font-size: 0.72rem;
+}
+
+.copy-btn {
+  background: var(--machine-raised);
+  border: 1px solid var(--edge);
+  color: var(--sheet);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.copy-btn:hover {
+  background: var(--focus);
+  color: #fff;
+}
+
+.copy-btn.copied {
+  background: var(--green);
+  color: #fff;
+}
+
+.code-box pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
   line-height: 1.5;
-  color: #9eccdf;
-  margin-bottom: 12px;
+  color: #e2ecd9;
+}
+
+/* Syntax Tokens */
+.syn-kw { color: #f28b82; font-weight: 700; }
+.syn-cmd { color: #79c0ff; }
+.syn-opt { color: #ffb454; }
+.syn-arg { color: #a2e8da; }
+.syn-comment { color: #8a9a88; font-style: italic; }
+
+/* ==========================================================================
+   Image Placeholder Slot (Compact & Respectful UI)
+   ========================================================================== */
+
+.image-placeholder-card {
+  background: rgba(48, 60, 50, 0.08);
+  border: 1px dashed var(--edge);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin: 16px 0;
+}
+
+.slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.slot-id {
+  font-weight: 750;
+  color: var(--rust-dark);
+}
+
+.slot-ratio {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.prompt-expander {
+  margin-top: 6px;
+  font-size: 0.82rem;
+}
+
+.prompt-expander summary {
+  cursor: pointer;
+  color: var(--focus);
+  font-weight: 600;
+}
+
+.prompt-text {
+  background: var(--machine-deep);
+  color: var(--cyan);
+  padding: 8px 12px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin: 8px 0 0;
   user-select: all;
 }
 
-.prompt-action-bar {
-  display: flex;
-  justify-content: flex-end;
-}
-
 /* ==========================================================================
-   Footer
+   Footer (AAAAT Style)
    ========================================================================== */
 
 .site-footer {
-  background: var(--bg-deep);
-  border-top: 2px solid var(--machine-border);
-  padding: 40px 0 32px;
-  margin-top: 64px;
-  color: var(--ink-muted);
-  font-size: 0.9rem;
+  background: var(--machine-deep);
+  border-top: 1px solid #81876b;
+  padding: 36px 0 24px;
+  color: #adb5a5;
+  font-size: 0.88rem;
 }
 
 .footer-inner {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: 28px;
 }
 
 @media (min-width: 768px) {
@@ -879,23 +684,21 @@ details.guide-detail[open] summary {
   }
 }
 
-.footer-brand {
-  font-family: var(--font-mono);
+.footer-brand h4 {
+  color: var(--sheet);
+  margin-bottom: 6px;
 }
 
-.footer-brand h4 {
-  color: var(--ink);
-  font-size: 1.1rem;
-  margin-bottom: 8px;
+.footer-brand p {
+  color: #a4ad9c;
 }
 
 .footer-links h5 {
-  font-family: var(--font-mono);
+  color: var(--paper);
   font-size: 0.82rem;
-  color: var(--pirate-amber);
-  text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 12px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
 }
 
 .footer-links ul {
@@ -905,25 +708,26 @@ details.guide-detail[open] summary {
 }
 
 .footer-links li {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .footer-links a {
-  color: var(--ink-muted);
+  color: #adb5a5;
+  text-decoration: none;
 }
 
 .footer-links a:hover {
-  color: var(--pirate-cyan);
+  color: var(--sheet);
+  text-decoration: underline;
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--machine-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: 24px;
-  padding-top: 16px;
+  padding-top: 14px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
   font-size: 0.78rem;
+  color: #8c9684;
 }
