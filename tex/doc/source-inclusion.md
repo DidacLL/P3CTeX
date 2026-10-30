@@ -14,12 +14,17 @@ These tools also work in PR and MEM. Existing pxSRC image APIs remain available.
     \pxInput[container=minipage,width=.8\linewidth]{sections/summary.tex}
     \pxInput[as=code,language=Python,title={Experiment}]{experiment.py}
 
+The source registry accepts external resources, not just TeX documents. Choose as=code for source code, as=text for literal text (logs, CSV, configuration), or as=native for TeX execution. Existing image APIs handle graphical resources. CSV text is displayed literally, not converted into a table.
+
+    \pxInput[as=text,first-line=2,last-line=12]{results.csv}
+    \pxInput[as=code,language=Python]{experiment.py}
+
 Native input executes TeX in a local group with the receiving document's style.
 Include body material, or select a region from a standalone document. Minipages
 cannot contain ordinary floats or break across pages. Relative child inputs and
 images are searched from the original source directory.
 
-Region markers occupy separate lines and are excluded:
+Region markers occupy separate lines and are excluded. Their default prefix is the TeX comment character. Set region-prefix=// for C-like sources, region-prefix=\string# for Python or shell sources, or customise region-suffix as needed. Line ranges require no source markers:
 
     %<*results>
     \subsection{Results}\label{sec:results}
@@ -55,10 +60,10 @@ For repeated native inclusion, set label-prefix=pr-one: and use
     \pxGlossarySetup{include=used,toc=true}
     % In the body:
     \gls{sample}
-    \pxPrintGlossaries
+    % Optional: \pxPrintGlossaries places lists here instead of at the end.
 
-The glossaries tool defaults to manual placement and noindex: run LaTeX repeatedly,
-without an external index command. The legacy glossary class option retains
+Enabling glossaries automatically prints the lists at the end. The default noindex backend needs repeated LaTeX runs,
+without an external index command. The legacy glossary class option also retains
 automatic end printing; override with \pxGlossarySetup{print=manual}.
 
 include=used prints referenced entries; include=all includes all defined entries

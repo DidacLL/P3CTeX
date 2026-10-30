@@ -33,7 +33,7 @@ Current student-tools work and pre-existing development edits must be committed 
 - as=native|code and container=none|minipage separate execution from layout. Code rendering reuses pxLST. cite and terms are explicit metadata; code itself never executes glossary or citation commands.
 - label-prefix applies to native labels; pxSourceRef resolves an internal reference with that prefix, while ordinary ref continues to address external/document labels unchanged.
 - pxANN provides immediate pxAnnex, queued pxAddAnnex and explicit pxPrintAnnexes. Main-body counters are restored; queues are consumed once. No global appendix transition is imposed.
-- pxGLS provides explicit printing and optional automatic printing. The legacy glossary class option retains automatic no-index lists; direct glossaries tool selection defaults to manual placement. External indexed backends remain author-managed.
+- pxGLS automatically prints used glossary lists when enabled, including through the glossaries tool key. Explicit placement and print=manual are optional customisations. External indexed backends remain author-managed.
 - Existing pxMEMsource/include/annex now delegate to these shared engines. Existing chapter mode remains pxMEM's responsibility.
 - References use standard LaTeX labels/citations and the author's bibliography backend, rather than forcing a new bibliography engine.
 
@@ -54,3 +54,10 @@ Current student-tools work and pre-existing development edits must be committed 
 - Generated source snippets are excluded from release selection. No release archive rebuilt; existing dist remains untouched.
 
 The previously observed EN,PAC Babel option clash remains a separate known issue. This validation does not claim every possible language-option combination works.
+
+
+## Owner corrections applied
+
+- Enabling glossaries automatically prints lists. Students need no printing command. The class-level automatic regression and the manual-plus-automatic regression passed with three LaTeX runs; rendered output was checked.
+- pxSRC manages external resources, not only TeX documents. Added literal as=text rendering, configurable region comment prefixes/suffixes, and Python/CSV coverage. Existing as=code handles external program files; graphical resources retain the existing image APIs. CSV is displayed literally, not parsed into a table.
+- Seven focused regression documents passed with three runs each after these corrections, including PAC/PR/MEM source integration. Python markers select only the intended fragment; CSV TeX-like text does not execute. Updated user guide and common test registration.

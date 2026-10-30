@@ -1,0 +1,12 @@
+\documentclass[PAC,sources,annexes]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcount\unsafeexecutions
+\pxSource[as=code,language=Python,region=example,region-prefix=\string#]{python}{fixtures/source/example.py}
+\begin{document}
+\pxUseSource[title={Python source}]{python}
+\pxInput[as=text,last-line=3,caption={CSV evidence},label=src:csv]{fixtures/source/data.csv}
+\pxAnnex{External evidence}{
+  \pxInput[as=text,first-line=2,last-line=3,container=minipage,width=.9\linewidth]{fixtures/source/data.csv}
+}
+\ifnum\unsafeexecutions=0\else\PackageError{source-test}{Literal text executed}{}\fi
+\end{document}

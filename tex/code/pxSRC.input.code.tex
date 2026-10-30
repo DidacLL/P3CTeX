@@ -8,6 +8,8 @@
 \newcounter{pxsource}
 \tl_new:N \l__pxsrc_input_path_tl
 \tl_new:N \l__pxsrc_input_region_tl
+\tl_new:N \l__pxsrc_input_region_prefix_tl
+\tl_new:N \l__pxsrc_input_region_suffix_tl
 \tl_new:N \l__pxsrc_input_mode_tl
 \tl_new:N \l__pxsrc_input_container_tl
 \tl_new:N \l__pxsrc_input_width_tl
@@ -32,13 +34,16 @@
 \msg_new:nnn {pxSRC}{input}{#1}
 \keys_define:nn {pxSRC/input}
   {
-    as .choices:nn = {native,code}{\tl_set_eq:NN \l__pxsrc_input_mode_tl \l_keys_choice_tl},
+    as .choices:nn = {native,code,text}{\tl_set_eq:NN \l__pxsrc_input_mode_tl \l_keys_choice_tl},
     as .initial:n = native,
     container .choices:nn = {none,minipage}{\tl_set_eq:NN \l__pxsrc_input_container_tl \l_keys_choice_tl},
     container .initial:n = none,
     width .tl_set:N = \l__pxsrc_input_width_tl,
     width .initial:n = \linewidth,
     region .tl_set:N = \l__pxsrc_input_region_tl,
+    region-prefix .tl_set:N = \l__pxsrc_input_region_prefix_tl,
+    region-prefix .initial:x = \c_percent_str,
+    region-suffix .tl_set:N = \l__pxsrc_input_region_suffix_tl,
     first-line .int_set:N = \l__pxsrc_input_first_int,
     first-line .initial:n = 1,
     last-line .int_set:N = \l__pxsrc_input_last_int,
@@ -84,11 +89,11 @@
       {\int_incr:N \l__pxsrc_input_lines_int
        \tl_if_blank:VF \l__pxsrc_input_region_tl
          {\str_if_eq:eeT {\tl_trim_spaces:n {##1}}
-            {\c_percent_str <*\l__pxsrc_input_region_tl>}
+            {\l__pxsrc_input_region_prefix_tl <*\l__pxsrc_input_region_tl>\l__pxsrc_input_region_suffix_tl}
             {\int_incr:N \l__pxsrc_input_starts_int
              \int_set:Nn \l__pxsrc_input_first_int {\l__pxsrc_input_lines_int+1}}
           \str_if_eq:eeT {\tl_trim_spaces:n {##1}}
-            {\c_percent_str </\l__pxsrc_input_region_tl>}
+            {\l__pxsrc_input_region_prefix_tl </\l__pxsrc_input_region_tl>\l__pxsrc_input_region_suffix_tl}
             {\int_incr:N \l__pxsrc_input_ends_int
              \int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_input_lines_int-1}}}}
     \ior_close:N \l__pxsrc_input_ior
@@ -131,7 +136,7 @@
       \immediate\closeout\pxSRCout
     \group_end:
   }
-\cs_new_protected:Npn \__pxsrc_input_render:
+\cs_new_protected:Npn \__pxsrc_input_render_code_native:
   {
     \tl_if_eq:NnTF \l__pxsrc_input_mode_tl {code}
       {\cs_if_exist:NTF \pxLST_input_file:nnnn
@@ -158,6 +163,17 @@
          {\cs_set_protected:Npn \label ##1
            {\exp_args:Ne \__pxsrc_document_label:n {\l__pxsrc_input_label_prefix_tl ##1}}}
        \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}
+  }
+% Literal text is useful for logs, CSV, configuration and other text resources.
+% It uses fancyvrb directly, without interpreting TeX or requiring pxLST.
+\cs_new_protected:Npn \__pxsrc_input_render:
+  {
+    \tl_if_eq:NnTF \l__pxsrc_input_mode_tl {text}
+      {\use:x {\exp_not:N \VerbatimInput[
+         firstline=\int_use:N \l__pxsrc_input_first_int,
+         lastline=\int_use:N \l__pxsrc_input_last_int]
+         {\exp_not:V \l__pxsrc_input_path_tl}}}
+      {\__pxsrc_input_render_code_native:}
   }
 \cs_new_protected:Npn \__pxsrc_input:nn #1#2
   {
