@@ -1,5 +1,5 @@
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (Pirate / Terminal Ergonomics)
+   P3CTeX LaTeX Generator Stylesheet (AAAAT Analog Workshop System)
    ========================================================================== */
 
 .generator-app {
@@ -11,19 +11,20 @@
 
 @media (min-width: 1024px) {
   .generator-app {
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.1fr 0.9fr;
     align-items: start;
   }
 }
 
 /* Preset Toolbar */
 .preset-bar {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-strong);
-  border-left: 4px solid var(--accent-amber);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--rust);
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(36, 52, 46, 0.1);
 }
 
 .preset-header {
@@ -34,7 +35,7 @@
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 750;
-  color: var(--accent-amber);
+  color: var(--rust-dark);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -46,9 +47,9 @@
 }
 
 .preset-btn {
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
+  background: #fdfbf7;
+  border: 1px solid var(--line);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
@@ -59,34 +60,35 @@
 }
 
 .preset-btn:hover {
-  background: #233748;
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
+  background: var(--paper);
+  border-color: var(--rust);
+  color: var(--rust-dark);
 }
 
 .preset-btn.active {
-  background: var(--accent-rust);
+  background: var(--rust);
   color: #ffffff;
-  border-color: #b33920;
+  border-color: var(--rust-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Config Groups */
 .config-group {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
+  background: var(--sheet);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   margin-bottom: 18px;
   overflow: hidden;
 }
 
 .config-group-header {
-  background: var(--bg-panel-raised);
+  background: #e2dac4;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid var(--line);
   font-family: var(--font-mono);
   font-weight: 750;
   font-size: 0.82rem;
-  color: var(--accent-cyan);
+  color: var(--rust-dark);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -106,29 +108,29 @@
 .form-row label {
   display: block;
   font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-weight: 650;
+  color: var(--ink);
   margin-bottom: 6px;
 }
 
 .form-row input[type="text"],
 .form-row select {
   width: 100%;
-  background: var(--bg-canvas);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  color: var(--ink);
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
   font-size: 0.92rem;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .form-row input[type="text"]:focus,
 .form-row select:focus {
   outline: none;
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.15);
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(36, 125, 121, 0.2);
 }
 
 /* Checkbox and Toggle lists */
@@ -143,18 +145,18 @@
   gap: 10px;
   cursor: pointer;
   font-size: 0.88rem;
-  color: var(--text-secondary);
+  color: var(--ink);
 }
 
 .toggle-item input[type="checkbox"] {
-  accent-color: var(--accent-cyan);
-  width: 17px;
-  height: 17px;
+  accent-color: var(--rust);
+  width: 18px;
+  height: 18px;
   cursor: pointer;
 }
 
 .toggle-item strong {
-  color: var(--text-primary);
+  color: var(--ink);
 }
 
 /* Preview Card */
@@ -164,20 +166,20 @@
 }
 
 .preview-card {
-  background: var(--bg-code);
-  border: 1px solid var(--line-strong);
+  background: var(--code-bg);
+  border: 1px solid var(--machine-raised);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
 }
 
 .preview-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #111a22;
+  background: #19251c;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid #2d3b30;
 }
 
 .preview-title {
@@ -186,8 +188,8 @@
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-secondary);
+  font-weight: 750;
+  color: var(--sheet);
   letter-spacing: 0.08em;
 }
 
@@ -195,8 +197,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent-green);
-  box-shadow: 0 0 6px var(--accent-green);
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
 }
 
 .preview-actions {
@@ -205,32 +207,31 @@
 }
 
 .btn-tool {
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
+  background: var(--machine-raised);
+  border: 1px solid #5a695c;
+  color: var(--sheet);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 5px 10px;
+  font-weight: 700;
+  padding: 6px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .btn-tool:hover {
-  background: #233748;
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
+  background: #4e5c51;
+  color: #ffffff;
 }
 
 .btn-tool.primary {
-  background: var(--accent-rust);
-  border-color: #b33920;
+  background: var(--rust);
+  border-color: var(--rust-dark);
   color: #ffffff;
 }
 
 .btn-tool.primary:hover {
-  background: var(--accent-rust-hover);
+  background: #c9512d;
 }
 
 .preview-code {
@@ -240,7 +241,14 @@
   overflow-y: auto;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  line-height: 1.5;
-  color: #edf4fa;
-  background: var(--bg-code);
+  line-height: 1.55;
+  color: var(--code-ink);
+  background: var(--code-bg);
+}
+
+.preview-code code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
 }

@@ -2,12 +2,13 @@
    P3CTeX Generator Engine
    Reactive LaTeX Preamble & Assessment Boilerplate Synthesis
    Factually compliant with P3CTeX.cls and official UOC styles
+   "Procrastinar és l'única esperança" · By ScVr!a
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  // Default Presets matching official P3CTeX conventions
+  // Deliverable Coursework Presets matching official P3CTeX conventions
   const PRESETS = {
     pac: {
       profile: 'PAC',
@@ -23,7 +24,7 @@
         caShort: 'PAC1',
         caFull: 'PAC 1: Anàlisi Lèxica i Sintàctica'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
     },
     pec: {
       profile: 'PEC',
@@ -39,7 +40,7 @@
         caShort: 'PEC1',
         caFull: 'PEC 1: Gestión de Procesos y Memoria Virtual'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
     },
     pr: {
       profile: 'PR',
@@ -55,23 +56,7 @@
         caShort: 'PR1',
         caFull: 'Pràctica 1: Disseny i Implementació del Sistema'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: true }
-    },
-    cmp: {
-      profile: 'PAC',
-      lang: 'cat',
-      modules: { default: true, CMP: true, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Compiladors i Teoria de la Computació',
-        subjShort: 'COMP',
-        subjCode: '75.580',
-        caShort: 'PAC2',
-        caFull: 'PAC 2: Autòmats, Gramàtiques i Bootstrapping'
-      },
-      blobs: { table: false, codebox: false, figure: false, cmp: true, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: true }
     },
     tfg: {
       profile: 'TFG',
@@ -87,7 +72,23 @@
         caShort: 'MEM',
         caFull: 'Memòria del Treball Final de Grau'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: false }
+    },
+    ca: {
+      profile: 'CA',
+      lang: 'en',
+      modules: { default: true, CMP: false, GNT: false, TFG: false },
+      toggles: { cover: false, toc: true, plagi: false },
+      meta: {
+        student: 'Estudiant UOC',
+        grade: 'Bachelor in Computer Science',
+        subjFull: 'Distributed Systems Architecture',
+        subjShort: 'DSA',
+        subjCode: '75.590',
+        caShort: 'CA1',
+        caFull: 'Continuous Assessment 1: Consensus Protocols'
+      },
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
     }
   };
 
@@ -131,20 +132,22 @@
       }
     });
 
-    // Profile radio/select
+    // Profile select
     const profileEl = document.getElementById('select-profile');
     if (profileEl) {
       profileEl.addEventListener('change', () => {
         state.profile = profileEl.value;
         if (state.profile === 'PR' || state.profile === 'TFG') {
           state.toggles.cover = true;
+        } else {
+          state.toggles.cover = false;
         }
         renderForm();
         generateLatexCode();
       });
     }
 
-    // Language radio/select
+    // Language select
     const langEl = document.getElementById('select-lang');
     if (langEl) {
       langEl.addEventListener('change', () => {
@@ -176,11 +179,17 @@
     });
 
     // Blobs checkboxes
-    ['table', 'codebox', 'figure', 'cmp', 'foreach'].forEach(blob => {
+    ['table', 'codebox', 'figure', 'cmp', 'graph', 'ml', 'longtable', 'foreach'].forEach(blob => {
       const el = document.getElementById('blob-' + blob);
       if (el) {
         el.addEventListener('change', () => {
           state.blobs[blob] = el.checked;
+          // Auto-enable CMP module if a CMP-dependent blob is selected
+          if ((blob === 'cmp' || blob === 'graph' || blob === 'ml') && el.checked) {
+            state.modules.CMP = true;
+            const cmpCheck = document.getElementById('mod-CMP');
+            if (cmpCheck) cmpCheck.checked = true;
+          }
           generateLatexCode();
         });
       }
@@ -275,7 +284,7 @@
     out += '%% Metadades acadèmiques oficials de la UOC\n';
     out += '\\PECTeXconfig{\n';
     out += '  data = {\n';
-    out += '    student        = {' + (state.meta.student || 'Nom Cognoms') + '},\n';
+    out += '    student        = {' + (state.meta.student || 'Estudiant UOC') + '},\n';
     out += '    grade          = {' + (state.meta.grade || 'Enginyeria Informàtica') + '},\n';
     out += '    subj-fullname  = {' + (state.meta.subjFull || 'Nom Assignatura') + '},\n';
     out += '    subj-shortname = {' + (state.meta.subjShort || 'SIGLES') + '},\n';
@@ -287,7 +296,7 @@
     out += '}\n\n';
 
     out += '\\begin{document}\n\n';
-    out += '\\section{Exercici 1}\n';
+    out += '\\sectionuoc{Exercici 1}\n';
     out += '\\subsection{Pregunta A}\n';
     out += 'La resposta al primer apartat de l\'activitat ' + (state.meta.caShort || 'PAC1') + ' es redacta aquí.\n\n';
 
@@ -303,6 +312,17 @@
       out += '}{\n';
       out += '  Pèrdua de paquets, 0.01 %, < 0.1 %, PASS\n';
       out += '}\n\n';
+    }
+
+    if (state.blobs.longtable) {
+      out += '%% BLOB: Taula multipàgina pxTBLlong* per a llistats extensos de dades\n';
+      out += '\\begin{pxTBLlong*}[header-repeat=true]{cols={0.25\\linewidth, 0.45\\linewidth, 0.3\\linewidth}}\n';
+      out += '  Codi / ID, Descripció del Mòdul, Estat de Verificació;\n';
+      out += '  MOD-01, Gestió de Memòria i Paginació Virtual, COMPLETAT;\n';
+      out += '  MOD-02, Planificador de Processos Round-Robin, COMPLETAT;\n';
+      out += '  MOD-03, Sistema de Fitxers Basat en Inodes, EN REVISIÓ;\n';
+      out += '  MOD-04, Controlador de Dispositius I/O en Bloc, PENDENT\n';
+      out += '\\end{pxTBLlong*}\n\n';
     }
 
     if (state.blobs.codebox) {
@@ -329,7 +349,7 @@
     }
 
     if (state.blobs.cmp) {
-      out += '%% BLOB: Diagrames d\'Enginyeria de Compiladors i Autòmats (pxCMP)\n';
+      out += '%% BLOB: Diagrames de Compiladors i Autòmats (pxCMP)\n';
       out += '\\subsection{Diagrama de Tombstone i Autòmat Finit}\n';
       out += '\\pxTombstoneCompile[title={Compilador Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
       out += '\\pxTransitionTable[title={Taula de transició de l\'autòmat}]{a, b}{\n';
@@ -341,6 +361,32 @@
       out += '\\pxAutomatonTrace[title={Traça de reconeixement de la paraula \\texttt{aba}}]{\n';
       out += '  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1\n';
       out += '}[Reconegut]\n\n';
+    }
+
+    if (state.blobs.graph) {
+      out += '%% BLOB: Graf de Cerca Heurística A* (pxCMP)\n';
+      out += '\\pxGraph[title={Graf de cerca heurística $A^*$} travessant estats]{\n';
+      out += '  A / A / 0,0 / start / $h=20$;\n';
+      out += '  B / B / 2.2,1.1 / path / {$g=4, f=16$};\n';
+      out += '  C / C / 2.2,-1.1 / visited / $h=15$;\n';
+      out += '  D / D / 4.4,1.1 / open / $h=10$;\n';
+      out += '  G / G / 4.4,-1.1 / goal / $h=0$\n';
+      out += '}{\n';
+      out += '  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12\n';
+      out += '}\n\n';
+    }
+
+    if (state.blobs.ml) {
+      out += '%% BLOB: Intel·ligència Artificial: Matriu de Confusió i Xarxa Neuronal (pxCMP)\n';
+      out += '\\pxConfusionMatrix[title={Avaluació del Classificador}]\n';
+      out += '  {Positiu, Negatiu}\n';
+      out += '  {45 (TP), 5 (FP); 3 (FN), 47 (TN)}\n';
+      out += '  [Precisió = 0.90 \\quad|\\quad Sensibilitat = 0.9375 \\quad|\\quad $F_1 = 0.9184$]\n\n';
+      out += '\\pxNeuralNet[title={Perceptró Multicapa (MLP)}]{\n';
+      out += '  Entrada / x_0, x_1, x_2 / input;\n';
+      out += '  Capa Oculta / h_0, h_1, h_2 / ReLU;\n';
+      out += '  Sortida / Y / Softmax\n';
+      out += '}[x_0 -> h_0 / 1; x_1 -> h_1 / 1; h_0 -> Y / 0.5]\n\n';
     }
 
     if (state.blobs.foreach) {
@@ -359,6 +405,9 @@
       codeEl.textContent = out;
     }
   }
+
+  // Expose generateLatexCode globally for testing / offline usage
+  window.generateLatexCode = generateLatexCode;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

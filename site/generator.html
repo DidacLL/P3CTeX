@@ -13,15 +13,19 @@
 <body class="generator">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Site Header -->
+  <!-- Header & Masthead Banner (AAAAT Alignment) -->
   <header class="site-header">
-    <div class="header-brand-bar">
-      <a class="brand-link" href="index.html" aria-label="P3CTeX Home">
-        <span class="brand-title-text">PEC.TeX // P3CTeX</span>
-        <span class="brand-badge">v1.1.0</span>
-      </a>
-      <span class="brand-motto">"Procrastinar és l'única esperança" · By ScVr!a</span>
-    </div>
+    <a class="brand" href="index.html" aria-label="P3CTeX home — Ultimate UOC Template Generator &amp; LaTeX Engineering Suite">
+      <div class="masthead-canvas">
+        <div class="masthead-title-row">
+          <span class="masthead-logo">PEC.TeX // P3CTeX</span>
+          <span class="masthead-badge">v1.1.0</span>
+        </div>
+        <div class="masthead-sub-row">
+          <span class="masthead-motto">"Procrastinar és l'única esperança"</span> · ULTIMATE UOC TEMPLATE GENERATOR · By ScVr!a
+        </div>
+      </div>
+    </a>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="tutorials.html">Tutorials</a>
@@ -38,22 +42,22 @@
       <p class="eyebrow">Interactive LaTeX Studio</p>
       <h1>Generate your assessment skeleton.</h1>
       <p class="lede">
-        Configure your subject metadata, pick a delivery preset, and toggle module capabilities. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
+        Configure your subject metadata, select your official delivery profile, and activate modular tools. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
       </p>
     </header>
 
-    <!-- Preset Toolbar -->
+    <!-- Preset Toolbar: Deliverable Profiles Only -->
     <div class="preset-bar">
       <div class="preset-header">
-        <span>CURATED COURSEWORK PRESETS</span>
+        <span>CURATED COURSEWORK PRESETS (DELIVERABLE PROFILES)</span>
         <span>ONE-CLICK POPULATE</span>
       </div>
       <div class="preset-buttons">
         <button type="button" class="preset-btn active" data-preset="pac">[PAC] Catalan Assessment</button>
         <button type="button" class="preset-btn" data-preset="pec">[PEC] Spanish Assessment</button>
         <button type="button" class="preset-btn" data-preset="pr">[PR] Laboratory Practicum</button>
-        <button type="button" class="preset-btn" data-preset="cmp">[CMP] Compilers &amp; Automata</button>
         <button type="button" class="preset-btn" data-preset="tfg">[TFG] Degree Thesis Memory</button>
+        <button type="button" class="preset-btn" data-preset="ca">[CA] English Assessment</button>
       </div>
     </div>
 
@@ -63,15 +67,16 @@
       <div class="generator-controls">
         <!-- 1. Profile & Language -->
         <div class="config-group">
-          <div class="config-group-header">01 // Document Profile &amp; Language</div>
+          <div class="config-group-header">01 // Delivery Profile &amp; Language</div>
           <div class="config-group-body">
             <div class="form-row">
-              <label for="select-profile">Delivery Profile</label>
+              <label for="select-profile">Official Delivery Profile</label>
               <select id="select-profile">
-                <option value="PAC">PAC — Continuous Assessment (Catalan, no cover, TOC)</option>
-                <option value="PEC">PEC — Evaluación Continua (Spanish, no cover, TOC)</option>
-                <option value="PR">PR — Laboratory Practicum (Formal cover, TOC, Figures)</option>
-                <option value="TFG">TFG — Bachelor Thesis (Tribunal, Bilingual, CC License)</option>
+                <option value="PAC">PAC — Continuous Assessment in Catalan (no cover, with TOC &amp; anti-plagiarism)</option>
+                <option value="PEC">PEC — Evaluación Continua en Español (no cover, with TOC &amp; anti-plagiarism)</option>
+                <option value="PR">PR — Laboratory / Practicum Report (Institutional cover, TOC, figures)</option>
+                <option value="TFG">TFG — Bachelor's Thesis Memory (Tribunal evaluation sheet, bilingual abstracts, CC license)</option>
+                <option value="CA">CA — Continuous Assessment in English (no cover, with TOC)</option>
               </select>
             </div>
             <div class="form-row">
@@ -94,7 +99,7 @@
               <input type="text" id="input-student" value="Estudiant UOC">
             </div>
             <div class="form-row">
-              <label for="input-grade">Degree / Degree Program</label>
+              <label for="input-grade">Degree / Engineering Program</label>
               <input type="text" id="input-grade" value="Grau en Enginyeria Informàtica">
             </div>
             <div class="form-row">
@@ -120,26 +125,26 @@
           </div>
         </div>
 
-        <!-- 3. Module Arsenal -->
+        <!-- 3. Module Arsenal (Real Public Names) -->
         <div class="config-group">
-          <div class="config-group-header">03 // Modular Package Arsenal</div>
+          <div class="config-group-header">03 // Modular Package Arsenal (Tools &amp; Modules)</div>
           <div class="config-group-body">
             <div class="toggle-list">
               <label class="toggle-item">
                 <input type="checkbox" id="mod-default" checked>
-                <span><strong>default bundle</strong> (pxPRP, pxUML, pxSRC, pxTAB, pxLST)</span>
+                <span><strong>Core Student Arsenal</strong> (<code>default</code>: Painless Tables, Zero-Crash Figures, IDE Code Boxes, UML)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="mod-CMP">
-                <span><strong>CMP</strong> (Compilers, Automata, Search Graphs, Neural Nets)</span>
+                <span><strong>Compilers &amp; Automata Tools</strong> (<code>CMP</code>: Tombstone diagrams, DFA/NFA state tables, $A^*$ search, ML)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="mod-GNT">
-                <span><strong>GNT</strong> (Gantt Charts &amp; Project Planning)</span>
+                <span><strong>Project Timeline &amp; Planning</strong> (<code>GNT</code>: Gantt charts for milestone schedules)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="mod-TFG">
-                <span><strong>TFG</strong> (Degree Thesis Tribunal &amp; Bilingual Memory)</span>
+                <span><strong>Degree Thesis Memory Structure</strong> (<code>TFG</code> / <code>MEM</code>: Tribunal sheet, bilingual abstracts, CC license)</span>
               </label>
             </div>
           </div>
@@ -152,11 +157,11 @@
             <div class="toggle-list">
               <label class="toggle-item">
                 <input type="checkbox" id="tog-cover">
-                <span><strong>cover</strong> (Force university cover page)</span>
+                <span><strong>cover</strong> (Force institutional university cover page)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="tog-toc" checked>
-                <span><strong>toc</strong> (Include table of contents)</span>
+                <span><strong>toc</strong> (Generate table of contents)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="tog-plagi">
@@ -173,23 +178,35 @@
             <div class="toggle-list">
               <label class="toggle-item">
                 <input type="checkbox" id="blob-table" checked>
-                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax)</span>
+                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax with auto-wrapping)</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-longtable">
+                <span><strong>pxTBLlong* Multipage Table</strong> (Auto-repeating header across page breaks)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-codebox" checked>
-                <span><strong>pxCode Syntax Listing</strong> (Darcula framed code block)</span>
+                <span><strong>pxCode Syntax Box</strong> (Dark IDE framed code listing with line numbers)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-figure" checked>
-                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder)</span>
+                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder if image missing)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-cmp">
-                <span><strong>pxCMP Compiler Diagram</strong> (Tombstone T-diagram &amp; DFA table)</span>
+                <span><strong>pxCMP Compiler &amp; Automaton</strong> (Tombstone T-diagram &amp; DFA transition table)</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-graph">
+                <span><strong>pxGraph A* Search Graph</strong> (Heuristic search graph with $h(n)$ and $g(n)$ costs)</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-ml">
+                <span><strong>pxCMP Machine Learning</strong> (Confusion matrix with $F_1$ metrics &amp; MLP neural net)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-foreach">
-                <span><strong>pxIMGList Batch Loop</strong> (Sequential image sequence)</span>
+                <span><strong>pxIMGList Batch Loop</strong> (Sequential multi-image listing)</span>
               </label>
             </div>
           </div>

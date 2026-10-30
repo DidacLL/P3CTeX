@@ -3,56 +3,61 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Interactive Web Generator · P3CTeX Tooling</title>
+  <title>Standalone Offline LaTeX Generator · P3CTeX Tooling</title>
   <meta name="description" content="Generate compliant, ready-to-compile UOC LaTeX preambles and assessment skeletons with live preview, copy-to-clipboard, and .tex download.">
   
   
   
   
 <style>
+/* Inlined site.css */
 /* ==========================================================================
-   P3CTeX — Public Web & Indie Documentation Suite
-   Aesthetic: Pirate Old School Software · Indie Retrofuturistic Alternative Tooling
-   Demopack ANSI Culture · High-Contrast Terminal Ergonomics
-   "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
+   P3CTeX — Academic Coursework & Engineering Tooling Suite
+   Aesthetic: AAAAT Analog Workshop System · Indie Retrofuturistic Tooling
+   Demopack ANSI Culture · "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
    ========================================================================== */
 
 :root {
-  /* Core Deep Terminal Palette */
-  --bg-canvas: #090e13;
-  --bg-sheet: #111a22;
-  --bg-panel: #16222d;
-  --bg-panel-raised: #1c2b38;
-  --bg-code: #080c10;
+  /* AAAAT Parchment & Analog Machine Palette */
+  --paper: #cfc9b3;
+  --sheet: #eee5d0;
+  --paper-strong: #bdb79f;
+  --machine: #27332a;
+  --machine-raised: #3c493f;
+  --machine-deep: #161f18;
+  --ink: #1f2b23;
+  --muted: #475448;
+  --line: #8f927b;
+  --edge: #6f7568;
 
-  /* Line & Border Systems */
-  --line-dim: #1e3040;
-  --line-strong: #2c445a;
-  --line-bright: #3f607e;
+  /* Accent & Action Tokens */
+  --rust: #b54524;
+  --rust-dark: #8c3217;
+  --focus: #247d79;
+  --cyan: #5eead4;
+  --cyan-bright: #7dfbf5;
+  --amber: #ffb454;
+  --green: #38ef7d;
 
-  /* High-Contrast Legible Ink */
-  --text-primary: #edf4fa;
-  --text-secondary: #c0d1e0;
-  --text-muted: #859db3;
-  --text-dim: #5c7285;
-
-  /* Phosphor Retro Accents */
-  --accent-rust: #e65133;
-  --accent-rust-hover: #ff684a;
-  --accent-amber: #ffb454;
-  --accent-cyan: #5eead4;
-  --accent-green: #38ef7d;
-  --accent-glow: rgba(94, 234, 212, 0.15);
+  /* Dark Code & Terminal Surfaces */
+  --code-bg: #0f1712;
+  --code-raised: #18241d;
+  --code-border: #28382c;
+  --code-ink: #ecf3f9;
+  --code-muted: #8ca294;
 
   /* Dimensions & Spacing */
-  --page-width: min(1380px, calc(100% - clamp(24px, 4vw, 80px)));
-  --radius-sm: 4px;
-  --radius-md: 6px;
+  --page-width: min(1360px, calc(100% - clamp(24px, 4vw, 80px)));
+  --radius-sm: 2px;
+  --radius-md: 4px;
 
   /* Typography */
-  --font-sans: 'Segoe UI', Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: 'Segoe UI', Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+
+  color: var(--ink);
+  color-scheme: light;
 }
 
 * {
@@ -61,201 +66,246 @@
 
 html {
   scroll-behavior: auto;
-  scroll-padding-top: 30px;
+  scroll-padding-top: 24px;
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-canvas);
-  background-image: 
-    radial-gradient(ellipse at 50% 0%, #152535 0%, transparent 60%),
-    linear-gradient(rgba(94, 234, 212, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(94, 234, 212, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 28px 28px, 28px 28px;
-  color: var(--text-primary);
+  background: #171e19;
+  background-image: radial-gradient(ellipse at 50% 0%, #455044 0%, transparent 65%);
+  color: var(--ink);
   font-family: var(--font-sans);
   line-height: 1.55;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
 
+button, input, select, textarea {
+  font: inherit;
+}
+
+a {
+  color: var(--rust-dark);
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+  color: var(--rust);
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 /* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   line-height: 1.15;
-  letter-spacing: -0.025em;
-  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  color: var(--ink);
   margin-top: 0;
 }
 
 h1 {
   font-size: clamp(2rem, 3.2vw, 2.85rem);
   font-weight: 800;
-  margin: 0.18em 0 0.4em;
-  color: #ffffff;
+  margin: 0.18em 0 0.42em;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
-  font-weight: 700;
-  margin: 0 0 0.6em;
-  color: #ffffff;
+  font-size: clamp(1.55rem, 2.2vw, 2.15rem);
+  font-weight: 750;
+  margin: 0 0 0.55em;
 }
 
 h3 {
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0 0 0.5em;
-  color: var(--accent-cyan);
   letter-spacing: -0.015em;
 }
 
 p {
   margin: 0 0 1.05em;
-  color: var(--text-secondary);
 }
 
-a {
-  color: var(--accent-cyan);
-  text-decoration: none;
-  text-underline-offset: 0.2em;
-  transition: color 0.15s ease;
+ul, ol {
+  padding-left: 1.5em;
+  margin: 0 0 1.2em;
 }
 
-a:hover {
-  color: #a7f3d0;
-  text-decoration: underline;
+li {
+  margin-bottom: 0.4em;
 }
 
 code {
   font-family: var(--font-mono);
   font-size: 0.9em;
-  background: rgba(0, 0, 0, 0.4);
-  color: var(--accent-amber);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line-dim);
+  background: rgba(36, 52, 46, 0.08);
+  color: var(--rust-dark);
+  padding: 1px 5px;
+  border-radius: 2px;
+  overflow-wrap: anywhere;
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-cyan);
-  outline-offset: 3px;
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
 }
 
-/* Skip link */
 .skip-link {
   position: fixed;
   top: -100px;
-  left: 16px;
+  left: 12px;
   z-index: 50;
-  background: var(--accent-amber);
-  color: #000000;
-  font-weight: 700;
+  background: var(--sheet);
+  color: var(--ink);
   padding: 10px 16px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
 .skip-link:focus {
-  top: 16px;
+  top: 12px;
 }
 
 /* ==========================================================================
-   Header & Navigation
+   Header & Masthead (AAAAT Alignment)
    ========================================================================== */
 
 .site-header {
-  background: #0d151c;
-  border-bottom: 1px solid var(--line-strong);
+  background: var(--machine-deep);
 }
 
-.header-brand-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px clamp(20px, 4vw, 64px);
-  width: var(--page-width);
-  margin: 0 auto;
-}
-
-.brand-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.brand {
+  display: block;
+  width: 100%;
+  aspect-ratio: 6.4;
+  min-height: 126px;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #101812 0%, #1a271e 60%, #121c15 100%);
+  border-bottom: 1px solid #4a5648;
   text-decoration: none;
 }
 
-.brand-title-text {
-  font-family: var(--font-heading);
-  font-size: 1.45rem;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.02em;
+.masthead-canvas {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+  color: var(--sheet);
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(94, 234, 212, 0.07) 0%, transparent 75%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0px, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 3px);
 }
 
-.brand-badge {
+.masthead-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.masthead-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(94, 234, 212, 0.4);
+}
+
+.masthead-badge {
+  background: var(--rust);
+  color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--accent-amber);
-  background: rgba(255, 180, 84, 0.12);
-  border: 1px solid rgba(255, 180, 84, 0.35);
-  padding: 2px 7px;
-  border-radius: 3px;
-  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--rust-dark);
 }
 
-.brand-motto {
+.masthead-sub-row {
+  margin-top: 6px;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  display: none;
-}
-@media (min-width: 768px) {
-  .brand-motto {
-    display: inline;
-  }
+  font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+  color: var(--paper);
+  letter-spacing: 0.08em;
+  text-align: center;
 }
 
+.masthead-motto {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+/* Site Navigation (AAAAT Style Tab Bar) */
 .site-nav {
   display: flex;
   justify-content: center;
   align-items: stretch;
   flex-wrap: nowrap;
-  background: #111b24;
-  border-block: 1px solid var(--line-dim);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(#4c5748, #303c32);
+  border-block: 1px solid #81876b;
+  box-shadow: 0 4px 8px rgba(10, 18, 10, 0.4);
+  overflow-x: auto;
 }
 
 .site-nav a {
-  color: var(--text-secondary);
+  color: var(--sheet);
   white-space: nowrap;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.92rem;
+  font-weight: 650;
+  font-size: 0.95rem;
   padding: 12px 24px;
-  border-inline: 1px solid rgba(255, 255, 255, 0.05);
+  border-inline: 1px solid rgba(255, 249, 237, 0.12);
   min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .site-nav a:hover {
-  background: var(--bg-panel);
-  color: #ffffff;
+  background: var(--machine-raised);
 }
 
 .site-nav a[aria-current=page] {
-  background: var(--bg-panel-raised);
-  color: var(--accent-cyan);
-  box-shadow: inset 0 -3px var(--accent-cyan);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: inset 0 -4px var(--rust);
 }
 
 .site-nav a.nav-action {
-  color: var(--accent-amber);
+  background: rgba(181, 69, 36, 0.35);
+  color: #fff;
+  border-inline-color: rgba(181, 69, 36, 0.6);
+}
+
+.site-nav a.nav-action:hover {
+  background: var(--rust);
 }
 
 /* ==========================================================================
-   Hero Section with Balanced Demopack Banner Frame
+   Hero Section (AAAAT 2-Column Split Grid)
    ========================================================================== */
 
 .hero {
@@ -263,11 +313,11 @@ code {
   margin: 24px auto 0;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  background: linear-gradient(135deg, #111b24 0%, #162432 100%);
-  border: 1px solid var(--line-strong);
-  border-bottom: 3px solid var(--accent-rust);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: linear-gradient(120deg, #424d40, #26352c);
+  color: var(--sheet);
+  border: 1px solid #81876b;
+  border-bottom: 3px solid var(--rust);
+  box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
   overflow: hidden;
 }
 
@@ -277,70 +327,145 @@ code {
   }
 }
 
-.hero .container {
-  width: auto;
-  padding: 32px clamp(24px, 3vw, 44px);
+.hero-copy {
+  padding: clamp(24px, 4vw, 44px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-copy h1 {
+  color: #ffffff;
+  margin: 0.15em 0 0.45em;
+}
+
+.hero-copy .lede {
+  color: var(--sheet);
+  font-size: 1.12rem;
+  line-height: 1.62;
+  margin-bottom: 1.4em;
+}
+
+.hero-art-chassis {
   display: flex;
   align-items: center;
-}
-
-.hero-copy {
-  max-width: 640px;
-}
-
-.hero .eyebrow {
-  color: var(--accent-amber);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.hero h1 {
-  font-size: clamp(2rem, 3.2vw, 2.75rem);
-  line-height: 1.1;
-  color: #ffffff;
-  margin-bottom: 14px;
-}
-
-.hero .lede {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin-bottom: 22px;
-}
-
-.hero-art.banner-contain {
-  width: 100%;
-  height: 100%;
-  min-height: 320px;
-  max-height: 420px;
-  object-fit: contain;
-  background: #090e13;
-  padding: 20px;
-  border-left: 1px solid var(--line-dim);
+  justify-content: center;
+  background: #111a14;
+  border-left: 1px solid #5a6657;
+  padding: 24px;
+  position: relative;
 }
 
 @media (max-width: 900px) {
-  .hero-art.banner-contain {
+  .hero-art-chassis {
     border-left: none;
-    border-top: 1px solid var(--line-dim);
-    max-height: 280px;
+    border-top: 1px solid #5a6657;
   }
 }
 
+.crt-terminal-frame {
+  width: 100%;
+  max-width: 480px;
+  background: #090e0b;
+  border: 2px solid #586955;
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.crt-titlebar {
+  background: #202b23;
+  border-bottom: 1px solid #3c4c40;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--sheet);
+  letter-spacing: 0.05em;
+}
+
+.crt-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.crt-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.crt-dot.red { background: #d94328; }
+.crt-dot.amber { background: #ffb454; }
+.crt-dot.green { background: #38ef7d; }
+
+.crt-screen {
+  padding: 16px;
+  background: #060a08;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.crt-screen img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #2d3d30;
+  box-shadow: 0 0 12px rgba(94, 234, 212, 0.2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.button {
+  background: var(--rust);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 11px 22px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rust-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s ease;
+}
+
+.button:hover {
+  background: #c9512d;
+  color: #ffffff;
+}
+
+.button.secondary {
+  background: var(--machine-raised);
+  color: var(--sheet);
+  border-color: #6a7667;
+}
+
+.button.secondary:hover {
+  background: #4e5c51;
+  color: #ffffff;
+}
+
 .hero-note {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: var(--paper);
   font-family: var(--font-mono);
   margin: 0;
 }
 
 /* ==========================================================================
-   Main Content Sheet Container (Clean High-Contrast Terminal)
+   Parchment Sheet Container (AAAAT Style Workspace)
    ========================================================================== */
 
 .container {
@@ -349,358 +474,192 @@ code {
 }
 
 main.container, .home main > .container {
-  padding: 36px clamp(24px, 3vw, 48px);
-  margin-block: 0 40px;
-  background: var(--bg-sheet);
-  border: 1px solid var(--line-strong);
-  border-top: none;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-}
-
-.page-intro {
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--line-dim);
-}
-
-.page-intro h1 {
-  margin-top: 6px;
+  padding-inline: clamp(22px, 3vw, 48px);
+  margin-block: 24px;
+  background: linear-gradient(110deg, #d6cdb5, #c4c3ac);
+  border: 1px solid #8a8d75;
+  border-radius: 0;
+  box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
 }
 
 .section {
-  padding-block: 36px;
-  border-bottom: 1px solid var(--line-dim);
+  padding-block: 32px;
+  border-bottom: 1px solid var(--line);
 }
 
-.section:last-of-type {
+.section:last-child {
   border-bottom: none;
 }
 
 .section-heading {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 28px;
   margin-bottom: 24px;
-  align-items: baseline;
-}
-
-@media (max-width: 768px) {
-  .section-heading {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
 }
 
 .eyebrow, .panel-number {
-  color: var(--accent-amber);
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+  color: var(--rust-dark);
+  font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 10px;
   display: block;
-}
-
-/* Buttons */
-.actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin: 22px 0;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 10px 20px;
-  background: var(--accent-rust);
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.92rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid #b33920;
-  text-decoration: none;
-  transition: all 0.15s ease;
-  box-shadow: 0 3px 10px rgba(230, 81, 51, 0.3);
-}
-
-.button:hover {
-  background: var(--accent-rust-hover);
-  color: #ffffff;
-  text-decoration: none;
-  transform: translateY(-1px);
-}
-
-.button.secondary {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
-  box-shadow: none;
-}
-
-.button.secondary:hover {
-  background: var(--bg-panel-raised);
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
-}
-
-/* Jump TOC */
-.toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
-  background: var(--bg-canvas);
-  border: 1px solid var(--line-dim);
-  padding: 12px 18px;
-  border-radius: var(--radius-sm);
-  margin: 20px 0;
   font-family: var(--font-mono);
-  font-size: 0.84rem;
 }
 
-.toc-title {
-  color: var(--accent-amber);
-  font-weight: 700;
-}
-
-.toc a {
-  color: var(--text-secondary);
-}
-
-.toc a:hover {
-  color: var(--accent-cyan);
-  text-decoration: none;
+.lede {
+  font-size: 1.12rem;
+  line-height: 1.62;
+  color: var(--ink);
 }
 
 /* Cards & Panels */
-.cards, .grid {
+.cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  margin-top: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-block: 20px;
 }
 
 .cards.col-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 }
 
-@media (max-width: 900px) {
-  .cards, .grid, .cards.col-2 {
+.panel {
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(36, 52, 46, 0.15);
+}
+
+.panel h2, .panel h3 {
+  margin: 0 0 0.5em;
+  color: var(--ink);
+}
+
+.panel p {
+  color: var(--ink);
+  flex-grow: 1;
+}
+
+.panel a {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+/* Split Sections */
+.section.split {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  .section.split {
     grid-template-columns: 1fr;
   }
 }
 
-.panel, .card {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
-  border-left: 3px solid var(--accent-cyan);
-  padding: 22px 20px;
-  border-radius: var(--radius-sm);
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-.panel:hover {
-  border-color: var(--line-strong);
-  border-left-color: var(--accent-amber);
-  transform: translateY(-2px);
-}
-
-.panel h2 {
-  font-size: 1.35rem;
-  color: #ffffff;
-  margin-bottom: 8px;
-}
-
-.panel h3 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-}
-
-/* Steps list */
-.steps {
-  list-style: none;
-  counter-reset: step-counter;
-  padding: 0;
-  margin: 20px 0;
-  display: grid;
-  gap: 16px;
-}
-
-.steps > li {
-  counter-increment: step-counter;
-  position: relative;
-  padding-left: 48px;
-  line-height: 1.55;
-  color: var(--text-secondary);
-}
-
-.steps > li::before {
-  content: counter(step-counter, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 34px;
-  height: 28px;
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-strong);
-  color: var(--accent-cyan);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-}
-
-.steps > li strong {
-  color: #ffffff;
-}
-
-/* Prose container */
-.prose {
-  max-width: 82ch;
-}
-
-.prose p, .prose li {
-  line-height: 1.65;
-}
-
-.prose ul, .prose ol {
-  padding-left: 20px;
-  margin: 12px 0 18px;
-  color: var(--text-secondary);
-}
-
-.prose li {
-  margin-bottom: 6px;
-}
-
-details.guide-detail {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
-  border-radius: var(--radius-sm);
-  padding: 14px 18px;
-  margin: 16px 0;
-}
-
-details.guide-detail summary {
-  cursor: pointer;
-  color: var(--accent-amber);
-  font-weight: 700;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-}
-
-details.guide-detail summary:hover {
-  color: #ffca7a;
-}
-
-details.guide-detail[open] summary {
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--line-dim);
-}
-
 /* ==========================================================================
-   Code Boxes (High-Contrast Clean Terminal)
+   Code Boxes (Dark Engineering Surfaces)
    ========================================================================== */
 
 .code-box {
-  background: var(--bg-code);
-  border: 1px solid var(--line-strong);
+  background: var(--code-bg);
+  border: 1px solid var(--machine-raised);
   border-radius: var(--radius-sm);
-  margin: 20px 0;
+  margin: 18px 0;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 .code-box-header {
+  background: #19251c;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: #111a22;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--line-dim);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-}
-
-.code-box-title {
-  display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-primary);
-  font-weight: 600;
+  padding: 8px 14px;
+  border-bottom: 1px solid #2d3b30;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--sheet);
 }
 
-.code-box-title .tag {
-  color: var(--accent-cyan);
-  background: rgba(94, 234, 212, 0.12);
+.code-badge {
+  background: rgba(94, 234, 212, 0.15);
+  color: var(--cyan);
   border: 1px solid rgba(94, 234, 212, 0.3);
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-size: 0.72rem;
+  padding: 2px 7px;
+  border-radius: 2px;
   font-weight: 700;
+  margin-right: 8px;
+}
+
+.code-filename {
+  font-weight: 600;
+  color: var(--paper);
 }
 
 .copy-btn {
-  background: #182531;
-  color: var(--text-secondary);
-  border: 1px solid var(--line-strong);
-  padding: 3px 10px;
-  border-radius: 3px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  background: var(--machine-raised);
+  color: var(--sheet);
+  border: 1px solid #5a695c;
+  padding: 4px 10px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .copy-btn:hover {
-  background: var(--accent-rust);
+  background: var(--rust);
   color: #ffffff;
-  border-color: #b33920;
+  border-color: var(--rust-dark);
 }
 
 .code-box pre {
   margin: 0;
-  padding: 16px;
+  padding: 16px 20px;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 0.88rem;
-  line-height: 1.5;
-  color: #e6edf3;
-  background: var(--bg-code);
+  line-height: 1.55;
+  color: var(--code-ink);
+  background: var(--code-bg);
 }
 
 .code-box code {
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
   background: transparent;
-  border: none;
+  color: inherit;
   padding: 0;
+  font-size: inherit;
+  border-radius: 0;
 }
 
-/* Syntax Tokens */
+/* Syntax Highlighting */
 .syn-kw { color: #f09614; font-weight: bold; }
-.syn-cmd { color: #73edff; font-weight: bold; }
+.syn-cmd { color: #7dfbf5; font-weight: bold; }
 .syn-opt { color: #ffb454; }
-.syn-arg { color: #98c379; }
-.syn-comment { color: #6b849a; font-style: italic; }
+.syn-arg { color: #82e293; }
+.syn-comment { color: #728a79; font-style: italic; }
 
 /* ==========================================================================
-   Image Placeholder Prompt Cards (Subtle & Non-Intrusive)
+   Image Placeholder Cards (Subtle, Compact, Collapsible)
    ========================================================================== */
 
 .image-placeholder-card {
-  background: var(--bg-panel);
-  border: 1px dashed var(--line-strong);
+  background: rgba(39, 51, 42, 0.08);
+  border: 1px dashed var(--line);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   margin: 20px 0;
@@ -711,62 +670,63 @@ details.guide-detail[open] summary {
   align-items: center;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
 }
 
 .slot-id {
   font-weight: 750;
-  color: var(--accent-amber);
+  color: var(--rust-dark);
 }
 
 .slot-ratio {
-  color: var(--text-muted);
-  font-size: 0.72rem;
+  color: var(--muted);
+  font-size: 0.74rem;
 }
 
 .prompt-expander {
   margin-top: 6px;
-  font-size: 0.82rem;
 }
 
 .prompt-expander summary {
   cursor: pointer;
-  color: var(--accent-cyan);
-  font-weight: 600;
+  color: var(--rust);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 650;
 }
 
 .prompt-text {
-  background: var(--bg-code);
+  background: #121c15;
   color: #9ee6df;
   padding: 10px 14px;
-  border-radius: 3px;
+  border-radius: 2px;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.45;
+  font-size: 0.8rem;
+  line-height: 1.5;
   margin: 8px 0 0;
-  border: 1px solid var(--line-dim);
+  border: 1px solid #29382c;
   user-select: all;
 }
 
 /* ==========================================================================
-   Footer
+   Site Footer (AAAAT Style Footer)
    ========================================================================== */
 
 .site-footer {
-  background: #090e13;
-  border-top: 1px solid var(--line-strong);
+  background: var(--machine-deep);
+  border-top: 1px solid #4a5648;
   padding: 40px 0 28px;
-  color: var(--text-muted);
+  color: var(--paper);
   font-size: 0.88rem;
 }
 
 .footer-inner {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 36px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .footer-inner {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -775,22 +735,23 @@ details.guide-detail[open] summary {
 
 .footer-brand h4 {
   color: #ffffff;
-  font-size: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
   margin-bottom: 8px;
 }
 
 .footer-brand p {
-  color: var(--text-muted);
-  margin-bottom: 6px;
+  color: var(--paper);
+  font-size: 0.88rem;
 }
 
 .footer-links h5 {
-  color: var(--accent-amber);
+  color: var(--amber);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   margin-bottom: 12px;
+  text-transform: uppercase;
 }
 
 .footer-links ul {
@@ -804,29 +765,31 @@ details.guide-detail[open] summary {
 }
 
 .footer-links a {
-  color: var(--text-secondary);
+  color: var(--sheet);
   text-decoration: none;
 }
 
 .footer-links a:hover {
-  color: var(--accent-cyan);
+  color: var(--cyan);
   text-decoration: underline;
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--line-dim);
-  margin-top: 28px;
+  border-top: 1px solid #303d32;
+  margin-top: 30px;
   padding-top: 16px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--text-dim);
+  font-size: 0.8rem;
+  color: var(--line);
 }
 
+
+/* Inlined generator.css */
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (Pirate / Terminal Ergonomics)
+   P3CTeX LaTeX Generator Stylesheet (AAAAT Analog Workshop System)
    ========================================================================== */
 
 .generator-app {
@@ -838,19 +801,20 @@ details.guide-detail[open] summary {
 
 @media (min-width: 1024px) {
   .generator-app {
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.1fr 0.9fr;
     align-items: start;
   }
 }
 
 /* Preset Toolbar */
 .preset-bar {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-strong);
-  border-left: 4px solid var(--accent-amber);
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--rust);
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(36, 52, 46, 0.1);
 }
 
 .preset-header {
@@ -861,7 +825,7 @@ details.guide-detail[open] summary {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 750;
-  color: var(--accent-amber);
+  color: var(--rust-dark);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -873,9 +837,9 @@ details.guide-detail[open] summary {
 }
 
 .preset-btn {
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
+  background: #fdfbf7;
+  border: 1px solid var(--line);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
@@ -886,34 +850,35 @@ details.guide-detail[open] summary {
 }
 
 .preset-btn:hover {
-  background: #233748;
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
+  background: var(--paper);
+  border-color: var(--rust);
+  color: var(--rust-dark);
 }
 
 .preset-btn.active {
-  background: var(--accent-rust);
+  background: var(--rust);
   color: #ffffff;
-  border-color: #b33920;
+  border-color: var(--rust-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Config Groups */
 .config-group {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
+  background: var(--sheet);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   margin-bottom: 18px;
   overflow: hidden;
 }
 
 .config-group-header {
-  background: var(--bg-panel-raised);
+  background: #e2dac4;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid var(--line);
   font-family: var(--font-mono);
   font-weight: 750;
   font-size: 0.82rem;
-  color: var(--accent-cyan);
+  color: var(--rust-dark);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -933,29 +898,29 @@ details.guide-detail[open] summary {
 .form-row label {
   display: block;
   font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-weight: 650;
+  color: var(--ink);
   margin-bottom: 6px;
 }
 
 .form-row input[type="text"],
 .form-row select {
   width: 100%;
-  background: var(--bg-canvas);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  color: var(--ink);
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
   font-size: 0.92rem;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .form-row input[type="text"]:focus,
 .form-row select:focus {
   outline: none;
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.15);
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(36, 125, 121, 0.2);
 }
 
 /* Checkbox and Toggle lists */
@@ -970,18 +935,18 @@ details.guide-detail[open] summary {
   gap: 10px;
   cursor: pointer;
   font-size: 0.88rem;
-  color: var(--text-secondary);
+  color: var(--ink);
 }
 
 .toggle-item input[type="checkbox"] {
-  accent-color: var(--accent-cyan);
-  width: 17px;
-  height: 17px;
+  accent-color: var(--rust);
+  width: 18px;
+  height: 18px;
   cursor: pointer;
 }
 
 .toggle-item strong {
-  color: var(--text-primary);
+  color: var(--ink);
 }
 
 /* Preview Card */
@@ -991,20 +956,20 @@ details.guide-detail[open] summary {
 }
 
 .preview-card {
-  background: var(--bg-code);
-  border: 1px solid var(--line-strong);
+  background: var(--code-bg);
+  border: 1px solid var(--machine-raised);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
 }
 
 .preview-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #111a22;
+  background: #19251c;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid #2d3b30;
 }
 
 .preview-title {
@@ -1013,8 +978,8 @@ details.guide-detail[open] summary {
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-secondary);
+  font-weight: 750;
+  color: var(--sheet);
   letter-spacing: 0.08em;
 }
 
@@ -1022,8 +987,8 @@ details.guide-detail[open] summary {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent-green);
-  box-shadow: 0 0 6px var(--accent-green);
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
 }
 
 .preview-actions {
@@ -1032,32 +997,31 @@ details.guide-detail[open] summary {
 }
 
 .btn-tool {
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-strong);
-  color: var(--text-primary);
+  background: var(--machine-raised);
+  border: 1px solid #5a695c;
+  color: var(--sheet);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 5px 10px;
+  font-weight: 700;
+  padding: 6px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .btn-tool:hover {
-  background: #233748;
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
+  background: #4e5c51;
+  color: #ffffff;
 }
 
 .btn-tool.primary {
-  background: var(--accent-rust);
-  border-color: #b33920;
+  background: var(--rust);
+  border-color: var(--rust-dark);
   color: #ffffff;
 }
 
 .btn-tool.primary:hover {
-  background: var(--accent-rust-hover);
+  background: #c9512d;
 }
 
 .preview-code {
@@ -1067,9 +1031,16 @@ details.guide-detail[open] summary {
   overflow-y: auto;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  line-height: 1.5;
-  color: #edf4fa;
-  background: var(--bg-code);
+  line-height: 1.55;
+  color: var(--code-ink);
+  background: var(--code-bg);
+}
+
+.preview-code code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
 }
 
 </style>
@@ -1077,15 +1048,19 @@ details.guide-detail[open] summary {
 <body class="generator">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Site Header -->
+  <!-- Header & Masthead Banner (AAAAT Alignment) -->
   <header class="site-header">
-    <div class="header-brand-bar">
-      <a class="brand-link" href="index.html" aria-label="P3CTeX Home">
-        <span class="brand-title-text">PEC.TeX // P3CTeX</span>
-        <span class="brand-badge">v1.1.0</span>
-      </a>
-      <span class="brand-motto">"Procrastinar és l'única esperança" · By ScVr!a</span>
-    </div>
+    <a class="brand" href="index.html" aria-label="P3CTeX home — Ultimate UOC Template Generator &amp; LaTeX Engineering Suite">
+      <div class="masthead-canvas">
+        <div class="masthead-title-row">
+          <span class="masthead-logo">PEC.TeX // P3CTeX</span>
+          <span class="masthead-badge">v1.1.0</span>
+        </div>
+        <div class="masthead-sub-row">
+          <span class="masthead-motto">"Procrastinar és l'única esperança"</span> · ULTIMATE UOC TEMPLATE GENERATOR · By ScVr!a
+        </div>
+      </div>
+    </a>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="tutorials.html">Tutorials</a>
@@ -1102,22 +1077,22 @@ details.guide-detail[open] summary {
       <p class="eyebrow">Interactive LaTeX Studio</p>
       <h1>Generate your assessment skeleton.</h1>
       <p class="lede">
-        Configure your subject metadata, pick a delivery preset, and toggle module capabilities. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
+        Configure your subject metadata, select your official delivery profile, and activate modular tools. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
       </p>
     </header>
 
-    <!-- Preset Toolbar -->
+    <!-- Preset Toolbar: Deliverable Profiles Only -->
     <div class="preset-bar">
       <div class="preset-header">
-        <span>CURATED COURSEWORK PRESETS</span>
+        <span>CURATED COURSEWORK PRESETS (DELIVERABLE PROFILES)</span>
         <span>ONE-CLICK POPULATE</span>
       </div>
       <div class="preset-buttons">
         <button type="button" class="preset-btn active" data-preset="pac">[PAC] Catalan Assessment</button>
         <button type="button" class="preset-btn" data-preset="pec">[PEC] Spanish Assessment</button>
         <button type="button" class="preset-btn" data-preset="pr">[PR] Laboratory Practicum</button>
-        <button type="button" class="preset-btn" data-preset="cmp">[CMP] Compilers &amp; Automata</button>
         <button type="button" class="preset-btn" data-preset="tfg">[TFG] Degree Thesis Memory</button>
+        <button type="button" class="preset-btn" data-preset="ca">[CA] English Assessment</button>
       </div>
     </div>
 
@@ -1127,15 +1102,16 @@ details.guide-detail[open] summary {
       <div class="generator-controls">
         <!-- 1. Profile & Language -->
         <div class="config-group">
-          <div class="config-group-header">01 // Document Profile &amp; Language</div>
+          <div class="config-group-header">01 // Delivery Profile &amp; Language</div>
           <div class="config-group-body">
             <div class="form-row">
-              <label for="select-profile">Delivery Profile</label>
+              <label for="select-profile">Official Delivery Profile</label>
               <select id="select-profile">
-                <option value="PAC">PAC — Continuous Assessment (Catalan, no cover, TOC)</option>
-                <option value="PEC">PEC — Evaluación Continua (Spanish, no cover, TOC)</option>
-                <option value="PR">PR — Laboratory Practicum (Formal cover, TOC, Figures)</option>
-                <option value="TFG">TFG — Bachelor Thesis (Tribunal, Bilingual, CC License)</option>
+                <option value="PAC">PAC — Continuous Assessment in Catalan (no cover, with TOC &amp; anti-plagiarism)</option>
+                <option value="PEC">PEC — Evaluación Continua en Español (no cover, with TOC &amp; anti-plagiarism)</option>
+                <option value="PR">PR — Laboratory / Practicum Report (Institutional cover, TOC, figures)</option>
+                <option value="TFG">TFG — Bachelor's Thesis Memory (Tribunal evaluation sheet, bilingual abstracts, CC license)</option>
+                <option value="CA">CA — Continuous Assessment in English (no cover, with TOC)</option>
               </select>
             </div>
             <div class="form-row">
@@ -1158,7 +1134,7 @@ details.guide-detail[open] summary {
               <input type="text" id="input-student" value="Estudiant UOC">
             </div>
             <div class="form-row">
-              <label for="input-grade">Degree / Degree Program</label>
+              <label for="input-grade">Degree / Engineering Program</label>
               <input type="text" id="input-grade" value="Grau en Enginyeria Informàtica">
             </div>
             <div class="form-row">
@@ -1184,26 +1160,26 @@ details.guide-detail[open] summary {
           </div>
         </div>
 
-        <!-- 3. Module Arsenal -->
+        <!-- 3. Module Arsenal (Real Public Names) -->
         <div class="config-group">
-          <div class="config-group-header">03 // Modular Package Arsenal</div>
+          <div class="config-group-header">03 // Modular Package Arsenal (Tools &amp; Modules)</div>
           <div class="config-group-body">
             <div class="toggle-list">
               <label class="toggle-item">
                 <input type="checkbox" id="mod-default" checked>
-                <span><strong>default bundle</strong> (pxPRP, pxUML, pxSRC, pxTAB, pxLST)</span>
+                <span><strong>Core Student Arsenal</strong> (<code>default</code>: Painless Tables, Zero-Crash Figures, IDE Code Boxes, UML)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="mod-CMP">
-                <span><strong>CMP</strong> (Compilers, Automata, Search Graphs, Neural Nets)</span>
+                <span><strong>Compilers &amp; Automata Tools</strong> (<code>CMP</code>: Tombstone diagrams, DFA/NFA state tables, $A^*$ search, ML)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="mod-GNT">
-                <span><strong>GNT</strong> (Gantt Charts &amp; Project Planning)</span>
+                <span><strong>Project Timeline &amp; Planning</strong> (<code>GNT</code>: Gantt charts for milestone schedules)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="mod-TFG">
-                <span><strong>TFG</strong> (Degree Thesis Tribunal &amp; Bilingual Memory)</span>
+                <span><strong>Degree Thesis Memory Structure</strong> (<code>TFG</code> / <code>MEM</code>: Tribunal sheet, bilingual abstracts, CC license)</span>
               </label>
             </div>
           </div>
@@ -1216,11 +1192,11 @@ details.guide-detail[open] summary {
             <div class="toggle-list">
               <label class="toggle-item">
                 <input type="checkbox" id="tog-cover">
-                <span><strong>cover</strong> (Force university cover page)</span>
+                <span><strong>cover</strong> (Force institutional university cover page)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="tog-toc" checked>
-                <span><strong>toc</strong> (Include table of contents)</span>
+                <span><strong>toc</strong> (Generate table of contents)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="tog-plagi">
@@ -1237,23 +1213,35 @@ details.guide-detail[open] summary {
             <div class="toggle-list">
               <label class="toggle-item">
                 <input type="checkbox" id="blob-table" checked>
-                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax)</span>
+                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax with auto-wrapping)</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-longtable">
+                <span><strong>pxTBLlong* Multipage Table</strong> (Auto-repeating header across page breaks)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-codebox" checked>
-                <span><strong>pxCode Syntax Listing</strong> (Darcula framed code block)</span>
+                <span><strong>pxCode Syntax Box</strong> (Dark IDE framed code listing with line numbers)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-figure" checked>
-                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder)</span>
+                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder if image missing)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-cmp">
-                <span><strong>pxCMP Compiler Diagram</strong> (Tombstone T-diagram &amp; DFA table)</span>
+                <span><strong>pxCMP Compiler &amp; Automaton</strong> (Tombstone T-diagram &amp; DFA transition table)</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-graph">
+                <span><strong>pxGraph A* Search Graph</strong> (Heuristic search graph with $h(n)$ and $g(n)$ costs)</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-ml">
+                <span><strong>pxCMP Machine Learning</strong> (Confusion matrix with $F_1$ metrics &amp; MLP neural net)</span>
               </label>
               <label class="toggle-item">
                 <input type="checkbox" id="blob-foreach">
-                <span><strong>pxIMGList Batch Loop</strong> (Sequential image sequence)</span>
+                <span><strong>pxIMGList Batch Loop</strong> (Sequential multi-image listing)</span>
               </label>
             </div>
           </div>
@@ -1326,16 +1314,96 @@ details.guide-detail[open] summary {
     </div>
   </footer>
 <script>
+/* Inlined site.js */
+/* ==========================================================================
+   P3CTeX Public Documentation & Interactive Scripts
+   ========================================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. One-Click Copy Buttons for Code Boxes & Image Prompts
+  setupCopyButtons();
+
+  // 2. Interactive Showcase Tabs
+  setupShowcaseTabs();
+
+  // 3. Highlight Current Navigation Item
+  setupNavHighlight();
+});
+
+function setupCopyButtons() {
+  document.querySelectorAll('[data-copy-target]').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const targetSelector = button.getAttribute('data-copy-target');
+      const targetElement = document.querySelector(targetSelector);
+      if (!targetElement) return;
+
+      const textToCopy = targetElement.innerText || targetElement.textContent;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        const originalText = button.innerText;
+        button.innerText = 'COPIED!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.innerText = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Clipboard copy failed:', err);
+      }
+    });
+  });
+}
+
+function setupShowcaseTabs() {
+  document.querySelectorAll('.showcase-tab-bar').forEach(tabBar => {
+    const tabs = tabBar.querySelectorAll('.showcase-tab');
+    const container = tabBar.closest('.showcase-container');
+    if (!container) return;
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetId = tab.getAttribute('data-tab-target');
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        container.querySelectorAll('.showcase-panel').forEach(panel => {
+          if (panel.id === targetId) {
+            panel.classList.add('active');
+            panel.hidden = false;
+          } else {
+            panel.classList.remove('active');
+            panel.hidden = true;
+          }
+        });
+      });
+    });
+  });
+}
+
+function setupNavHighlight() {
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.site-nav a').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentPath || (currentPath === '' && href === 'index.html')) {
+      link.setAttribute('aria-current', 'page');
+    }
+  });
+}
+
+
+/* Inlined generator.js */
 /* ==========================================================================
    P3CTeX Generator Engine
    Reactive LaTeX Preamble & Assessment Boilerplate Synthesis
    Factually compliant with P3CTeX.cls and official UOC styles
+   "Procrastinar és l'única esperança" · By ScVr!a
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  // Default Presets matching official P3CTeX conventions
+  // Deliverable Coursework Presets matching official P3CTeX conventions
   const PRESETS = {
     pac: {
       profile: 'PAC',
@@ -1351,7 +1419,7 @@ details.guide-detail[open] summary {
         caShort: 'PAC1',
         caFull: 'PAC 1: Anàlisi Lèxica i Sintàctica'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
     },
     pec: {
       profile: 'PEC',
@@ -1367,7 +1435,7 @@ details.guide-detail[open] summary {
         caShort: 'PEC1',
         caFull: 'PEC 1: Gestión de Procesos y Memoria Virtual'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
     },
     pr: {
       profile: 'PR',
@@ -1383,23 +1451,7 @@ details.guide-detail[open] summary {
         caShort: 'PR1',
         caFull: 'Pràctica 1: Disseny i Implementació del Sistema'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: true }
-    },
-    cmp: {
-      profile: 'PAC',
-      lang: 'cat',
-      modules: { default: true, CMP: true, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Compiladors i Teoria de la Computació',
-        subjShort: 'COMP',
-        subjCode: '75.580',
-        caShort: 'PAC2',
-        caFull: 'PAC 2: Autòmats, Gramàtiques i Bootstrapping'
-      },
-      blobs: { table: false, codebox: false, figure: false, cmp: true, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: true }
     },
     tfg: {
       profile: 'TFG',
@@ -1415,7 +1467,23 @@ details.guide-detail[open] summary {
         caShort: 'MEM',
         caFull: 'Memòria del Treball Final de Grau'
       },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: false }
+    },
+    ca: {
+      profile: 'CA',
+      lang: 'en',
+      modules: { default: true, CMP: false, GNT: false, TFG: false },
+      toggles: { cover: false, toc: true, plagi: false },
+      meta: {
+        student: 'Estudiant UOC',
+        grade: 'Bachelor in Computer Science',
+        subjFull: 'Distributed Systems Architecture',
+        subjShort: 'DSA',
+        subjCode: '75.590',
+        caShort: 'CA1',
+        caFull: 'Continuous Assessment 1: Consensus Protocols'
+      },
+      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
     }
   };
 
@@ -1459,20 +1527,22 @@ details.guide-detail[open] summary {
       }
     });
 
-    // Profile radio/select
+    // Profile select
     const profileEl = document.getElementById('select-profile');
     if (profileEl) {
       profileEl.addEventListener('change', () => {
         state.profile = profileEl.value;
         if (state.profile === 'PR' || state.profile === 'TFG') {
           state.toggles.cover = true;
+        } else {
+          state.toggles.cover = false;
         }
         renderForm();
         generateLatexCode();
       });
     }
 
-    // Language radio/select
+    // Language select
     const langEl = document.getElementById('select-lang');
     if (langEl) {
       langEl.addEventListener('change', () => {
@@ -1504,11 +1574,17 @@ details.guide-detail[open] summary {
     });
 
     // Blobs checkboxes
-    ['table', 'codebox', 'figure', 'cmp', 'foreach'].forEach(blob => {
+    ['table', 'codebox', 'figure', 'cmp', 'graph', 'ml', 'longtable', 'foreach'].forEach(blob => {
       const el = document.getElementById('blob-' + blob);
       if (el) {
         el.addEventListener('change', () => {
           state.blobs[blob] = el.checked;
+          // Auto-enable CMP module if a CMP-dependent blob is selected
+          if ((blob === 'cmp' || blob === 'graph' || blob === 'ml') && el.checked) {
+            state.modules.CMP = true;
+            const cmpCheck = document.getElementById('mod-CMP');
+            if (cmpCheck) cmpCheck.checked = true;
+          }
           generateLatexCode();
         });
       }
@@ -1603,7 +1679,7 @@ details.guide-detail[open] summary {
     out += '%% Metadades acadèmiques oficials de la UOC\n';
     out += '\\PECTeXconfig{\n';
     out += '  data = {\n';
-    out += '    student        = {' + (state.meta.student || 'Nom Cognoms') + '},\n';
+    out += '    student        = {' + (state.meta.student || 'Estudiant UOC') + '},\n';
     out += '    grade          = {' + (state.meta.grade || 'Enginyeria Informàtica') + '},\n';
     out += '    subj-fullname  = {' + (state.meta.subjFull || 'Nom Assignatura') + '},\n';
     out += '    subj-shortname = {' + (state.meta.subjShort || 'SIGLES') + '},\n';
@@ -1615,7 +1691,7 @@ details.guide-detail[open] summary {
     out += '}\n\n';
 
     out += '\\begin{document}\n\n';
-    out += '\\section{Exercici 1}\n';
+    out += '\\sectionuoc{Exercici 1}\n';
     out += '\\subsection{Pregunta A}\n';
     out += 'La resposta al primer apartat de l\'activitat ' + (state.meta.caShort || 'PAC1') + ' es redacta aquí.\n\n';
 
@@ -1631,6 +1707,17 @@ details.guide-detail[open] summary {
       out += '}{\n';
       out += '  Pèrdua de paquets, 0.01 %, < 0.1 %, PASS\n';
       out += '}\n\n';
+    }
+
+    if (state.blobs.longtable) {
+      out += '%% BLOB: Taula multipàgina pxTBLlong* per a llistats extensos de dades\n';
+      out += '\\begin{pxTBLlong*}[header-repeat=true]{cols={0.25\\linewidth, 0.45\\linewidth, 0.3\\linewidth}}\n';
+      out += '  Codi / ID, Descripció del Mòdul, Estat de Verificació;\n';
+      out += '  MOD-01, Gestió de Memòria i Paginació Virtual, COMPLETAT;\n';
+      out += '  MOD-02, Planificador de Processos Round-Robin, COMPLETAT;\n';
+      out += '  MOD-03, Sistema de Fitxers Basat en Inodes, EN REVISIÓ;\n';
+      out += '  MOD-04, Controlador de Dispositius I/O en Bloc, PENDENT\n';
+      out += '\\end{pxTBLlong*}\n\n';
     }
 
     if (state.blobs.codebox) {
@@ -1657,7 +1744,7 @@ details.guide-detail[open] summary {
     }
 
     if (state.blobs.cmp) {
-      out += '%% BLOB: Diagrames d\'Enginyeria de Compiladors i Autòmats (pxCMP)\n';
+      out += '%% BLOB: Diagrames de Compiladors i Autòmats (pxCMP)\n';
       out += '\\subsection{Diagrama de Tombstone i Autòmat Finit}\n';
       out += '\\pxTombstoneCompile[title={Compilador Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
       out += '\\pxTransitionTable[title={Taula de transició de l\'autòmat}]{a, b}{\n';
@@ -1669,6 +1756,32 @@ details.guide-detail[open] summary {
       out += '\\pxAutomatonTrace[title={Traça de reconeixement de la paraula \\texttt{aba}}]{\n';
       out += '  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1\n';
       out += '}[Reconegut]\n\n';
+    }
+
+    if (state.blobs.graph) {
+      out += '%% BLOB: Graf de Cerca Heurística A* (pxCMP)\n';
+      out += '\\pxGraph[title={Graf de cerca heurística $A^*$} travessant estats]{\n';
+      out += '  A / A / 0,0 / start / $h=20$;\n';
+      out += '  B / B / 2.2,1.1 / path / {$g=4, f=16$};\n';
+      out += '  C / C / 2.2,-1.1 / visited / $h=15$;\n';
+      out += '  D / D / 4.4,1.1 / open / $h=10$;\n';
+      out += '  G / G / 4.4,-1.1 / goal / $h=0$\n';
+      out += '}{\n';
+      out += '  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12\n';
+      out += '}\n\n';
+    }
+
+    if (state.blobs.ml) {
+      out += '%% BLOB: Intel·ligència Artificial: Matriu de Confusió i Xarxa Neuronal (pxCMP)\n';
+      out += '\\pxConfusionMatrix[title={Avaluació del Classificador}]\n';
+      out += '  {Positiu, Negatiu}\n';
+      out += '  {45 (TP), 5 (FP); 3 (FN), 47 (TN)}\n';
+      out += '  [Precisió = 0.90 \\quad|\\quad Sensibilitat = 0.9375 \\quad|\\quad $F_1 = 0.9184$]\n\n';
+      out += '\\pxNeuralNet[title={Perceptró Multicapa (MLP)}]{\n';
+      out += '  Entrada / x_0, x_1, x_2 / input;\n';
+      out += '  Capa Oculta / h_0, h_1, h_2 / ReLU;\n';
+      out += '  Sortida / Y / Softmax\n';
+      out += '}[x_0 -> h_0 / 1; x_1 -> h_1 / 1; h_0 -> Y / 0.5]\n\n';
     }
 
     if (state.blobs.foreach) {
@@ -1687,6 +1800,9 @@ details.guide-detail[open] summary {
       codeEl.textContent = out;
     }
   }
+
+  // Expose generateLatexCode globally for testing / offline usage
+  window.generateLatexCode = generateLatexCode;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
