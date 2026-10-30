@@ -128,7 +128,7 @@
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
 	\__ifglossary:nn{
-		\makenoidxglossaries
+		% pxGLS owns glossary initialisation.
 %% \GL*{<glossary label>}
 %% Glossary shorthand created only when glossary support is enabled.
 %% * - print the long acronym form; unstarred prints the short form.
@@ -147,19 +147,7 @@
 		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
 }
-\AtEndDocument{
-%	\glsaddall
-
-	\__ifglossary:nn{
-		\clearpage
-		\addcontentsline{toc}{section}{Glossari}
-		\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
-		\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
-	}{}
-%	\__ifbibliography:nn{
-%		\pxBib{ \l__pxdoc_bibpath_tl }
-%	}{}
-}
+% Glossary placement and optional automatic printing are owned by pxGLS.
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }

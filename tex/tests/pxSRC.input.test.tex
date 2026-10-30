@@ -1,0 +1,46 @@
+\providecommand\SourceTestOptions{PAC,sources,annexes,glossary}
+\edef\SourceTestClass{\noexpand\documentclass[\SourceTestOptions]{P3CTeX}}
+\SourceTestClass
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\pxGlossarySetup{print=manual}
+\newglossaryentry{native-term}{name={Native term},description={Used by native TeX}}
+\newglossaryentry{code-only}{name={CODEONLYMUSTNOTAPPEAR},description={Literal code is not executed}}
+\newglossaryentry{metadata-term}{name={Metadata term},description={Explicitly associated with a code excerpt}}
+\newacronym{cpu}{CPU}{central processing unit}
+\newcount\unsafeexecutions
+\newcount\childinputs
+\pxSource[region=selected]{report}{fixtures/source/document.tex}
+\begin{document}
+\section{Main body}
+\pxUseSource[caption={Native fragment},label=src:native]{report}
+\ifnum\childinputs=1\else\PackageError{source-test}{Nested relative input failed}{}\fi
+\pxInput[as=code,region=code,title={Literal source},language={[LaTeX]TeX},
+  terms={metadata-term},cite={source-ref},caption={Code excerpt},label=src:code]
+  {fixtures/source/document.tex}
+\ifnum\unsafeexecutions=0\else\PackageError{source-test}{Code executed as TeX}{}\fi
+\ifglsused{code-only}{\PackageError{source-test}{Code changed glossary use}{}}{}
+\pxInput[container=minipage,width=.8\linewidth]{fixtures/source/child.tex}
+\ifnum\childinputs=2\else\PackageError{source-test}{Minipage input failed}{}\fi
+\pxAddAnnex[label=ann:queued]{Queued source}{\pxUseSource[label-prefix=ann:]{report}}
+\pxAnnex[label=ann:first]{Immediate annex}{
+  \subsection{Evidence}\label{ann:evidence}
+  \begin{equation}1+1=2\label{eq:annex}\end{equation}
+}
+\section{Body resumes}
+\ifnum\value{section}=2\else\PackageError{source-test}{Annex changed main numbering}{}\fi
+\pxPrintAnnexes
+\ifnum\childinputs=3\else\PackageError{source-test}{Queued native source failed}{}\fi
+\pxPrintAnnexes
+\ifnum\childinputs=3\else\PackageError{source-test}{Annex queue printed twice}{}\fi
+\ifnum\value{section}=2\else\PackageError{source-test}{Queued annex changed main numbering}{}\fi
+Sources \ref{src:native} and \ref{src:code}; annexes \ref{ann:first} and
+\ref{ann:queued}; equation \ref{eq:annex}.
+\clearpage
+\pxPrintGlossaries
+\pxPrintGlossaries % no duplicate lists
+\begin{thebibliography}{9}
+\bibitem{source-ref} Source author. Reusable material. 2026.
+\end{thebibliography}
+\typeout{PXSRC-INPUT-PASS: native, code, minipage, relative assets, metadata and annex queue}
+\end{document}
+

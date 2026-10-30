@@ -1,0 +1,20 @@
+\documentclass{article}
+\usepackage{pxSRC}
+\newcount\badinputs
+\begin{document}
+\ExplSyntaxOn
+\msg_redirect_name:nnn {pxSRC}{input}{warning}
+\ExplSyntaxOff
+\pxInput[region=absent]{fixtures/source/errors.tex}
+\pxInput[region=duplicate]{fixtures/source/errors.tex}
+\pxInput[region=unclosed]{fixtures/source/errors.tex}
+\pxInput[first-line=0]{fixtures/source/errors.tex}
+\pxInput[first-line=999]{fixtures/source/errors.tex}
+\pxInput[region=duplicate,first-line=2]{fixtures/source/errors.tex}
+\pxInput{fixtures/source/missing.tex}
+\pxUseSource{missing-id}
+\ifnum\badinputs=0\else\PackageError{source-errors}{An invalid selection executed content}{}\fi
+Invalid source selections were diagnosed without executing their contents.
+\typeout{PXSRC-ERRORS-PASS}
+\end{document}
+

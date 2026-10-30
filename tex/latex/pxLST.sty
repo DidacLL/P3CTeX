@@ -700,7 +700,7 @@
 		}
 		{
 			\tcbinputlisting{
-				listing~options={style=pxlst,language=#1,#4},
+				listing~options={style=pxlst,language={#1},#4},
 				colback=pxbg!90!,
 				colframe=pxbg!60!,
 				coltext=pxfg,
@@ -757,7 +757,7 @@
 \NewDocumentCommand{\pxCodeSet}{O{dark} m O{pxlst}}{%
   \pxLSTpaletteSelect{#1}%
   \lstset{%
-    language=#2,%
+    language={#2},%
     style=#3%
   }%
 }
@@ -890,7 +890,7 @@
     \group_begin:
       \tl_if_blank:nTF { #1 }
         { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, style=#3 } }
-        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, language=#1, style=#3 } }
+        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, language={#1}, style=#3 } }
       \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }

@@ -1,0 +1,21 @@
+\documentclass{article}
+\begin{document}
+Ignored full-document preamble and body.
+%<*selected>
+\subsection{Imported source}
+\label{sec:imported}
+Native glossary use: \gls{native-term}; acronym: \gls{cpu}.
+A citation from native TeX: \cite{source-ref}.
+\input{child.tex}
+\includegraphics[width=1cm]{testimage.png}
+\begin{verbatim}
+literal '$HOME' and 100% with \commands
+\end{verbatim}
+%</selected>
+%<*code>
+\global\advance\unsafeexecutions by 1
+\gls{code-only}
+\cite{not-a-real-reference}
+%</code>
+\end{document}
+

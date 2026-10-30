@@ -1,0 +1,20 @@
+% Optional annexes for any P3CTeX document or standard article/report.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,l3keys2e}
+\ProvidesExplPackage{pxANN}{2026/10/30}{0.1}{Explicit and queued annexes}
+\file_input:n {pxANN.code.tex}
+\NewDocumentCommand\pxAnnexSetup{m}{\keys_set:nn {pxANN}{#1}}
+\NewDocumentCommand\pxAnnex{O{} m +m}{\__pxann_print:nnn {#1}{#2}{#3}}
+\NewDocumentCommand\pxAddAnnex{O{} m +m}
+  {\seq_gput_right:Nn \g__pxann_pending_seq {\pxAnnex[#1]{#2}{#3}}}
+\NewDocumentCommand\pxPrintAnnexes{}
+  {\group_begin:
+   \seq_set_eq:NN \l__pxann_print_seq \g__pxann_pending_seq
+   \seq_gclear:N \g__pxann_pending_seq
+   \seq_map_inline:Nn \l__pxann_print_seq {##1}
+   \group_end:}
+\ProcessKeysOptions{pxANN}
+\AtEndDocument{\seq_if_empty:NF \g__pxann_pending_seq
+  {\PackageWarning{pxANN}{Queued~annexes~were~not~printed.~Use~\string\pxPrintAnnexes}}}
+\endinput
+

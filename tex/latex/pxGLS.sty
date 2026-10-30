@@ -1,0 +1,24 @@
+% Optional glossary placement; standard glossaries commands remain available.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,l3keys2e}
+\IfPackageLoadedTF{glossaries}{}{\RequirePackage[acronym]{glossaries}}
+\ProvidesExplPackage{pxGLS}{2026/10/30}{0.1}{Explicit glossary placement}
+\file_input:n {pxGLS.code.tex}
+\NewDocumentCommand\pxGlossarySetup{m}{\keys_set:nn {pxGLS}{#1}}
+\NewDocumentCommand\pxGlossaryFile{m}{\file_input:n {#1}}
+\NewDocumentCommand\pxPrintGlossary{O{}}
+  {\group_begin:\keys_set:nn {pxGLS}{#1}\__pxgls_print:\group_end:}
+\NewDocumentCommand\pxPrintGlossaries{O{}}
+  {\group_begin:
+   \keys_set:nn {pxGLS}{#1}
+   \bool_if:NT \l__pxgls_terms_bool
+     {\tl_set:Nn \l__pxgls_type_tl {main}\__pxgls_print:}
+   \bool_if:NT \l__pxgls_acronyms_bool
+     {\tl_set:Nn \l__pxgls_type_tl {acronym}\__pxgls_print:}
+   \group_end:}
+\ProcessKeysOptions{pxGLS}
+\bool_set_true:N \l__pxgls_backend_locked_bool
+\tl_if_eq:NnT \l__pxgls_backend_tl {noindex}{\makenoidxglossaries}
+\AtEndDocument{\bool_if:NT \l__pxgls_auto_bool{\pxPrintGlossaries}}
+\endinput
+

@@ -1,0 +1,75 @@
+\ProvidesExplFile{pxANN.code.tex}{2026/10/30}{0.1}{Annex implementation}
+\newcounter{pxannex}
+\renewcommand\thepxannex{\Alph{pxannex}}
+\seq_new:N \g__pxann_pending_seq
+\seq_new:N \l__pxann_print_seq
+\prop_new:N \l__pxann_saved_counters_prop
+\tl_new:N \l__pxann_label_tl
+\tl_new:N \l__pxann_level_tl
+\tl_new:N \l__pxann_name_tl
+\bool_new:N \l__pxann_toc_bool
+\bool_new:N \l__pxann_pagebreak_bool
+\keys_define:nn {pxANN}
+  {
+    label .tl_set:N = \l__pxann_label_tl,
+    name .tl_set:N = \l__pxann_name_tl,
+    name .initial:n = \appendixname,
+    level .choices:nn = {auto,section,chapter}
+      {\tl_set_eq:NN \l__pxann_level_tl \l_keys_choice_tl},
+    level .initial:n = auto,
+    toc .bool_set:N = \l__pxann_toc_bool,
+    toc .initial:n = true,
+    pagebreak .bool_set:N = \l__pxann_pagebreak_bool,
+    pagebreak .initial:n = true
+  }
+\cs_new_protected:Npn \__pxann_print:nnn #1#2#3
+  {
+    \group_begin:
+    \keys_set:nn {pxANN}{#1}
+    \tl_if_eq:NnT \l__pxann_level_tl {auto}
+      {\cs_if_exist:NTF \chapter
+        {\tl_set:Nn \l__pxann_level_tl {chapter}}
+        {\tl_set:Nn \l__pxann_level_tl {section}}}
+    \bool_if:NT \l__pxann_pagebreak_bool {\clearpage}
+    \refstepcounter{pxannex}
+    \prop_clear:N \l__pxann_saved_counters_prop
+    \clist_map_inline:nn {chapter,section,subsection,subsubsection,equation,figure,table}
+      {\cs_if_exist:cT {c@##1}
+        {\prop_put:Nnx \l__pxann_saved_counters_prop {##1}{\int_use:c {c@##1}}
+         \int_gzero:c {c@##1}}}
+    % Annex numbering is local. Global LaTeX counters are restored after content,
+    % while labels retain the expanded annex-prefixed number written to the aux file.
+    \cs_set:Npn \thechapter {\thepxannex}
+    \tl_if_eq:NnTF \l__pxann_level_tl {chapter}
+      {\cs_set:Npn \thesection {\thepxannex.\arabic{section}}}
+      {\cs_set:Npn \thesection {\thepxannex}
+       \cs_set:Npn \thesubsection {\thepxannex.\arabic{subsection}}}
+    \cs_set:Npn \theequation {\thepxannex.\arabic{equation}}
+    \cs_set:Npn \thefigure {\thepxannex.\arabic{figure}}
+    \cs_set:Npn \thetable {\thepxannex.\arabic{table}}
+    \cs_set:Npn \theHchapter {pxann.\arabic{pxannex}}
+    \cs_set:Npn \theHsection {pxann.\arabic{pxannex}.\arabic{section}}
+    \cs_set:Npn \theHsubsection {pxann.\arabic{pxannex}.\arabic{section}.\arabic{subsection}}
+    \cs_set:Npn \theHequation {pxann.\arabic{pxannex}.\arabic{equation}}
+    \cs_set:Npn \theHfigure {pxann.\arabic{pxannex}.\arabic{figure}}
+    \cs_set:Npn \theHtable {pxann.\arabic{pxannex}.\arabic{table}}
+    \tl_if_eq:NnTF \l__pxann_level_tl {chapter}
+      {\cs_if_exist:NTF \chapter
+        {\chapter*{\l__pxann_name_tl~\thepxannex :~#2}}
+        {\PackageError{pxANN}{Chapter~annexes~require~a~chapter-capable~document}{Use~level=section.}}}
+      {\section*{\l__pxann_name_tl~\thepxannex :~#2}}
+    \cs_if_exist:NT \phantomsection {\phantomsection}
+    \protected@edef\@currentlabel{\thepxannex}
+    \def\@currentlabelname{#2}
+    \bool_if:NT \l__pxann_toc_bool
+      {\addcontentsline{toc}{\l__pxann_level_tl}{\l__pxann_name_tl~\thepxannex :~#2}}
+    \tl_if_blank:VF \l__pxann_label_tl {\exp_args:NV \label \l__pxann_label_tl}
+    #3
+    % Flush pending floats before restoring their numbering context.
+    \par\clearpage
+    \prop_map_inline:Nn \l__pxann_saved_counters_prop
+      {\int_gset:cn {c@##1}{##2}}
+    \group_end:
+  }
+\endinput
+

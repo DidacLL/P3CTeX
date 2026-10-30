@@ -1,6 +1,6 @@
 # Source inclusion, glossaries and annexes
 
-Status: requirements and existing implementation audit; implementation pending.
+Status: shared source input, annex and glossary implementations are integrated. PAC/PR/MEM smoke tests, invalid-selection tests and legacy MEM tests pass. Final documentation, backend tests and full multi-pass gate are in progress.
 
 Owner request (2026-10-30): pxSRC must load files and fragments as P3CTeX-styled code, native TeX, minipages and annex content. Glossaries, references and annexes must integrate consciously and be optional in PAC, PR and MEM documents. Work directly on the development branch and checkpoint in Git regularly.
 
@@ -26,3 +26,19 @@ Owner request (2026-10-30): pxSRC must load files and fragments as P3CTeX-styled
 ## Checkpoint discipline
 
 Current student-tools work and pre-existing development edits must be committed before starting this extension. Keep this file current with completed steps, decisions, test outcomes and remaining work at each subsequent commit. Do not publish or bump VERSION as part of this work.
+
+## Implemented decisions
+
+- pxSRC exposes pxSource, pxInput and pxUseSource. Whole native files use native input; fragments reuse fancyvrb extraction with preflight marker/range validation. Source paths are prepended to native input/graphics lookup.
+- as=native|code and container=none|minipage separate execution from layout. Code rendering reuses pxLST. cite and terms are explicit metadata; code itself never executes glossary or citation commands.
+- label-prefix applies to native labels; pxSourceRef resolves an internal reference with that prefix, while ordinary ref continues to address external/document labels unchanged.
+- pxANN provides immediate pxAnnex, queued pxAddAnnex and explicit pxPrintAnnexes. Main-body counters are restored; queues are consumed once. No global appendix transition is imposed.
+- pxGLS provides explicit printing and optional automatic printing. The legacy glossary class option retains automatic no-index lists; direct glossaries tool selection defaults to manual placement. External indexed backends remain author-managed.
+- Existing pxMEMsource/include/annex now delegate to these shared engines. Existing chapter mode remains pxMEM's responsibility.
+- References use standard LaTeX labels/citations and the author's bibliography backend, rather than forcing a new bibliography engine.
+
+## Validation and remaining work
+
+- Checkpoint bb93310: initial student tools and pre-existing local development edits. All 38 tests/templates passed before direct transfer; the four initial direct-checkout lookup failures passed after refreshing MiKTeX's filename database.
+- Current source integration passes PAC, PR, MEM, missing/duplicate-region diagnostics and the existing MEM regression. PAC's profile selects Catalan; combining PAC and EN currently triggers the pre-existing Babel option clash and needs a separate focused fix.
+- Complete multi-pass cross-reference/glossary checks, external-backend and manual-placement assertions, user manuals and final repository-wide gate before final sign-off.

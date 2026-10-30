@@ -1,0 +1,200 @@
+% Source selection and rendering, shared by pxSRC and legacy pxMEM entry points.
+\ProvidesExplFile{pxSRC.input.code.tex}{2026/10/30}{0.1}{Source file inclusion}
+\prop_new:N \g__pxsrc_sources_prop
+\prop_new:N \g__pxsrc_source_options_prop
+\int_new:N \g__pxsrc_piece_int
+\ior_new:N \l__pxsrc_input_ior
+\newwrite\pxSRCout
+\newcounter{pxsource}
+\tl_new:N \l__pxsrc_input_path_tl
+\tl_new:N \l__pxsrc_input_region_tl
+\tl_new:N \l__pxsrc_input_mode_tl
+\tl_new:N \l__pxsrc_input_container_tl
+\tl_new:N \l__pxsrc_input_width_tl
+\tl_new:N \l__pxsrc_input_title_tl
+\tl_new:N \l__pxsrc_input_caption_tl
+\tl_new:N \l__pxsrc_input_label_tl
+\tl_new:N \l__pxsrc_input_label_prefix_tl
+\cs_new_eq:NN \__pxsrc_document_label:n \label
+\AddToHook{begindocument/end}{\cs_gset_eq:NN \__pxsrc_document_label:n \label}
+\tl_new:N \l__pxsrc_input_language_tl
+\tl_new:N \l__pxsrc_input_options_tl
+\tl_new:N \l__pxsrc_input_cite_tl
+\clist_new:N \l__pxsrc_input_terms_clist
+\tl_new:N \l__pxsrc_input_temp_tl
+\int_new:N \l__pxsrc_input_first_int
+\int_new:N \l__pxsrc_input_last_int
+\int_new:N \l__pxsrc_input_lines_int
+\int_new:N \l__pxsrc_input_starts_int
+\int_new:N \l__pxsrc_input_ends_int
+\bool_new:N \l__pxsrc_input_valid_bool
+\bool_new:N \l__pxsrc_input_fragment_bool
+\msg_new:nnn {pxSRC}{input}{#1}
+\keys_define:nn {pxSRC/input}
+  {
+    as .choices:nn = {native,code}{\tl_set_eq:NN \l__pxsrc_input_mode_tl \l_keys_choice_tl},
+    as .initial:n = native,
+    container .choices:nn = {none,minipage}{\tl_set_eq:NN \l__pxsrc_input_container_tl \l_keys_choice_tl},
+    container .initial:n = none,
+    width .tl_set:N = \l__pxsrc_input_width_tl,
+    width .initial:n = \linewidth,
+    region .tl_set:N = \l__pxsrc_input_region_tl,
+    first-line .int_set:N = \l__pxsrc_input_first_int,
+    first-line .initial:n = 1,
+    last-line .int_set:N = \l__pxsrc_input_last_int,
+    last-line .initial:n = 0,
+    title .tl_set:N = \l__pxsrc_input_title_tl,
+    caption .tl_set:N = \l__pxsrc_input_caption_tl,
+    label .tl_set:N = \l__pxsrc_input_label_tl,
+    label-prefix .tl_set:N = \l__pxsrc_input_label_prefix_tl,
+    language .tl_set:N = \l__pxsrc_input_language_tl,
+    listing-options .tl_set:N = \l__pxsrc_input_options_tl,
+    cite .tl_set:N = \l__pxsrc_input_cite_tl,
+    terms .clist_set:N = \l__pxsrc_input_terms_clist
+  }
+\keys_define:nn {pxSRC}
+  {input .code:n = {\keys_set:nn {pxSRC/input}{#1}}}
+\cs_new_protected:Npn \__pxsrc_input_error:n #1
+  {\bool_set_false:N \l__pxsrc_input_valid_bool
+   \msg_error:nnn {pxSRC}{input}{#1}}
+\cs_new_protected:Npn \__pxsrc_source:nnn #1#2#3
+  {\prop_gput:Nnn \g__pxsrc_sources_prop {#2}{#3}
+   \prop_gput:Nnn \g__pxsrc_source_options_prop {#2}{#1}}
+\cs_new_protected:Npn \__pxsrc_use_source:nn #1#2
+  {\group_begin:
+   \prop_get:NnNTF \g__pxsrc_sources_prop {#2}\l__pxsrc_input_path_tl
+     {\prop_get:NnN \g__pxsrc_source_options_prop {#2}\l_tmpa_tl
+      \exp_args:NnV \keys_set:nn {pxSRC/input}\l_tmpa_tl
+      \exp_args:NnV \__pxsrc_input:nn {#1}\l__pxsrc_input_path_tl}
+     {\msg_error:nnn {pxSRC}{input}{Unknown~source~id~'#2'.}}
+   \group_end:}
+% Validate markers before extraction: missing/duplicate/unclosed regions are errors.
+\cs_new_protected:Npn \__pxsrc_input_select:
+  {
+    \int_zero:N \l__pxsrc_input_lines_int
+    \int_zero:N \l__pxsrc_input_starts_int
+    \int_zero:N \l__pxsrc_input_ends_int
+    \tl_if_blank:VF \l__pxsrc_input_region_tl
+      {\bool_lazy_or:nnT
+        {\int_compare_p:n {\l__pxsrc_input_first_int != 1}}
+        {\int_compare_p:n {\l__pxsrc_input_last_int != 0}}
+        {\__pxsrc_input_error:n {Select~a~region~or~a~line~range,~not~both.}}}
+    \exp_args:NNV \ior_open:Nn \l__pxsrc_input_ior \l__pxsrc_input_path_tl
+    \ior_str_map_inline:Nn \l__pxsrc_input_ior
+      {\int_incr:N \l__pxsrc_input_lines_int
+       \tl_if_blank:VF \l__pxsrc_input_region_tl
+         {\str_if_eq:eeT {\tl_trim_spaces:n {##1}}
+            {\c_percent_str <*\l__pxsrc_input_region_tl>}
+            {\int_incr:N \l__pxsrc_input_starts_int
+             \int_set:Nn \l__pxsrc_input_first_int {\l__pxsrc_input_lines_int+1}}
+          \str_if_eq:eeT {\tl_trim_spaces:n {##1}}
+            {\c_percent_str </\l__pxsrc_input_region_tl>}
+            {\int_incr:N \l__pxsrc_input_ends_int
+             \int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_input_lines_int-1}}}}
+    \ior_close:N \l__pxsrc_input_ior
+    \tl_if_blank:VF \l__pxsrc_input_region_tl
+      {\bool_lazy_or:nnT
+        {\int_compare_p:n {\l__pxsrc_input_starts_int != 1}}
+        {\int_compare_p:n {\l__pxsrc_input_ends_int != 1}}
+        {\__pxsrc_input_error:n {A~region~must~have~exactly~one~start~and~one~end~marker.}}}
+    \int_compare:nNnT {\l__pxsrc_input_last_int} = {0}
+      {\int_set_eq:NN \l__pxsrc_input_last_int \l__pxsrc_input_lines_int}
+    \bool_lazy_or:nnT
+      {\int_compare_p:n {\l__pxsrc_input_first_int < 1}}
+      {\int_compare_p:n {\l__pxsrc_input_last_int > \l__pxsrc_input_lines_int}}
+      {\__pxsrc_input_error:n {Source~line~range~is~outside~the~file.}}
+    \bool_lazy_or:nnT {\l__pxsrc_input_fragment_bool}
+      {\int_compare_p:n {\l__pxsrc_input_lines_int > 0}}
+    {\int_compare:nNnT {\l__pxsrc_input_last_int} < {\l__pxsrc_input_first_int}
+      {\__pxsrc_input_error:n {Source~selection~is~empty~or~reversed.}}}
+  }
+% Reuse fancyvrb's literal-line mechanism from pxMEM. Only selected lines are
+% written; TeX catcodes are applied later by ordinary input, never by this scanner.
+\cs_new_protected:Npn \__pxsrc_input_extract:
+  {
+    \int_gincr:N \g__pxsrc_piece_int
+    \tl_set:Nx \l__pxsrc_input_temp_tl
+      {\c_sys_jobname_str .pxsrc-\int_use:N \g__pxsrc_piece_int .tex}
+    \group_begin:
+      \int_gzero:N \FV@CodeLineNo
+      \def\FV@FindStartStop{\FV@DefineFindStart\FV@FindStartStop}
+      \FV@DefineWhiteSpace
+      \def\FV@Space{\space}
+      \FV@DefineTabOut
+      \let\FV@FontScanPrep\relax
+      \let\@noligs\relax
+      \fvset{firstline=\int_use:N \l__pxsrc_input_first_int,
+             lastline=\int_use:N \l__pxsrc_input_last_int}
+      \def\FV@ProcessLine{\immediate\write\pxSRCout}
+      \immediate\openout\pxSRCout=\l__pxsrc_input_temp_tl\relax
+      \exp_args:NV \FV@Input \l__pxsrc_input_path_tl
+      \immediate\closeout\pxSRCout
+    \group_end:
+  }
+\cs_new_protected:Npn \__pxsrc_input_render:
+  {
+    \tl_if_eq:NnTF \l__pxsrc_input_mode_tl {code}
+      {\cs_if_exist:NTF \pxLST_input_file:nnnn
+        {\tl_if_blank:VT \l__pxsrc_input_title_tl
+           {\tl_set:Nx \l__pxsrc_input_title_tl {\tl_to_str:V \l__pxsrc_input_path_tl}}
+         \use:x {\exp_not:N \pxLST_input_file:nnnn
+           {\exp_not:V \l__pxsrc_input_language_tl}
+           {\exp_not:V \l__pxsrc_input_path_tl}
+           {\exp_not:V \l__pxsrc_input_title_tl}
+           {\exp_not:V \l__pxsrc_input_options_tl,
+            firstline=\int_use:N \l__pxsrc_input_first_int,
+            lastline=\int_use:N \l__pxsrc_input_last_int,
+            firstnumber=\int_use:N \l__pxsrc_input_first_int}}}
+        {\__pxsrc_input_error:n {Code~input~requires~pxLST.~Load~the~code~tool~in~the~preamble.}}}
+      {\bool_if:NTF \l__pxsrc_input_fragment_bool
+         {\__pxsrc_input_extract:}
+         {\tl_set_eq:NN \l__pxsrc_input_temp_tl \l__pxsrc_input_path_tl}
+       \exp_args:NV \filename@parse \l__pxsrc_input_path_tl
+       \providecommand\input@path{}
+       \edef\input@path{{\filename@area}\input@path}
+       \providecommand\Ginput@path{}
+       \edef\Ginput@path{{\filename@area}\Ginput@path}
+       \tl_if_blank:VF \l__pxsrc_input_label_prefix_tl
+         {\cs_set_protected:Npn \label ##1
+           {\exp_args:Ne \__pxsrc_document_label:n {\l__pxsrc_input_label_prefix_tl ##1}}}
+       \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}
+  }
+\cs_new_protected:Npn \__pxsrc_input:nn #1#2
+  {
+    \group_begin:
+    \keys_set:nn {pxSRC/input}{#1}
+    \bool_set_true:N \l__pxsrc_input_valid_bool
+    \bool_set:Nn \l__pxsrc_input_fragment_bool
+      {!\tl_if_blank_p:V \l__pxsrc_input_region_tl ||
+       \int_compare_p:n {\l__pxsrc_input_first_int != 1} ||
+       \int_compare_p:n {\l__pxsrc_input_last_int != 0}}
+    \file_get_full_name:nNTF {#2}\l__pxsrc_input_path_tl
+      {
+        \__pxsrc_input_select:
+        \bool_if:NT \l__pxsrc_input_valid_bool
+          {
+            \tl_if_eq:NnT \l__pxsrc_input_container_tl {minipage}
+              {\begin{minipage}{\l__pxsrc_input_width_tl}}
+            \bool_lazy_or:nnT
+              {!\tl_if_blank_p:V \l__pxsrc_input_caption_tl}
+              {!\tl_if_blank_p:V \l__pxsrc_input_label_tl}
+              {\refstepcounter{pxsource}
+               \tl_if_blank:VF \l__pxsrc_input_label_tl {\exp_args:NV \label \l__pxsrc_input_label_tl}}
+            \__pxsrc_input_render:
+            \tl_if_blank:VF \l__pxsrc_input_caption_tl
+              {\par\smallskip\noindent\textbf{\pxSourceName~\thepxsource :}~
+               \l__pxsrc_input_caption_tl\par}
+            \tl_if_blank:VF \l__pxsrc_input_cite_tl
+              {\par\noindent\exp_args:NV \cite \l__pxsrc_input_cite_tl\par}
+            \clist_if_empty:NF \l__pxsrc_input_terms_clist
+              {\cs_if_exist:NTF \glsadd
+                {\clist_map_inline:Nn \l__pxsrc_input_terms_clist {\glsadd{##1}}}
+                {\__pxsrc_input_error:n {Source~terms~require~glossaries.~Enable~the~glossary~tool.}}}
+            \tl_if_eq:NnT \l__pxsrc_input_container_tl {minipage}{\end{minipage}}
+          }
+      }
+      {\__pxsrc_input_error:n {Source~file~'#2'~not~found.}}
+    \group_end:
+  }
+\endinput
+

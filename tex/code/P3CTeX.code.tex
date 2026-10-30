@@ -71,10 +71,8 @@
 	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
 		no-plagi	.initial:n 	=	false,
 		no-plagi	.default:n 	=	true,
-	glossary		.code		={
-									\RequirePackage[acronym]{glossaries}
-									\bool_set_true:N \l_pxdoc_useglossary_bool
-								},
+    glossary .bool_set:N = \l_pxdoc_useglossary_bool,
+    glossary .default:n = true,
 %	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
 %		bibliography			.initial:n	= {},
 %	references			.meta:n		={usebibliography={true}, bibpath={#1}},
@@ -234,9 +232,11 @@
 \bool_if:NT \l__pxdoc_gnt_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,GNT} }
 \bool_if:NT \l__pxdoc_cmp_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,CMP} }
 \bool_if:NT \l__pxdoc_orl_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,ORL} }
+\bool_if:NT \l_pxdoc_useglossary_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}}
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
+\bool_if:NT \l_pxdoc_useglossary_bool {\pxGlossarySetup{print=auto}}
 \pxGDX_config:n { %% Pass P3CTeX / data keys to pxCORE
 	cover-config={
 		text-backtitle	 ={\l__pxdata_course_tl},

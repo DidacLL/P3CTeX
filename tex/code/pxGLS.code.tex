@@ -1,0 +1,72 @@
+\ProvidesExplFile{pxGLS.code.tex}{2026/10/30}{0.1}{Glossary placement implementation}
+\prop_new:N \g__pxgls_printed_prop
+\tl_new:N \l__pxgls_backend_tl
+\tl_new:N \l__pxgls_type_tl
+\tl_new:N \l__pxgls_title_tl
+\tl_new:N \l__pxgls_terms_title_tl
+\tl_new:N \l__pxgls_acronyms_title_tl
+\tl_new:N \l__pxgls_options_tl
+\bool_new:N \l__pxgls_auto_bool
+\bool_new:N \l__pxgls_backend_locked_bool
+\bool_new:N \l__pxgls_all_bool
+\bool_new:N \l__pxgls_terms_bool
+\bool_new:N \l__pxgls_acronyms_bool
+\bool_new:N \l__pxgls_toc_bool
+\keys_define:nn {pxGLS}
+  {
+    backend .choices:nn = {noindex,external}{\bool_if:NTF \l__pxgls_backend_locked_bool
+      {\tl_if_eq:NNF \l__pxgls_backend_tl \l_keys_choice_tl
+        {\PackageError{pxGLS}{Glossary~backend~is~a~package-load~option}{Choose~the~backend~before~defining~entries.}}}
+      {\tl_set_eq:NN \l__pxgls_backend_tl \l_keys_choice_tl}},
+    backend .initial:n = noindex,
+    print .choice:,
+    print / manual .code:n = {\bool_set_false:N \l__pxgls_auto_bool},
+    print / auto .code:n = {\bool_set_true:N \l__pxgls_auto_bool},
+    print .initial:n = manual,
+    include .choice:,
+    include / used .code:n = {\bool_set_false:N \l__pxgls_all_bool},
+    include / all .code:n = {\bool_set_true:N \l__pxgls_all_bool},
+    include .initial:n = used,
+    terms .bool_set:N = \l__pxgls_terms_bool,
+    terms .initial:n = true,
+    acronyms .bool_set:N = \l__pxgls_acronyms_bool,
+    acronyms .initial:n = true,
+    toc .bool_set:N = \l__pxgls_toc_bool,
+    toc .initial:n = true,
+    type .tl_set:N = \l__pxgls_type_tl,
+    type .initial:n = main,
+    title .tl_set:N = \l__pxgls_title_tl,
+    terms-title .tl_set:N = \l__pxgls_terms_title_tl,
+    terms-title .initial:n = \glossaryname,
+    acronyms-title .tl_set:N = \l__pxgls_acronyms_title_tl,
+    acronyms-title .initial:n = \acronymname,
+    options .tl_set:N = \l__pxgls_options_tl
+  }
+\cs_new_protected:Npn \__pxgls_print:
+  {
+    \prop_if_in:NVF \g__pxgls_printed_prop \l__pxgls_type_tl
+      {
+        \exp_args:NV \ifglossaryexists \l__pxgls_type_tl
+          {
+            \group_begin:
+            \bool_if:NT \l__pxgls_all_bool
+              {\use:x {\exp_not:N \glsaddall[types={\l__pxgls_type_tl}]}}
+            \tl_if_blank:VT \l__pxgls_title_tl
+              {\tl_if_eq:NnTF \l__pxgls_type_tl {acronym}
+                {\tl_set_eq:NN \l__pxgls_title_tl \l__pxgls_acronyms_title_tl}
+                {\tl_set_eq:NN \l__pxgls_title_tl \l__pxgls_terms_title_tl}}
+            \bool_if:NTF \l__pxgls_toc_bool {\glstoctrue}{\glstocfalse}
+            \tl_if_eq:NnTF \l__pxgls_backend_tl {noindex}
+              {\use:x {\exp_not:N \printnoidxglossary[
+                type={\l__pxgls_type_tl},title={\exp_not:V \l__pxgls_title_tl},
+                \exp_not:V \l__pxgls_options_tl]}}
+              {\use:x {\exp_not:N \printglossary[
+                type={\l__pxgls_type_tl},title={\exp_not:V \l__pxgls_title_tl},
+                \exp_not:V \l__pxgls_options_tl]}}
+            \prop_gput:NVn \g__pxgls_printed_prop \l__pxgls_type_tl {true}
+            \group_end:
+          }{}
+      }
+  }
+\endinput
+

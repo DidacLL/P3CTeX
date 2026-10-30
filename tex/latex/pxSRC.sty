@@ -37,9 +37,16 @@
 % Hyperlinks configuration
 \RequirePackage{hyperref}
 % Foreach loops used by \pxIMGList
-\RequirePackage{pgffor}
+\RequirePackage{pgffor,fancyvrb}
 % Load Code
 \file_input:n {pxSRC.code.tex}
+\file_input:n {pxSRC.input.code.tex}
+\ProcessKeysOptions{pxSRC}
+\providecommand\pxSourceName{Source}
+\NewDocumentCommand\pxSourceRef{m}{\exp_args:Ne \ref {\l__pxsrc_input_label_prefix_tl #1}}
+\NewDocumentCommand\pxSource{O{} m m}{\__pxsrc_source:nnn {#1}{#2}{#3}}
+\NewDocumentCommand\pxInput{O{} m}{\__pxsrc_input:nn {#1}{#2}}
+\NewDocumentCommand\pxUseSource{O{} m}{\__pxsrc_use_source:nn {#1}{#2}}
 %%%%%%%%%%%%%%	LaTeX2e API %%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%
 %% Package configuration (pxSRC key family).
