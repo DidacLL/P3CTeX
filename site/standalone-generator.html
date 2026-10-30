@@ -14,45 +14,44 @@
 /* ==========================================================================
    P3CTeX — Academic Coursework & Engineering Tooling Suite
    Visual Identity: Retrofuturistic Indie Engineering Workstation
-   Aesthetic: Gentle Slate Console · Restful Contrast · Eye-Comfort Ergonomics
+   Aesthetic: Technical Datasheet · Non-Card Architecture · Eye-Comfort Ergonomics
    "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
    ========================================================================== */
 
 :root {
-  /* Restful, Low-Strain Matte Slate Palette (Sampled from Demopack #262C36) */
-  --bg-deep: #181d24;
-  --bg-main: #1f252f;
-  --bg-surface: #262d38;
-  --bg-card: #2c3542;
-  --bg-card-hover: #333d4c;
-  --bg-recessed: #161b22;
+  /* Restful, Low-Strain Matte Slate Palette (Demopack #262C36 Baseline) */
+  --bg-deep: #161a22;
+  --bg-main: #1d232c;
+  --bg-surface: #242b36;
+  --bg-elevated: #2b3341;
+  --bg-recessed: #13171e;
   --bg-demopack: #262c36;
 
   /* Legacy & Generator Integration Tokens */
   --chassis-bg: var(--bg-deep);
   --chassis-surface: var(--bg-surface);
   --chassis-panel: var(--bg-surface);
-  --chassis-card: var(--bg-card);
-  --chassis-raised: var(--bg-card-hover);
+  --chassis-card: var(--bg-elevated);
+  --chassis-raised: var(--bg-elevated);
   --chassis-recessed: var(--bg-recessed);
 
-  /* Soft Separation Borders (No Harsh White Lines) */
-  --border-subtle: #2f3846;
-  --border-base: #3c4758;
-  --border-bright: #4d5b6f;
-  --border-accent: #65768e;
-  --line-dark: #2a333f;
-  --line-mid: #3c4758;
-  --line-light: #4d5b6f;
+  /* Soft Separation Borders */
+  --border-subtle: #2d3644;
+  --border-base: #3b4657;
+  --border-bright: #4e5c70;
+  --border-accent: #66788f;
+  --line-dark: #28303d;
+  --line-mid: #3b4657;
+  --line-light: #4e5c70;
 
-  /* Soft, Eye-Comfortable Typography (Warm Silver & Slate, Never Harsh White Glare) */
-  --text-white: #dde5ec;
-  --text-primary: #c6d0dc;
-  --text-secondary: #8e9eaf;
-  --text-muted: #687787;
-  --text-dim: #8e9eaf;
+  /* Soft, Eye-Comfortable Typography (Warm Silver & Slate, Never Harsh Glare) */
+  --text-white: #e2e9f0;
+  --text-primary: #c8d2de;
+  --text-secondary: #909fae;
+  --text-muted: #6a7989;
+  --text-dim: #909fae;
 
-  /* Gentle Vintage Filament Accents (Warm, Muted, Never Neon Blinding) */
+  /* Gentle Vintage Filament Accents (Warm, Muted) */
   --btn-rust: #b84332;
   --btn-rust-bevel: #cc4f3d;
   --btn-rust-shadow: #5c1e14;
@@ -69,12 +68,12 @@
   --accent-cyan-subtle: rgba(98, 168, 168, 0.12);
   --crt-teal-bright: #72baba;
 
-  /* Dual Typography Stack */
+  /* Typography */
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Dimensions */
-  --max-width: 1180px;
+  /* Layout */
+  --max-width: 1140px;
   --page-pad: clamp(16px, 3.5vw, 36px);
 }
 
@@ -125,7 +124,7 @@ img {
 }
 
 /* ==========================================================================
-   Typography Hierarchy (Gentle, Restful Contrast, Easy on the Eyes)
+   Typography Hierarchy (Technical Document & Reference Style)
    ========================================================================== */
 
 h1, h2, h3, h4, h5, h6 {
@@ -138,24 +137,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: clamp(1.9rem, 3vw, 2.6rem);
-  margin-bottom: 0.4em;
+  font-size: clamp(1.85rem, 2.8vw, 2.45rem);
+  margin-bottom: 0.35em;
 }
 
 h2 {
-  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
-  margin-bottom: 0.5em;
+  font-size: clamp(1.3rem, 1.8vw, 1.65rem);
+  margin-bottom: 0.45em;
   border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 8px;
 }
 
 h3 {
-  font-size: 1.12rem;
-  margin-bottom: 0.4em;
+  font-size: 1.1rem;
+  margin-bottom: 0.35em;
 }
 
 p {
-  margin: 0 0 1.1em;
+  margin: 0 0 1em;
 }
 
 code {
@@ -178,7 +177,7 @@ code {
   top: -100px;
   left: 16px;
   z-index: 100;
-  background: var(--bg-card);
+  background: var(--bg-surface);
   color: var(--text-white);
   padding: 10px 18px;
   font-weight: 600;
@@ -201,9 +200,8 @@ code {
   border-bottom: 1px solid var(--border-base);
 }
 
-/* Telemetry Diagnostics Strip */
 .telemetry-ticker-bar {
-  background: #14181f;
+  background: #12161d;
   border-bottom: 1px solid var(--border-subtle);
   padding: 6px var(--page-pad);
   font-family: var(--font-mono);
@@ -253,7 +251,7 @@ code {
   background: var(--btn-rust);
 }
 
-/* Uncropped Demopack Banner Mounting */
+/* Demopack Banner Mount */
 .brand {
   display: block;
   width: 100%;
@@ -272,12 +270,12 @@ code {
   display: block;
 }
 
-/* Tactile Function-Key Navigation Deck */
+/* Function-Key Navigation Deck */
 .site-nav {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  background: #171d25;
+  background: #151a22;
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-base);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -306,14 +304,14 @@ code {
 }
 
 .site-nav a:hover {
-  background: var(--bg-card);
+  background: var(--bg-elevated);
   color: var(--text-white);
   border-color: var(--border-bright);
   text-decoration: none;
 }
 
 .site-nav a[aria-current=page] {
-  background: var(--bg-card);
+  background: var(--bg-elevated);
   color: var(--text-white);
   border-top: 2px solid var(--btn-rust);
   border-color: var(--border-bright);
@@ -331,23 +329,23 @@ code {
 }
 
 /* ==========================================================================
-   Hero Section: Balanced Split Grid (Comfortable Scale)
+   Hero Station: Integrated Workbench (No Floating Marketing Cards)
    ========================================================================== */
 
 .hero-station {
   width: min(var(--max-width), calc(100% - var(--page-pad) * 2));
-  margin: 26px auto 0;
+  margin: 24px auto 0;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 30px;
+  gap: 28px;
   align-items: center;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 880px) {
   .hero-station {
     grid-template-columns: 1fr;
-    gap: 22px;
-    margin-top: 18px;
+    gap: 20px;
+    margin-top: 16px;
   }
 }
 
@@ -361,7 +359,7 @@ code {
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--accent-amber);
@@ -370,7 +368,7 @@ code {
 }
 
 .hero-copy h1 {
-  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  font-size: clamp(1.85rem, 2.8vw, 2.45rem);
   font-weight: 800;
   line-height: 1.18;
   color: var(--text-white);
@@ -382,7 +380,7 @@ code {
 }
 
 .hero-lead {
-  font-size: 1.05rem;
+  font-size: 1.04rem;
   line-height: 1.6;
   color: var(--text-primary);
   margin-bottom: 1.2em;
@@ -392,50 +390,21 @@ code {
   color: var(--text-white);
 }
 
-/* Quick Specs Row */
-.hero-quick-specs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 1.3em;
-}
-
-.spec-pill {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  padding: 5px 11px;
-  border-radius: 2px;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-
-.spec-pill strong {
-  color: var(--text-white);
-  margin-right: 4px;
-}
-
-.spec-pill code {
-  color: var(--crt-teal-bright);
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
 /* Action Buttons */
 .hero-cta-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .btn {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 10px 18px;
+  padding: 9px 16px;
   border-radius: 2px;
   text-decoration: none;
   display: inline-flex;
@@ -448,7 +417,7 @@ code {
   background: linear-gradient(180deg, var(--btn-rust-bevel) 0%, var(--btn-rust) 100%);
   color: #ffffff;
   border: 1px solid var(--btn-rust-bevel);
-  box-shadow: 0 3px 0 var(--btn-rust-shadow), 0 3px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 0 var(--btn-rust-shadow), 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary:hover {
@@ -456,23 +425,17 @@ code {
   color: #ffffff;
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 4px 0 var(--btn-rust-shadow), 0 5px 12px rgba(0, 0, 0, 0.4);
-}
-
-.btn-primary:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 var(--btn-rust-shadow);
 }
 
 .btn-secondary {
   background: var(--bg-surface);
   color: var(--text-primary);
   border: 1px solid var(--border-bright);
-  box-shadow: 0 3px 0 #12161d, 0 3px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 0 #10141a;
 }
 
 .btn-secondary:hover {
-  background: var(--bg-card);
+  background: var(--bg-elevated);
   color: var(--text-white);
   border-color: var(--border-accent);
 }
@@ -490,7 +453,7 @@ code {
 }
 
 .hero-note {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   font-family: var(--font-mono);
   margin: 0;
@@ -500,9 +463,9 @@ code {
 .hero-media {
   background: var(--bg-deep);
   border: 1px solid var(--border-base);
-  border-radius: 3px;
+  border-radius: 2px;
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .hero-media img {
@@ -513,8 +476,8 @@ code {
 }
 
 .hero-media-bar {
-  padding: 7px 12px;
-  background: #151a22;
+  padding: 6px 12px;
+  background: #141820;
   border-top: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
   font-size: 0.74rem;
@@ -525,7 +488,7 @@ code {
 }
 
 /* ==========================================================================
-   Main Content Container & Modular Sections
+   Main Technical Container & Non-Card Technical Layouts
    ========================================================================== */
 
 .container {
@@ -534,7 +497,7 @@ code {
 }
 
 .section {
-  padding-block: 34px;
+  padding-block: 30px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -543,7 +506,7 @@ code {
 }
 
 .section-heading {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .section-heading .eyebrow {
@@ -554,78 +517,81 @@ code {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .section-heading h2 {
   border-bottom: none;
   padding-bottom: 0;
-  margin-bottom: 0.35em;
+  margin-bottom: 0.3em;
 }
 
 .section-heading p {
   color: var(--text-secondary);
   font-size: 0.98rem;
-  margin-bottom: 0.5em;
-  max-width: 860px;
+  margin-bottom: 0.4em;
+  max-width: 900px;
 }
 
-/* Feature Cards Grid */
-.cards {
+/* Technical Specification List (Replaces Generic Cards) */
+.spec-sheet {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
   margin-block: 16px;
 }
 
-.cards.col-2 {
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+@media (min-width: 768px) {
+  .spec-sheet.col-2 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-.panel {
-  background: var(--bg-card);
+.spec-entry {
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-top: 3px solid var(--border-bright);
-  padding: 18px 20px;
+  border-left: 3px solid var(--border-bright);
+  padding: 16px 20px;
   border-radius: 2px;
+}
+
+.spec-entry.accent-profile {
+  border-left-color: var(--btn-rust);
+}
+
+.spec-entry.accent-tool {
+  border-left-color: var(--accent-cyan);
+}
+
+.spec-entry.accent-setup {
+  border-left-color: var(--accent-amber);
+}
+
+.spec-meta {
   display: flex;
-  flex-direction: column;
-  transition: all 0.12s ease;
-}
-
-.panel:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-bright);
-  border-top-color: var(--accent-cyan);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-}
-
-.panel-number {
+  justify-content: space-between;
+  align-items: center;
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   font-weight: 700;
   color: var(--accent-amber);
-  letter-spacing: 0.06em;
-  margin-bottom: 6px;
-  display: block;
+  margin-bottom: 4px;
 }
 
-.panel h3 {
-  font-size: 1.1rem;
+.spec-entry h3 {
+  font-size: 1.08rem;
   color: var(--text-white);
-  margin-bottom: 0.35em;
+  margin-bottom: 0.3em;
 }
 
-.panel p {
+.spec-entry p {
   color: var(--text-secondary);
   font-size: 0.92rem;
   line-height: 1.55;
-  margin-bottom: 0.9em;
-  flex-grow: 1;
+  margin-bottom: 0.6em;
 }
 
-.panel code {
-  align-self: flex-start;
+.spec-entry code {
   font-size: 0.82rem;
 }
 
@@ -634,7 +600,7 @@ code {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.86rem;
-  margin-block: 16px 12px;
+  margin-block: 14px 10px;
   background: var(--bg-surface);
   border: 1px solid var(--border-base);
   border-radius: 2px;
@@ -642,14 +608,14 @@ code {
 }
 
 .data-matrix-table th {
-  background: #171d26;
+  background: #141922;
   color: var(--accent-amber);
   font-family: var(--font-mono);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-align: left;
-  padding: 10px 12px;
+  padding: 9px 12px;
   border: 1px solid var(--border-subtle);
   font-size: 0.74rem;
 }
@@ -683,7 +649,7 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #121720;
+  background: #10151d;
   border-bottom: 1px solid var(--border-subtle);
   padding: 8px 14px;
   font-family: var(--font-mono);
@@ -707,7 +673,7 @@ code {
 }
 
 .copy-btn {
-  background: var(--bg-card);
+  background: var(--bg-elevated);
   color: var(--text-primary);
   border: 1px solid var(--border-bright);
   padding: 4px 12px;
@@ -750,12 +716,12 @@ code {
 .syn-arg { color: #3fb07f; }
 .syn-comment { color: #687787; font-style: italic; }
 
-/* Image Placeholder Diagnostic Cards */
+/* Image Placeholder Diagnostic Cards (Minimal, Required by Tests) */
 .image-placeholder-card {
-  background: var(--bg-card);
+  background: var(--bg-surface);
   border: 1px dashed var(--border-bright);
   padding: 12px 16px;
-  margin: 16px 0;
+  margin: 14px 0;
   border-radius: 2px;
 }
 
@@ -802,21 +768,6 @@ code {
   user-select: all;
 }
 
-/* Numbered Steps List */
-ol.steps {
-  padding-left: 1.4em;
-  margin-block: 14px;
-}
-
-ol.steps li {
-  margin-bottom: 11px;
-  line-height: 1.58;
-}
-
-ol.steps strong {
-  color: var(--text-white);
-}
-
 /* Jump Navigation Table of Contents */
 nav.toc {
   display: flex;
@@ -830,7 +781,7 @@ nav.toc {
 }
 
 nav.toc a {
-  background: var(--bg-card);
+  background: var(--bg-elevated);
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   padding: 6px 12px;
@@ -843,7 +794,7 @@ nav.toc a {
 }
 
 nav.toc a:hover {
-  background: var(--bg-card-hover);
+  background: #343e4f;
   color: var(--text-white);
   border-color: var(--accent-cyan);
   text-decoration: none;
@@ -870,6 +821,21 @@ details.guide-detail[open] summary {
   color: var(--accent-amber);
 }
 
+/* Numbered Steps List */
+ol.steps {
+  padding-left: 1.4em;
+  margin-block: 12px;
+}
+
+ol.steps li {
+  margin-bottom: 10px;
+  line-height: 1.55;
+}
+
+ol.steps strong {
+  color: var(--text-white);
+}
+
 /* ==========================================================================
    Footer
    ========================================================================== */
@@ -877,10 +843,10 @@ details.guide-detail[open] summary {
 .site-footer {
   background: var(--bg-deep);
   border-top: 1px solid var(--border-base);
-  padding: 34px 0 22px;
+  padding: 32px 0 20px;
   color: var(--text-muted);
   font-size: 0.86rem;
-  margin-top: 36px;
+  margin-top: 32px;
 }
 
 .footer-inner {
@@ -940,7 +906,7 @@ details.guide-detail[open] summary {
 
 .footer-bottom {
   border-top: 1px solid var(--border-subtle);
-  margin-top: 22px;
+  margin-top: 20px;
   padding-top: 12px;
   display: flex;
   flex-wrap: wrap;
