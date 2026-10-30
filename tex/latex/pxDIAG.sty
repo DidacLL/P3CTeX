@@ -1,0 +1,12 @@
+% Descriptive entry point for the established pxCMP diagram engine.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pxDIAG}[2026/10/30 P3CTeX diagram tools]
+\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{pxCMP}}
+\ProcessOptions\relax
+\RequirePackage{pxCMP}
+\NewCommandCopy\pxDiagramSetup\pxCMPsetup
+\NewCommandCopy\pxDiagramSavePreset\pxCMPsavepreset
+\NewCommandCopy\pxDiagramUsePreset\pxCMPusepreset
+\NewDocumentEnvironment{pxDiagram}{O{} +b}
+  {\begin{pxCMPDiagram}[#1]#2\end{pxCMPDiagram}}{}
+\endinput

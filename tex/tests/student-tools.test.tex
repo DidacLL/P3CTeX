@@ -1,0 +1,30 @@
+\documentclass[EN,code,calculations,diagrams,requirements,images]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\begin{document}
+\section*{Reusable tools}
+\pxDefVar{m}{1200}\pxDefVar{v}{25}
+\pxDefFormula{energy}{\frac{1}{2}[m][v]^2}[symbol=E_k,unit=J]
+\pxSolve{energy}\par
+\pxSolve[values={v=30},steps=2]{energy}
+\begin{pxUserStory}{US-102: Reuse a calculation}
+\pxAsA{student}
+\pxIWant{to change input values without copying the formula}
+\pxSoThat{the displayed working stays consistent}
+\pxAcceptanceCriteria{\begin{itemize}\item Show the substituted values.
+\item Preserve the original defaults.\end{itemize}}
+\end{pxUserStory}
+\begin{pxScenario}[colback=green!4]{Override one value}
+\pxGiven{a speed of 25 metres per second}
+\pxWhen{I solve with a speed of 30}
+\pxThen{the displayed result is 540\,000 joules}
+\end{pxScenario}
+\pxREQsetup{labels={strengths=Fortaleses,weaknesses=Debilitats}}
+\pxSWOT{\begin{itemize}\item Reusable formulas\item Local configuration\end{itemize}}
+  {Explicit supported syntax}{Student lab reports}{Incorrect input data}
+\pxTransitionTable[title={Existing partition support}]{a,b}{
+  q_0 / initial / q_1,q_0 / I;
+  q_1 / accepting / q_1,q_0 / II}
+\pxSRCsetup{default-width=.35\linewidth}
+\pxIMG{missing-asset}{Existing missing-image placeholder}
+\pxPageRule
+\end{document}

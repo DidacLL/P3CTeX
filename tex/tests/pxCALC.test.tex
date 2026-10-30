@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{pxCALC}
+\newcommand\AssertResult[2]{\ifdim #1pt=#2pt\else
+  \PackageError{pxCALC-test}{Expected #2, got #1}{}\fi}
+\pxDefVar{m}{1200}[m]
+\pxDefVar{v}{25}[v]
+\pxDefFormula{Ek}{\frac{1}{2}[m][v]^2}[symbol=E_k,unit=J,prec=2]
+\pxDefFormula{nested}{\sqrt{\frac{[v]^2}{25}}}[symbol=N]
+\pxDefFormula{chain}{[nested]+1}[symbol=C]
+\begin{document}
+\pxCalcStore{Ek}{\result}
+% Divide the physical result to stay within TeX's dimension limit.
+\edef\scaled{\fpeval{\result/1000}}
+\AssertResult{\scaled}{375}
+\pxSolve{Ek}\par
+\pxSolve[values={m=800,v=40}]{Ek}\par
+\pxCalcStore[values={m=800,v=40}]{Ek}{\result}
+\edef\scaled{\fpeval{\result/1000}}
+\AssertResult{\scaled}{640}
+\pxCalcStore{Ek}{\result}
+\edef\scaled{\fpeval{\result/1000}}
+\AssertResult{\scaled}{375}
+\pxCalcStore{chain}{\result}\AssertResult{\result}{6}
+\pxSolve{nested}\par
+\pxSetVar{v}{-10}
+\pxCalcStore{chain}{\result}\AssertResult{\result}{3}
+\pxSolve[steps=1]{Ek}\par
+\pxSolve[steps=2]{Ek}\par
+\pxCalc{\sqrt{\frac{81}{9}}}\par
+% Error paths must terminate and identify the problem; warnings are local to this test.
+\begingroup
+\ExplSyntaxOn
+\msg_redirect_name:nnn {pxCALC}{unknown}{warning}
+\msg_redirect_name:nnn {pxCALC}{cycle}{warning}
+\ExplSyntaxOff
+\pxDefFormula{missing}{[undefined]+1}
+\pxCalcStore{missing}{\result}
+\ifnum\pdfstrcmp{\result}{nan}=0\else
+  \PackageError{pxCALC-test}{Missing variable did not produce nan}{}\fi
+\pxDefFormula{loopA}{[loopB]+1}
+\pxDefFormula{loopB}{[loopA]+1}
+\pxCalcStore{loopA}{\result}
+\ifnum\pdfstrcmp{\result}{nan}=0\else
+  \PackageError{pxCALC-test}{Dependency cycle did not produce nan}{}\fi
+\endgroup
+\typeout{PXCALC-PASS: values, overrides, scope, nested math and formula chaining}
+\end{document}

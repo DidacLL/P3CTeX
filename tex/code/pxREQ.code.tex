@@ -1,0 +1,31 @@
+\ProvidesExplFile{pxREQ.code.tex}{2026/10/30}{0.1}{Requirements implementation}
+\providecolor{primaryColor}{rgb}{0,0,.47}
+\prop_new:N \l__pxreq_labels_prop
+\prop_set_from_keyval:Nn \l__pxreq_labels_prop
+  {story=User~story,scenario=Scenario,as-a=As~a,i-want=I~want,
+   so-that=So~that,acceptance=Acceptance~criteria,given=Given,when=When,
+   then=Then,strengths=Strengths,weaknesses=Weaknesses,
+   opportunities=Opportunities,threats=Threats}
+\tl_new:N \l__pxreq_box_options_tl
+\keys_define:nn {pxREQ}
+  {box-options .tl_set:N = \l__pxreq_box_options_tl,
+   labels .code:n = {\prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+     \prop_map_inline:Nn \l_tmpa_prop {\prop_put:Nnn \l__pxreq_labels_prop {##1}{##2}}}}
+\cs_new:Npn \__pxreq_label:n #1 {\prop_item:Nn \l__pxreq_labels_prop {#1}}
+\tcbset{pxreq/.style={enhanced,breakable,colback=primaryColor!3,
+  colframe=primaryColor,arc=1mm,fonttitle=\bfseries}}
+\cs_new_protected:Npn \__pxreq_begin:nnn #1#2#3
+  {\tcbset{pxreq}
+   \exp_args:NV \tcbset \l__pxreq_box_options_tl
+   \begin{tcolorbox}[title={\__pxreq_label:n {#1}:~#3},#2]}
+\cs_new_protected:Npn \__pxreq_field:nn #1#2
+  {\par\noindent\textbf{\__pxreq_label:n {#1}:}~#2\par}
+\cs_new_protected:Npn \__pxreq_swot:nnnnn #1#2#3#4#5
+  {\pxTable[style=grid,width=natural,
+    colspec={p{\dim_eval:n {.5\linewidth-2\tabcolsep-1.5\arrayrulewidth}}
+             p{\dim_eval:n {.5\linewidth-2\tabcolsep-1.5\arrayrulewidth}}},#1]
+    {{\textbf{\__pxreq_label:n {strengths}}},{\textbf{\__pxreq_label:n {weaknesses}}}}
+    {{#2},{#3}}
+    {{\textbf{\__pxreq_label:n {opportunities}}},{\textbf{\__pxreq_label:n {threats}}}}
+    {{#4},{#5}}}
+\endinput

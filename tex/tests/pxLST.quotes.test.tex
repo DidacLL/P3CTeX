@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{pxLST}
+\newcount\sentinels
+\newcommand\CountSentinel{\global\advance\sentinels by 1\color{pxkeyword}}
+\lstdefinestyle{quote-probe}{morekeywords=[5]{AFTER},keywordstyle=[5]\CountSentinel}
+\newcount\rangelines
+\newcommand\CountRange{\global\advance\rangelines by 1\color{pxfg}}
+\newcommand\RangeFailure{\PackageError{pxLST-test}{Printed a line outside the requested range}{}}
+\lstdefinelanguage{pxRangeProbe}{morekeywords=[5]{KEPT},keywordstyle=[5]\CountRange,
+  morekeywords=[4]{DROPPED},keywordstyle=[4]\RangeFailure}
+\begin{document}
+% Begin with another language: the local language must not retain its quotes.
+\pxLSTsetup{pxJava}
+\begin{pxCode}[language=pxJLex,style=quote-probe]{Long strings and parameters}
+<YYINITIAL>"'''" { yybegin(LONG_STRING); } AFTER
+<LONG_STRING>"'''" { yybegin(YYINITIAL); } AFTER
+<LONG_STRING>"$"[a-zA-Z_][a-zA-Z0-9_]* { Eval.emitParameter(yytext()); } AFTER
+<LONG_STRING>[^'$]+ { /* ignore text */ } AFTER
+<LONG_STRING>"'" { /* ignore quote */ } AFTER
+<LONG_STRING>"$" { /* ignore dollar */ } AFTER
+<LONG_STRING>"\"" { /* escaped double quote */ } AFTER
+<LONG_STRING>"\$" { /* escaped dollar */ } AFTER
+<LONG_STRING>"\\" { /* escaped backslash */ } AFTER
+\end{pxCode}
+\ifnum\sentinels=9\else
+  \PackageError{pxLST-test}{String state leaked: expected 9 keywords, got \the\sentinels}{}
+\fi
+\begin{pxTerminal}{Literal shell transcript}
+$ printf '%s\n' "$HOME" '100%'
+/home/student
+# echo '$not_math' "quoted"
+\end{pxTerminal}
+\pxCodeChunk[pxJava]{sample.java}{2}{4}{Lines 2--4}
+\pxCodeChunk[pxRangeProbe]{sample-range.txt}{2}{3}{Range assertion}
+\ifnum\rangelines=2\else
+  \PackageError{pxLST-test}{Expected exactly two source lines}{}\fi
+\pxCodeIn[pxBash]{echo '$HOME'}
+\pxCodeIn[pxBash]|printf '%s' "$HOME" # comment|
+\typeout{PXLST-PASS: 9 post-string keywords recognised}
+\end{document}

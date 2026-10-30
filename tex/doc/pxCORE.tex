@@ -42,6 +42,19 @@ In standalone documents, load \texttt{pxCORE} as a normal package:
 In P3CTeX-based workflows, \texttt{pxCORE} is normally loaded by the
 document class (\texttt{P3CTeX.cls}) and configured via class options.
 
+\section{Readable tool selection}
+\begin{verbatim}
+\usepackage[code,images,tables,diagrams,calculations,requirements]{pxCORE}
+\end{verbatim}
+The keywords \texttt{code}, \texttt{images}, \texttt{tables} and
+\texttt{diagrams} select the existing LST, SRC, TAB and CMP tools.
+\texttt{diagrams-config} forwards diagram options, just like \texttt{CMPconfig}.
+\texttt{calculations} (or \texttt{CALC}) loads \texttt{pxCALC};
+\texttt{requirements} (or \texttt{REQ}) loads \texttt{pxREQ}.
+The diagram entry point \texttt{pxDIAG} delegates to \texttt{pxCMP}.
+All selection keys accept \texttt{=false}; a bare keyword means true.
+See the student-tools guide for examples and customisation.
+
 \section{Key family \texttt{pxCORE}}
 
 The \texttt{pxCORE} key family controls which libraries are activated and

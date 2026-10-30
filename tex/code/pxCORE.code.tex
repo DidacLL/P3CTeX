@@ -34,6 +34,27 @@
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
+    calculations .bool_set:N = \l_pxcore_calc_use_bool,
+    calculations .initial:n = false,
+    calculations .default:n = true,
+    CALC .meta:n = {calculations=#1},
+    CALC .default:n = true,
+    diagrams .meta:n = {CMP=#1},
+    diagrams .default:n = true,
+    DIAG .meta:n = {CMP=#1},
+    DIAG .default:n = true,
+    diagrams-config .meta:n = {CMPconfig={#1}},
+    code .meta:n = {LST=#1},
+    code .default:n = true,
+    images .meta:n = {SRC=#1},
+    images .default:n = true,
+    tables .meta:n = {TAB=#1},
+    tables .default:n = true,
+    requirements .bool_set:N = \l_pxcore_req_use_bool,
+    requirements .initial:n = false,
+    requirements .default:n = true,
+    REQ .meta:n = {requirements=#1},
+    REQ .default:n = true,
 	debug		.bool_set:N 	= \l_pxcore_debug_bool,
 		debug		.initial:n	= false,
 		debug		.default:n	= true,
@@ -127,8 +148,8 @@
 \bool_if:NT \l_pxcore_cmp_use_bool
 	{
 		\tl_if_blank:VTF \l_pxcore_cmp_config_tl
-			{ \RequirePackage{pxCMP} }
-			{ \RequirePackage[\l_pxcore_cmp_config_tl]{pxCMP} }
+			{ \RequirePackage{pxDIAG} }
+			{ \RequirePackage[\l_pxcore_cmp_config_tl]{pxDIAG} }
 	}
 \bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
 \bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
@@ -139,4 +160,6 @@
 
 
 
+\bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
+\bool_if:NT \l_pxcore_req_use_bool { \RequirePackage{pxREQ} }
 \endinput

@@ -1,0 +1,93 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=22mm]{geometry}
+\usepackage[code,calculations,diagrams,requirements]{pxCORE}
+\title{P3CTeX: reusable student tools}
+\author{P3CTeX}
+\date{Development guide, October 2026}
+\begin{document}
+\maketitle
+\section{Choose the tools you need}
+\begin{verbatim}
+\documentclass[code,images,tables,diagrams,
+               calculations,requirements]{P3CTeX}
+\end{verbatim}
+Existing module options remain supported. The diagram entry point
+\texttt{pxDIAG} uses the established \texttt{pxCMP} engine and presets.
+The new calculation package is \texttt{pxCALC}. Package names do not
+dictate the keywords used to load tools.
+
+\section{Write a formula once}
+\begin{verbatim}
+\pxDefVar{m}{1200}[m]
+\pxDefVar{v}{25}[v]
+\pxDefFormula{Ek}{\frac{1}{2}[m][v]^2}
+  [symbol=E_k,unit=J]
+\pxSolve{Ek}
+\pxSolve[values={m=800,v=40}]{Ek}
+\end{verbatim}
+\pxDefVar{m}{1200}[m]
+\pxDefVar{v}{25}[v]
+\pxDefFormula{Ek}{\frac{1}{2}[m][v]^2}[symbol=E_k,unit=J]
+\[\pxSolve{Ek}\]
+\[\pxSolve[values={m=800,v=40}]{Ek}\]
+The override is local. The next call still uses the original values.
+\texttt{steps=1} prints the result; \texttt{steps=2} also prints the formula;
+\texttt{steps=3} also prints substituted values. Settings can be supplied
+with \verb|\pxCalcSetup|, with a formula, or for one call.
+
+\verb|\pxCalcStore{Ek}{\energy}| saves the unrounded number for reuse.
+\verb|\pxSetVar{v}{30}| changes the value in the current TeX group.
+\verb|\pxCalc{sin(pi/2)}| evaluates a numerical expression directly.
+Units format results; they do not convert values. Divide joules by 1000
+before labelling the result as kilojoules.
+
+\section{Verbatim terminal and source ranges}
+\begin{pxTerminal}{Shell session}
+$ printf '%s\n' "$HOME" '100%'
+/home/student
+100%
+\end{pxTerminal}
+\begin{verbatim}
+\begin{pxTerminal}{Shell session}
+$ printf '%s\n' "$HOME" '100%'
+/home/student
+100%
+\end{pxTerminal}
+\pxCodeIn[pxBash]|echo "$HOME" # literal code|
+\pxCodeChunk[pxJava]{Main.java}{12}{20}{Validation}
+\end{verbatim}
+Terminal options use listings keys, like \texttt{pxCode}. Palettes and
+language definitions remain customisable through the existing listing API.
+Inline verbatim must be outside other commands' arguments.
+
+\section{Requirements and analysis}
+\begin{pxUserStory}{US-102: Reuse calculations}
+\pxAsA{student}
+\pxIWant{to change inputs without copying the formula}
+\pxSoThat{the displayed working stays consistent}
+\pxAcceptanceCriteria{Show substitutions and preserve the defaults.}
+\end{pxUserStory}
+\begin{pxScenario}{Change one input}
+\pxGiven{a speed of 25 metres per second}
+\pxWhen{I solve with a speed of 30}
+\pxThen{the result is 540\,000 joules}
+\end{pxScenario}
+\pxSWOT{Reusable formulas}{Explicit supported syntax}
+  {Student laboratory reports}{Incorrect input data}
+
+Cards accept normal \texttt{tcolorbox} options; their labels are editable
+with \verb|\pxREQsetup{labels={as-a=Com a,i-want=Vull}}|.
+The SWOT grid reuses \texttt{pxTAB}; its optional argument accepts table
+options, including an explicit column specification.
+
+\section{Reuse the existing environment}
+Safe images, placeholders and image lists already belong to \texttt{pxSRC}.
+Transition tables already include partition labels in \texttt{pxCMP}.
+Use \texttt{pxMEM} for report annexes and the class for cover metadata and
+authorship declarations. These tools do not introduce replacement systems.
+
+The companion \texttt{student-tools.md} gives the complete syntax limits,
+customisation keys and migration details.
+\end{document}

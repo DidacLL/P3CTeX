@@ -1,0 +1,134 @@
+% Named values and formula templates. No regex conversion of mathematical syntax:
+% regex only recognises flat [name] slots; TeX itself reads nested macro arguments.
+\ProvidesExplFile{pxCALC.code.tex}{2026/10/30}{0.1}{Calculation implementation}
+\prop_new:N \l__pxcalc_values_prop
+\prop_new:N \l__pxcalc_formulas_prop
+\prop_new:N \l__pxcalc_symbols_prop
+\prop_new:N \l__pxcalc_options_prop
+\seq_new:N \l__pxcalc_stack_seq
+\seq_new:N \l__pxcalc_match_seq
+\tl_new:N \l__pxcalc_work_tl
+\tl_new:N \l__pxcalc_slot_tl
+\tl_new:N \l__pxcalc_value_tl
+\tl_new:N \l__pxcalc_result_tl
+\tl_new:N \l__pxcalc_symbolic_tl
+\tl_new:N \l__pxcalc_numeric_tl
+\tl_new:N \l__pxcalc_symbol_tl
+\tl_new:N \l__pxcalc_unit_tl
+\int_new:N \l__pxcalc_precision_int
+\int_new:N \l__pxcalc_steps_int
+\msg_new:nnn {pxCALC}{unknown}{Unknown~calculation~name~'#1'.~Define~it~before~use.}
+\msg_new:nnn {pxCALC}{cycle}{Cyclic~formula~dependency~at~'#1'.}
+\msg_new:nnn {pxCALC}{name}{Invalid~name~'#1'.~Use~a~letter~followed~by~letters,~digits,~underscores~or~hyphens.}
+\cs_generate_variant:Nn \regex_extract_once:nnNTF {nVNTF}
+\cs_generate_variant:Nn \tl_replace_all:Nnn {Nxx}
+\cs_generate_variant:Nn \prop_get:NnNTF {NVNTF}
+\keys_define:nn {pxCALC}
+  {
+    prec .int_set:N = \l__pxcalc_precision_int,
+    prec .initial:n = 2,
+    steps .choice:,
+    steps / 1 .code:n = {\int_set:Nn \l__pxcalc_steps_int {1}},
+    steps / 2 .code:n = {\int_set:Nn \l__pxcalc_steps_int {2}},
+    steps / 3 .code:n = {\int_set:Nn \l__pxcalc_steps_int {3}},
+    steps .initial:n = 3,
+    unit .tl_set:N = \l__pxcalc_unit_tl,
+    symbol .tl_set:N = \l__pxcalc_symbol_tl,
+    values .code:n = {\keyval_parse:NNn \__pxcalc_missing:n \__pxcalc_set:nn {#1}}
+  }
+\cs_new_protected:Npn \__pxcalc_missing:n #1
+  {\msg_error:nnn {pxCALC}{unknown}{#1}}
+\prg_new_conditional:Npnn \__pxcalc_name:n #1 {T}
+  {\regex_match:nnTF {\A [A-Za-z][A-Za-z0-9_\-]* \Z}{#1}
+    {\prg_return_true:}
+    {\msg_error:nnn {pxCALC}{name}{#1}\prg_return_false:}}
+\cs_new_protected:Npn \__pxcalc_var:nnn #1#2#3
+  {\__pxcalc_name:nT {#1}{
+    \__pxcalc_eval:nN {#2}\l__pxcalc_result_tl
+    \prop_put:NnV \l__pxcalc_values_prop {#1}\l__pxcalc_result_tl
+    \prop_remove:Nn \l__pxcalc_formulas_prop {#1}
+    \prop_put:Nnn \l__pxcalc_symbols_prop {#1}{#3}}}
+\cs_new_protected:Npn \__pxcalc_set:nn #1#2
+  {\prop_if_in:NnTF \l__pxcalc_values_prop {#1}
+    {\__pxcalc_eval:nN {#2}\l__pxcalc_result_tl
+     \prop_put:NnV \l__pxcalc_values_prop {#1}\l__pxcalc_result_tl}
+    {\msg_error:nnn {pxCALC}{unknown}{#1}}}
+\cs_new_protected:Npn \__pxcalc_formula:nnn #1#2#3
+  {\__pxcalc_name:nT {#1}{
+    \prop_put:Nnn \l__pxcalc_formulas_prop {#1}{#2}
+    \prop_remove:Nn \l__pxcalc_values_prop {#1}
+    \prop_put:Nnn \l__pxcalc_options_prop {#1}{#3}
+    \group_begin:
+      \tl_set:Nn \l__pxcalc_symbol_tl {#1}
+      \keys_set:nn {pxCALC}{#3}
+      \exp_args:NNNV \group_end: \tl_set:Nn \l__pxcalc_symbol_tl \l__pxcalc_symbol_tl
+    \prop_put:NnV \l__pxcalc_symbols_prop {#1}\l__pxcalc_symbol_tl}}
+% Result is returned across one local group; recursive calls cannot clobber
+% the parent's expression, slot, or cycle-detection stack.
+\cs_new_protected:Npn \__pxcalc_resolve:nN #1#2
+  {\group_begin:
+    \seq_if_in:NnTF \l__pxcalc_stack_seq {#1}
+      {\msg_error:nnn {pxCALC}{cycle}{#1}\tl_set:Nn \l__pxcalc_result_tl {nan}}
+      {\seq_put_right:Nn \l__pxcalc_stack_seq {#1}
+       \prop_get:NnNTF \l__pxcalc_values_prop {#1}\l__pxcalc_result_tl {}
+         {\prop_get:NnNTF \l__pxcalc_formulas_prop {#1}\l__pxcalc_work_tl
+           {\exp_args:NV \__pxcalc_eval:nN \l__pxcalc_work_tl \l__pxcalc_result_tl}
+           {\msg_error:nnn {pxCALC}{unknown}{#1}\tl_set:Nn \l__pxcalc_result_tl {nan}}}}
+    \exp_args:NNNV \group_end: \tl_set:Nn #2 \l__pxcalc_result_tl}
+\cs_new_protected:Npn \__pxcalc_slots:Nn #1#2
+  {\regex_extract_once:nVNTF {\[([A-Za-z][A-Za-z0-9_\-]*)\]} #1 \l__pxcalc_match_seq
+    {\tl_set:Nx \l__pxcalc_slot_tl {\seq_item:Nn \l__pxcalc_match_seq {2}}
+     \str_if_eq:nnTF {#2}{symbol}
+       {\prop_get:NVNTF \l__pxcalc_symbols_prop \l__pxcalc_slot_tl \l__pxcalc_value_tl {}
+         {\msg_error:nnx {pxCALC}{unknown}{\l__pxcalc_slot_tl}
+          \tl_set:Nn \l__pxcalc_value_tl {?}}}
+       {\exp_args:NV \__pxcalc_resolve:nN \l__pxcalc_slot_tl \l__pxcalc_value_tl
+        \tl_set:Nx \l__pxcalc_value_tl {(\l__pxcalc_value_tl)}}
+     \regex_replace_all:nnN {\[\u{l__pxcalc_slot_tl}\]} {\u{l__pxcalc_value_tl}} #1
+     \__pxcalc_slots:Nn #1{#2}}{}}
+\cs_new_protected:Npn \__pxcalc_eval:nN #1#2
+  {\group_begin:
+    \tl_set:Nn \l__pxcalc_work_tl {#1}
+    \__pxcalc_slots:Nn \l__pxcalc_work_tl {number}
+    % These bindings apply only during numeric expansion, never during printing.
+    \cs_set:Npn \frac ##1##2 {((##1)/(##2))}
+    \cs_set:Npn \sqrt ##1 {sqrt(##1)}
+    \cs_set:Npn \cdot {*}
+    \cs_set:Npn \times {*}
+    \cs_set:Npn \pi {pi}
+    \tl_if_in:VnTF \l__pxcalc_work_tl {nan}
+      {\tl_set:Nn \l__pxcalc_result_tl {nan}}
+      {\tl_set:Nx \l__pxcalc_result_tl {\fp_eval:n {\l__pxcalc_work_tl}}}
+    \exp_args:NNNV \group_end: \tl_set:Nn #2 \l__pxcalc_result_tl}
+\cs_new_protected:Npn \__pxcalc_prepare:nn #1#2
+  {\seq_clear:N \l__pxcalc_stack_seq
+   \prop_get:NnNT \l__pxcalc_symbols_prop {#2}\l__pxcalc_symbol_tl {}
+   \prop_get:NnNT \l__pxcalc_options_prop {#2}\l_tmpa_tl
+     {\exp_args:NnV \keys_set:nn {pxCALC}\l_tmpa_tl}
+   \keys_set:nn {pxCALC}{#1}
+   \__pxcalc_resolve:nN {#2}\l__pxcalc_result_tl}
+\cs_new_protected:Npn \__pxcalc_print_result:
+  {\tl_set:Nx \l_tmpa_tl {\fp_eval:n {round(\l__pxcalc_result_tl,\l__pxcalc_precision_int)}}
+   \tl_if_blank:VTF \l__pxcalc_unit_tl
+     {\exp_args:NV \num \l_tmpa_tl}
+     {\exp_args:NVV \qty \l_tmpa_tl \l__pxcalc_unit_tl}}
+\cs_new_protected:Npn \__pxcalc_solve:nn #1#2
+  {\group_begin:
+    \__pxcalc_prepare:nn {#1}{#2}
+    \ensuremath{
+      \l__pxcalc_symbol_tl =
+      \prop_get:NnNT \l__pxcalc_formulas_prop {#2}\l__pxcalc_symbolic_tl
+        {\tl_set_eq:NN \l__pxcalc_numeric_tl \l__pxcalc_symbolic_tl
+         \int_compare:nNnT {\l__pxcalc_steps_int}>{1}
+           {\__pxcalc_slots:Nn \l__pxcalc_symbolic_tl {symbol}
+            \l__pxcalc_symbolic_tl =}
+         \int_compare:nNnT {\l__pxcalc_steps_int}>{2}
+           {\__pxcalc_slots:Nn \l__pxcalc_numeric_tl {number}
+            \l__pxcalc_numeric_tl =}}
+      \__pxcalc_print_result:}
+    \group_end:}
+\cs_new_protected:Npn \__pxcalc_store:nnN #1#2#3
+  {\group_begin:
+    \__pxcalc_prepare:nn {#1}{#2}
+    \exp_args:NNNV \group_end: \cs_set:Npn #3\l__pxcalc_result_tl}
+\endinput

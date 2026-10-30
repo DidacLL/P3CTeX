@@ -1,0 +1,28 @@
+# Source inclusion, glossaries and annexes
+
+Status: requirements and existing implementation audit; implementation pending.
+
+Owner request (2026-10-30): pxSRC must load files and fragments as P3CTeX-styled code, native TeX, minipages and annex content. Glossaries, references and annexes must integrate consciously and be optional in PAC, PR and MEM documents. Work directly on the development branch and checkpoint in Git regularly.
+
+## Existing foundation
+
+- pxSRC owns images, placeholders, image lists and source configuration.
+- pxLST owns syntax-highlighted inline, block and external-file code, including line slices.
+- pxMEM currently couples tagged TeX extraction to the memory module. It registers source files, extracts `%<*region>` / `%</region>` using fancyvrb, and prepends source-relative input and graphics search paths.
+- pxMEM annexes switch chapter numbering globally through appendix; this must not be imposed on PAC documents.
+- The class glossary key loads glossaries and uses the no-index backend. It currently prints both acronym and term lists automatically at document end with hard-coded Catalan titles. Explicit placement and independent enable/print controls are missing.
+- Bibliography keys in P3CTeX.code.tex are commented out. Native LaTeX citation commands remain available; do not pretend an integrated bibliography API already exists.
+
+## Design work to complete
+
+1. Separate source selection (whole file, named region, line range) from rendering (native, code, minipage) and placement (here, queued annex). Keep file paths relative to the included source, and diagnose unknown IDs, absent files and absent/ambiguous regions.
+2. Reuse pxLST rendering and migrate/generalise the existing tagged extraction rather than introducing a competing implementation. Keep pxMEMsource/include as compatibility entry points.
+3. Define what propagates: native TeX executes labels, citations and glossary uses normally; verbatim code must never execute embedded commands. Source metadata can explicitly associate citations/glossary entries with a code excerpt.
+4. Introduce optional annex registration and explicit printing, with deterministic order, titles, labels and stable hyperref anchors, without globally switching subsequent main-body numbering. Respect chapter versus section structure and allow use in PAC, PR and MEM.
+5. Split glossary declaration/use from printing. Support explicit placement and optional automatic printing; use only entries actually referenced unless the author explicitly asks for all. Preserve the existing glossary class option as a compatibility profile.
+6. Make bibliography backend ownership explicit, avoiding forced replacement of a document's existing biblatex/BibTeX setup. Define source citation metadata and document the bibliography commands it relies upon.
+7. Test nested source-relative assets, fragment selection, missing/duplicate markers, literal special characters, code/non-execution, glossary first-use and list inclusion, citations, cross-references and annex numbering in PAC/PR/MEM. Compile multi-pass examples and inspect their output.
+
+## Checkpoint discipline
+
+Current student-tools work and pre-existing development edits must be committed before starting this extension. Keep this file current with completed steps, decisions, test outcomes and remaining work at each subsequent commit. Do not publish or bump VERSION as part of this work.

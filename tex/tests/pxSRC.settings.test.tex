@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage[default-width=.9\linewidth]{pxSRC}
+\begin{document}
+\pxSRCsetup{default-width=.6\linewidth}
+\ExplSyntaxOn
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.6\linewidth}
+  {\PackageError{pxSRC-test}{Setup was overwritten by package options}{}}
+\ExplSyntaxOff
+\begingroup
+\pxDEFimagewidth{.3\linewidth}
+\pxDEFimagepairwidth{.2\linewidth}
+\pxDEFimageplaceholdercolor{blue}
+\pxDEFimageposition{htbp}
+\pxDEFimagepairgap{2em}
+\pxDEFimagelabelprefix{capture:}
+\ExplSyntaxOn
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.3\linewidth}
+  {\PackageError{pxSRC-test}{Width setter ignored its argument}{}}
+\dim_compare:nNnF {\l__pxsrc_pair_width_tl} = {.2\linewidth}
+  {\PackageError{pxSRC-test}{Pair width setter ignored its argument}{}}
+\dim_compare:nNnF {\l__pxsrc_pair_gap_tl} = {2em}
+  {\PackageError{pxSRC-test}{Gap setter ignored its argument}{}}
+\str_if_eq:eeF {\l__pxsrc_placeholder_color_tl}{blue}
+  {\PackageError{pxSRC-test}{Colour setter ignored its argument}{}}
+\str_if_eq:eeF {\l__pxsrc_float_spec_tl}{htbp}
+  {\PackageError{pxSRC-test}{Position setter ignored its argument}{}}
+\str_if_eq:eeF {\l__pxsrc_label_prefix_tl}{capture:}
+  {\PackageError{pxSRC-test}{Label setter ignored its argument}{}}
+\ExplSyntaxOff
+\pxIMG{missing-figure}{Scoped placeholder}
+\endgroup
+\ExplSyntaxOn
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.6\linewidth}
+  {\PackageError{pxSRC-test}{Width leaked out of its group}{}}
+\ExplSyntaxOff
+\typeout{PXSRC-PASS: setters, setup precedence and grouping}
+\end{document}

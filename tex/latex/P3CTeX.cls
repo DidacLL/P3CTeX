@@ -41,6 +41,7 @@
 }
 
 \LoadClass{article} % Base class
+\RequirePackage{amsmath} % Load before arev to keep integral definitions compatible.
 \RequirePackage{arev} % Fonts
 \file_input:n {P3CTeX.code.tex} % Input expl3 code
 %% =================================
@@ -122,7 +123,7 @@
 %% * - select the thick rule variant.
 \NewDocumentCommand{\pxPageRule}{s}{
 	\IfBooleanTF{#1}{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
-		{\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\}
+		{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
 }
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
@@ -162,36 +163,13 @@
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }
-
-%% =================================
-%% ===== STANDARD UOC SHORTHANDS ===
-%% =================================
-%% Built-in list, typography, table and bibliography helpers used across UOC PAC/PEC preambles.
-\ExplSyntaxOff
-\providecommand{\textbc}[1]{\textbf{\textcolor{primaryColor}{#1}}}
-\def\itembf#1:{\item\textbf{#1:} }
-\def\subitembf#1:{\subitem\textbf{#1:} }
-\def\subsubitembf#1:{\subsubitem\textbf{#1:} }
-\def\itembc#1:{\item\textbc{#1:} }
-\def\subitembc#1:{\subitem\textbc{#1:} }
-\def\subsubitembc#1:{\subsubitem\textbc{#1:} }
-\def\BOX#1:#2;{\parbox[c]{#1\linewidth}{#2}}
-\def\itemT#1:#2;{\item\textbf{#1:}\subitem \BOX.8:#2;}
-\providecommand{\FL}{\hspace*{\fill}}
-\providecommand{\REF}[1]{$^\text{\textcolor{gray}{\small Pàg[\pageref{#1}]}}$}
-\providecommand{\EXPAND}[1]{\resizebox{\linewidth}{!}{#1}}
-\providecommand{\adjH}{\rule[1ex]{0pt}{3ex}}
-\providecommand{\headRow}{\rowcolor{secondaryColor}\adjH}
-\providecommand{\oddRow}{\rowcolor{secondaryColor!20!}\adjH}
-
-%% \pxBib[<style>]{<bibfile>} or \pxBib[<style>][<bibfile>]
-%% Print bibliography on a new page and register it in the TOC.
-\NewDocumentCommand{\pxBib}{ O{apalike} g O{../references} }{%
-	\newpage
-	\nocite{*}%
-	\addcontentsline{toc}{section}{Referències}%
-	\bibliographystyle{#1}%
-	\IfNoValueTF{#2}{\bibliography{#3}}{\bibliography{#2}}%
-}
-\ExplSyntaxOn
+%\makeatletter
+%\def\pxBib#1{
+%	\newpage
+%	\nocite{*}
+%	\addcontentsline{toc}{section}{Referències}
+%	\bibliographystyle{abbrvnat}
+%	\bibliography{ #1 }
+%}
+%\makeatother
 \endinput

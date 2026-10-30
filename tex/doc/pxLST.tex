@@ -214,4 +214,19 @@ L'\`alies \texttt{\textbackslash pxLSTinput} i la comanda \texttt{\textbackslash
 El paquet gestiona de manera transparent car\`acters especials catalans i castellans dins dels blocs de codi:
 l'ela geminada (\texttt{l·l}), vocals accentuades (\texttt{à}, \texttt{è}, \texttt{é}, \texttt{í}, \texttt{ò}, \texttt{ó}, \texttt{ú}), ce trencada (\texttt{ç}), e\~ne (\texttt{ñ}) i s\'imbols ordinals (\texttt{º}, \texttt{ª}).
 
+\section{Literal code and source ranges}
+Quotes are rendered upright; dollar signs are literal unless
+\texttt{mathescape=true} is explicitly requested. JLex and CUP quoted strings
+recognise backslash escapes. Inline code also accepts verbatim delimiters:
+\begin{verbatim}
+\pxCodeIn[pxBash]|printf '%s' "$HOME"|
+\pxCodeChunk[pxJava]{Main.java}{12}{20}{Validation}
+\begin{pxTerminal}{Shell session}
+$ echo "$HOME"
+/home/student
+\end{pxTerminal}
+\end{verbatim}
+The terminal accepts listings options in an optional argument and uses the
+existing palette. Source ranges are inclusive and preserve line numbers.
+Inline verbatim cannot be used inside another command's argument.
 \end{document}

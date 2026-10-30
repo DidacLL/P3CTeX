@@ -98,12 +98,12 @@ pattern \texttt{<base><n>} (e.g.\ \texttt{plot1}, \texttt{plot2}, \dots), using
 one caption per item.
 
 \begin{verbatim}
-\pxIMGList[<path-prefix>]{<base>}[<caption-prefix>]{cap1,cap2,cap3}
+\pxIMGList[<width>]{<path/base>}[<caption-prefix>]{cap1,cap2,cap3}
 \end{verbatim}
 
 Example:
 \begin{verbatim}
-\pxIMGList[img/]{iter}{Step: }{one,two,three}
+\pxIMGList[.8\linewidth]{img/iter}[Step: ]{one,two,three}
 \end{verbatim}
 
 \section{Minimal example}
@@ -114,7 +114,7 @@ Example:
 \pxSRCsetup{placeholder-color=blue,float-spec=htbp}
 \pxIMG[.6\linewidth]{img/diagram}[blue]{System diagram}[fig:system]
 \pxIMGpair{img/a}{img/b}[gray]{Comparison}[fig:pair]
-\pxIMGList[img/]{run}{Iteration: }{first,second,third}
+\pxIMGList[.8\linewidth]{img/run}[Iteration: ]{first,second,third}
 \end{document}
 \end{verbatim}
 

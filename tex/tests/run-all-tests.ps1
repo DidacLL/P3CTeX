@@ -1,6 +1,7 @@
 param(
     [switch]$CleanArtifacts,
-    [switch]$IncludeTemplates
+    [switch]$IncludeTemplates,
+    [string]$JobPrefix = ""
 )
 
 Set-StrictMode -Version Latest
@@ -33,10 +34,14 @@ $testFiles = @(
     "pxLST.test.tex",
     "pxLST.languages.test.tex",
     "pxLST.io.test.tex",
+    "pxLST.quotes.test.tex",
+    "pxCALC.test.tex",
+    "student-tools.test.tex",
 
     # Additional modules
     "pxUML.test.tex",
     "pxSRC.test.tex",
+    "pxSRC.settings.test.tex",
     "pxPRP.test.tex",
     "pxGNT.test.tex",
     "pxGNT.standalone.test.tex",
@@ -78,7 +83,8 @@ try {
         }
 
         Write-Host "---- Running $testFile ----" -ForegroundColor DarkGray
-        & pdflatex -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+        $jobName = $JobPrefix + [System.IO.Path]::GetFileNameWithoutExtension($testFile)
+        & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
         $exitCode = $LASTEXITCODE
         $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
 
@@ -95,7 +101,7 @@ try {
         }
 
         if ($CleanArtifacts) {
-            $baseName = [System.IO.Path]::GetFileNameWithoutExtension($testFile)
+            $baseName = $jobName
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.aux")
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.log")
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.out")

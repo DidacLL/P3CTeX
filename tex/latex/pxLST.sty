@@ -28,6 +28,7 @@
 %% =======================================================
 \RequirePackage{expl3}
 \RequirePackage{xparse,l3keys2e}
+\RequirePackage{textcomp}
 \RequirePackage{listings}
 \RequirePackage{listingsutf8}
 \RequirePackage[table]{xcolor}
@@ -145,7 +146,7 @@
 \lstdefinestyle{pxlst}{
 	inputencoding    = utf8,
 	extendedchars    = true,
-	basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{pxfg},
+	basicstyle       = \footnotesize\linespread{1.2}\fontencoding{T1}\ttfamily\selectfont\color{pxfg},
 	identifierstyle  = \color{pxfg},
 	commentstyle     = \itshape\color{pxcomment},
 	stringstyle      = \color{pxstring},
@@ -156,6 +157,9 @@
 	keywordstyle     = [5]\bfseries\color{pxkeyword!65!},
 	emphstyle        = \underbar\color{pxoperator},
 	showstringspaces = false,
+	upquote          = true,
+	mathescape       = false,
+	texcl            = false,
 	showspaces       = false,
 	showtabs         = false,
 	showlines        = false,
@@ -358,6 +362,9 @@
 	commentstyle     = \color{pxcomment}\itshape,
 	numberstyle      = \tiny\color{pxnumber},
 	showstringspaces = false,
+	upquote          = true,
+	mathescape       = false,
+	texcl            = false,
 	columns          = flexible,
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
@@ -501,7 +508,7 @@
 	sensitive        = true,
 	morecomment      = [s]{/*}{*/},
 	morecomment      = [l]{//},
-	morestring       = [d]",
+	morestring       = [b]",
 	literate         =
 	{<}{{{\color{pxtag}<}}}1
 	{>}{{{\color{pxtag}>}}}1
@@ -527,7 +534,7 @@
 	sensitive        = true,
 	morecomment      = [s]{/*}{*/},
 	morecomment      = [l]{//},
-	morestring       = [d]",
+	morestring       = [b]",
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
@@ -673,11 +680,13 @@
 %% \pxLST_input_file:nnn {<language>}{<file>}{<title>}
 %% Typeset an external source file in a breakable pxLST tcolorbox.
 %% #1 - listings language name.  #2 - source filename/path.  #3 - header title.
-\cs_new_protected:Npn \pxLST_input_file:nnn #1 #2 #3 {
+\cs_new_protected:Npn \pxLST_input_file:nnn #1 #2 #3
+  {\pxLST_input_file:nnnn {#1}{#2}{#3}{}}
+\cs_new_protected:Npn \pxLST_input_file:nnnn #1 #2 #3 #4 {
 	\tl_if_blank:nTF {#1}
 		{
 			\tcbinputlisting{
-				listing~options={style=pxlst},
+				listing~options={style=pxlst,#4},
 				colback=pxbg!90!,
 				colframe=pxbg!60!,
 				coltext=pxfg,
@@ -691,7 +700,7 @@
 		}
 		{
 			\tcbinputlisting{
-				listing~options={style=pxlst,language=#1},
+				listing~options={style=pxlst,language=#1,#4},
 				colback=pxbg!90!,
 				colframe=pxbg!60!,
 				coltext=pxfg,
@@ -872,15 +881,11 @@
 \NewDocumentCommand{\pxCodeFile}{ O{} m O{#2} }
   { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
 
-%% \pxCodeFileInput[<language>]{<file>}[<title>]
-%% Convenience alias for \pxCodeFile (defaults to pxJLex when language is omitted).
-\NewDocumentCommand{\pxCodeFileInput}{ O{pxJLex} m O{#2} }
-  { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
 
 %% \pxCodeIn[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
 %% #1 - optional listings language.  #2 - inline code.  #3 - listings style (default pxlst).
-\NewDocumentCommand{\pxCodeIn}{ O{} m O{pxlst}}
+\NewDocumentCommand{\pxCodeIn}{ O{} v O{pxlst}}
   {
     \group_begin:
       \tl_if_blank:nTF { #1 }
@@ -978,4 +983,22 @@
 \NewCommandCopy{\pxCodeInline}{\pxCodeIn}
 \NewCommandCopy{\pxInlineCode}{\pxCodeIn}
 \NewCommandCopy{\pxLSTinput}{\pxCodeFile}
+%% Terminal transcripts are verbatim; write literal $, #, %, quotes and prompts.
+%% Options use the same listings key syntax as pxCode; title is mandatory.
+%% Override the pxlst-terminal tcolorbox style to customise the container.
+\tcbset{pxlst-terminal/.style={enhanced,breakable,listing~only,
+  colback=pxbg!95!,colframe=pxbg!70!,coltext=pxfg,arc=.25em,
+  fonttitle=\small\ttfamily\bfseries}}
+\newtcblisting{pxTerminal}[2][]{pxlst-terminal,title={#2},
+  listing~options={style=pxlst,language={},numbers=none,xleftmargin=0pt,#1}}
+%% \pxCodeChunk[<language>]{<file>}{<first line>}{<last line>}{<title>}
+%% Reuse the file renderer and preserve original source line numbers.
+\NewDocumentCommand\pxCodeChunk{O{} m m m m}
+  {\group_begin:
+    \int_compare:nNnTF {#3} < {1}
+      {\PackageError{pxLST}{First~line~must~be~positive}{Use~a~1-based~line~range.}}
+      {\int_compare:nNnTF {#4} < {#3}
+        {\PackageError{pxLST}{Last~line~precedes~first~line}{Use~an~ascending~line~range.}}
+        {\pxLST_input_file:nnnn {#1}{#2}{#5}{firstline=#3,lastline=#4,firstnumber=#3}}}
+   \group_end:}
 \endinput

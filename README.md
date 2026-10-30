@@ -64,6 +64,10 @@ python3 scripts/package_release.py
 
 ---
 
+## Development: student tools
+
+The development branch adds readable loading options (`code`, `images`, `tables`, `diagrams`, `calculations`, `requirements`) alongside the existing module options. See [Student tools](tex/doc/student-tools.md) for worked calculations, terminal transcripts, code ranges, requirements cards, customisation and supported syntax. Existing diagrams, tables, safe images, covers and annexes remain the foundation.
+
 ## User Guide
 
 ### Installation & Local Setup
