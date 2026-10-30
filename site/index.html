@@ -198,31 +198,31 @@
           <div class="tutorial-step-bar">
             <button type="button" class="tut-step-btn active" data-step="1">
               <span class="step-num">01</span>
-              <span class="step-title">Class &amp; Profiles</span>
+              <span class="step-title">Profiles (PAC/PR)</span>
             </button>
             <button type="button" class="tut-step-btn" data-step="2">
               <span class="step-num">02</span>
-              <span class="step-title">Student Metadata</span>
+              <span class="step-title">Cover &amp; Headers</span>
             </button>
             <button type="button" class="tut-step-btn" data-step="3">
               <span class="step-num">03</span>
-              <span class="step-title">Body &amp; Sections</span>
+              <span class="step-title">Default Shorthands</span>
             </button>
             <button type="button" class="tut-step-btn" data-step="4">
               <span class="step-num">04</span>
-              <span class="step-title">Tables (pxTAB)</span>
+              <span class="step-title">Text Overrides (pxTXT)</span>
             </button>
             <button type="button" class="tut-step-btn" data-step="5">
               <span class="step-num">05</span>
-              <span class="step-title">Code (pxLST)</span>
+              <span class="step-title">Tables, Code &amp; Fig</span>
             </button>
             <button type="button" class="tut-step-btn" data-step="6">
               <span class="step-num">06</span>
-              <span class="step-title">Figures (pxSRC)</span>
+              <span class="step-title">UML (pxUML)</span>
             </button>
             <button type="button" class="tut-step-btn" data-step="7">
               <span class="step-num">07</span>
-              <span class="step-title">Compilation</span>
+              <span class="step-title">Annexes &amp; Bib (pxMEM)</span>
             </button>
           </div>
 
@@ -243,21 +243,13 @@
               </div>
 
               <div class="tut-code-viewport">
-                <pre class="editor-pre"><code id="tut-code-target">% =======================================================
-% Step 1: Declare Document Class &amp; Select Profile
-% =======================================================
-% Supported Profiles:
-%   PAC / PEC / CA : Continuous Assessment (Page 1 start, no blank cover)
-%   PR             : Practicum Report (Institutional UOC cover page)
-%   MEM            : Multi-Chapter Memory (\chapter + appendices)
-%   TFG            : Final Degree Project (Official UOC work card)
+                <pre class="editor-pre"><code id="tut-code-target">\documentclass[PAC,default]{P3CTeX} % Profile: PAC (default) | PR | MEM | TFG
 
-\documentclass[PAC,default]{P3CTeX}
-
-% Architectural note on PAC vs PR:
-% PAC and PR share the exact same macros, fonts, and geometry.
-% - PAC begins directly on page 1 with student metadata &amp; pledge.
-% - PR adds the graphic cover page before page 1.</code></pre>
+% PAC vs PR: Both share identical macros, geometry, and Arev typography.
+% - PAC: Starts on page 1 with metadata &amp; anti-plagiarism pledge (Continuous Assessment).
+% - PR:  Adds the official UOC graphical cover page and table of contents (Reports).
+% - MEM: Multi-chapter report. Enables \chapter, \pxMEMannex, and figure/table indexes.
+% - TFG: Final Degree Project. Injects official UOC work card and bilingual abstract.</code></pre>
               </div>
 
               <!-- Stepper Navigation Controls -->

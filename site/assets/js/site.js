@@ -79,25 +79,17 @@ function setupDeckSwitcher() {
 const tutorialSteps = {
   1: {
     num: '01',
-    title: 'Document Class & Profiles',
-    tag: 'CORE SETUP',
-    filename: '01-documentclass.tex',
-    code: `% =======================================================
-% Step 1: Declare Document Class & Select Profile
-% =======================================================
-% Supported Profiles:
-%   PAC / PEC / CA : Continuous Assessment (Page 1 start, no blank cover)
-%   PR             : Practicum Report (Institutional UOC cover page)
-%   MEM            : Multi-Chapter Memory (\\chapter + appendices)
-%   TFG            : Final Degree Project (Official UOC work card)
+    title: 'Profiles (PAC / PR / MEM / TFG)',
+    tag: 'DOCUMENT LIFECYCLE',
+    filename: '01-profiles.tex',
+    code: `\\documentclass[PAC,default]{P3CTeX} % Profile: PAC (default) | PR | MEM | TFG
 
-\\documentclass[PAC,default]{P3CTeX}
-
-% Architectural note on PAC vs PR:
-% PAC and PR share the exact same macros, fonts, and geometry.
-% - PAC begins directly on page 1 with student metadata & pledge.
-% - PR adds the graphic cover page before page 1.`,
-    desc: 'Every P3CTeX document begins with \\documentclass[<profile>,default]{P3CTeX}. The profile configures page geometry, typography, and whether an institutional cover page is rendered or bypassed.',
+% PAC vs PR: Both share identical macros, geometry, and Arev typography.
+% - PAC: Starts on page 1 with metadata & anti-plagiarism pledge (Continuous Assessment).
+% - PR:  Adds the official UOC graphical cover page and table of contents (Reports).
+% - MEM: Multi-chapter report. Enables \\chapter, \\pxMEMannex, and figure/table indexes.
+% - TFG: Final Degree Project. Injects official UOC work card and bilingual abstract.`,
+    desc: 'P3CTeX defines document lifecycle profiles via class options. PAC and PR share identical macros, booktabs tables, listings, and geometry, differing solely by whether an institutional graphic cover is generated.',
     refLabel: '// PROFILE OPTIONS REFERENCE:',
     refTable: [
       { k: 'PAC / PEC / CA', v: 'Continuous assessment (starts directly on page 1, auto anti-plagiarism pledge, no blank cover). Catalan (PAC), Spanish (PEC), English (CA).' },
@@ -105,20 +97,15 @@ const tutorialSteps = {
       { k: 'MEM', v: 'Multi-chapter technical memory. Enables \\chapter, appendices (\\pxMEMannex), and figure/table indexes.' },
       { k: 'TFG', v: 'Final Degree Project. Adds official UOC work card (\\pxTFGworkcard), praise/dedication, and bilingual abstracts.' }
     ],
-    tipTitle: '💡 Why PAC vs PR?',
-    tipText: 'UOC grading rubrics for continuous assessment (PAC) explicitly discourage empty cover pages to streamline grading. PAC puts student identity and the required anti-plagiarism pledge immediately at the top of page 1. For lab reports (PR), switch to [PR] to print the graphic cover.'
+    tipTitle: '💡 PAC vs PR Grading Compliance',
+    tipText: 'UOC continuous assessment rubrics penalize blank cover pages because teachers grade hundreds of digital submissions. PAC puts your identity directly on page 1. For formal practicum deliverables, switch to [PR].'
   },
   2: {
     num: '02',
-    title: 'Student & Coursework Metadata',
-    tag: 'DECLARATIVE METADATA',
-    filename: '02-metadata.tex',
-    code: `% =======================================================
-% Step 2: Configure Student & Coursework Metadata
-% =======================================================
-% P3CTeX uses this declarative dictionary to populate page headers,
-% footers, anti-plagiarism authorship pledges, and document covers:
-
+    title: 'Cover Overrides & Header Layout',
+    tag: 'GDXCOVER & GDXSTYLE',
+    filename: '02-cover-and-headers.tex',
+    code: `% 1. Academic metadata dictionary:
 \\PECTeXconfig{
   data = {
     student        = {Estudiant UOC},
@@ -132,191 +119,217 @@ const tutorialSteps = {
   }
 }
 
-% Tip: Once defined, your name and subject never need to be repeated.`,
-    desc: 'Metadata is defined cleanly before \\begin{document} inside \\PECTeXconfig{ data = { ... } }. P3CTeX injects these fields into running headers, footers, anti-plagiarism statements, and title covers without manual formatting.',
-    refLabel: '// SUPPORTED METADATA KEYS:',
+% 2. Cover visual & text overrides (gdxCOVER):
+\\PECTeXcover{
+  text-title       = {Anàlisi de Gramàtiques LR(1)},
+  text-subtitle    = {Implementació d'un Analitzador Sintàctic},
+  text-backtitle   = {UNIVERSITAT OBERTA DE CATALUNYA},
+  add-picture      = true,
+  image-square     = {pxsqrcover.png},
+  uppertitle       = true,
+  text-uppertitle  = {Grau en Enginyeria Informàtica}
+}
+
+% 3. Running headers and footers (gdxSTYLE):
+\\PECTeXpage{
+  header-left      = {\\raisebox{0.075cm}{\\includegraphics[height=0.9cm]{img/pxhlogo.png}}},
+  header-center    = {\\mdseries COMP \\par\\noindent \\bfseries PAC 1},
+  header-right     = {\\raggedleft\\mdseries Estudiant UOC \\par\\noindent\\bfseries 75.580},
+  footer-left      = {\\textcolor{gray}{\\small PAC1-COMP}},
+  footer-center    = {\\thepage\\ / \\pageref{LastPage}}
+}`,
+    desc: 'Metadata (\\PECTeXconfig) populates university registers. Direct visual overrides for the cover (\\PECTeXcover) and running headers/footers (\\PECTeXpage) allow custom branding, logos, and footer notices.',
+    refLabel: '// COVER & PAGE REGISTERS:',
     refTable: [
-      { k: 'student', v: 'Full name of the student or group members (separated by \\and).' },
-      { k: 'grade', v: 'Official university degree title (e.g., Grau en Enginyeria Informàtica).' },
-      { k: 'subj-fullname / -shortname', v: 'Full subject title and course acronym (e.g. Compiladors i Llenguatges / COMP).' },
-      { k: 'subj-code', v: 'UOC subject catalog code (e.g., 75.580).' },
-      { k: 'ca-fullname / -shortname', v: 'Continuous assessment or deliverable title and code (e.g., PAC 1 / PAC1).' },
-      { k: 'date', v: 'Submission date (defaults to \\today).' }
+      { k: '\\PECTeXconfig{data={...}}', v: 'High-level student and course metadata dictionary (student, grade, subj-code...).' },
+      { k: '\\PECTeXcover{...}', v: 'Cover keys: text-title, text-subtitle, text-backtitle, add-picture, image-square, image-long.' },
+      { k: '\\PECTeXpage{...}', v: 'Header/footer layout: header-left, header-center, header-right, footer-left, footer-center, footer-right.' },
+      { k: 'footer-center / footer-left', v: 'Available footer space for page counters (\\thepage / \\pageref{LastPage}) or notices.' }
     ],
-    tipTitle: '💡 Zero Hardcoding in Document Body',
-    tipText: 'Once registered in \\PECTeXconfig, you never need to repeat your name or course code in the body. If you reuse the template for PAC2 or PAC3, just update the single ca-fullname string.'
+    tipTitle: '💡 Metadata vs Layout Literals',
+    tipText: 'Metadata keys represent who you are; cover and page literals represent how the document looks. You can override cover text without altering your student record.'
   },
   3: {
     num: '03',
-    title: 'Document Body & Auto-Pledge',
-    tag: 'CONTENT WORKFLOW',
-    filename: '03-document-body.tex',
-    code: `% =======================================================
-% Step 3: Document Body & Automatic Academic Pledge
-% =======================================================
-\\begin{document}
-% In [PAC] mode, \\begin{document} automatically renders:
-% 1. Page 1 student & course banner
-% 2. Mandatory UOC anti-plagiarism authorship declaration
-% 3. Table of contents (if toc=true)
-% In [PR] mode, it outputs the full institutional title page.
+    title: 'Built-in Tools & Typographic Shorthands',
+    tag: 'DEFAULT PRESET',
+    filename: '03-default-tools.tex',
+    code: `\\section{Demostració d'eines i abreviatures per defecte}
 
-\\section{Exercici 1: Anàlisi Lèxica}
-\\subsection{Apartat A: Expressions Regulars}
-Resolució del primer apartat del document segons l'enunciat de l'activitat...
+% Institutional primary colored bold text:
+\\textbc{Text destacat en el color primari institucional.}
 
-\\subsection{Apartat B: Diagrama de Transicions}
-Descripció dels estats de l'autòmat i transicions amb símbols d'entrada...
+% Fast structured lists:
+\\begin{itemize}
+  \\itembf Objectiu:: Desenvolupar l'analitzador lèxic.
+  \\subitembf Restricció:: Temps d'execució inferior a 1 segon.
+  \\itemT Metodologia: Implementació amb taules DFA mínimes.;
+\\end{itemize}
 
-\\section{Exercici 2: Implementació del Lexer}
-Detall dels tokens i gestió d'errors sintàctics...
+% Fixed width parbox and horizontal filling:
+\\BOX{0.48}:{Columna Esquerra}\\FL\\BOX{0.48}:{Columna Dreta}
 
-\\end{document}`,
-    desc: 'Opening \\begin{document} invokes P3CTeX hooks. In PAC profile, it immediately prints the anti-plagiarism pledge and student identity plate, fulfilling UOC guidelines without an empty cover.',
-    refLabel: '// SECTIONING COMMANDS:',
+% Inline page reference badge:
+Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure de context.
+
+% Auto-scale wide equations or tables to exact linewidth:
+\\EXPAND{$\\displaystyle \\sum_{i=1}^{n} \\frac{i^2 + \\sqrt{i}}{\\log(i + 1)} = \\Omega(n^2)$}`,
+    desc: 'P3CTeX bundles convenient typographical shorthands loaded automatically by the default option. They accelerate writing, format list keys in bold, and provide inline page badges.',
+    refLabel: '// BUILT-IN SHORTHANDS:',
     refTable: [
-      { k: '\\section{Title}', v: 'Primary numbered exercise or deliverable block.' },
-      { k: '\\subsection{Title}', v: 'Sub-activity or question part (Apartat A, Apartat B...).' },
-      { k: '\\subsubsection{Title}', v: 'Fine-grained technical subsection.' },
-      { k: '\\chapter{Title}', v: 'Available in MEM / TFG profiles for full chapter breaks.' }
+      { k: '\\textbc{text}', v: 'Typesets bold text in the official primary institutional theme color.' },
+      { k: '\\itembf Label: Text', v: 'Quick bold-item definition inside itemize environments.' },
+      { k: '\\subitembf Label: Text', v: 'Indented secondary bold sub-item bullet.' },
+      { k: '\\BOX{width}:{content};', v: 'Fixed-fraction width parbox container (\\BOX{0.5}:{...};).' },
+      { k: '\\REF{label}', v: 'Renders a superscript gray page reference badge (e.g. Pàg[14]).' },
+      { k: '\\EXPAND{content}', v: 'Scales wide formulas or tables to fit \\linewidth perfectly.' }
     ],
-    tipTitle: '💡 Mandatory Authorship Compliance',
-    tipText: 'UOC requires all continuous assessment submissions to include an explicit anti-plagiarism pledge stating that the work was prepared independently. P3CTeX injects this text automatically in Catalan, Spanish, or English.'
+    tipTitle: '💡 Built-in Table Row Helpers',
+    tipText: 'When using standard LaTeX tabulars, P3CTeX provides \\headRow and \\oddRow with \\adjH row height struts for rapid zebra striping.'
   },
   4: {
     num: '04',
-    title: 'Comma-Separated Tables (pxTAB)',
-    tag: 'DATA TABLES',
-    filename: '04-tables-pxtab.tex',
-    code: `% =======================================================
-% Step 4: Tables with Comma-Separated Values (pxTAB)
-% =======================================================
-% No \\begin{tabular}{l|c|r} column counting or manual arithmetic!
-% Rows are defined as comma-separated values in braced groups:
+    title: 'Overwriting Default Strings & Language Literals',
+    tag: 'PXTXT ENGINE',
+    filename: '04-language-overrides.tex',
+    code: `% Override standard P3CTeX literal text strings:
+\\renewcommand{\\pxDEFtocname}{Taula de Continguts}
+\\renewcommand{\\pxDEFpximgname}{Gràfic}
+\\renewcommand{\\pxDEFpxcodename}{Llistat de Codi}
+\\renewcommand{\\pxDEFpxcmdname}{Instrucció de Terminal}
 
-\\pxTable[style=header]
-  {Mètrica / Token, Expressió Regular, Estat}
-  {Identificador, [a-zA-Z][a-zA-Z0-9]*, PASS}
-  {Literal Enter, [0-9]+, PASS}
-  {Operador Suma, \\texttt{+}, PASS}
-  {Delimitador, [;,{}], PASS}
+% Custom authorship declaration text for UOC submission:
+\\renewcommand{\\pxDEFnoplagi}[1]{%
+  Jo, \\textbf{#1}, confirmo que aquest lliurament és de la meva exclusiva autoria, %
+  sense cap intervenció externa no permesa ni plagi.%
+}
 
-% Available styles:
-%   style=header  : Dark high-contrast header row with subtle separator borders
-%   style=striped : Alternating zebra shading for multi-row data
-%
-% For multi-page tables that paginate across page breaks with repeated headers:
-% \\pxTBLlong*[style=striped]{Capçalera 1, Capçalera 2}{Fila 1...}{Fila 2...}`,
-    desc: 'pxTAB eliminates tedious column counting and width calculations in LaTeX. Write comma-separated values in braced groups {...}, and pxTAB formats professional booktabs tables with automatic zebra row striping.',
-    refLabel: '// PXTAB COMMANDS & STYLES:',
+\\begin{document}
+% \\begin{document} outputs the customized authorship pledge and TOC automatically!`,
+    desc: 'All standard labels in P3CTeX are defined in pxTXT via macros prefixed with \\pxDEF. You can overwrite any default string globally in your preamble with standard \\renewcommand.',
+    refLabel: '// PXTXT STRING REGISTERS:',
     refTable: [
-      { k: '\\pxTable[style=...]{head}{row1}{row2}', v: 'Standard compact table with automatic column sizing.' },
-      { k: '\\pxTBLlong*[opts]{head}{rows...}', v: 'Multi-page table that repeats headers across page breaks.' },
-      { k: 'style=header', v: 'High-contrast dark header row with subtle separator borders.' },
-      { k: 'style=striped', v: 'Alternating row background shading (zebra striping) for readability.' }
+      { k: '\\pxDEFtocname', v: 'Title printed above the Table of Contents (default: Índex / Índice / Table of Contents).' },
+      { k: '\\pxDEFnoplagi{author}', v: 'Statutory UOC anti-plagiarism and authorship pledge paragraph.' },
+      { k: '\\pxDEFpximgname', v: 'Prefix label for pxSRC images and vector figure boxes (default: Imatge / Imagen / Picture).' },
+      { k: '\\pxDEFpxcodename', v: 'Prefix label for pxLST source code listing frames.' },
+      { k: '\\pxDEFpxcmdname', v: 'Prefix label for terminal command boxes.' }
     ],
-    tipTitle: '💡 Special Characters in Tables',
-    tipText: 'Because commas separate columns, if a cell value contains a literal comma or macro brackets, wrap it in braces: {[0-9]+, \\texttt{+}}.'
+    tipTitle: '💡 Multilingual Previews',
+    tipText: 'Passing CAT, ES, or EN in \\documentclass sets all pxTXT strings automatically. Use \\renewcommand{\\pxDEF...} when a faculty professor requires specific terminology.'
   },
   5: {
     num: '05',
-    title: 'Code Listings with Syntax Highlighting (pxLST)',
-    tag: 'SOURCE CODE',
-    filename: '05-code-pxlst.tex',
-    code: `% =======================================================
-% Step 5: Code Listings with Darcula Dark Theme (pxLST)
-% =======================================================
-% Syntax highlighting, line numbers, and monospaced Inconsolata font:
+    title: 'Data Tables, Code Listings & Safe Figures',
+    tag: 'PXTAB, PXLST & PXSRC',
+    filename: '05-tab-lst-src.tex',
+    code: `% 1. pxTAB: Comma-separated tables without manual column arithmetic:
+\\pxTable[style=header]
+  {Fase, Estat, Temps, Proves}
+  {Lexer, PASS, 0.12 s, 48/48}
+  {Parser LR(1), PASS, 0.45 s, 112/112}
+  {Generació Codi, PASS, 0.88 s, 32/32}
 
-\\begin{pxCode}[language=Java]{Lexer.java}
-public class Lexer {
-    private final String source;
-    private int position = 0;
-
-    public Lexer(String source) {
-        this.source = source;
-    }
-
-    public Token nextToken() {
-        // Retorna el següent token reconegut
-        return new Token(TokenType.EOF, "");
+% 2. pxLST: JetBrains Darcula dark code listing with line numbers:
+\\begin{pxCode}[language=Java]{Parser.java}
+public class Parser {
+    private final Lexer lexer;
+    public AST parse() throws SyntaxError {
+        return parseExpression(0);
     }
 }
 \\end{pxCode}
 
-% Inline code formatting matching the listing palette:
-% El mètode \\pxCodeInline{nextToken()} processa cada caràcter.`,
-    desc: 'pxLST wraps LaTeX listings with a custom Darcula-inspired dark theme. It renders syntax highlighting, line numbers, and file titles cleanly without text overflowing the margins.',
-    refLabel: '// PXLST OPTIONS & SHORTCUTS:',
+% 3. pxSRC: Safe figure inclusion (draws vector placeholder if file missing):
+\\pxIMG[0.75\\linewidth]{img/dfa_transitions}{Autòmat de transició d'estats}[fig:dfa]`,
+    desc: 'pxTAB formats clean tables from comma-separated rows. pxLST highlights source code in a Darcula dark theme. pxSRC includes figures with vector placeholders if files are missing.',
+    refLabel: '// CORE SUITE COMMANDS:',
     refTable: [
-      { k: '\\begin{pxCode}[language=...]{Title}', v: 'Syntax-highlighted block. Takes programming language and filename title.' },
-      { k: 'language=Java | Python | C | SQL', v: 'All standard listings languages supported.' },
-      { k: '\\pxCodeInline{code}', v: 'Inline code snippet with matching dark pill background.' },
-      { k: '\\pxInputCode[opts]{file.java}', v: 'Directly includes an external source code file without copy-pasting.' }
+      { k: '\\pxTable[style=...]{head}{row1}{row2}', v: 'Comma-separated table. Styles: header, striped, boxed, grid.' },
+      { k: '\\pxTBLlong*[opts]{head}{rows...}', v: 'Multi-page table repeating headers across page breaks.' },
+      { k: '\\begin{pxCode}[language=...]{Title}', v: 'Code block with Darcula syntax highlighting and line numbers.' },
+      { k: '\\pxIMG[width]{path}{caption}[label]', v: 'Resilient figure inclusion with automatic placeholder fallback.' }
     ],
-    tipTitle: '💡 Multi-Language Coursework',
-    tipText: 'pxLST works out of the box for COMP (Java/C), Software Engineering (Python/JavaScript), Databases (SQL/PL-SQL), and Systems (Bash/C++).'
+    tipTitle: '💡 Zero Missing File Halts',
+    tipText: 'pxSRC guarantees pdflatex never halts with a missing file error before deadlines. A clean placeholder marks missing figures until they are exported.'
   },
   6: {
     num: '06',
-    title: 'Resilient Safe Figures (pxSRC)',
-    tag: 'GRAPHICS & FIGURES',
-    filename: '06-figures-pxsrc.tex',
-    code: `% =======================================================
-% Step 6: Safe Figure Inclusion with Fallback (pxSRC)
-% =======================================================
-% Standard \\includegraphics crashes pdflatex if an image file is missing.
-% pxSRC renders an elegant vector wireframe placeholder if the file is not found!
+    title: 'Object-Oriented UML Class Diagrams',
+    tag: 'PXUML ENGINE',
+    filename: '06-uml-class-diagram.tex',
+    code: `% 1. Register class structure into the pxPRP class registry:
+\\pxUMLClass[class]{Token}[Object]{
+  - type : TokenType,
+  - lexeme : String,
+  - line : int
+}[
+  + getLexeme() : String,
+  + getType() : TokenType,
+  + toString() : String
+]
 
-\\pxIMG[0.85\\linewidth]{img/automata}{Diagrama de transicions de l'autòmat}[fig:dfa]
+\\pxUMLClass[class]{Lexer}{
+  - input : String,
+  - cursor : int
+}[
+  + nextToken() : Token,
+  + hasMoreTokens() : boolean
+]
 
-% You can reference the figure anywhere in your text:
-Segons es mostra a la Figura~\\ref{fig:dfa}, l'estat inicial és q0...
+% 2. Draw UML diagram with TikZ layout:
+\\pxUMLDiagram{
+  \\drawclass{Token}[0,0]
+  \\drawclass{Lexer}[6,0]
+}
 
-% Supported extensions: .png, .jpg, .pdf, .eps
-% pxSRC discovers the correct graphic extension automatically.`,
-    desc: 'Standard \\includegraphics halts compilation with a fatal error if an image file is missing. pxSRC detects missing files and draws an elegant vector wireframe placeholder box, keeping your PDF compilation flowing uninterrupted.',
-    refLabel: '// PXSRC COMMAND ARGUMENTS:',
+% 3. Print member specifications directly as itemized list:
+\\printAttributes{Token}
+\\printOperations{Token}`,
+    desc: 'pxUML decouples UML class definitions from drawing. Classes are registered once with attributes and operations, then drawn with \\drawclass inside \\pxUMLDiagram or printed as textual lists.',
+    refLabel: '// PXUML INTERFACE COMMANDS:',
     refTable: [
-      { k: '\\pxIMG[width]{path}{caption}[label]', v: 'Primary figure inclusion macro with automatic missing-file fallback.' },
-      { k: '[width]', v: 'Optional width specification (defaults to 0.8\\linewidth).' },
-      { k: '{path}', v: 'Relative path without extension (finds .png, .jpg, or .pdf automatically).' },
-      { k: '{caption} / [label]', v: 'Figure caption and \\label for cross-referencing via \\ref{label}.' }
+      { k: '\\pxUMLClass[type]{Name}[parent]{attrs}[ops]<impl>', v: 'Registers a classifier into the pxPRP property registry without drawing.' },
+      { k: '\\drawclass{Name}[x,y]', v: 'Renders a registered class with full attributes, operations, and inheritance lines.' },
+      { k: '\\drawsimpleclass{Name}[x,y]', v: 'Renders a compact class showing only attributes and inheritance.' },
+      { k: '\\printAttributes{Name} / \\printOperations{Name}', v: 'Typesets class members as a formatted itemized specification list.' }
     ],
-    tipTitle: '💡 Deadline Safe',
-    tipText: 'When working late before a submission deadline, missing or renamed screenshot files won’t break your LaTeX compilation. The PDF still builds completely with placeholders indicating exactly what is missing.'
+    tipTitle: '💡 Single Source of Truth',
+    tipText: "Registering classes in pxUML means your UML diagram and your written report's method specification share identical signatures with zero copy-paste divergence."
   },
   7: {
     num: '07',
-    title: 'Compiling Locally with pdflatex',
-    tag: 'OFFLINE COMPILATION',
-    filename: '07-terminal-compile.sh',
-    code: `# =======================================================
-# Step 7: Local Offline Compilation with pdflatex
-# =======================================================
-# P3CTeX compiles 100% locally with zero cloud dependencies!
+    title: 'Multi-Chapter Reports, Annexes & Bibliography',
+    tag: 'PXMEM & PXBIB',
+    filename: '07-mem-annexes-bib.tex',
+    code: `% Requires MEM profile: \\documentclass[MEM,PR,default]{P3CTeX}
 
-# 1. Open terminal in your coursework folder and run:
-pdflatex my-assessment.tex
+\\chapter{Desenvolupament del Projecte}
+\\section{Arquitectura del Compilador}
+Descripció detallada del mòdul semàntic...
 
-# 2. Run pdflatex a second time to resolve references and TOC:
-pdflatex my-assessment.tex
+% Annexes switch numbering to letter format (Annex A, Annex B...) automatically:
+\\pxMEMannex{Codi Font Complet del Mòdul Sintàctic}{
+  \\input{src/syntax_analyzer.tex}
+}
 
-# Output generated:
-# -> my-assessment.pdf (ready for UOC campus submission!)
+% Reusing sections from previous PR submissions without file duplication:
+\\pxMEMsource{pr1}{../PR1/lliurament_pr1.tex}
+\\pxMEMinclude{pr1}{benchmark_results} % extracts %<*benchmark_results> block
 
-# If using BibTeX bibliography:
-# pdflatex my-assessment.tex && bibtex my-assessment && pdflatex my-assessment.tex`,
-    desc: 'P3CTeX compiles cleanly with the standard pdflatex engine included in both MiKTeX (Windows) and TeX Live (Linux/macOS). No special engines (XeLaTeX/LuaLaTeX) or cloud subscriptions required.',
-    refLabel: '// COMPILATION COMMAND MATRIX:',
+% Bibliography: automatically adds 'Bibliografia' to TOC on a fresh page:
+\\pxBib[apalike]{references}`,
+    desc: 'pxMEM turns P3CTeX into a multi-chapter report without changing base article geometry. It handles numbered chapters, lettered annexes, cross-PR section extraction, and bibliography.',
+    refLabel: '// ADVANCED REPORT MACROS:',
     refTable: [
-      { k: 'pdflatex file.tex', v: 'Standard single-pass compilation.' },
-      { k: 'pdflatex x2', v: 'Resolves page numbers, \\ref cross-references, and table of contents.' },
-      { k: 'bibtex file && pdflatex x2', v: 'Compiles bibliography references when using \\pxBib.' },
-      { k: 'del *.aux *.log / rm *.aux', v: 'Deletes temporary cache files if LaTeX throws an auxiliary cache mismatch.' }
+      { k: '\\chapter{Title}', v: 'Numbered chapter page break; numbers sections within current chapter.' },
+      { k: '\\pxMEMannex{Title}{content}', v: 'Letter-numbered appendix chapter (Annex A, Annex B) with auto TOC registration.' },
+      { k: '\\pxMEMsource{id}{path.tex}', v: 'Registers a previous assessment .tex file for code/text snippet reuse.' },
+      { k: '\\pxMEMinclude{id}{region}', v: 'Inputs lines tagged with %<*region> ... %</region> from registered source.' },
+      { k: '\\pxBib[style]{bibfile}', v: 'Outputs bibliography on a new page and creates a TOC entry automatically.' }
     ],
-    tipTitle: '💡 Zero Overleaf Restrictions',
-    tipText: 'Compiling locally means no 20-second Overleaf timeout errors, no paid collaborator tiers, and complete offline privacy for your university assignments.'
+    tipTitle: '💡 Code Snippet Reuse Across Deliverables',
+    tipText: 'When preparing your final memory, tag benchmark or test sections in PR1 with %<*tag> and pull them directly into MEM with \\pxMEMinclude without maintaining two copies.'
   }
 };
 
