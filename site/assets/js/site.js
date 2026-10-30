@@ -1,195 +1,75 @@
-/**
- * P3CTeX Public Documentation & Interactive Scripts
- * Lightweight, accessible, zero-dependency ES6
- */
+/* ==========================================================================
+   P3CTeX Public Documentation & Interactive Scripts
+   ========================================================================== */
 
-(function () {
-  'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. One-Click Copy Buttons for Code Boxes & Image Prompts
+  setupCopyButtons();
 
-  // --- 1. Toast Notification Utility ---
-  function showToast(message) {
-    let toast = document.getElementById('site-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'site-toast';
-      toast.className = 'toast-notice';
-      toast.setAttribute('role', 'status');
-      toast.setAttribute('aria-live', 'polite');
-      document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2800);
-  }
-  window.showToast = showToast;
+  // 2. Interactive Showcase Tabs
+  setupShowcaseTabs();
 
-  // --- 2. Universal Clipboard Copy Utility ---
-  function copyTextToClipboard(text, onSuccess, onError) {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(onSuccess).catch(() => {
-        fallbackCopy(text, onSuccess, onError);
-      });
-    } else {
-      fallbackCopy(text, onSuccess, onError);
-    }
-  }
+  // 3. Highlight Current Navigation Item
+  setupNavHighlight();
+});
 
-  function fallbackCopy(text, onSuccess, onError) {
-    try {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.top = '-9999px';
-      textarea.style.left = '-9999px';
-      textarea.setAttribute('readonly', '');
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textarea);
-      if (successful) {
-        if (onSuccess) onSuccess();
-      } else {
-        if (onError) onError();
+function setupCopyButtons() {
+  document.querySelectorAll('[data-copy-target]').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const targetSelector = button.getAttribute('data-copy-target');
+      const targetElement = document.querySelector(targetSelector);
+      if (!targetElement) return;
+
+      const textToCopy = targetElement.innerText || targetElement.textContent;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        const originalText = button.innerText;
+        button.innerText = 'COPIED!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.innerText = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Clipboard copy failed:', err);
       }
-    } catch (err) {
-      if (onError) onError(err);
-    }
-  }
-  window.copyTextToClipboard = copyTextToClipboard;
+    });
+  });
+}
 
-  // --- 3. DOM Content Loaded Initialization ---
-  document.addEventListener('DOMContentLoaded', () => {
-    // --- Mobile Drawer Navigation ---
-    const mobileToggle = document.querySelector('.mobile-nav-toggle');
-    const mobileDrawer = document.getElementById('mobile-drawer');
+function setupShowcaseTabs() {
+  document.querySelectorAll('.showcase-tab-bar').forEach(tabBar => {
+    const tabs = tabBar.querySelectorAll('.showcase-tab');
+    const container = tabBar.closest('.showcase-container');
+    if (!container) return;
 
-    if (mobileToggle && mobileDrawer) {
-      mobileToggle.addEventListener('click', () => {
-        const isOpen = mobileDrawer.classList.contains('open');
-        if (isOpen) {
-          mobileDrawer.classList.remove('open');
-          mobileToggle.setAttribute('aria-expanded', 'false');
-        } else {
-          mobileDrawer.classList.add('open');
-          mobileToggle.setAttribute('aria-expanded', 'true');
-        }
-      });
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetId = tab.getAttribute('data-tab-target');
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
 
-      // Close on clicking links inside drawer
-      mobileDrawer.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileDrawer.classList.remove('open');
-          mobileToggle.setAttribute('aria-expanded', 'false');
+        container.querySelectorAll('.showcase-panel').forEach(panel => {
+          if (panel.id === targetId) {
+            panel.classList.add('active');
+            panel.hidden = false;
+          } else {
+            panel.classList.remove('active');
+            panel.hidden = true;
+          }
         });
       });
-
-      // Close on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
-          mobileDrawer.classList.remove('open');
-          mobileToggle.setAttribute('aria-expanded', 'false');
-          mobileToggle.focus();
-        }
-      });
-    }
-
-    // --- Code Snippet Copy Buttons ---
-    document.querySelectorAll('.btn-copy-code').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.getAttribute('data-copy-target');
-        let codeText = '';
-        if (targetId) {
-          const targetEl = document.querySelector(targetId);
-          if (targetEl) codeText = targetEl.textContent;
-        } else {
-          const codeBox = btn.closest('.code-box');
-          if (codeBox) {
-            const codeEl = codeBox.querySelector('pre code') || codeBox.querySelector('pre');
-            if (codeEl) codeText = codeEl.textContent;
-          }
-        }
-
-        if (codeText) {
-          copyTextToClipboard(codeText, () => {
-            const originalHTML = btn.innerHTML;
-            btn.classList.add('copied');
-            btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg> Copied!`;
-            showToast('LaTeX code copied to clipboard');
-            setTimeout(() => {
-              btn.classList.remove('copied');
-              btn.innerHTML = originalHTML;
-            }, 2500);
-          }, () => {
-            showToast('Failed to copy code. Please select manually.');
-          });
-        }
-      });
     });
+  });
+}
 
-    // --- Image Prompt Copy Buttons ---
-    document.querySelectorAll('.btn-copy-prompt').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.getAttribute('data-copy-target');
-        let promptText = '';
-        if (targetId) {
-          const targetEl = document.getElementById(targetId);
-          if (targetEl) promptText = targetEl.textContent.trim();
-        } else {
-          const card = btn.closest('.image-placeholder-card');
-          if (card) {
-            const promptEl = card.querySelector('.prompt-text');
-            if (promptEl) promptText = promptEl.textContent.trim();
-          }
-        }
-
-        if (promptText) {
-          copyTextToClipboard(promptText, () => {
-            const originalHTML = btn.innerHTML;
-            btn.classList.add('copied');
-            btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg> Prompt Copied!`;
-            showToast('Image prompt copied to clipboard');
-            setTimeout(() => {
-              btn.classList.remove('copied');
-              btn.innerHTML = originalHTML;
-            }, 2500);
-          }, () => {
-            showToast('Failed to copy prompt.');
-          });
-        }
-      });
-    });
-
-    // --- URL Hash Listener for Details / Accordions ---
-    function expandDetailsTarget() {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const target = document.querySelector(hash);
-      if (target) {
-        const parentDetails = target.closest('details');
-        if (parentDetails) {
-          parentDetails.open = true;
-        }
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-    window.addEventListener('hashchange', expandDetailsTarget);
-    expandDetailsTarget();
-
-    // --- Global Accordion Expand/Collapse Toggle ---
-    const accordionToggleBtn = document.getElementById('btn-toggle-all-chapters');
-    if (accordionToggleBtn) {
-      accordionToggleBtn.addEventListener('click', () => {
-        const chapters = document.querySelectorAll('.guide-chapter');
-        const anyClosed = Array.from(chapters).some(ch => !ch.open);
-        chapters.forEach(ch => {
-          ch.open = anyClosed;
-        });
-        accordionToggleBtn.textContent = anyClosed ? 'Collapse All Chapters' : 'Expand All Chapters';
-      });
+function setupNavHighlight() {
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.site-nav a').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentPath || (currentPath === '' && href === 'index.html')) {
+      link.setAttribute('aria-current', 'page');
     }
   });
-})();
+}

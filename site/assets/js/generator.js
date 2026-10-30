@@ -1,487 +1,373 @@
-/**
- * P3CTeX Reactive LaTeX Generator Engine
- * Client-side AST assembly, live preview, clipboard & file export
- */
+/* ==========================================================================
+   P3CTeX Generator Engine
+   Reactive LaTeX Preamble & Complex Boilerplate Synthesis
+   ========================================================================== */
 
 (function () {
   'use strict';
 
-  // --- Initial State adhering to P3CTeXState Schema ---
-  const state = {
-    preset: 'PAC',
-    language: 'cat',
-    cover: false,
-    toc: true,
-    noPlagi: true,
-    debug: false,
-    printDoc: false,
-    packages: {
-      pxCALC: true,
-      pxCMP: true,
-      pxMEM: false,
-      pxSRC: true,
-      pxLST: true,
-      pxTAB: true,
-      pxUML: false,
-      pxREQ: false,
-      pxANN: false,
-      pxGNT: false,
-      pxGLS: false
+  // Default State & Presets
+  const PRESETS = {
+    pac: {
+      docClass: 'P3CTeX',
+      classOpts: { cover: true, toc: false, CMP: false, draft: false, fontsize: '11pt', language: 'catalan' },
+      meta: {
+        student: 'Dídac Llorens',
+        niu: '0131242',
+        subject: 'Enginyeria del Software',
+        subjCode: '75.564',
+        caShort: 'PAC 1',
+        caFull: 'Repte 1: Modelat i Especificació de Requeriments',
+        title: 'PAC 1 — Solució Oficial'
+      },
+      packages: { pxCALC: true, pxCMP: false, pxMEM: false, pxSRC: true, pxLST: true, pxTAB: true, pxUML: true, pxREQ: true },
+      blobs: { multipageTable: false, foreachLoop: false, cmpDiagrams: false, codebox: true, reqCard: true }
     },
-    packageConfigs: {
-      lstPalette: 'dark',
-      lstDefaultLang: 'pxPython',
-      cmpPreset: 'p3c-uoc',
-      tabPreset: 'p3c-header',
-      srcPlaceholderColor: 'primaryColor'
+    pr: {
+      docClass: 'P3CTeX',
+      classOpts: { cover: true, toc: true, CMP: true, draft: false, fontsize: '11pt', language: 'catalan' },
+      meta: {
+        student: 'Dídac Llorens',
+        niu: '0131242',
+        subject: 'Compiladors i Llenguatges',
+        subjCode: '75.580',
+        caShort: 'PR 1',
+        caFull: 'Pràctica 1: Anàlisi Lèxica, Sintàctica i Bootstrapping',
+        title: 'Pràctica 1 — Memòria Tècnica'
+      },
+      packages: { pxCALC: true, pxCMP: true, pxMEM: false, pxSRC: true, pxLST: true, pxTAB: true, pxUML: false, pxREQ: false },
+      blobs: { multipageTable: true, foreachLoop: true, cmpDiagrams: true, codebox: true, reqCard: false }
     },
-    metadata: {
-      student: 'Nom Alumne',
-      grade: "Grau d'Enginyeria Informàtica",
-      subjFullName: 'Disseny de Compiladors',
-      subjShortName: 'DC',
-      subjCode: '05.597',
-      caFullName: 'PAC 1: Anàlisi Lèxica',
-      caShortName: 'PAC1',
-      date: '\\today'
+    tfg: {
+      docClass: 'P3CTeX',
+      classOpts: { cover: true, toc: true, CMP: true, draft: false, fontsize: '11pt', language: 'catalan' },
+      meta: {
+        student: 'Dídac Llorens',
+        niu: '0131242',
+        subject: 'Treball Final de Grau',
+        subjCode: '75.599',
+        caShort: 'TFG',
+        caFull: 'Memòria del Treball Final de Grau en Enginyeria Informàtica',
+        title: 'Disseny i Implementació d\'un Ecosistema de Tipografia Científica'
+      },
+      packages: { pxCALC: true, pxCMP: true, pxMEM: true, pxSRC: true, pxLST: true, pxTAB: true, pxUML: true, pxREQ: true },
+      blobs: { multipageTable: true, foreachLoop: false, cmpDiagrams: true, codebox: true, reqCard: true }
     },
-    snippets: {
-      introSection: true,
-      calcExample: true,
-      cmpAutomaton: true,
-      cmpTombstone: false,
-      codeListing: true,
-      tableExample: true,
-      umlClass: false,
-      bibliography: false
+    cmp: {
+      docClass: 'P3CTeX',
+      classOpts: { cover: true, toc: false, CMP: true, draft: false, fontsize: '11pt', language: 'catalan' },
+      meta: {
+        student: 'Dídac Llorens',
+        niu: '0131242',
+        subject: 'Teoria de la Computació',
+        subjCode: '75.520',
+        caShort: 'PAC 2',
+        caFull: 'Autòmats Finits, Gramàtiques i Models de Compilador',
+        title: 'Exercicis de Computabilitat i Diagrames de Tombstone'
+      },
+      packages: { pxCALC: true, pxCMP: true, pxMEM: false, pxSRC: true, pxLST: true, pxTAB: true, pxUML: false, pxREQ: false },
+      blobs: { multipageTable: false, foreachLoop: true, cmpDiagrams: true, codebox: false, reqCard: false }
+    },
+    req: {
+      docClass: 'P3CTeX',
+      classOpts: { cover: true, toc: false, CMP: false, draft: false, fontsize: '11pt', language: 'catalan' },
+      meta: {
+        student: 'Dídac Llorens',
+        niu: '0131242',
+        subject: 'Enginyeria de Requisits',
+        subjCode: '75.550',
+        caShort: 'PAC 3',
+        caFull: 'Especificació d\'Històries d\'Usuari i Matriu DAFO',
+        title: 'Document d\'Enginyeria de Requisits (IEEE 830)'
+      },
+      packages: { pxCALC: false, pxCMP: false, pxMEM: false, pxSRC: true, pxLST: false, pxTAB: true, pxUML: true, pxREQ: true },
+      blobs: { multipageTable: true, foreachLoop: false, cmpDiagrams: false, codebox: false, reqCard: true }
     }
   };
 
-  // --- LaTeX Document Generator Function ---
-  function generateLatexCode(st) {
-    const lines = [];
+  // State
+  let state = JSON.parse(JSON.stringify(PRESETS.pac));
 
-    // 1. File header & TeX encoding markers
-    lines.push('% !TeX encoding = UTF-8');
-    lines.push(`% !TeX spellcheck = ${st.language === 'cat' ? 'ca_ES' : st.language === 'es' ? 'es_ES' : 'en_US'}`);
-    lines.push('%% =======================================================');
-    lines.push('%%  P3CTeX Document — Generated with P3CTeX Interactive Generator');
-    lines.push(`%%  Target: ${st.metadata.caShortName || 'Activity'} — ${st.metadata.subjFullName || 'Subject'}`);
-    lines.push('%% =======================================================\n');
-
-    // 2. Class Declaration & Options
-    const classOpts = [];
-
-    if (st.preset !== 'Custom') {
-      classOpts.push(st.preset);
-      if (st.preset === 'PR') {
-        classOpts.push(st.language);
-      }
-    } else {
-      if (st.cover) classOpts.push('cover'); else classOpts.push('no-cover');
-      if (st.toc) classOpts.push('toc'); else classOpts.push('no-toc');
-      if (st.noPlagi) classOpts.push('no-plagi');
-      classOpts.push(st.language);
-    }
-
-    // Class-load submodules (validated by P3CTeX.code.tex)
-    if (st.packages.pxCMP) classOpts.push('CMP');
-    if (st.packages.pxMEM) classOpts.push('MEM');
-    if (st.packages.pxGNT) classOpts.push('GNT');
-    if (st.debug) classOpts.push('debug');
-    if (st.printDoc) classOpts.push('print-doc');
-
-    const classOptStr = classOpts.length > 0 ? `[${classOpts.join(',')}]` : '';
-    lines.push(`\\documentclass${classOptStr}{P3CTeX}\n`);
-
-    // 3. Document Metadata Configuration (\PECTeXconfig)
-    lines.push('%% Document Metadata Configuration');
-    lines.push('\\PECTeXconfig{');
-    lines.push('  data = {');
-    lines.push(`    student        = {${st.metadata.student || 'Nom Alumne'}},`);
-    lines.push(`    grade          = {${st.metadata.grade || "Grau d'Enginyeria Informàtica"}},`);
-    lines.push(`    subj-fullname  = {${st.metadata.subjFullName || 'Assignatura'}},`);
-    lines.push(`    subj-shortname = {${st.metadata.subjShortName || 'ASG'}},`);
-    lines.push(`    subj-code      = {${st.metadata.subjCode || '00.000'}},`);
-    lines.push(`    ca-fullname    = {${st.metadata.caFullName || 'Activitat'}},`);
-    lines.push(`    ca-shortname   = {${st.metadata.caShortName || 'PAC1'}},`);
-    lines.push(`    date           = {${st.metadata.date || '\\today'}}`);
-    lines.push('  }');
-    lines.push('}\n');
-
-    // 4. Standalone Packages & Configuration
-    lines.push('%% Package Initializations & Presets');
-    if (st.packages.pxCALC) {
-      lines.push('\\usepackage{pxCALC}');
-      lines.push('\\pxCalcSetup{prec=2, steps=3}');
-    }
-
-    if (st.packages.pxSRC) {
-      lines.push('\\usepackage{pxSRC}');
-      lines.push(`\\pxSRCsetup{placeholder-color=${st.packageConfigs.srcPlaceholderColor}}`);
-    }
-
-    if (st.packages.pxLST) {
-      lines.push('\\usepackage{pxLST}');
-      lines.push(`\\pxLSTsetup[${st.packageConfigs.lstPalette}]{${st.packageConfigs.lstDefaultLang}}`);
-    }
-
-    if (st.packages.pxTAB) {
-      lines.push('\\usepackage{pxTAB}');
-      lines.push(`\\pxTABsetup{preset=${st.packageConfigs.tabPreset}}`);
-    }
-
-    if (st.packages.pxUML) {
-      lines.push('\\usepackage{pxUML}');
-    }
-
-    if (st.packages.pxREQ) {
-      lines.push('\\usepackage{pxREQ}');
-    }
-
-    if (st.packages.pxANN) {
-      lines.push('\\usepackage{pxANN}');
-    }
-
-    if (st.packages.pxGLS) {
-      lines.push('\\usepackage{pxGLS}');
-    }
-    lines.push('');
-
-    // 5. Document Body
-    lines.push('%% =======================================================');
-    lines.push('%%  DOCUMENT CONTENT');
-    lines.push('%% =======================================================');
-    lines.push('\\begin{document}\n');
-
-    // Starter Snippets
-    if (st.snippets.introSection) {
-      lines.push('\\section{Introducció}');
-      lines.push("En aquest document es presenten les solucions desenvolupades per a l'activitat.");
-      lines.push('\\bigskip\n');
-    }
-
-    if (st.packages.pxCALC && st.snippets.calcExample) {
-      lines.push('%% Worked Calculation with pxCALC');
-      lines.push("\\section{Càlculs d'Enginyeria (pxCALC)}");
-      lines.push('\\pxDefVar{Vcc}{5}[V]');
-      lines.push('\\pxDefVar{R1}{1000}[R_1]');
-      lines.push('\\pxDefVar{R2}{2000}[R_2]');
-      lines.push('\\pxDefFormula{Vout}{[Vcc] * [R2] / ([R1] + [R2])}[symbol=V_{out}, unit=\\volt]');
-      lines.push('\\noindent Resultat del divisor de tensió:');
-      lines.push('\\[');
-      lines.push('  \\pxSolve[prec=3]{Vout}');
-      lines.push('\\]\n');
-    }
-
-    if (st.packages.pxCMP && st.snippets.cmpAutomaton) {
-      lines.push('%% Finite Automaton with pxCMP');
-      lines.push('\\section{Autòmat Finit Determinista (pxCMP)}');
-      lines.push('\\begin{center}');
-      lines.push('\\pxAutomaton[');
-      lines.push(`  preset=${st.packageConfigs.cmpPreset},`);
-      lines.push('  states={q0/initial/at={(0,0)}, q1/accepting/at={(3,0)}},');
-      lines.push('  transitions={q0/q1/a, q1/q0/b, q1/q1/a}');
-      lines.push(']{}');
-      lines.push('\\end{center}\n');
-    }
-
-    if (st.packages.pxCMP && st.snippets.cmpTombstone) {
-      lines.push('%% Tombstone Compiler Diagram with pxCMP');
-      lines.push('\\section{Esquema de Compilació Tombstone (pxCMP)}');
-      lines.push('\\begin{center}');
-      lines.push('  \\pxTombstoneCompile{App}{C}{x86}{C}');
-      lines.push('\\end{center}\n');
-    }
-
-    if (st.packages.pxLST && st.snippets.codeListing) {
-      lines.push('%% Code Listing with pxLST');
-      lines.push('\\section{Implementació de Codi (pxLST)}');
-      lines.push(`\\begin{pxCode}[language=${st.packageConfigs.lstDefaultLang}]{AlgorismePrincipal}`);
-      lines.push('def process_data(records):');
-      lines.push('    """Process validation batch in pure Python."""');
-      lines.push('    return [item.strip() for item in records if item]');
-      lines.push('\\end{pxCode}\n');
-    }
-
-    if (st.packages.pxTAB && st.snippets.tableExample) {
-      lines.push('%% Formatted Table with pxTAB');
-      lines.push('\\section{Resultats Experimentals (pxTAB)}');
-      lines.push(`\\pxTable[preset=${st.packageConfigs.tabPreset}]`);
-      lines.push('  {Mètrica, Mètode Clàssic, Mètode P3CTeX}');
-      lines.push("  {Temps d'execució, 14.8 ms, 2.1 ms}");
-      lines.push('  {Consum de memòria, 12.4 MB, 3.2 MB}');
-      lines.push('  {Taxa d\'èxit, 94.2\\%, 99.8\\%}\n');
-    }
-
-    if (st.packages.pxUML && st.snippets.umlClass) {
-      lines.push('%% UML Class Diagram with pxUML');
-      lines.push('\\section{Model de Classes (pxUML)}');
-      lines.push('\\pxUMLClass{Student}{- id: String}[+ submitWork(): void]');
-      lines.push('\\pxUMLDiagram*{');
-      lines.push('  \\drawclass[text width=12em]{Student}[0,0]');
-      lines.push('}\n');
-    }
-
-    if (st.snippets.bibliography) {
-      lines.push('%% Referències Bibliogràfiques');
-      lines.push('\\newpage');
-      lines.push('\\nocite{*}');
-      lines.push('\\bibliographystyle{abbrvnat}');
-      lines.push('\\bibliography{referencies}\n');
-    }
-
-    lines.push('\\end{document}');
-    return lines.join('\n');
+  // Initialize
+  function init() {
+    bindPresetButtons();
+    bindFormInputs();
+    bindActions();
+    renderForm();
+    generateLatex();
   }
 
-  // --- Filename Sanitizer ---
-  function getComputedFilename(st) {
-    const act = (st.metadata.caShortName || 'DOC').replace(/[^a-zA-Z0-9_-]/g, '');
-    const subj = (st.metadata.subjShortName || 'P3C').replace(/[^a-zA-Z0-9_-]/g, '');
-    return `${subj}_${act}.tex`;
-  }
-
-  // --- Update UI from State ---
-  function renderPreview() {
-    const codeEl = document.getElementById('preview-code');
-    const filenameEl = document.getElementById('filename-badge');
-    const lineCountEl = document.getElementById('preview-line-count');
-    const charCountEl = document.getElementById('preview-char-count');
-
-    if (!codeEl) return;
-
-    const code = generateLatexCode(state);
-    codeEl.textContent = code;
-
-    const filename = getComputedFilename(state);
-    if (filenameEl) filenameEl.textContent = filename;
-
-    const lines = code.split('\n');
-    if (lineCountEl) lineCountEl.textContent = `${lines.length} lines`;
-    if (charCountEl) charCountEl.textContent = `${code.length} chars`;
-  }
-
-  // --- Bind Form Inputs to State ---
-  function bindForm() {
-    // Presets
+  function bindPresetButtons() {
     document.querySelectorAll('[data-preset]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const p = btn.getAttribute('data-preset');
-        state.preset = p;
-
-        if (p === 'PAC') {
-          state.language = 'cat';
-          state.cover = false;
-          state.toc = true;
-          state.noPlagi = true;
-        } else if (p === 'PEC') {
-          state.language = 'es';
-          state.cover = false;
-          state.toc = true;
-          state.noPlagi = true;
-        } else if (p === 'CA') {
-          state.language = 'en';
-          state.cover = false;
-          state.toc = true;
-          state.noPlagi = true;
-        } else if (p === 'PR') {
-          state.cover = true;
-          state.toc = true;
-          state.noPlagi = true;
+        const presetKey = btn.getAttribute('data-preset');
+        if (PRESETS[presetKey]) {
+          state = JSON.parse(JSON.stringify(PRESETS[presetKey]));
+          document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderForm();
+          generateLatex();
         }
-
-        // Sync inputs
-        const langSel = document.getElementById('input-language');
-        if (langSel) langSel.value = state.language;
-        const coverChk = document.getElementById('chk-cover');
-        if (coverChk) coverChk.checked = state.cover;
-        const tocChk = document.getElementById('chk-toc');
-        if (tocChk) tocChk.checked = state.toc;
-        const plagiChk = document.getElementById('chk-no-plagi');
-        if (plagiChk) plagiChk.checked = state.noPlagi;
-
-        renderPreview();
       });
     });
+  }
 
-    // Language
-    const langSelect = document.getElementById('input-language');
-    if (langSelect) {
-      langSelect.addEventListener('change', (e) => {
-        state.language = e.target.value;
-        renderPreview();
-      });
+  function bindFormInputs() {
+    const container = document.getElementById('generator-form');
+    if (!container) return;
+
+    container.addEventListener('input', handleInputChange);
+    container.addEventListener('change', handleInputChange);
+  }
+
+  function handleInputChange(e) {
+    const target = e.target;
+    const name = target.name;
+    if (!name) return;
+
+    if (name.startsWith('meta.')) {
+      const key = name.replace('meta.', '');
+      state.meta[key] = target.value;
+    } else if (name.startsWith('opts.')) {
+      const key = name.replace('opts.', '');
+      state.classOpts[key] = target.type === 'checkbox' ? target.checked : target.value;
+    } else if (name.startsWith('pkg.')) {
+      const key = name.replace('pkg.', '');
+      state.packages[key] = target.checked;
+    } else if (name.startsWith('blob.')) {
+      const key = name.replace('blob.', '');
+      state.blobs[key] = target.checked;
     }
 
-    // Metadata inputs
-    const metadataFields = [
-      ['meta-student', 'student'],
-      ['meta-grade', 'grade'],
-      ['meta-subj-fullname', 'subjFullName'],
-      ['meta-subj-shortname', 'subjShortName'],
-      ['meta-subj-code', 'subjCode'],
-      ['meta-ca-fullname', 'caFullName'],
-      ['meta-ca-shortname', 'caShortName'],
-      ['meta-date', 'date']
-    ];
+    generateLatex();
+  }
 
-    metadataFields.forEach(([elemId, key]) => {
-      const el = document.getElementById(elemId);
-      if (el) {
-        el.addEventListener('input', (e) => {
-          state.metadata[key] = e.target.value;
-          renderPreview();
-        });
+  function renderForm() {
+    for (const [k, v] of Object.entries(state.meta)) {
+      const input = document.querySelector(`[name="meta.${k}"]`);
+      if (input) input.value = v;
+    }
+
+    for (const [k, v] of Object.entries(state.classOpts)) {
+      const input = document.querySelector(`[name="opts.${k}"]`);
+      if (input) {
+        if (input.type === 'checkbox') input.checked = !!v;
+        else input.value = v;
       }
-    });
-
-    // Class option checkboxes (cover, toc, noPlagi, debug, printDoc)
-    const optionToggles = [
-      ['chk-cover', 'cover'],
-      ['chk-toc', 'toc'],
-      ['chk-no-plagi', 'noPlagi'],
-      ['chk-debug', 'debug'],
-      ['chk-print-doc', 'printDoc']
-    ];
-
-    optionToggles.forEach(([elemId, key]) => {
-      const el = document.getElementById(elemId);
-      if (el) {
-        el.addEventListener('change', (e) => {
-          state[key] = e.target.checked;
-          // Switching a granular toggle sets preset to Custom
-          state.preset = 'Custom';
-          document.querySelectorAll('[data-preset]').forEach(b => {
-            if (b.getAttribute('data-preset') === 'Custom') b.classList.add('active');
-            else b.classList.remove('active');
-          });
-          renderPreview();
-        });
-      }
-    });
-
-    // Package toggles
-    const pkgKeys = ['pxCALC', 'pxCMP', 'pxMEM', 'pxSRC', 'pxTAB', 'pxLST', 'pxUML', 'pxREQ', 'pxANN', 'pxGNT', 'pxGLS'];
-    pkgKeys.forEach(pkg => {
-      const el = document.getElementById(`pkg-${pkg}`);
-      if (el) {
-        el.addEventListener('change', (e) => {
-          state.packages[pkg] = e.target.checked;
-          renderPreview();
-        });
-      }
-    });
-
-    // Package Config options
-    const cfgLstPalette = document.getElementById('cfg-lst-palette');
-    if (cfgLstPalette) {
-      cfgLstPalette.addEventListener('change', (e) => {
-        state.packageConfigs.lstPalette = e.target.value;
-        renderPreview();
-      });
     }
 
-    const cfgLstLang = document.getElementById('cfg-lst-lang');
-    if (cfgLstLang) {
-      cfgLstLang.addEventListener('change', (e) => {
-        state.packageConfigs.lstDefaultLang = e.target.value;
-        renderPreview();
-      });
+    for (const [k, v] of Object.entries(state.packages)) {
+      const input = document.querySelector(`[name="pkg.${k}"]`);
+      if (input) input.checked = !!v;
     }
 
-    const cfgCmpPreset = document.getElementById('cfg-cmp-preset');
-    if (cfgCmpPreset) {
-      cfgCmpPreset.addEventListener('change', (e) => {
-        state.packageConfigs.cmpPreset = e.target.value;
-        renderPreview();
-      });
+    for (const [k, v] of Object.entries(state.blobs)) {
+      const input = document.querySelector(`[name="blob.${k}"]`);
+      if (input) input.checked = !!v;
+    }
+  }
+
+  function generateLatex() {
+    const previewEl = document.getElementById('latex-preview');
+    if (!previewEl) return;
+
+    const opts = [];
+    if (state.classOpts.cover) opts.push('cover');
+    if (state.classOpts.toc) opts.push('toc');
+    if (state.classOpts.CMP) opts.push('CMP');
+    if (state.classOpts.draft) opts.push('draft');
+    if (state.classOpts.fontsize) opts.push(state.classOpts.fontsize);
+    if (state.classOpts.language && state.classOpts.language !== 'catalan') {
+      opts.push(state.classOpts.language);
+    }
+    const optString = opts.length > 0 ? '[' + opts.join(',') + ']' : '';
+
+    let out = '% !TeX encoding = UTF-8\n';
+    out += '% !TeX program = pdflatex\n';
+    out += '%% ==========================================================================\n';
+    out += '%% P3CTeX Document Boilerplate\n';
+    out += '%% Generated automatically via P3CTeX Indie Tooling Engine\n';
+    out += '%% Motto: "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a\n';
+    out += '%% ==========================================================================\n\n';
+
+    out += '\\documentclass' + optString + '{P3CTeX}\n\n';
+
+    out += '%% --- Metadades del Document & Identificacio UOC ---\n';
+    out += '\\PECTeXconfig{\n';
+    out += '  data = {\n';
+    out += '    student        = {' + (state.meta.student || 'Estudiant') + '},\n';
+    out += '    niu            = {' + (state.meta.niu || '0000000') + '},\n';
+    out += '    grade          = {Grau en Enginyeria Informatica},\n';
+    out += '    subj-fullname  = {' + (state.meta.subject || 'Assignatura') + '},\n';
+    out += '    subj-shortname = {' + (state.meta.subject ? state.meta.subject.substring(0, 4).toUpperCase() : 'UOC') + '},\n';
+    out += '    subj-code      = {' + (state.meta.subjCode || '00.000') + '},\n';
+    out += '    ca-fullname    = {' + (state.meta.caFull || 'PAC') + '},\n';
+    out += '    ca-shortname   = {' + (state.meta.caShort || 'PAC1') + '},\n';
+    out += '  }\n';
+    out += '}\n\n';
+
+    if (state.classOpts.cover) {
+      out += '%% --- Configuracio de Portada P3CTeX ---\n';
+      out += '\\PECTeXcover{fullcover, text-uppertitle=' + (state.meta.caShort || 'PAC1') + '}\n\n';
     }
 
-    const cfgTabPreset = document.getElementById('cfg-tab-preset');
-    if (cfgTabPreset) {
-      cfgTabPreset.addEventListener('change', (e) => {
-        state.packageConfigs.tabPreset = e.target.value;
-        renderPreview();
-      });
+    out += '%% --- Moduls d\'Arsenal P3CTeX ---\n';
+    if (state.packages.pxCALC) out += '\\usepackage{pxCALC}  % Calculs automatics i resolucio pas a pas\n';
+    if (state.packages.pxTAB)  out += '\\usepackage{pxTAB}   % Taules professionals i composicio de presets\n';
+    if (state.packages.pxSRC)  out += '\\usepackage{pxSRC}   % Gestio resilient d\'imatges i fallbacks\n';
+    if (state.packages.pxLST)  out += '\\usepackage{pxLST}   % Caixes de codi amb ressaltat de sintaxi\n';
+    if (state.packages.pxREQ)  out += '\\usepackage{pxREQ}   % Histories d\'usuari i matrius DAFO/SWOT\n';
+    if (state.packages.pxUML)  out += '\\usepackage{pxUML}   % Diagrames de classes i sequencia UML\n';
+    if (state.packages.pxMEM)  out += '\\usepackage{pxMEM}   % Estructura modular per a memories i TFG\n';
+    out += '\n';
+
+    if (state.packages.pxSRC) {
+      out += '%% Configuracio resilient de figures\n';
+      out += '\\pxSRCsetup{placeholder-color=blue, fallback=true}\n\n';
+    }
+    if (state.packages.pxTAB) {
+      out += '%% Estil base per a taules\n';
+      out += '\\pxTABsetup{style=header, headerbgcolor=blue!15, headertextcolor=blue!70!black}\n\n';
     }
 
-    // Snippet toggles
-    const snippetKeys = [
-      ['snip-intro', 'introSection'],
-      ['snip-calc', 'calcExample'],
-      ['snip-automaton', 'cmpAutomaton'],
-      ['snip-tombstone', 'cmpTombstone'],
-      ['snip-code', 'codeListing'],
-      ['snip-table', 'tableExample'],
-      ['snip-uml', 'umlClass'],
-      ['snip-bib', 'bibliography']
-    ];
+    out += '\\begin{document}\n\n';
+    out += '\\section*{' + (state.meta.title || 'Resolucio de la Practica') + '}\n';
+    out += 'Document generat per a la resolucio oficial de l\'activitat \\textbf{' + (state.meta.caFull || 'PAC') + '}.\n\n';
 
-    snippetKeys.forEach(([elemId, key]) => {
-      const el = document.getElementById(elemId);
-      if (el) {
-        el.addEventListener('change', (e) => {
-          state.snippets[key] = e.target.checked;
-          renderPreview();
-        });
-      }
-    });
+    if (state.blobs.multipageTable) {
+      out += '%% BLOB: Taula Multipagina de Gran Volum (pxTBLlong / longtable)\n';
+      out += '\\section{Registre Detallat d\'Execucio i Proves}\n';
+      out += '\\pxTBLlong[.95\\linewidth]{5}{\n';
+      out += '  \\textbf{ID} & \\textbf{Vector d\'Entrada} & \\textbf{Estat Esperat} & \\textbf{Temps (ms)} & \\textbf{Veredicte}\n';
+      out += '}{\n';
+      out += '  TC-01 & \\texttt{0x00FF (Init)}     & READY       & 1.24  & \\textbf{PASS} \\\\\n';
+      out += '  TC-02 & \\texttt{0x01A0 (Payload)}  & PROCESSING  & 4.85  & \\textbf{PASS} \\\\\n';
+      out += '  TC-03 & \\texttt{0x02B4 (Checksum)} & VERIFIED    & 2.10  & \\textbf{PASS} \\\\\n';
+      out += '  TC-04 & \\texttt{0x03FF (Overflow)} & REJECTED    & 0.88  & \\textbf{PASS} \\\\\n';
+      out += '  TC-05 & \\texttt{0x04C1 (Retry)}    & RECOVERED   & 12.40 & \\textbf{PASS} \\\\\n';
+      out += '  TC-06 & \\texttt{0x05D8 (Drain)}    & IDLE        & 1.15  & \\textbf{PASS} \\\\\n';
+      out += '  TC-07 & \\texttt{0x06E2 (Close)}    & TERMINATED  & 0.42  & \\textbf{PASS} \\\\\n';
+      out += '}\n\n';
+    }
 
-    // Copy to Clipboard Button
+    if (state.blobs.foreachLoop) {
+      out += '%% BLOB: Execucio Recursiva i Iterativa Automatica (\\foreach)\n';
+      out += '\\section{Galeria d\'Iteracions i Benchmarks Recursius}\n';
+      out += '\\noindent\\foreach \\iter/\\labelName in {1/Baseline, 2/Optimized-O2, 3/Vectorized-AVX2, 4/Final-JIT} {%\n';
+      out += '  \\begin{minipage}[t]{0.48\\linewidth}\n';
+      out += '    \\centering\n';
+      out += '    \\pxIMG[0.9\\linewidth]{benchmarks/step_\\iter}{\\labelName\\ (Iteracio \\iter)}[fig:bench_\\iter]\n';
+      out += '    \\vspace{1em}\n';
+      out += '  \\end{minipage}%\n';
+      out += '  \\hfill\\ifnum\\iter=2 \\par\\vspace{1em}\\fi\n';
+      out += '}\n\n';
+    }
+
+    if (state.blobs.cmpDiagrams && state.classOpts.CMP) {
+      out += '%% BLOB: Diagrames de Compilacio i Automats (pxCMP)\n';
+      out += '\\section{Arquitectura del Compilador i Taula de Transicio}\n';
+      out += '\\subsection{Diagrama de Tombstone}\n';
+      out += '\\pxTombstoneCompile[title={Compilacio de Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
+      out += '\\subsection{Taula de Transicio d\'Estats (DFA)}\n';
+      out += '\\pxTransitionTable[title={Taula de transicio d\'estats del lexer}]{a, b}{\n';
+      out += '  q_0 / initial   / q_1, q_0 / I;\n';
+      out += '  q_1 / normal    / q_1, q_2 / I;\n';
+      out += '  q_2 / accepting / q_0, q_2 / II\n';
+      out += '}\n\n';
+      out += '\\pxAutomatonTrace[title={Traca de reconeixement de la paraula \\texttt{abb}}]{\n';
+      out += '  q_0 / a / q_1; q_1 / b / q_2; q_2 / b / q_2\n';
+      out += '}[Acceptat]\n\n';
+    }
+
+    if (state.blobs.codebox && state.packages.pxLST) {
+      out += '%% BLOB: Llistat de Codi Font Professional (pxLST)\n';
+      out += '\\section{Implementacio de l\'Algorisme Principal}\n';
+      out += '\\pxCodeSet[dark]{pxJava}\n';
+      out += '\\begin{pxCode}[language=pxJava]{PipelineEngine}\n';
+      out += 'public class PipelineEngine {\n';
+      out += '    private final int bufferCapacity;\n';
+      out += '    public PipelineEngine(int capacity) {\n';
+      out += '        this.bufferCapacity = capacity;\n';
+      out += '    }\n';
+      out += '    public synchronized boolean dispatch(byte[] data) {\n';
+      out += '        if (data == null || data.length > bufferCapacity) {\n';
+      out += '            return false;\n';
+      out += '        }\n';
+      out += '        return true;\n';
+      out += '    }\n';
+      out += '}\n';
+      out += '\\end{pxCode}\n\n';
+    }
+
+    if (state.blobs.reqCard && state.packages.pxREQ) {
+      out += '%% BLOB: Historia d\'Usuari i Matriu DAFO / SWOT (pxREQ)\n';
+      out += '\\section{Especificacio d\'Enginyeria de Requisits}\n';
+      out += '\\begin{pxUserStory}{US-01}\n';
+      out += '  \\pxAsA{Estudiant d\'Enginyeria de la UOC}\n';
+      out += '  \\pxIWant{Generar documents LaTeX amb plantilles oficials}\n';
+      out += '  \\pxSoThat{Puc lliurar PACs impecables a l\'avaluacio continuada}\n';
+      out += '  \\pxAcceptanceCriteria{Compilacio sense errors i tipografia estandarditzada}\n';
+      out += '\\end{pxUserStory}\n\n';
+      out += '\\pxSWOT[tabwidth=\\linewidth]{\n';
+      out += '  Sintaxi expl3 moderna, suport resilient d\'imatges\n';
+      out += '}{\n';
+      out += '  Dependencia d\'un entorn TeX local\n';
+      out += '}{\n';
+      out += '  Adopcio massiva a assignatures de la UOC\n';
+      out += '}{\n';
+      out += '  Modificacions de formats oficials per part del professorat\n';
+      out += '}\n\n';
+    }
+
+    out += '\\section{Conclusions}\n';
+    out += 'El treball s\'ha desenvolupat complint amb la totalitat dels objectius proposats en el calendari.\n\n';
+    out += '\\end{document}\n';
+
+    previewEl.textContent = out;
+  }
+
+  function bindActions() {
     const copyBtn = document.getElementById('btn-copy-tex');
     if (copyBtn) {
-      copyBtn.addEventListener('click', () => {
-        const code = generateLatexCode(state);
-        if (window.copyTextToClipboard) {
-          window.copyTextToClipboard(code, () => {
-            const orig = copyBtn.innerHTML;
-            copyBtn.classList.add('copied');
-            copyBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg> Copied!`;
-            if (window.showToast) window.showToast('Document .tex code copied to clipboard');
-            setTimeout(() => {
-              copyBtn.classList.remove('copied');
-              copyBtn.innerHTML = orig;
-            }, 2500);
-          }, () => {
-            if (window.showToast) window.showToast('Failed to copy. Please select manually.');
-          });
+      copyBtn.addEventListener('click', async () => {
+        const previewEl = document.getElementById('latex-preview');
+        if (!previewEl) return;
+        try {
+          await navigator.clipboard.writeText(previewEl.textContent);
+          const origText = copyBtn.innerText;
+          copyBtn.innerText = 'COPIED TO CLIPBOARD!';
+          copyBtn.classList.add('green');
+          setTimeout(() => {
+            copyBtn.innerText = origText;
+            copyBtn.classList.remove('green');
+          }, 2000);
+        } catch (err) {
+          console.error(err);
         }
       });
     }
 
-    // Download .tex Button
     const downloadBtn = document.getElementById('btn-download-tex');
     if (downloadBtn) {
       downloadBtn.addEventListener('click', () => {
-        const code = generateLatexCode(state);
-        const filename = getComputedFilename(state);
-        const blob = new Blob([code], { type: 'text/x-tex;charset=utf-8' });
+        const previewEl = document.getElementById('latex-preview');
+        if (!previewEl) return;
+        const blob = new Blob([previewEl.textContent], { type: 'text/x-tex;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
+        const filename = (state.meta.caShort || 'P3CTeX-document').replace(/[^a-zA-Z0-9_-]/g, '_') + '.tex';
         a.href = url;
         a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 300);
-        if (window.showToast) window.showToast(`Downloaded ${filename}`);
+        URL.revokeObjectURL(url);
       });
     }
   }
 
-  // Expose to window for testing / standalone
-  window.P3CTeXGenerator = {
-    state,
-    generateLatexCode,
-    getComputedFilename,
-    renderPreview
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    bindForm();
-    renderPreview();
-  });
+  // Export
+  window.P3CTeXGenerator = { init, generateLatex, generateLatexCode: generateLatex };
+  window.generateLatexCode = generateLatex;
+  document.addEventListener('DOMContentLoaded', init);
 })();
