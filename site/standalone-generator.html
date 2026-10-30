@@ -12,1399 +12,956 @@
 <style>
 /* Inlined site.css */
 /* ==========================================================================
-   P3CTeX — Academic Coursework & Engineering Tooling Suite
-   Visual Identity: Retrofuturistic Indie Engineering Workstation
-   Aesthetic: Hardware Instrument Console · Restful Slate · Vintage Warm Accents
+   P3CTeX Emergency Engineering Workstation MK-II
+   Architecture: Fixed-Viewport Interactive Console (Zero Vertical Scroll Slop)
+   Design: Retrofuturistic High-Density Hardware Instrument Deck
    "PROCRASTINAR ÉS L'ÚNICA ESPERANÇA" · By ScVr!a
    ========================================================================== */
 
 :root {
-  /* Restful, Low-Strain Matte Slate Palette (Zero Glare & Halation) */
-  --bg-deep: #11151c;
-  --bg-main: #151a23;
-  --bg-surface: #1d2430;
-  --bg-deck: #252e3d;
-  --bg-recessed: #0e1218;
-  --bg-crt-screen: #0a0d12;
+  /* Deep Space Canvas Palette */
+  --bg-void: #05080c;
+  --bg-deck: #0a0e15;
+  --bg-stage: #080c12;
+  --bg-subtle: #101622;
+  --bg-editor: #06090e;
 
-  /* Architectural Chiseled Borders */
-  --border-subtle: #273242;
-  --border-base: #344256;
-  --border-bright: #475a75;
-  --border-accent: #5d7596;
+  /* Architectural Hairlines & Datum Rules (Zero Generic Card Borders) */
+  --hairline-dim: rgba(255, 255, 255, 0.08);
+  --hairline-base: #1e2838;
+  --hairline-bright: #2e3e56;
 
-  /* Ergonomic Typography (Warm Silver & Slate, High Legibility) */
-  --text-white: #e6eef6;
-  --text-primary: #cbd7e3;
-  --text-secondary: #90a3b6;
-  --text-muted: #66798e;
+  /* Phosphor & Retro Hardware Luminescence */
+  --phosphor-green: #22c55e;
+  --phosphor-green-glow: rgba(34, 197, 94, 0.3);
+  --phosphor-amber: #f59e0b;
+  --phosphor-amber-glow: rgba(245, 158, 11, 0.25);
+  --phosphor-cyan: #38bdf8;
+  --phosphor-cyan-glow: rgba(56, 189, 248, 0.25);
+  --action-rust: #e11d48;
+  --action-rust-hover: #f43f5e;
 
-  /* Warm Vintage Hardware Accents (Tektronix & Amber Phosphor) */
-  --btn-rust: #b84332;
-  --btn-rust-bevel: #cc4f3d;
-  --btn-rust-shadow: #5c1e14;
-  --btn-rust-hover: #d1503e;
+  /* Typography Colors */
+  --txt-pure: #ffffff;
+  --txt-primary: #e2e8f0;
+  --txt-secondary: #94a3b8;
+  --txt-muted: #64748b;
 
-  --accent-amber: #e59b3c;
-  --accent-amber-subtle: rgba(229, 155, 60, 0.12);
-
-  /* Calm Phosphor Cyan/Teal (Non-acidic) */
-  --accent-cyan: #4ea8a8;
-  --accent-cyan-subtle: rgba(78, 168, 168, 0.12);
-  --crt-teal-bright: #68c0c0;
-
-  /* Status Green LED */
-  --accent-green: #3fb07f;
-  --accent-green-subtle: rgba(63, 176, 127, 0.12);
-
-  /* Typography */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-
-  /* Sizing */
-  --max-width: 1140px;
-  --page-pad: clamp(16px, 3.5vw, 36px);
+  /* Typographic Font Families */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {
   box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 24px;
-}
-
-body {
   margin: 0;
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  line-height: 1.66;
-  font-size: 16.5px;
+  padding: 0;
+}
+
+html, body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-void);
+  color: var(--txt-primary);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-button, input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-a {
-  color: var(--accent-cyan);
-  text-decoration: none;
-  text-underline-offset: 0.22em;
-  transition: all 0.12s ease;
-}
-
-a:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-button {
-  cursor: pointer;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-/* ==========================================================================
-   Typography Hierarchy
-   ========================================================================== */
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  color: var(--text-white);
-  line-height: 1.25;
-  margin-top: 0;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-
-h1 {
-  font-size: clamp(2rem, 3.4vw, 3rem);
-  margin-bottom: 0.35em;
-}
-
-h2 {
-  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
-  margin-bottom: 0.4em;
-}
-
-h3 {
-  font-size: 1.15rem;
-  margin-bottom: 0.35em;
-}
-
-p {
-  margin: 0 0 1em;
-}
-
-code {
-  font-family: var(--font-mono);
-  font-size: 0.88em;
-  background: var(--bg-recessed);
-  color: var(--crt-teal-bright);
-  border: 1px solid var(--border-subtle);
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent-cyan);
-  outline-offset: 3px;
-}
-
+/* Off-Screen Accessibility Link */
 .skip-link {
-  position: fixed;
-  top: -100px;
-  left: 16px;
-  z-index: 100;
-  background: var(--bg-surface);
-  color: var(--text-white);
-  padding: 10px 18px;
-  font-weight: 600;
-  border: 1px solid var(--border-bright);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
-
 .skip-link:focus {
-  top: 16px;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: auto;
+  height: auto;
+  z-index: 99999;
+  background: var(--phosphor-amber);
+  color: #000000;
+  padding: 8px 14px;
+  font-weight: 700;
 }
 
 /* ==========================================================================
-   Header & Hardware Telemetry
+   FIXED VIEWPORT CONTAINER (100vh / 100vw)
    ========================================================================== */
-
-.site-header {
-  background: var(--bg-deep);
-  border-bottom: 1px solid var(--border-base);
+.console-viewport {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-void);
+  background-image: 
+    linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  overflow: hidden;
 }
 
-.telemetry-bar,
-.telemetry-ticker-bar {
-  background: #0f131a;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 7px var(--page-pad);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--text-muted);
+/* ==========================================================================
+   TOP MASTHEAD HEADER DECK
+   ========================================================================== */
+.console-masthead {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  letter-spacing: 0.03em;
-}
-
-.telemetry-inner {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.telemetry-left,
-.telemetry-right {
-  display: flex;
-  align-items: center;
+  height: 52px;
+  padding: 0 20px;
+  background: var(--bg-deck);
+  border-bottom: 1px solid var(--hairline-base);
+  flex-shrink: 0;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
-.telemetry-item {
-  color: var(--text-secondary);
+.masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.masthead-brand .brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--txt-pure);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  font-size: 16px;
+}
+.brand-badge .badge-icon {
+  color: var(--phosphor-cyan);
+  font-size: 18px;
+}
+.brand-badge .badge-ver {
+  font-size: 11px;
+  color: var(--phosphor-amber);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 1px 5px;
+  letter-spacing: 0;
+}
+.brand-tagline {
+  font-size: 11px;
+  color: var(--txt-muted);
+  border-left: 1px solid var(--hairline-bright);
+  padding-left: 12px;
+  letter-spacing: 0.02em;
 }
 
+.masthead-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--txt-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.telemetry-sep {
+  color: var(--hairline-bright);
+}
 .telemetry-item strong {
-  color: var(--text-white);
+  color: var(--txt-primary);
 }
-
-.status-indicator,
-.led-indicator {
-  display: inline-flex;
+.telemetry-item.status {
+  color: var(--phosphor-green);
+  display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 700;
 }
-
-.dot,
-.led-dot {
+.led-pulse {
+  display: inline-block;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  display: inline-block;
+  background-color: var(--phosphor-green);
+  box-shadow: 0 0 8px var(--phosphor-green);
+}
+.telemetry-motto {
+  color: var(--phosphor-amber);
+  font-style: italic;
+  font-size: 11px;
 }
 
-.dot.green,
-.led-dot.green {
-  background: var(--accent-green);
-  box-shadow: 0 0 5px var(--accent-green);
-}
-
-.dot.amber,
-.led-dot.amber {
-  background: var(--accent-amber);
-  box-shadow: 0 0 5px var(--accent-amber);
-}
-
-.dot.rust,
-.led-dot.rust {
-  background: var(--btn-rust);
-}
-
-/* Demopack Banner Mounting */
-.banner-mount,
-.brand {
-  display: block;
-  width: 100%;
-  max-width: 1040px;
-  margin: 0 auto;
-  aspect-ratio: 1024 / 338;
-  background: #000000;
-  border-inline: 1px solid var(--border-subtle);
-  overflow: hidden;
-}
-
-.banner-mount img,
-.brand img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-/* Function-Key Navigation Deck (Horizontal Row Guaranteed) */
-.site-nav {
-  background: #11151c;
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-base);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  padding: 8px var(--page-pad);
+.masthead-actions {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 8px;
+  flex-shrink: 0;
 }
-
-.nav-inner {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
-
-.site-nav a,
-.nav-inner a {
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  white-space: nowrap;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  padding: 8px 14px;
-  min-height: 36px;
+.action-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-  transition: all 0.12s ease;
-}
-
-.site-nav a:hover,
-.nav-inner a:hover {
-  background: var(--bg-deck);
-  color: var(--text-white);
-  border-color: var(--accent-cyan);
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-decoration: none;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
 }
-
-.site-nav a[aria-current=page],
-.nav-inner a[aria-current=page] {
-  background: var(--bg-deck);
-  color: var(--text-white);
-  border-top: 2px solid var(--btn-rust);
-  border-color: var(--border-bright);
+.action-btn.cyan {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--phosphor-cyan);
+  border-color: rgba(56, 189, 248, 0.35);
 }
-
-.site-nav a.nav-action,
-.nav-inner a.nav-action {
-  background: rgba(184, 67, 50, 0.22);
-  color: #ff9e91;
-  border-color: var(--btn-rust-bevel);
+.action-btn.cyan:hover {
+  background: var(--phosphor-cyan);
+  color: #000;
+  box-shadow: 0 0 10px var(--phosphor-cyan-glow);
 }
-
-.site-nav a.nav-action:hover,
-.nav-inner a.nav-action:hover {
-  background: var(--btn-rust);
-  color: #ffffff;
+.action-btn.rust {
+  background: var(--action-rust);
+  color: #fff;
+}
+.action-btn.rust:hover {
+  background: var(--action-rust-hover);
+  box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
+}
+.action-btn.ghost {
+  color: var(--txt-secondary);
+  border-color: var(--hairline-base);
+}
+.action-btn.ghost:hover {
+  color: #fff;
+  border-color: var(--hairline-bright);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* ==========================================================================
-   Hero Section
+   TACTICAL SELECTOR RIBBON
    ========================================================================== */
-
-.hero-block {
-  padding-top: clamp(36px, 5vw, 64px);
-  padding-bottom: clamp(28px, 4vw, 44px);
-  border-bottom: 1px solid var(--border-subtle);
-  background: linear-gradient(180deg, rgba(29, 36, 48, 0.5) 0%, rgba(21, 26, 35, 0) 100%);
-}
-
-.hero-block .container {
-  max-width: var(--max-width);
-  margin-inline: auto;
-}
-
-.eyebrow {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--accent-amber);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.hero-block h1 {
-  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: var(--text-white);
-  margin-bottom: 0.3em;
-}
-
-.hero-block h1 .accent-text {
-  color: #e56b5b;
-}
-
-.hero-tagline {
-  font-family: var(--font-mono);
-  font-size: clamp(1.05rem, 1.5vw, 1.22rem);
-  font-weight: 700;
-  color: var(--accent-amber);
-  line-height: 1.45;
-  margin-bottom: 0.8em;
-}
-
-.hero-lead {
-  font-size: clamp(1rem, 1.25vw, 1.12rem);
-  line-height: 1.68;
-  color: var(--text-primary);
-  margin-bottom: 1.8em;
-  max-width: 840px;
-}
-
-.hero-buttons {
+.console-selector-ribbon {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 1.8em;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 20px;
+  background: var(--bg-void);
+  border-bottom: 1px solid var(--hairline-base);
+  flex-shrink: 0;
 }
 
-.btn {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 11px 20px;
-  border-radius: 3px;
-  text-decoration: none;
+.selector-track {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+.selector-key {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.12s ease;
-}
-
-.btn-primary {
-  background: var(--btn-rust);
-  color: #ffffff;
-  border: 1px solid var(--btn-rust-bevel);
-  box-shadow: 0 2px 0 var(--btn-rust-shadow);
-}
-
-.btn-primary:hover {
-  background: var(--btn-rust-hover);
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.btn-secondary {
-  background: var(--bg-deck);
-  color: var(--text-primary);
-  border: 1px solid var(--border-bright);
-}
-
-.btn-secondary:hover {
-  background: #2f3b4e;
-  color: var(--text-white);
-  border-color: var(--accent-cyan);
-  text-decoration: none;
-}
-
-.btn-ghost {
+  gap: 8px;
   background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-base);
-}
-
-.btn-ghost:hover {
-  background: var(--bg-surface);
-  color: var(--text-white);
-  border-color: var(--border-bright);
-  text-decoration: none;
-}
-
-.hero-badges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+  color: var(--txt-secondary);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 14px;
   font-family: var(--font-mono);
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.hero-badges .sep {
-  color: var(--border-base);
-}
-
-/* ==========================================================================
-   Panoramic Workshop Viewport
-   ========================================================================== */
-
-.workshop-viewport {
-  padding-block: 28px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.workshop-frame,
-.workshop-figure {
-  margin: 0;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-radius: 3px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-.frame-hud-top,
-.frame-hud-bottom,
-.figure-hud-top,
-.figure-hud-bottom {
-  background: #0f131a;
-  padding: 8px 16px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.frame-hud-top,
-.figure-hud-top {
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--accent-amber);
+  font-size: 12px;
   font-weight: 700;
-}
-
-.frame-hud-bottom,
-.figure-hud-bottom {
-  border-top: 1px solid var(--border-subtle);
-}
-
-.workshop-frame img,
-.workshop-figure img {
-  width: 100%;
-  height: auto;
-  max-height: 440px;
-  object-fit: cover;
-  display: block;
-}
-
-/* ==========================================================================
-   General Section Layout
-   ========================================================================== */
-
-.container {
-  width: min(var(--max-width), calc(100% - var(--page-pad) * 2));
-  margin-inline: auto;
-}
-
-.section {
-  padding-block: clamp(38px, 5vw, 64px);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.section-title-group {
-  margin-bottom: 24px;
-}
-
-.section-kicker {
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--accent-amber);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.section-title-group h2 {
-  font-size: clamp(1.45rem, 2.3vw, 1.95rem);
-  color: var(--text-white);
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 0.3em;
-  line-height: 1.25;
-}
-
-.section-sub {
-  color: var(--text-secondary);
-  font-size: 0.98rem;
-  line-height: 1.62;
-  margin: 0;
-  max-width: 860px;
-}
-
-/* ==========================================================================
-   Interactive Deliverable Workbench Console (Two-Pane Studio)
-   ========================================================================== */
-
-.workbench-console {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-top: 3px solid var(--border-bright);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-block: 22px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
-}
-
-.workbench-bar {
-  background: #0f131a;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 10px 16px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.workbench-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.rocker-btn {
-  background: var(--bg-deck);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  font-weight: 700;
-  padding: 7px 14px;
-  border-radius: 3px;
   cursor: pointer;
   transition: all 0.12s ease;
 }
-
-.rocker-btn:hover {
-  background: #2f3b4e;
-  color: var(--text-white);
-  border-color: var(--border-bright);
+.selector-key .key-index {
+  color: var(--txt-muted);
+  font-size: 10px;
+}
+.selector-key:hover {
+  color: var(--txt-pure);
+  background: rgba(255, 255, 255, 0.03);
+}
+.selector-key.active {
+  color: var(--phosphor-amber);
+  border-bottom: 2px solid var(--phosphor-amber);
+  background: rgba(245, 158, 11, 0.06);
+}
+.selector-key.active .key-index {
+  color: var(--phosphor-amber);
 }
 
-.rocker-btn.active {
-  background: var(--btn-rust);
-  color: #ffffff;
-  border-color: var(--btn-rust-bevel);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+.selector-meta .mode-readout {
+  font-size: 11px;
+  color: var(--txt-muted);
+  letter-spacing: 0.05em;
 }
 
-/* Split 2-pane workbench body */
-.workbench-body {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  align-items: stretch;
+/* ==========================================================================
+   MAIN CONSOLE STAGE (100% Remaining Height, No Page Scroll)
+   ========================================================================== */
+.console-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-stage);
 }
 
-@media (max-width: 960px) {
-  .workbench-body {
-    grid-template-columns: 1fr;
-  }
+.console-deck {
+  display: none;
+  height: 100%;
+  width: 100%;
+  padding: 16px 20px;
+  overflow: hidden;
 }
-
-/* Left Specs Pane */
-.workbench-guide {
-  padding: 22px;
-  background: var(--bg-surface);
-  border-right: 1px solid var(--border-subtle);
+.console-deck.active {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
 }
 
-@media (max-width: 960px) {
-  .workbench-guide {
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-}
-
-.guide-header {
-  margin-bottom: 4px;
-}
-
-.guide-tag {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--accent-amber);
-  letter-spacing: 0.06em;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.guide-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 8px;
-}
-
-.guide-desc {
-  font-size: 0.92rem;
-  line-height: 1.62;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-}
-
-.workbench-specs-grid {
+/* ==========================================================================
+   DECK 01: SKELETON CODES (Dual Split Screen)
+   ========================================================================== */
+.deck-split-view {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  background: var(--bg-recessed);
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
 }
 
-.spec-cell {
+.code-buffer-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-editor);
+  border: 1px solid var(--hairline-base);
+}
+
+.buffer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 14px;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--hairline-base);
+  flex-shrink: 0;
+}
+.buffer-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+}
+.buffer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--phosphor-amber);
+}
+.buffer-title {
+  color: var(--txt-pure);
+  font-weight: 700;
+}
+.buffer-tag {
+  color: var(--txt-muted);
+  font-size: 10.5px;
+}
+
+.tactile-copy-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--phosphor-amber);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.tactile-copy-action:hover {
+  background: var(--phosphor-amber);
+  color: #000;
+}
+.tactile-copy-action.copied {
+  background: var(--phosphor-green);
+  color: #000;
+  border-color: var(--phosphor-green);
+}
+.tactile-copy-action.mini {
+  padding: 2px 8px;
+  font-size: 10.5px;
+}
+
+.buffer-editor-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 16px;
+  background: var(--bg-editor);
+}
+.editor-pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #bbf7d0;
+  white-space: pre;
+}
+
+/* Profile Sidebar */
+.profile-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-deck);
+  border: 1px solid var(--hairline-base);
+  padding: 14px 16px;
+  gap: 12px;
+  overflow-y: auto;
+}
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  color: var(--txt-muted);
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--hairline-dim);
+  padding-bottom: 6px;
+}
+
+.profile-rocker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.profile-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--hairline-base);
+  padding: 8px 12px;
+  color: var(--txt-secondary);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+}
+.profile-switch .sw-badge {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--txt-muted);
+  width: 34px;
+  flex-shrink: 0;
+}
+.profile-switch .sw-content {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-
-.spec-label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--accent-amber);
-  font-weight: 700;
-  letter-spacing: 0.05em;
+.profile-switch .sw-name {
+  font-size: 12px;
+  color: var(--txt-primary);
+}
+.profile-switch .sw-desc {
+  font-size: 10.5px;
+  color: var(--txt-muted);
+}
+.profile-switch:hover {
+  border-color: var(--hairline-bright);
+}
+.profile-switch.active {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: var(--phosphor-cyan);
+}
+.profile-switch.active .sw-badge {
+  color: var(--phosphor-cyan);
+}
+.profile-switch.active .sw-name {
+  color: #fff;
+}
+.profile-switch.active .sw-desc {
+  color: var(--txt-secondary);
 }
 
-.spec-val {
-  font-size: 0.82rem;
-  color: var(--text-white);
-  font-weight: 600;
-}
-
-.guide-features {
-  font-size: 0.84rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 12px;
-}
-
-.guide-features strong {
-  color: var(--text-white);
-  display: block;
-  margin-bottom: 4px;
-  font-size: 0.82rem;
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
-}
-
-.guide-features ul {
-  margin: 0;
-  padding-left: 18px;
-}
-
-.guide-features li {
-  margin-bottom: 4px;
-}
-
-/* Right Code Pane */
-.workbench-code-pane {
-  background: var(--bg-crt-screen);
+.profile-specs-readout {
+  flex: 1;
+  min-height: 0;
+  border-top: 1px solid var(--hairline-dim);
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
-
-.workbench-code-pane .code-box-header {
-  background: #0c1016;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-}
-
-.workbench-code-pane pre {
+.specs-title {
+  font-size: 13.5px;
+  color: var(--phosphor-amber);
   margin: 0;
-  padding: 18px 20px;
-  overflow-x: auto;
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  line-height: 1.58;
-  color: var(--text-primary);
-  flex-grow: 1;
 }
-
-.copy-btn {
-  background: var(--bg-deck);
-  color: var(--text-primary);
-  border: 1px solid var(--border-bright);
-  padding: 5px 12px;
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+.specs-summary {
+  font-size: 11.5px;
+  color: var(--txt-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+.specs-dl {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  row-gap: 5px;
+  font-size: 11px;
+  margin-top: 6px;
+}
+.specs-dl dt {
+  color: var(--txt-muted);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: all 0.12s ease;
+}
+.specs-dl dd {
+  color: var(--txt-primary);
+  margin: 0;
 }
 
-.copy-btn:hover {
-  background: var(--btn-rust);
-  color: #ffffff;
-  border-color: var(--btn-rust-bevel);
+.sidebar-action-box {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline-dim);
+}
+.sidebar-action-box .action-label {
+  display: block;
+  font-size: 10px;
+  color: var(--txt-muted);
+  margin-bottom: 4px;
+}
+.sidebar-action-box .cmd-pill {
+  display: block;
+  background: var(--bg-editor);
+  color: var(--phosphor-green);
+  padding: 6px 8px;
+  font-size: 11px;
+  border: 1px solid var(--hairline-base);
 }
 
 /* ==========================================================================
-   Full Delivery Profile Matrix Table
+   DECK 02: CO-PROCESSOR ARSENAL
    ========================================================================== */
-
-.table-frame,
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 24px;
-  border: 1px solid var(--border-base);
-  border-radius: 3px;
-  background: var(--bg-surface);
+.macro-stage-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 14px;
 }
 
-.matrix-table,
-.datasheet-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.86rem;
+.macro-channel-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
 }
-
-.matrix-table th,
-.datasheet-table th {
-  background: #0f131a;
-  color: var(--accent-amber);
+.channel-key {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-deck);
+  border: 1px solid var(--hairline-base);
+  padding: 10px 12px;
+  color: var(--txt-secondary);
   font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.12s ease;
   text-align: left;
-  padding: 10px 14px;
-  border: 1px solid var(--border-subtle);
-  font-size: 0.74rem;
+}
+.channel-key .ch-id {
+  color: var(--txt-muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+.channel-key:hover {
+  border-color: var(--hairline-bright);
+  color: var(--txt-pure);
+}
+.channel-key.active {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: var(--phosphor-cyan);
+  color: var(--txt-pure);
+}
+.channel-key.active .ch-id {
+  color: var(--phosphor-cyan);
+}
+
+.macro-showcase-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.macro-narrative {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg-deck);
+  border: 1px solid var(--hairline-base);
+  padding: 20px;
+  overflow-y: auto;
+}
+.macro-hero-title {
+  font-size: 16px;
+  color: var(--phosphor-cyan);
+  margin: 0;
+}
+.macro-hero-desc {
+  font-size: 13px;
+  color: var(--txt-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+.macro-features-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+}
+.feat-pill {
+  font-size: 11.5px;
+  color: var(--phosphor-amber);
+  background: rgba(245, 158, 11, 0.06);
+  border-left: 2px solid var(--phosphor-amber);
+  padding: 4px 8px;
+}
+.macro-doc-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+.doc-link-btn {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--phosphor-cyan);
+  text-decoration: none;
+  padding: 6px 12px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.doc-link-btn:hover {
+  background: var(--phosphor-cyan);
+  color: #000;
+}
+.doc-link-btn.secondary {
+  color: var(--txt-secondary);
+  border-color: var(--hairline-base);
+}
+
+.macro-code-display {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-editor);
+  border: 1px solid var(--hairline-base);
+  height: 100%;
+}
+.code-display-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--hairline-base);
+}
+.code-display-header .disp-label {
+  font-size: 11px;
+  color: var(--txt-muted);
+}
+.macro-pre {
+  flex: 1;
+  padding: 16px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #fde68a;
+  overflow: auto;
+}
+
+/* ==========================================================================
+   DECK 03: LOCAL RUNBOOK
+   ========================================================================== */
+.runbook-stage-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 14px;
+}
+.runbook-header-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--hairline-base);
+  padding-bottom: 8px;
+}
+.runbook-title {
+  font-size: 14px;
+  color: var(--phosphor-amber);
+  margin: 0;
+}
+.runbook-tag {
+  font-size: 11px;
+  color: var(--txt-muted);
+}
+
+.runbook-grid-flow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+.runbook-step-row {
+  display: flex;
+  gap: 12px;
+  background: var(--bg-deck);
+  border: 1px solid var(--hairline-base);
+  padding: 14px;
+}
+.step-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--phosphor-cyan);
+  line-height: 1;
+}
+.step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.step-headline strong {
+  display: block;
+  font-size: 12px;
+  color: var(--txt-pure);
+}
+.step-headline .step-note {
+  font-size: 11px;
+  color: var(--txt-muted);
+}
+.step-code-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-editor);
+  border: 1px solid var(--hairline-bright);
+  padding: 6px 10px;
+  margin-top: 4px;
+}
+.step-code-box code {
+  color: var(--phosphor-green);
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.matrix-table td,
-.datasheet-table td {
-  padding: 10px 14px;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  line-height: 1.45;
+.runbook-offline-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  padding: 12px 16px;
+  gap: 16px;
 }
-
-.matrix-table tbody tr:nth-child(even),
-.datasheet-table tbody tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.015);
+.strip-text strong {
+  display: block;
+  font-size: 12px;
+  color: var(--phosphor-green);
 }
-
-.matrix-table tbody tr:hover,
-.datasheet-table tbody tr:hover {
-  background: rgba(78, 168, 168, 0.05);
+.strip-text span {
+  font-size: 11.5px;
+  color: var(--txt-secondary);
 }
-
-.status-chip {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 2px;
-  letter-spacing: 0.03em;
-}
-
-.status-chip.active {
-  background: rgba(78, 168, 168, 0.15);
-  color: var(--crt-teal-bright);
-  border: 1px solid rgba(78, 168, 168, 0.35);
-}
-
-.status-chip.muted {
-  color: var(--text-muted);
+.offline-download-btn {
+  background: var(--phosphor-green);
+  color: #000;
+  font-weight: 800;
+  font-size: 11.5px;
+  padding: 8px 14px;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
-   Coursework Macro Grid (2x2 Clean Layout)
+   DECK 04: SPEC MATRIX
    ========================================================================== */
-
-.macro-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 24px;
-}
-
-@media (max-width: 820px) {
-  .macro-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.macro-item {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-top: 2px solid var(--border-bright);
-  border-radius: 4px;
-  padding: 22px;
+.specs-stage-view {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  height: 100%;
+  gap: 12px;
 }
-
-.macro-header {
+.specs-stage-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  border-bottom: 1px solid var(--hairline-base);
+  padding-bottom: 8px;
 }
-
-.macro-tag {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--accent-amber);
-  letter-spacing: 0.06em;
-}
-
-.macro-file {
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  color: var(--crt-teal-bright);
-  font-weight: 600;
-}
-
-.macro-item h3 {
-  font-size: 1.15rem;
-  color: var(--text-white);
-  margin-bottom: 0.4em;
-}
-
-.macro-item p {
-  color: var(--text-secondary);
-  font-size: 0.92rem;
-  line-height: 1.62;
-  margin-bottom: 1em;
-  flex-grow: 1;
-}
-
-.macro-code {
-  background: var(--bg-recessed);
-  border: 1px solid var(--border-subtle);
-  padding: 9px 12px;
-  border-radius: 3px;
-  margin-bottom: 14px;
-  overflow-x: auto;
-}
-
-.macro-code code {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--text-primary);
-  background: transparent;
-  padding: 0;
-  border: none;
-}
-
-.macro-link {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
-  align-self: flex-start;
-}
-
-.macro-link:hover {
-  color: var(--text-white);
-  text-decoration: underline;
-}
-
-/* ==========================================================================
-   Installation & Setup Steps
-   ========================================================================== */
-
-.setup-steps {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-.step-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-left: 3px solid var(--accent-cyan);
-  border-radius: 3px;
-  padding: 20px 24px;
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.step-number {
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent-cyan);
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.step-content {
-  flex-grow: 1;
-}
-
-.step-content h3 {
-  font-size: 1.08rem;
-  color: var(--text-white);
-  margin-bottom: 0.35em;
-}
-
-.step-content p {
-  color: var(--text-secondary);
-  font-size: 0.92rem;
-  line-height: 1.62;
+.specs-matrix-title {
+  font-size: 14px;
+  color: var(--phosphor-cyan);
   margin: 0;
 }
-
-.step-command {
-  margin-top: 10px;
-  background: var(--bg-recessed);
-  border: 1px solid var(--border-subtle);
-  padding: 8px 12px;
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--text-primary);
-  overflow-x: auto;
+.specs-matrix-sub {
+  font-size: 11px;
+  color: var(--txt-muted);
 }
 
-.step-command code {
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
-/* Auxiliary Tools Callout */
-.tools-callout {
-  background: rgba(229, 155, 60, 0.06);
-  border: 1px solid rgba(229, 155, 60, 0.3);
-  border-radius: 3px;
-  padding: 18px 22px;
-  margin-top: 24px;
-}
-
-.tools-callout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  color: var(--accent-amber);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tools-callout p {
-  color: var(--text-primary);
-  font-size: 0.92rem;
-  line-height: 1.62;
-  margin: 0;
-}
-
-.tools-callout a {
-  color: var(--accent-amber);
-  font-weight: 600;
-  text-decoration: underline;
-}
-
-/* ==========================================================================
-   Code Boxes, Syntax Highlighting & Standalone Terminals
-   ========================================================================== */
-
-.code-box {
-  background: var(--bg-recessed);
-  border: 1px solid var(--border-base);
-  border-top: 3px solid var(--border-accent);
-  margin-block: 16px;
-  border-radius: 3px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
-
-.code-box-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0f131a;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 8px 14px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-}
-
-.code-badge {
-  background: rgba(78, 168, 168, 0.15);
-  color: var(--crt-teal-bright);
-  border: 1px solid rgba(78, 168, 168, 0.35);
-  padding: 2px 6px;
-  font-weight: 700;
-  margin-right: 8px;
-  border-radius: 2px;
-  letter-spacing: 0.04em;
-}
-
-.code-filename {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.code-box pre {
-  margin: 0;
-  padding: 16px;
-  overflow-x: auto;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  line-height: 1.55;
-  color: var(--text-primary);
-}
-
-.code-box code {
-  background: transparent;
-  border: none;
-  padding: 0;
-  color: inherit;
-  font-size: inherit;
-}
-
-/* Syntax Highlighting */
-.syn-kw { color: var(--accent-amber); font-weight: 600; }
-.syn-cmd { color: var(--crt-teal-bright); font-weight: 600; }
-.syn-opt { color: #d49b42; }
-.syn-arg { color: #3fb07f; }
-.syn-comment { color: #687787; font-style: italic; }
-
-/* Jump Navigation Table of Contents */
-nav.toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 16px 0 22px;
-  padding: 10px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-radius: 3px;
-}
-
-nav.toc a {
+.matrix-table-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid var(--hairline-base);
   background: var(--bg-deck);
-  color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
-  padding: 6px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 2px;
-  transition: all 0.12s ease;
 }
-
-nav.toc a:hover {
-  background: #343e4f;
-  color: var(--text-white);
-  border-color: var(--accent-cyan);
-  text-decoration: none;
+.matrix-spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
 }
-
-/* Details and Accordion Guides */
-details.guide-detail {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-  margin-block: 12px;
+.matrix-spec-table th,
+.matrix-spec-table td {
   padding: 10px 14px;
+  border-bottom: 1px solid var(--hairline-dim);
 }
-
-details.guide-detail summary {
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--text-white);
-  outline: none;
-}
-
-details.guide-detail[open] summary {
-  margin-bottom: 8px;
-  color: var(--accent-amber);
-}
-
-/* Numbered Steps List */
-ol.steps {
-  padding-left: 1.4em;
-  margin-block: 12px;
-}
-
-ol.steps li {
-  margin-bottom: 10px;
-  line-height: 1.55;
-}
-
-ol.steps strong {
-  color: var(--text-white);
-}
-
-/* Showcase Tabs */
-.showcase-tab-bar {
-  display: flex;
-  gap: 8px;
-  background: #0f131a;
-  border: 1px solid var(--border-base);
-  border-bottom: none;
-  padding: 8px 12px;
-  border-radius: 3px 3px 0 0;
-}
-
-.showcase-tab {
-  background: var(--bg-deck);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
+.matrix-spec-table thead th {
+  background: var(--bg-subtle);
+  color: var(--phosphor-amber);
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.12s ease;
+  border-bottom: 1px solid var(--hairline-bright);
+}
+.matrix-spec-table tbody th {
+  color: var(--txt-muted);
+  font-weight: 700;
+  width: 220px;
+}
+.matrix-spec-table tbody td {
+  color: var(--txt-primary);
+}
+.matrix-spec-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.showcase-tab.active {
-  background: var(--btn-rust);
-  color: #ffffff;
-  border-color: var(--btn-rust-bevel);
+/* ==========================================================================
+   DECK 05: WORKSHOP LAB
+   ========================================================================== */
+.workshop-stage-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px;
 }
-
-.showcase-panel {
-  display: none;
+.workshop-media-frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--hairline-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
 }
-
-.showcase-panel.active {
+.workshop-media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
-
-/* Image Placeholder Diagnostic Cards (Minimal, Required by Tests) */
-.image-placeholder-card {
-  background: var(--bg-surface);
-  border: 1px dashed var(--border-bright);
-  padding: 12px 16px;
-  margin: 14px 0;
-  border-radius: 2px;
-}
-
-.slot-header {
+.workshop-hud-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
+  gap: 8px;
+}
+.hud-tag {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--hairline-bright);
+  color: var(--txt-secondary);
+  font-size: 10px;
+  padding: 3px 8px;
+}
+.hud-tag.status {
+  color: var(--phosphor-green);
+  border-color: var(--phosphor-green);
 }
 
-.slot-id {
-  font-weight: 700;
-  color: var(--accent-amber);
-}
-
-.slot-ratio {
-  color: var(--text-muted);
-  font-size: 0.74rem;
-}
-
-.prompt-expander {
-  margin-top: 6px;
-}
-
-.prompt-expander summary {
-  cursor: pointer;
-  color: var(--accent-cyan);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.prompt-text {
-  background: var(--bg-recessed);
-  color: #b8c4d0;
-  padding: 8px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.45;
-  margin: 6px 0 0;
-  border: 1px solid var(--border-subtle);
-  border-radius: 2px;
-  user-select: all;
-}
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-
-.site-footer {
-  background: var(--bg-deep);
-  border-top: 1px solid var(--border-base);
-  padding: 44px 0 28px;
-  color: var(--text-muted);
-  font-size: 0.86rem;
-  margin-top: 48px;
-}
-
-.footer-content,
-.footer-inner {
+.workshop-manifesto {
   display: grid;
-  grid-template-columns: 1.8fr 1fr 1fr;
-  gap: 36px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: var(--bg-deck);
+  border: 1px solid var(--hairline-base);
+  padding: 14px;
 }
-
-@media (max-width: 800px) {
-  .footer-content,
-  .footer-inner {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-
-.footer-about h4,
-.footer-brand h4 {
-  color: var(--text-white);
-  font-size: 1.1rem;
+.manifesto-col h3 {
+  font-size: 11.5px;
+  color: var(--phosphor-amber);
   margin-bottom: 6px;
 }
-
-.footer-about p,
-.footer-brand p {
-  color: var(--text-secondary);
-  font-size: 0.88rem;
-  margin-bottom: 0.5em;
-  line-height: 1.58;
-}
-
-.footer-col h5,
-.footer-links h5 {
-  color: var(--accent-amber);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-
-.footer-col ul,
-.footer-links ul {
-  list-style: none;
-  padding: 0;
+.manifesto-col p {
+  font-size: 11.5px;
+  color: var(--txt-secondary);
+  line-height: 1.5;
   margin: 0;
 }
 
-.footer-col li,
-.footer-links li {
-  margin-bottom: 7px;
-}
-
-.footer-col a,
-.footer-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 0.86rem;
-}
-
-.footer-col a:hover,
-.footer-links a:hover {
-  color: var(--text-white);
-  text-decoration: underline;
-}
-
-.footer-bottom {
-  border-top: 1px solid var(--border-subtle);
-  margin-top: 32px;
-  padding-top: 16px;
+/* ==========================================================================
+   BOTTOM TELEMETRY STATUS STRIP
+   ========================================================================== */
+.console-telemetry-footer {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--text-muted);
+  height: 34px;
+  padding: 0 20px;
+  background: var(--bg-deck);
+  border-top: 1px solid var(--hairline-base);
+  font-size: 11px;
+  color: var(--txt-muted);
+  flex-shrink: 0;
+}
+.footer-status-left {
+  display: flex;
+  align-items: center;
   gap: 8px;
+}
+.dot-live {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--phosphor-green);
+}
+.footer-links-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.foot-link {
+  color: var(--txt-secondary);
+  text-decoration: none;
+}
+.foot-link:hover {
+  color: var(--phosphor-cyan);
 }
 
 
@@ -1934,101 +1491,94 @@ ol.steps strong {
 <script>
 /* Inlined site.js */
 /* ==========================================================================
-   P3CTeX Public Documentation & Interactive Scripts
+   P3CTeX Product Workstation — Client Controller
+   Fixed-Viewport Console & Navigation Management
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. One-Click Copy Buttons for Code Boxes & Image Prompts
-  setupCopyButtons();
-
-  // 2. Interactive Showcase Tabs
-  setupShowcaseTabs();
-
-  // 3. Highlight Current Navigation Item
-  setupNavHighlight();
-
-  // 4. Interactive Console Profile Switcher
+  setupDeckSwitcher();
   setupProfileRocker();
+  setupChannelRocker();
+  setupCopyButtons();
 });
 
-function setupCopyButtons() {
-  document.querySelectorAll('[data-copy-target]').forEach(button => {
-    button.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const targetSelector = button.getAttribute('data-copy-target');
-      const targetElement = document.querySelector(targetSelector);
-      if (!targetElement) return;
+/* --------------------------------------------------------------------------
+   1. Section Deck Switcher (01 .. 05)
+   -------------------------------------------------------------------------- */
+function setupDeckSwitcher() {
+  const keys = document.querySelectorAll('.selector-key[data-deck]');
+  const decks = document.querySelectorAll('.console-deck');
+  const readout = document.getElementById('active-mode-readout');
 
-      const textToCopy = targetElement.innerText || targetElement.textContent;
-      try {
-        await navigator.clipboard.writeText(textToCopy);
-        const originalText = button.innerText;
-        button.innerText = 'COPIED!';
-        button.classList.add('copied');
-        setTimeout(() => {
-          button.innerText = originalText;
-          button.classList.remove('copied');
-        }, 2000);
-      } catch (err) {
-        console.error('Clipboard copy failed:', err);
+  const modeLabels = {
+    'deck-templates': 'SECTION: [01 // STARTER TEMPLATES]',
+    'deck-macros': 'SECTION: [02 // PACKAGES & MACROS]',
+    'deck-runbook': 'SECTION: [03 // INSTALLATION & SETUP]',
+    'deck-specs': 'SECTION: [04 // DELIVERABLE GUIDE]',
+    'deck-workshop': 'SECTION: [05 // ABOUT P3CTeX]'
+  };
+
+  function activateDeck(targetDeckId) {
+    decks.forEach(deck => {
+      if (deck.id === targetDeckId) {
+        deck.classList.add('active');
+      } else {
+        deck.classList.remove('active');
       }
     });
-  });
-}
 
-function setupShowcaseTabs() {
-  document.querySelectorAll('.showcase-tab-bar').forEach(tabBar => {
-    const tabs = tabBar.querySelectorAll('.showcase-tab');
-    const container = tabBar.closest('.showcase-container');
-    if (!container) return;
+    keys.forEach(k => {
+      if (k.getAttribute('data-deck') === targetDeckId) {
+        k.classList.add('active');
+      } else {
+        k.classList.remove('active');
+      }
+    });
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const targetId = tab.getAttribute('data-tab-target');
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+    if (readout && modeLabels[targetDeckId]) {
+      readout.textContent = modeLabels[targetDeckId];
+    }
+  }
 
-        container.querySelectorAll('.showcase-panel').forEach(panel => {
-          if (panel.id === targetId) {
-            panel.classList.add('active');
-            panel.hidden = false;
-          } else {
-            panel.classList.remove('active');
-            panel.hidden = true;
-          }
-        });
-      });
+  keys.forEach(key => {
+    key.addEventListener('click', () => {
+      const targetDeckId = key.getAttribute('data-deck');
+      activateDeck(targetDeckId);
+      window.location.hash = targetDeckId.replace('deck-', '');
     });
   });
-}
 
-function setupNavHighlight() {
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.site-nav a').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPath || (currentPath === '' && href === 'index.html')) {
-      link.setAttribute('aria-current', 'page');
+  // Activate by URL hash if present
+  const hash = window.location.hash.replace('#', '');
+  if (hash) {
+    const target = 'deck-' + hash;
+    if (document.getElementById(target)) {
+      activateDeck(target);
     }
-  });
+  }
 }
 
+/* --------------------------------------------------------------------------
+   2. Deliverable Profile Switcher (PAC / PR / TFG)
+   -------------------------------------------------------------------------- */
 function setupProfileRocker() {
-  const rockerButtons = document.querySelectorAll('.rocker-btn[data-profile]');
-  const codeTarget = document.querySelector('#code-minimal-pac');
-  const readoutProfile = document.querySelector('#readout-profile-label');
-  const readoutDesc = document.querySelector('#readout-profile-desc');
-  const readoutCover = document.querySelector('#readout-cover');
-  const readoutToc = document.querySelector('#readout-toc');
-  const readoutLang = document.querySelector('#readout-lang');
-  if (!rockerButtons.length || !codeTarget) return;
+  const switches = document.querySelectorAll('.profile-switch[data-profile]');
+  const codeTarget = document.getElementById('code-minimal-target');
+  const bufferFilename = document.getElementById('buffer-filename');
+  const titleTarget = document.getElementById('spec-profile-title');
+  const descTarget = document.getElementById('spec-profile-desc');
+  const coverTarget = document.getElementById('spec-cover-val');
+  const tocTarget = document.getElementById('spec-toc-val');
+  const fontTarget = document.getElementById('spec-font-val');
 
   const profileData = {
     pac: {
-      label: 'PAC (Continuous Assessment)',
-      desc: 'Standard deliverable for continuous assessment (PAC / PEC / CA). Starts directly on page 1 with subject metadata and mandatory anti-plagiarism pledge—no blank cover page as required by UOC coursework rules.',
-      cover: 'Disabled (Starts on page 1)',
-      toc: 'Automatic with plagiarism pledge',
-      lang: 'Catalan (cat) / Spanish (es) / English (en)',
+      filename: 'minimal-pac.tex',
+      title: 'PAC (Continuous Assessment)',
+      desc: 'Designed for standard semester deliverables (PAC / PEC / CA). As required by UOC grading criteria, it eliminates the blank cover page and starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism pledge.',
+      cover: 'Bypassed (Starts on Page 1)',
+      toc: 'Auto with anti-plagiarism pledge',
+      font: 'Arev Sans 11pt (Clear and legible)',
       code: `% Minimal P3CTeX PAC Continuous Assessment Skeleton
 \\documentclass[PAC,default]{P3CTeX}
 
@@ -2053,19 +1603,20 @@ function setupProfileRocker() {
 \\subsection{Apartat A}
 Resolució del primer apartat del document...
 
-% Taula declarativa per comes amb pxTAB (inclosa al paquet default)
+% Taula declarativa per comes amb pxTAB (inclosa al paquet default):
 \\pxTable[style=header]{Mètrica, Valor Mesurat, Estat}{Temps d'execució, 0.42 s, PASS}{Memòria consumida, 18.5 MB, PASS}
 
-% Inclusió resilient de figura amb pxSRC (crea placeholder si la imatge no existeix)
+% Inclusió resilient de figura amb pxSRC (crea placeholder si el fitxer no existeix):
 \\pxIMG[0.8\\linewidth]{img/arquitectura}{Diagrama de l'arquitectura proposada}[fig:arq]
 \\end{document}`
     },
     pr: {
-      label: 'PR (Practicum & Lab Report)',
-      desc: 'Comprehensive report profile for lab projects and practicums (PR). Generates an institutional cover page, table of contents, list of figures, and formal academic integrity declaration for 20–50 page projects.',
-      cover: 'Enabled (Formal Cover)',
-      toc: 'Enabled (Full TOC & LOF)',
-      lang: 'Catalan / Spanish',
+      filename: 'minimal-pr.tex',
+      title: 'PR (Practicum & Lab Report)',
+      desc: 'Comprehensive report profile for lab projects and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, list of figures, and formal academic integrity declaration for 20–50 page projects.',
+      cover: 'Institutional Cover with UOC Logo',
+      toc: 'Full TOC, List of Figures & Tables',
+      font: 'Arev Sans 11pt (Lab Report Standard)',
       code: `% Minimal P3CTeX PR Practicum Report Skeleton
 \\documentclass[PR,default]{P3CTeX}
 
@@ -2097,11 +1648,12 @@ Descripció dels requeriments i l'arquitectura desenvolupada...
 \\end{document}`
     },
     tfg: {
-      label: 'TFG (Bachelor Thesis Memory)',
+      filename: 'minimal-tfg.tex',
+      title: 'TFG (Bachelor Thesis Memory)',
       desc: 'Academic monograph profile for Bachelor’s Thesis (TFG). Generates official evaluation tribunal sheets, bilingual Catalan/English abstracts, Creative Commons copyright block, chapter formatting, and appendices.',
-      cover: 'Enabled (Tribunal Sheet)',
-      toc: 'Enabled (Memory Chapters)',
-      lang: 'Bilingual (cat/en)',
+      cover: 'Tribunal Evaluation Sheet + CC License',
+      toc: 'Academic Memory Chapter TOC',
+      font: 'Arev Sans 11pt (Academic Memory)',
       code: `% Minimal P3CTeX TFG Bachelor Thesis Memory Skeleton
 \\documentclass[TFG,MEM,default]{P3CTeX}
 
@@ -2131,21 +1683,157 @@ Detalls d'implementació i esquemes d'enginyeria...
     }
   };
 
-  rockerButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const profile = btn.getAttribute('data-profile');
-      if (!profileData[profile]) return;
+  switches.forEach(sw => {
+    sw.addEventListener('click', () => {
+      const p = sw.getAttribute('data-profile');
+      if (!profileData[p]) return;
 
-      rockerButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      switches.forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
 
-      const data = profileData[profile];
-      if (readoutProfile) readoutProfile.textContent = data.label;
-      if (readoutDesc && data.desc) readoutDesc.textContent = data.desc;
-      if (readoutCover) readoutCover.textContent = data.cover;
-      if (readoutToc) readoutToc.textContent = data.toc;
-      if (readoutLang) readoutLang.textContent = data.lang;
-      codeTarget.textContent = data.code;
+      const data = profileData[p];
+      if (bufferFilename) bufferFilename.textContent = data.filename;
+      if (titleTarget) titleTarget.textContent = data.title;
+      if (descTarget) descTarget.textContent = data.desc;
+      if (coverTarget) coverTarget.textContent = data.cover;
+      if (tocTarget) tocTarget.textContent = data.toc;
+      if (fontTarget) fontTarget.textContent = data.font;
+      if (codeTarget) codeTarget.textContent = data.code;
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   3. Packages & Macros Switcher (pxTAB, pxSRC, pxLST, pxCMP)
+   -------------------------------------------------------------------------- */
+function setupChannelRocker() {
+  const keys = document.querySelectorAll('.channel-key[data-channel]');
+  const titleTarget = document.getElementById('macro-hero-title');
+  const descTarget = document.getElementById('macro-hero-desc');
+  const featuresTarget = document.getElementById('macro-features-strip');
+  const codeTarget = document.getElementById('macro-code-target');
+  const urlTarget = document.getElementById('macro-showcase-url');
+
+  const channelData = {
+    pxtab: {
+      title: 'pxTAB • Data Tables Without the LaTeX Pain',
+      desc: 'Standard LaTeX tables are painful: counting column widths, escaping ampersands, and calculating hlines at 2:00 AM. pxTAB replaces all that with simple comma-separated rows. It handles alternating row shading (zebra striping) and multipage tables automatically.',
+      features: [
+        '<strong>Simple syntax:</strong> Comma-separated values, zero ampersand wrestling',
+        '<strong>Auto zebra shading:</strong> Alternating row colors for easy reading',
+        '<strong>Multipage support:</strong> Automatically splits long tables across pages',
+        '<strong>Zero compilation crashes:</strong> Built on robust longtable and booktabs'
+      ],
+      code: `% Create a clean table with comma-separated values:
+\\pxTable[style=header]
+  {Mètrica, Valor Mesurat, Estat}
+  {Temps d'execució, 0.42 s, PASS}
+  {Memòria consumida, 18.5 MB, PASS}
+  {Eficiència Algorísmica, O(n log n), PASS}`,
+      url: 'showcases.html#pxtab'
+    },
+    pxsrc: {
+      title: 'pxSRC • Resilient Figures & Image Fallbacks',
+      desc: 'Including images in LaTeX often breaks builds when a collaborator deletes a file or a path is slightly off. \\pxIMG automatically fits images to text width and includes a failsafe: if an image is missing from disk, it displays a clear placeholder diagram instead of halting compilation right before your deadline.',
+      features: [
+        '<strong>Failsafe placeholder:</strong> Never crashes pdflatex if an image file is missing',
+        '<strong>Auto proportioning:</strong> Automatically scales figures to text width',
+        '<strong>Unified labels:</strong> Binds caption, label, and file path in one command',
+        '<strong>Format support:</strong> Works with PNG, JPG, and vector PDF diagrams'
+      ],
+      code: `% Include an image that will never break the compilation:
+\\pxIMG[0.85\\linewidth]{img/arquitectura}
+  {Diagrama de l'arquitectura proposada}[fig:arq]`,
+      url: 'showcases.html#pxsrc'
+    },
+    pxlst: {
+      title: 'pxLST • Formatted Code Listings',
+      desc: 'Include syntax-highlighted code with line numbers, clear borders, and dedicated captioning. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML without requiring external Python pygments or shell escape privileges.',
+      features: [
+        '<strong>Zero external tools:</strong> 100% pure LaTeX, no Python or pygments needed',
+        '<strong>7 languages pre-configured:</strong> Java, Python, C, SQL, Bash, R, YAML',
+        '<strong>Line numbers & gutter:</strong> Clear, professional code presentation',
+        '<strong>Easy copy-paste:</strong> Optimized typography with JetBrains and Consolas'
+      ],
+      code: `% Syntax-highlighted code block with line numbering:
+\\begin{pxCode}[language=Java,caption=Lexer.java]
+public class Lexer {
+  public static void main(String[] args) {
+    System.out.println("Lexer ready for compilation");
+  }
+}
+\\end{pxCode}`,
+      url: 'showcases.html#pxlst'
+    },
+    pxcmp: {
+      title: 'pxCMP • Compilers & Automata Tools',
+      desc: 'Dedicated macros specifically designed for Computer Engineering courses like Compilers, Automata, and Theory of Computation. Easily draw multi-stage Tombstone compiler diagrams, state machine transition tables, and syntactic parse trees without manual TikZ coding.',
+      features: [
+        '<strong>Tombstone T-diagrams:</strong> \\pxTombstoneCompile for compiler pipelines',
+        '<strong>Transition tables:</strong> \\pxTransitionTable for DFA and NFA state machines',
+        '<strong>Parse trees:</strong> Syntactic derivation trees for grammars',
+        '<strong>Target courses:</strong> Compiladors, Teoria de la Computació'
+      ],
+      code: `% Draw a compiler Tombstone diagram:
+\\pxTombstoneCompile{CUP}{Parser}{Java}
+
+% Draw a state machine transition table:
+\\pxTransitionTable{
+  state, 0, 1;
+  q0, q1, q0;
+  q1, q0, q1
+}`,
+      url: 'showcases.html#pxcmp'
+    }
+  };
+
+  keys.forEach(k => {
+    k.addEventListener('click', () => {
+      const ch = k.getAttribute('data-channel');
+      if (!channelData[ch]) return;
+
+      keys.forEach(key => key.classList.remove('active'));
+      k.classList.add('active');
+
+      const d = channelData[ch];
+      if (titleTarget) titleTarget.innerHTML = d.title;
+      if (descTarget) descTarget.textContent = d.desc;
+      if (codeTarget) codeTarget.textContent = d.code;
+      if (urlTarget) urlTarget.setAttribute('href', d.url);
+
+      if (featuresTarget) {
+        featuresTarget.innerHTML = d.features
+          .map(f => `<div class="feat-pill">${f}</div>`)
+          .join('');
+      }
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   4. One-Click Clipboard Actions
+   -------------------------------------------------------------------------- */
+function setupCopyButtons() {
+  document.querySelectorAll('[data-copy-target]').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const targetSelector = btn.getAttribute('data-copy-target');
+      const targetEl = document.querySelector(targetSelector);
+      if (!targetEl) return;
+
+      const text = targetEl.innerText || targetEl.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span>COPIED!</span>';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+          btn.classList.remove('copied');
+        }, 1800);
+      } catch (err) {
+        console.error('Copy failed:', err);
+      }
     });
   });
 }

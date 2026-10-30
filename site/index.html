@@ -8,167 +8,97 @@
   <link rel="stylesheet" href="assets/css/site.css">
   <script src="assets/js/site.js" defer></script>
 </head>
-<body class="home">
-  <a class="skip-link" href="#main">Skip to content</a>
+<body class="console-workstation">
+  <a class="skip-link" href="#console-stage">Skip to console display</a>
 
-  <!-- Top System Telemetry -->
-  <aside class="telemetry-bar" aria-label="System telemetry">
-    <div class="telemetry-inner">
-      <div class="telemetry-left">
-        <span class="status-indicator"><span class="dot green"></span> SYS: ONLINE</span>
-        <span class="telemetry-item">KERNEL: <strong>P3CTeX.cls v1.1</strong></span>
-        <span class="telemetry-item">ENGINE: <strong>pdflatex (MiKTeX / TeX Live)</strong></span>
-        <span class="telemetry-item">UOC COMPUTER ENGINEERING</span>
+  <!-- ======================================================================
+       FIXED-VIEWPORT PRODUCT WORKSTATION
+       Zero vertical scroll · Always fits screen · Clear, informative interface
+       ====================================================================== -->
+  <div class="console-viewport">
+
+    <!-- Top Masthead Header -->
+    <header class="console-masthead">
+      <div class="masthead-brand">
+        <a href="index.html" class="brand-badge" aria-label="P3CTeX Home">
+          <span class="badge-icon">⌸</span>
+          <span class="badge-title">P3CTeX</span>
+          <span class="badge-ver">v1.1</span>
+        </a>
+        <span class="brand-tagline">UOC Computer Engineering LaTeX Class</span>
       </div>
-      <div class="telemetry-right">
-        <span class="telemetry-item"><em>"PROCRASTINAR ÉS L'ÚNICA ESPERANÇA"</em></span>
-        <span class="status-indicator"><span class="dot rust"></span> By ScVr!a</span>
+
+      <div class="masthead-telemetry">
+        <span class="telemetry-item status"><span class="led-pulse green"></span> READY</span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item">DELIVERABLES: <strong>PAC &bull; PR &bull; TFG</strong></span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item">ENGINE: <strong>pdflatex (MiKTeX &amp; TeX Live)</strong></span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item campus">UNIVERSITAT OBERTA DE CATALUNYA</span>
       </div>
-    </div>
-  </aside>
 
-  <!-- Demopack CRT Banner -->
-  <header class="site-header">
-    <div class="banner-mount">
-      <a href="index.html" class="brand-link" aria-label="P3CTeX — Ultimate UOC Template Generator">
-        <img src="assets/images/brand-banner.jpg" alt="P3CTeX Demopack Banner: Procrastinar és l'única esperança. Ultimate UOC Template Generator by ScVr!a" width="1024" height="338" fetchpriority="high">
-      </a>
-    </div>
+      <div class="masthead-actions">
+        <a href="generator.html" class="action-btn cyan">⚡ WEB GENERATOR</a>
+        <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="action-btn rust" target="_blank" rel="noopener">⬇ DOWNLOAD ZIP</a>
+        <a href="https://github.com/DidacLL/P3CTeX" class="action-btn ghost" target="_blank" rel="noopener">GITHUB</a>
+      </div>
+    </header>
 
-    <!-- Main Navigation Bar (Guaranteed Horizontal Row) -->
-    <nav class="site-nav" aria-label="Main navigation">
-      <div class="nav-inner">
-        <a href="index.html" aria-current="page">[HOME]</a>
-        <a href="tutorials.html">[USER GUIDE]</a>
-        <a href="showcases.html">[EXAMPLES]</a>
-        <a href="generator.html">[WEB GENERATOR]</a>
-        <a href="standalone-generator.html" download="p3ctex-standalone-generator.html">[OFFLINE TOOL]</a>
-        <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">[DOWNLOAD ZIP]</a>
-        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">[GITHUB]</a>
+    <!-- Console Section Selector Ribbon -->
+    <nav class="console-selector-ribbon" aria-label="Navigation Sections">
+      <div class="selector-track">
+        <button type="button" class="selector-key active" data-deck="deck-templates">
+          <span class="key-index">01</span>
+          <span class="key-label">STARTER TEMPLATES</span>
+        </button>
+        <button type="button" class="selector-key" data-deck="deck-macros">
+          <span class="key-index">02</span>
+          <span class="key-label">PACKAGES &amp; MACROS</span>
+        </button>
+        <button type="button" class="selector-key" data-deck="deck-runbook">
+          <span class="key-index">03</span>
+          <span class="key-label">INSTALLATION &amp; SETUP</span>
+        </button>
+        <button type="button" class="selector-key" data-deck="deck-specs">
+          <span class="key-index">04</span>
+          <span class="key-label">DELIVERABLE GUIDE</span>
+        </button>
+        <button type="button" class="selector-key" data-deck="deck-workshop">
+          <span class="key-index">05</span>
+          <span class="key-label">ABOUT P3CTeX</span>
+        </button>
+      </div>
+      <div class="selector-meta">
+        <span class="mode-readout" id="active-mode-readout">SECTION: [01 // STARTER TEMPLATES]</span>
       </div>
     </nav>
-  </header>
 
-  <main id="main">
-    <!-- Hero Section -->
-    <section class="hero-block" aria-label="P3CTeX Overview">
-      <div class="container">
-        <span class="eyebrow">// UOC COMPUTER ENGINEERING · OFFICIAL LATEX CLASS //</span>
-        <h1>PEC.TeX // <span class="accent-text">P3CTeX</span></h1>
-        <p class="hero-tagline">
-          Standardized LaTeX document class and modular packages for UOC coursework.
-        </p>
-        <p class="hero-lead">
-          P3CTeX standardizes LaTeX documents for Computer Engineering studies at Universitat Oberta de Catalunya (UOC). It configures Arev typography, page geometry, running headers, covers, and mandatory anti-plagiarism declarations through class options, with built-in macros for data tables, source code listings, and computer science diagrams.
-        </p>
+    <!-- Main Stage (Transforms per active section, 100% viewport fit) -->
+    <main id="console-stage" class="console-stage">
 
-        <div class="hero-buttons">
-          <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="btn btn-primary" target="_blank" rel="noopener">[⬇ DOWNLOAD RELEASE (ZIP)]</a>
-          <a href="tutorials.html#bootstrap" class="btn btn-secondary">[📖 INSTALLATION &amp; SETUP GUIDE]</a>
-          <a href="generator.html" class="btn btn-ghost">[⚡ WEB PREAMBLE GENERATOR]</a>
-        </div>
-
-        <div class="hero-badges">
-          <span>PROFILES: PAC / PEC / CA / PR / TFG</span>
-          <span class="sep">•</span>
-          <span>ENGINE: PDFLATEX (MIKTEX / TEX LIVE)</span>
-          <span class="sep">•</span>
-          <span>LICENSE: GPL v3.0</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Workshop Panoramic Viewport -->
-    <section class="workshop-viewport" aria-label="Late-night engineering workshop">
-      <div class="container">
-        <figure class="workshop-frame">
-          <div class="frame-hud-top">
-            <span>// WORKSHOP LAB · LATE-NIGHT STUDY DESK</span>
-            <span>"PROCRASTINAR ÉS L'ÚNICA ESPERANÇA" · By ScVr!a</span>
-          </div>
-          <img src="assets/images/hero-workshop.jpg" alt="P3CTeX late-night engineering workshop with vintage CRT terminal, compiler design textbooks and oscilloscope" width="1024" height="434" fetchpriority="high">
-          <div class="frame-hud-bottom">
-            <span>STATION: CRT TERMINAL // COMPILER DESIGN TEXTBOOKS // SCHEMATICS // COFFEE</span>
-            <span>UOC COMPUTER ENGINEERING // BARCELONA</span>
-          </div>
-        </figure>
-      </div>
-    </section>
-
-    <!-- Interactive Delivery Profile Workbench -->
-    <section class="section" aria-label="Delivery Profiles &amp; Templates">
-      <div class="container">
-        <div class="section-title-group">
-          <span class="section-kicker">01 // DELIVERABLE PROFILES</span>
-          <h2>One class. Three deliverable workflows.</h2>
-          <p class="section-sub">
-            P3CTeX adapts page layout, covers, and tables of contents through class options:
-          </p>
-        </div>
-
-        <!-- Interactive Profile Workbench (Two-Pane Studio) -->
-        <div class="workbench-console">
-          <!-- Switcher Bar -->
-          <div class="workbench-bar">
-            <div class="workbench-tabs">
-              <button type="button" class="rocker-btn active" data-profile="pac">[● PAC CONTINUOUS ASSESSMENT]</button>
-              <button type="button" class="rocker-btn" data-profile="pr">[○ PR PRACTICUM REPORT]</button>
-              <button type="button" class="rocker-btn" data-profile="tfg">[○ TFG THESIS MEMORY]</button>
+      <!-- ==================================================================
+           SECTION 01: STARTER TEMPLATES (PAC / PR / TFG)
+           ================================================================== -->
+      <section id="deck-templates" class="console-deck active" aria-label="Starter Templates">
+        <div class="deck-split-view">
+          
+          <!-- Left: Code Editor Buffer -->
+          <div class="code-buffer-panel">
+            <div class="buffer-toolbar">
+              <div class="buffer-meta">
+                <span class="buffer-dot"></span>
+                <span class="buffer-title" id="buffer-filename">minimal-pac.tex</span>
+                <span class="buffer-tag">READY TO COPY &bull; COMPILES WITH PDFLATEX</span>
+              </div>
+              <button class="tactile-copy-action" data-copy-target="#code-minimal-target">
+                <span class="copy-icon">📋</span>
+                <span class="copy-text">COPY TEMPLATE CODE</span>
+              </button>
             </div>
-            <button class="copy-btn" data-copy-target="#code-minimal-pac">[📋 COPY SKELETON]</button>
-          </div>
-
-          <!-- Split Workbench Body -->
-          <div class="workbench-body">
-            <!-- Left Deliverable Guide & Specs -->
-            <div class="workbench-guide">
-              <div>
-                <div class="guide-header">
-                  <span class="guide-tag">// DELIVERABLE BLUEPRINT //</span>
-                  <div class="guide-title" id="readout-profile-label">PAC (Continuous Assessment)</div>
-                </div>
-                <p class="guide-desc" id="readout-profile-desc">
-                  Standard deliverable for continuous assessment (PAC / PEC / CA). Starts directly on page 1 with subject metadata and mandatory anti-plagiarism pledge—no blank cover page as required by UOC coursework rules.
-                </p>
-
-                <!-- 4 Telemetry Cells -->
-                <div class="workbench-specs-grid">
-                  <div class="spec-cell">
-                    <span class="spec-label">COVER PAGE</span>
-                    <span class="spec-val" id="readout-cover">Disabled (Starts on page 1)</span>
-                  </div>
-                  <div class="spec-cell">
-                    <span class="spec-label">TABLE OF CONTENTS</span>
-                    <span class="spec-val" id="readout-toc">Automatic with plagiarism pledge</span>
-                  </div>
-                  <div class="spec-cell">
-                    <span class="spec-label">PAGE GEOMETRY</span>
-                    <span class="spec-val">Compact margins, Arev typography</span>
-                  </div>
-                  <div class="spec-cell">
-                    <span class="spec-label">LANGUAGE</span>
-                    <span class="spec-val" id="readout-lang">Catalan (cat) / Spanish (es) / English (en)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="guide-features">
-                <strong>AUTOMATIC DELIVERABLE ANATOMY</strong>
-                <ul>
-                  <li>Header banner with student ID, grade, and subject code</li>
-                  <li>Official UOC anti-plagiarism statement embedded inline</li>
-                  <li>Running headers with automatic page numbering</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Right Code Pane -->
-            <div class="workbench-code-pane">
-              <div class="code-box-header">
-                <span class="code-badge">LATEX SKELETON</span>
-                <span class="code-filename">minimal-uoc.tex</span>
-              </div>
-              <pre><code id="code-minimal-pac">% Minimal P3CTeX PAC Continuous Assessment Skeleton
+            
+            <div class="buffer-editor-area">
+              <pre class="editor-pre"><code id="code-minimal-target">% Minimal P3CTeX PAC Continuous Assessment Skeleton
 \documentclass[PAC,default]{P3CTeX}
 
 % Declarative UOC Student & Subject Metadata
@@ -192,240 +122,352 @@
 \subsection{Apartat A}
 Resolució del primer apartat del document...
 
-% Taula declarativa per comes amb pxTAB:
+% Taula declarativa per comes amb pxTAB (inclosa al paquet default):
 \pxTable[style=header]{Mètrica, Valor Mesurat, Estat}{Temps d'execució, 0.42 s, PASS}{Memòria consumida, 18.5 MB, PASS}
 
-% Inclusió resilient de figura amb pxSRC:
+% Inclusió resilient de figura amb pxSRC (crea placeholder si el fitxer no existeix):
 \pxIMG[0.8\linewidth]{img/arquitectura}{Diagrama de l'arquitectura proposada}[fig:arq]
 \end{document}</code></pre>
             </div>
           </div>
+
+          <!-- Right: Profile Selector & Explanation -->
+          <aside class="profile-sidebar-panel">
+            <div class="sidebar-header">
+              <span class="sidebar-tag">DELIVERABLE PROFILE</span>
+              <span class="sidebar-sub">CLICK TO SWITCH</span>
+            </div>
+
+            <!-- Profile Rocker Switchers -->
+            <div class="profile-rocker-group">
+              <button type="button" class="profile-switch active" data-profile="pac">
+                <span class="sw-badge">PAC</span>
+                <div class="sw-content">
+                  <strong class="sw-name">Continuous Assessment</strong>
+                  <span class="sw-desc">Starts directly on page 1 (no blank cover)</span>
+                </div>
+              </button>
+              <button type="button" class="profile-switch" data-profile="pr">
+                <span class="sw-badge">PR</span>
+                <div class="sw-content">
+                  <strong class="sw-name">Practicum &amp; Lab Report</strong>
+                  <span class="sw-desc">Formal cover page, full TOC &amp; figures</span>
+                </div>
+              </button>
+              <button type="button" class="profile-switch" data-profile="tfg">
+                <span class="sw-badge">TFG</span>
+                <div class="sw-content">
+                  <strong class="sw-name">Bachelor Thesis Memory</strong>
+                  <span class="sw-desc">Tribunal evaluation sheet &amp; chapters</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Explanation & Specifications -->
+            <div class="profile-specs-readout">
+              <h3 class="specs-title" id="spec-profile-title">PAC (Continuous Assessment)</h3>
+              <p class="specs-summary" id="spec-profile-desc">
+                Designed for standard semester deliverables (PAC / PEC / CA). As required by UOC grading criteria, it eliminates the blank cover page and starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism pledge.
+              </p>
+
+              <dl class="specs-dl">
+                <dt>COVER PAGE:</dt>
+                <dd id="spec-cover-val">Bypassed (Starts on Page 1)</dd>
+                <dt>TOC &amp; SUMMARY:</dt>
+                <dd id="spec-toc-val">Auto with anti-plagiarism pledge</dd>
+                <dt>TYPOGRAPHY:</dt>
+                <dd id="spec-font-val">Arev Sans 11pt (Clear and legible)</dd>
+                <dt>HOW TO COMPILE:</dt>
+                <dd>pdflatex your-file.tex</dd>
+              </dl>
+            </div>
+
+            <div class="sidebar-action-box">
+              <span class="action-label">COMPILE IN TERMINAL:</span>
+              <code class="cmd-pill">pdflatex minimal-pac.tex</code>
+            </div>
+          </aside>
+
         </div>
+      </section>
 
-        <!-- Full Delivery Profile Comparison Matrix Table -->
-        <div class="table-frame">
-          <table class="matrix-table" aria-label="Delivery Profile Comparison Matrix">
-            <thead>
-              <tr>
-                <th>Profile Option</th>
-                <th>Deliverable Target</th>
-                <th>Cover Page</th>
-                <th>Table of Contents</th>
-                <th>Plagiarism Pledge</th>
-                <th>Default Language</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>[PAC]</code></td>
-                <td>Continuous Assessment (UOC)</td>
-                <td><span class="status-chip muted">Disabled (No cover)</span></td>
-                <td><span class="status-chip active">Automatic</span></td>
-                <td>Inline Statement</td>
-                <td>Catalan (<code>cat</code>)</td>
-              </tr>
-              <tr>
-                <td><code>[PEC]</code></td>
-                <td>Evaluación Continua</td>
-                <td><span class="status-chip muted">Disabled (No cover)</span></td>
-                <td><span class="status-chip active">Automatic</span></td>
-                <td>Inline Statement</td>
-                <td>Spanish (<code>es</code>)</td>
-              </tr>
-              <tr>
-                <td><code>[CA]</code></td>
-                <td>Continuous Assessment</td>
-                <td><span class="status-chip muted">Disabled (No cover)</span></td>
-                <td><span class="status-chip active">Automatic</span></td>
-                <td>Inline Statement</td>
-                <td>English (<code>en</code>)</td>
-              </tr>
-              <tr>
-                <td><code>[PR]</code></td>
-                <td>Practicum &amp; Lab Projects</td>
-                <td><span class="status-chip active">Formal Institutional Cover</span></td>
-                <td><span class="status-chip active">Full TOC &amp; Figures</span></td>
-                <td>Printed on Cover</td>
-                <td>Catalan (<code>cat</code>)</td>
-              </tr>
-              <tr>
-                <td><code>[TFG,MEM]</code></td>
-                <td>Bachelor Thesis Memory</td>
-                <td><span class="status-chip active">Official Tribunal Sheet</span></td>
-                <td><span class="status-chip active">Chapters &amp; Appendices</span></td>
-                <td>CC License Block</td>
-                <td>Bilingual (<code>cat/en</code>)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      <!-- ==================================================================
+           SECTION 02: PACKAGES & MACROS (pxTAB, pxSRC, pxLST, pxCMP)
+           ================================================================== -->
+      <section id="deck-macros" class="console-deck" aria-label="Packages and Macros">
+        <div class="macro-stage-view">
+          
+          <!-- Macro Selector Bar -->
+          <div class="macro-channel-bar">
+            <button type="button" class="channel-key active" data-channel="pxtab">
+              <span class="ch-id">pxTAB</span>
+              <span class="ch-name">Tables without column math</span>
+            </button>
+            <button type="button" class="channel-key" data-channel="pxsrc">
+              <span class="ch-id">pxSRC</span>
+              <span class="ch-name">Resilient images &amp; figures</span>
+            </button>
+            <button type="button" class="channel-key" data-channel="pxlst">
+              <span class="ch-id">pxLST</span>
+              <span class="ch-name">Formatted code listings</span>
+            </button>
+            <button type="button" class="channel-key" data-channel="pxcmp">
+              <span class="ch-id">pxCMP</span>
+              <span class="ch-name">Compilers &amp; automata diagrams</span>
+            </button>
+          </div>
 
-    <!-- Coursework Macro Packages -->
-    <section class="section" aria-label="Coursework Toolkit &amp; Macros">
-      <div class="container">
-        <div class="section-title-group">
-          <span class="section-kicker">02 // COURSEWORK TOOLKIT</span>
-          <h2>Macros tailored for computer science coursework.</h2>
-          <p class="section-sub">
-            Built-in toolkits that eliminate common LaTeX headaches across your semester assignments:
-          </p>
-        </div>
+          <!-- Active Macro Showcase Area -->
+          <div class="macro-showcase-split">
+            <div class="macro-narrative">
+              <h2 class="macro-hero-title" id="macro-hero-title">pxTAB &bull; Data Tables Without the LaTeX Pain</h2>
+              <p class="macro-hero-desc" id="macro-hero-desc">
+                Standard LaTeX tables are painful: counting column widths, escaping ampersands, and calculating hlines at 2:00 AM. <code>pxTAB</code> replaces all that with simple comma-separated rows. It handles alternating row shading (zebra striping) and multipage tables automatically.
+              </p>
 
-        <div class="macro-grid">
-          <!-- Tables -->
-          <article class="macro-item">
-            <div class="macro-header">
-              <span class="macro-tag">TABLES</span>
-              <span class="macro-file">pxTAB</span>
-            </div>
-            <h3>Data Tables Without the Pain</h3>
-            <p>Skip manual column width math, ampersands, and hlines. Write clean comma-separated rows with <code>\pxTable</code>. Features automatic alternating row zebra striping and multipage support.</p>
-            <div class="macro-code">
-              <code>\pxTable[style=header]{Mètrica, Valor, Estat}{Temps, 0.42 s, PASS}{Memòria, 18.5 MB, PASS}</code>
-            </div>
-            <a href="showcases.html#pxtab" class="macro-link">View table examples →</a>
-          </article>
+              <div class="macro-features-strip" id="macro-features-strip">
+                <div class="feat-pill"><strong>Simple syntax:</strong> Comma-separated values, zero ampersand wrestling</div>
+                <div class="feat-pill"><strong>Auto zebra shading:</strong> Alternating row colors for easy reading</div>
+                <div class="feat-pill"><strong>Multipage support:</strong> Automatically splits long tables across pages</div>
+                <div class="feat-pill"><strong>Zero compilation crashes:</strong> Built on robust longtable and booktabs</div>
+              </div>
 
-          <!-- Figures -->
-          <article class="macro-item">
-            <div class="macro-header">
-              <span class="macro-tag">FIGURES</span>
-              <span class="macro-file">pxSRC</span>
-            </div>
-            <h3>Resilient Figures &amp; Fallbacks</h3>
-            <p>Auto-scales images to text width with <code>\pxIMG</code>. If a graphic file path is missing on disk, P3CTeX prints a calibrated placeholder diagram instead of halting compilation right before your deadline.</p>
-            <div class="macro-code">
-              <code>\pxIMG[0.8\linewidth]{img/arquitectura}{Diagrama d'arquitectura}[fig:arq]</code>
-            </div>
-            <a href="showcases.html#pxsrc" class="macro-link">View figure examples →</a>
-          </article>
-
-          <!-- Code Listings -->
-          <article class="macro-item">
-            <div class="macro-header">
-              <span class="macro-tag">CODE</span>
-              <span class="macro-file">pxLST</span>
-            </div>
-            <h3>Syntax-Highlighted Code Blocks</h3>
-            <p>Formatted code blocks with line numbers using <code>\begin{pxCode}</code>. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML without requiring external pygments installations.</p>
-            <div class="macro-code">
-              <code>\begin{pxCode}[language=Java,caption=Lexer.java] ... \end{pxCode}</code>
-            </div>
-            <a href="showcases.html#pxlst" class="macro-link">View code examples →</a>
-          </article>
-
-          <!-- CS Diagrams -->
-          <article class="macro-item">
-            <div class="macro-header">
-              <span class="macro-tag">DIAGRAMS</span>
-              <span class="macro-file">pxCMP</span>
-            </div>
-            <h3>Compilers &amp; Automata Tools</h3>
-            <p>Dedicated macros for Computer Science courses: Tombstone compiler diagrams (<code>\pxTombstoneCompile</code>), finite state automata transition tables, and parser trees without manual TikZ coding.</p>
-            <div class="macro-code">
-              <code>\pxTombstoneCompile{CUP}{Parser}{Java} &amp; \pxTransitionTable{...}</code>
-            </div>
-            <a href="showcases.html#pxcmp" class="macro-link">View compiler examples →</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Installation & Local Setup -->
-    <section class="section" aria-label="Installation &amp; Setup">
-      <div class="container">
-        <div class="section-title-group">
-          <span class="section-kicker">03 // GETTING STARTED</span>
-          <h2>Three-step local installation.</h2>
-          <p class="section-sub">
-            Works with standard <strong>pdflatex</strong> on <strong>MiKTeX</strong> (Windows) or <strong>TeX Live</strong> (Linux, macOS, Windows) and any editor (VS Code, TeXstudio, TeXworks):
-          </p>
-        </div>
-
-        <div class="setup-steps">
-          <div class="step-card">
-            <span class="step-number">01</span>
-            <div class="step-content">
-              <h3>1. Download P3CTeX Release</h3>
-              <p>Download and extract <code>P3CTeX-vX.Y.Z.zip</code> from <a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">GitHub Releases</a>, or clone the repository directly using git:</p>
-              <div class="step-command">
-                <code>git clone https://github.com/DidacLL/P3CTeX.git</code>
+              <div class="macro-doc-actions">
+                <a href="showcases.html#pxtab" id="macro-showcase-url" class="doc-link-btn">View Compiled Table Examples →</a>
+                <a href="tutorials.html" class="doc-link-btn secondary">Full Reference Guide</a>
               </div>
             </div>
-          </div>
 
-          <div class="step-card">
-            <span class="step-number">02</span>
-            <div class="step-content">
-              <h3>2. Register with Your TeX Distribution</h3>
-              <p>Tell your TeX engine where P3CTeX lives so any document on your computer can find <code>\documentclass{P3CTeX}</code>:</p>
-              <div class="step-command">
-                <code># MiKTeX (GUI): Settings → Directories → Add folder → Refresh FNDB<br># MiKTeX (CLI): initexmf --register-root="/path/to/P3CTeX" &amp;&amp; initexmf --update-fndb<br># TeX Live: Add folder to TEXMFHOME or export TEXINPUTS="/path/to/P3CTeX//:"</code>
+            <div class="macro-code-display">
+              <div class="code-display-header">
+                <span class="disp-label">HOW TO USE IN YOUR DOCUMENT:</span>
+                <button class="tactile-copy-action mini" data-copy-target="#macro-code-target">
+                  <span class="copy-icon">📋</span>
+                  <span class="copy-text">COPY SNIPPET</span>
+                </button>
               </div>
+              <pre class="macro-pre"><code id="macro-code-target">% Create a clean table with comma-separated values:
+\pxTable[style=header]
+  {Mètrica, Valor Mesurat, Estat}
+  {Temps d'execució, 0.42 s, PASS}
+  {Memòria consumida, 18.5 MB, PASS}
+  {Eficiència Algorísmica, O(n log n), PASS}</code></pre>
             </div>
           </div>
 
-          <div class="step-card">
-            <span class="step-number">03</span>
-            <div class="step-content">
-              <h3>3. Compile with pdflatex</h3>
-              <p>Open your document in VS Code (with LaTeX Workshop) or TeXstudio and hit compile, or run from terminal:</p>
-              <div class="step-command">
-                <code>pdflatex your-document.tex</code>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SECTION 03: INSTALLATION & SETUP (LOCAL MIKTEX & TEX LIVE)
+           ================================================================== -->
+      <section id="deck-runbook" class="console-deck" aria-label="Installation and Setup">
+        <div class="runbook-stage-view">
+          
+          <div class="runbook-header-strip">
+            <h2 class="runbook-title">How to Install and Compile P3CTeX on Your Machine</h2>
+            <span class="runbook-tag">100% LOCAL &bull; WORKS WITH MIKTEX &amp; TEX LIVE &bull; ZERO INTERNET NEEDED</span>
+          </div>
+
+          <div class="runbook-grid-flow">
+            
+            <div class="runbook-step-row">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-headline">
+                  <strong>Download or Clone the Repository</strong>
+                  <span class="step-note">Get the document class and packages onto your computer</span>
+                </div>
+                <div class="step-code-box">
+                  <code id="cmd-step-1">git clone https://github.com/DidacLL/P3CTeX.git</code>
+                  <button class="tactile-copy-action mini" data-copy-target="#cmd-step-1">[COPY]</button>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Auxiliary Tools Callout -->
-        <div class="tools-callout">
-          <div class="tools-callout-header">
-            <span>AUXILIARY GENERATOR UTILITIES</span>
-            <span>OPTIONAL BROWSER COMPANIONS</span>
-          </div>
-          <p>
-            Prefer to assemble your initial document preamble visually before writing LaTeX? Use the online <a href="generator.html">Interactive Web Generator</a>, or download the single-file <a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Offline Generator (.html)</a> to generate starter preambles locally with zero internet access.
-          </p>
-        </div>
-      </div>
-    </section>
-  </main>
+            <div class="runbook-step-row">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <div class="step-headline">
+                  <strong>Register in MiKTeX (Windows)</strong>
+                  <span class="step-note">Tell MiKTeX where P3CTeX is located and refresh the database</span>
+                </div>
+                <div class="step-code-box">
+                  <code id="cmd-step-2">initexmf --register-root="/path/to/P3CTeX" &amp;&amp; initexmf --update-fndb</code>
+                  <button class="tactile-copy-action mini" data-copy-target="#cmd-step-2">[COPY]</button>
+                </div>
+              </div>
+            </div>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-about">
-        <h4>PEC.TeX // P3CTeX</h4>
-        <p>Created by ScVr!a. Open-source LaTeX document class and modular packages based on official styles defined by the UOC.</p>
-        <p>Licensed under GNU General Public License v3.0 · <em>"Procrastinar és l'única esperança"</em></p>
+            <div class="runbook-step-row">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <div class="step-headline">
+                  <strong>Configure TeX Live (Linux &amp; macOS)</strong>
+                  <span class="step-note">Point TEXINPUTS to the directory, or link it into your ~/texmf folder</span>
+                </div>
+                <div class="step-code-box">
+                  <code id="cmd-step-3">export TEXINPUTS=".:/path/to/P3CTeX//:"</code>
+                  <button class="tactile-copy-action mini" data-copy-target="#cmd-step-3">[COPY]</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="runbook-step-row">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <div class="step-headline">
+                  <strong>Compile Your Document</strong>
+                  <span class="step-note">Compile cleanly with standard pdflatex</span>
+                </div>
+                <div class="step-code-box">
+                  <code id="cmd-step-4">pdflatex your-submission.tex</code>
+                  <button class="tactile-copy-action mini" data-copy-target="#cmd-step-4">[COPY]</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Offline Standalone Generator Highlight -->
+          <div class="runbook-offline-strip">
+            <span class="strip-icon">💾</span>
+            <div class="strip-text">
+              <strong>Offline Web Generator Available:</strong>
+              <span>Need to generate templates without an internet connection? Download the single-file offline generator tool. Runs directly in any web browser with zero setup.</span>
+            </div>
+            <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="offline-download-btn">⬇ DOWNLOAD OFFLINE TOOL (.HTML)</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SECTION 04: DELIVERABLE GUIDE (PAC vs PR vs TFG)
+           ================================================================== -->
+      <section id="deck-specs" class="console-deck" aria-label="Deliverable Guide">
+        <div class="specs-stage-view">
+          
+          <div class="specs-stage-header">
+            <h2 class="specs-matrix-title">Deliverable Profiles: When to Use Which Option</h2>
+            <span class="specs-matrix-sub">One single class (P3CTeX.cls) pre-configured for every UOC engineering deliverable</span>
+          </div>
+
+          <div class="matrix-table-wrap">
+            <table class="matrix-spec-table">
+              <thead>
+                <tr>
+                  <th scope="col">DELIVERABLE TYPE</th>
+                  <th scope="col">PAC (Continuous Assessment)</th>
+                  <th scope="col">PR (Practicum &amp; Lab Report)</th>
+                  <th scope="col">TFG (Bachelor's Final Thesis)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Target Coursework</th>
+                  <td>Semester continuous assessment PAC / PEC</td>
+                  <td>20–50 page lab reports and practicums</td>
+                  <td>Final degree thesis monograph memory</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cover Page</th>
+                  <td><strong>Bypassed</strong> (Starts immediately on p. 1)</td>
+                  <td><strong>Institutional Cover</strong> with UOC branding</td>
+                  <td><strong>Official Tribunal Evaluation Sheet</strong> + CC license</td>
+                </tr>
+                <tr>
+                  <th scope="row">Table of Contents</th>
+                  <td>Auto-generated with anti-plagiarism pledge</td>
+                  <td>Full TOC, List of Figures &amp; Tables</td>
+                  <td>Multi-level chapter memory TOC</td>
+                </tr>
+                <tr>
+                  <th scope="row">Document Structure</th>
+                  <td><code>\sectionuoc{...}</code> exercises</td>
+                  <td>Sections, subsections, appendices</td>
+                  <td><code>\chapter{...}</code> academic memory</td>
+                </tr>
+                <tr>
+                  <th scope="row">Included Packages</th>
+                  <td>pxTAB (tables), pxSRC (figures), pxLST (code)</td>
+                  <td>pxTAB, pxSRC, pxLST</td>
+                  <td>pxTAB, pxSRC, pxLST, pxCMP, biblatex</td>
+                </tr>
+                <tr>
+                  <th scope="row">Configuration</th>
+                  <td><code>\documentclass[PAC,default]{P3CTeX}</code></td>
+                  <td><code>\documentclass[PR,default]{P3CTeX}</code></td>
+                  <td><code>\documentclass[TFG,MEM,default]{P3CTeX}</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SECTION 05: ABOUT P3CTeX
+           ================================================================== -->
+      <section id="deck-workshop" class="console-deck" aria-label="About P3CTeX">
+        <div class="workshop-stage-view">
+          
+          <div class="workshop-media-frame">
+            <img src="assets/images/hero-workshop.jpg" alt="P3CTeX late-night engineering workshop overlooking cyberpunk Barcelona skyline at 3am" width="1024" height="434" fetchpriority="high">
+            <div class="workshop-hud-overlay">
+              <span class="hud-tag">ORIGIN: UOC COMPUTER ENGINEERING</span>
+              <span class="hud-tag">LOCATION: BARCELONA</span>
+              <span class="hud-tag">STATUS: OPEN SOURCE</span>
+            </div>
+          </div>
+
+          <div class="workshop-manifesto">
+            <div class="manifesto-col">
+              <h3>BUILT FOR REAL DEADLINES</h3>
+              <p>
+                P3CTeX was created by a UOC Computer Engineering student who got tired of wasting the final two hours before a 23:59 submission fighting broken table borders, misaligned figures, and cryptic LaTeX compile errors.
+              </p>
+            </div>
+            <div class="manifesto-col">
+              <h3>"PROCRASTINAR ÉS L'ÚNICA ESPERANÇA"</h3>
+              <p>
+                When you're writing code and finishing your report in the middle of the night, your LaTeX template should just work. Single declarative config, resilient figures, and tables that never crash pdflatex.
+              </p>
+            </div>
+            <div class="manifesto-col">
+              <h3>100% FREE &amp; OPEN SOURCE</h3>
+              <p>
+                Zero subscriptions, zero cloud lock-in. Works with standard, local TeX distributions (MiKTeX and TeX Live). Released under the GNU General Public License v3.0 by ScVr!a.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Status Strip -->
+    <footer class="console-telemetry-footer">
+      <div class="footer-status-left">
+        <span class="dot-live"></span>
+        <span class="status-txt">P3CTeX v1.1</span>
+        <span class="sep">&bull;</span>
+        <span class="license-txt">GNU General Public License v3.0</span>
+        <span class="sep">&bull;</span>
+        <span class="author-txt">By ScVr!a &bull; UOC Computer Engineering</span>
       </div>
-      <div class="footer-col">
-        <h5>Documentation &amp; Setup</h5>
-        <ul>
-          <li><a href="tutorials.html#bootstrap">MiKTeX / TeX Live Setup</a></li>
-          <li><a href="tutorials.html#preamble">Preamble Anatomy</a></li>
-          <li><a href="tutorials.html#pac">PAC Workflows</a></li>
-          <li><a href="tutorials.html#pr">PR Practicum Workflows</a></li>
-          <li><a href="tutorials.html#tfg">TFG Thesis Memory</a></li>
-          <li><a href="showcases.html">Macro Showcases</a></li>
-        </ul>
+
+      <div class="footer-links-right">
+        <a href="tutorials.html" class="foot-link">Tutorials</a>
+        <a href="showcases.html" class="foot-link">Macro Showcases</a>
+        <a href="generator.html" class="foot-link">Interactive Generator</a>
+        <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="foot-link">Offline Tool (.html)</a>
+        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="foot-link">GitHub Repository</a>
       </div>
-      <div class="footer-col">
-        <h5>Repository &amp; Helpers</h5>
-        <ul>
-          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
-          <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub Repository</a></li>
-          <li><a href="generator.html">Web Generator Helper</a></li>
-          <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Offline Generator (.html)</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <span>© 2026 ScVr!a · P3CTeX LaTeX Document Class &amp; Package Suite</span>
-      <span>BARCELONA // UOC COMPUTER ENGINEERING</span>
-    </div>
-  </footer>
+    </footer>
+
+  </div>
 </body>
 </html>
