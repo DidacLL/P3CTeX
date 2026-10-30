@@ -420,28 +420,28 @@ class TestTier4RealWorldWorkloads(unittest.TestCase):
         self.assertEqual(open_braces, close_braces, "Unbalanced curly braces in generated LaTeX")
 
     def test_image_placeholder_cards_and_prompts_index(self):
-        """Validates all visual cards across pages and matches with IMAGE_PROMPTS.md."""
+        """Validates real visual assets on disk and matches catalog in IMAGE_PROMPTS.md."""
         prompts_file = SITE_DIR / "IMAGE_PROMPTS.md"
         self.assertTrue(prompts_file.is_file(), "IMAGE_PROMPTS.md does not exist")
         prompts_content = prompts_file.read_text(encoding="utf-8")
 
-        all_cards = []
-        for html_file in [SITE_DIR / "index.html", SITE_DIR / "tutorials.html", SITE_DIR / "showcases.html", SITE_DIR / "generator.html"]:
-            parser = parse_html_file(html_file)
-            all_cards.extend(parser.placeholder_cards)
+        # Verify key prompt slots are documented in IMAGE_PROMPTS.md
+        expected_slots = [
+            "IMG-HERO-01", "IMG-BRAND-02", "IMG-DOC-12", "IMG-PACPR-03",
+            "IMG-CALC-04", "IMG-CMP-05", "IMG-TAB-09", "IMG-LST-08",
+            "IMG-SRC-07", "IMG-REQ-13", "IMG-UML-10", "IMG-GEN-11"
+        ]
+        for slot in expected_slots:
+            self.assertIn(slot, prompts_content, f"Slot {slot} missing from IMAGE_PROMPTS.md catalog")
 
-        self.assertGreaterEqual(len(all_cards), 10, "Expected at least 10 placeholder cards across pages")
-
-        for card in all_cards:
-            slot_id = card["slot_id"]
-            self.assertTrue(slot_id, f"Card missing data-slot-id: {card}")
-            self.assertTrue(card["aspect_ratio"], f"Card {slot_id} missing data-aspect-ratio")
-            self.assertIn(slot_id, prompts_content, f"Slot {slot_id} missing from IMAGE_PROMPTS.md")
-            if card["prompt_text"]:
-                # First few words of prompt must be in IMAGE_PROMPTS.md
-                words = card["prompt_text"].split()[:5]
-                snippet = " ".join(words)
-                self.assertIn(snippet, prompts_content, f"Prompt text for {slot_id} not reflected in index")
+        # Verify that real generated image files exist on disk in assets/images
+        images_dir = SITE_DIR / "assets" / "images"
+        self.assertTrue(images_dir.is_dir(), "assets/images directory missing")
+        expected_images = ["brand-banner.jpg", "hero-workshop.jpg"]
+        for img_name in expected_images:
+            img_path = images_dir / img_name
+            self.assertTrue(img_path.is_file(), f"Expected real image {img_name} missing from assets/images")
+            self.assertGreater(img_path.stat().st_size, 1000, f"Image {img_name} is empty or corrupted")
 
 
 class TestTier5AdversarialCoverageHardening(unittest.TestCase):
