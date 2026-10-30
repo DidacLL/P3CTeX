@@ -30,13 +30,13 @@
     </nav>
   </header>
 
-  <!-- Main Parchment Sheet Container -->
+  <!-- Main Content Container -->
   <main id="main" class="container">
     <header class="page-intro">
-      <p class="eyebrow">Practical Coursework Guide</p>
-      <h1>Mastering P3CTeX from scratch.</h1>
+      <p class="eyebrow">[ UOC COMPUTER ENGINEERING · PRACTICAL SURVIVAL GUIDE ]</p>
+      <h1>Mastering P3CTeX for coursework deadlines.</h1>
       <p class="lede">
-        Everything you need to write professional academic deliverables at the UOC. Set up your environment once, master the shared-preamble hierarchy, and write fast, resilient LaTeX without breaking a sweat at 23:45.
+        You don't need to be a LaTeX wizard to produce clean, official university submissions. Set up your environment once, reuse your preambles across every semester, and write fast, resilient deliverables without formatting headaches.
       </p>
 
       <!-- Jump Navigation -->
@@ -53,23 +53,23 @@
     <!-- Chapter 01: Setup -->
     <section class="section" id="bootstrap">
       <span class="panel-number">01 / BOOTSTRAP</span>
-      <h2>Installation &amp; Environment Setup</h2>
+      <h2>Installation &amp; Environment Setup (No Git Required)</h2>
       <div class="prose">
-        <p>P3CTeX is distributed as a packaged TeX tree. You do not need to clone Git repositories to use it in your daily coursework. Once registered in your TeX distribution, <code>\documentclass{P3CTeX}</code> is available system-wide across all your assignments.</p>
+        <p>You don't need to clone development repositories or learn Git internals just to write your coursework. P3CTeX is distributed as a packaged TeX tree. Register it once in your local TeX distribution, and <code>\documentclass{P3CTeX}</code> becomes available everywhere on your computer.</p>
 
         <ol class="steps">
           <li>
-            <strong>Install MiKTeX or TeX Live:</strong> Install a standard LaTeX distribution on your computer (<a href="https://miktex.org/download" target="_blank" rel="noopener">MiKTeX</a> on Windows, or <a href="https://tug.org/texlive/" target="_blank" rel="noopener">TeX Live</a> on Linux/macOS). In MiKTeX, enable "Install missing packages on-the-fly".
+            <strong>Install MiKTeX or TeX Live:</strong> Install a standard LaTeX distribution (<a href="https://miktex.org/download" target="_blank" rel="noopener">MiKTeX</a> on Windows, or <a href="https://tug.org/texlive/" target="_blank" rel="noopener">TeX Live</a> on Linux/macOS). In MiKTeX, make sure "Install missing packages on-the-fly" is set to Yes.
           </li>
           <li>
-            <strong>Download the Release Package:</strong> Download <code>P3CTeX-vX.Y.Z.zip</code> from <a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">GitHub Releases</a> and extract it to a permanent folder on your system (e.g. <code>C:\LaTeX\P3CTeX</code> or <code>~/texmf/p3ctex</code>).
+            <strong>Download the Release Package:</strong> Download <code>P3CTeX-vX.Y.Z.zip</code> from <a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">GitHub Releases</a> and extract it to a permanent folder (such as <code>C:\LaTeX\P3CTeX</code> or <code>~/texmf/p3ctex</code>).
           </li>
           <li>
-            <strong>Register with your TeX Distribution (One-Time Step):</strong>
+            <strong>Register with your TeX Engine (One-Time Step):</strong>
             <ul>
-              <li><strong>MiKTeX:</strong> Open <em>MiKTeX Console</em> → <em>Settings</em> → <em>Directories</em> tab → Click <em>Add</em> → Select the extracted P3CTeX folder → Click <em>Tasks</em> → <em>Refresh file name database (FNDB)</em>.</li>
-              <li><strong>TeX Live:</strong> Place the files into your personal <code>TEXMFHOME</code> directory or set <code>TEXINPUTS=".:/path/to/p3ctex//:"</code> in your shell.</li>
-              <li><strong>Coursework Directory:</strong> Alternatively, you can simply extract the release ZIP directly into your assignment folder next to your <code>.tex</code> file.</li>
+              <li><strong>MiKTeX:</strong> Open <em>MiKTeX Console</em> → <em>Settings</em> → <em>Directories</em> tab → Click <em>Add</em> → Select your extracted P3CTeX folder → Click <em>Tasks</em> → <em>Refresh file name database (FNDB)</em>.</li>
+              <li><strong>TeX Live:</strong> Place the files into your personal <code>TEXMFHOME</code> directory or set <code>TEXINPUTS=".:/path/to/p3ctex//:"</code> in your environment.</li>
+              <li><strong>Emergency Fallback:</strong> If you're 15 minutes away from a deadline on a fresh laptop, just drop <code>P3CTeX.cls</code> and the <code>.sty</code> files directly into your assignment folder. LaTeX always finds local files!</li>
             </ul>
           </li>
         </ol>
@@ -87,8 +87,8 @@
         </div>
 
         <details class="guide-detail">
-          <summary>Configuring VS Code &amp; LaTeX Workshop for One-Click Compilation</summary>
-          <p>In VS Code with the LaTeX Workshop extension, use this clean build recipe in your <code>settings.json</code>:</p>
+          <summary>VS Code &amp; LaTeX Workshop One-Click Compilation Setup</summary>
+          <p>For instant Ctrl+S compilation in VS Code, add this build recipe to your <code>settings.json</code>:</p>
           <div class="code-box">
             <div class="code-box-header">
               <div class="code-box-title"><span class="tag">JSON</span> settings.json</div>
@@ -118,18 +118,16 @@
       <span class="panel-number">02 / PREAMBLE</span>
       <h2>Preamble Anatomy &amp; UOC Metadata</h2>
       <div class="prose">
-        <p>A compliant P3CTeX document begins with <code>\documentclass[options]{P3CTeX}</code> and a single declarative metadata configuration block. This guarantees that all header ribbons, footers, cover sheets, and title bars match official university standards.</p>
+        <p>Every assignment starts with <code>\documentclass[options]{P3CTeX}</code> and a single metadata block. Forget copy-pasting messy packages from old semesters: P3CTeX formats the headers, cover, table of contents, and student details automatically.</p>
 
-        <h3>Frequently Used Document Class Options</h3>
+        <h3>Key Document Class Options</h3>
         <ul>
-          <li><code>PAC</code>: Catalan continuous assessment profile (no cover, with table of contents and authorship declaration).</li>
-          <li><code>PEC</code>: Spanish continuous assessment profile (no cover, with TOC and declaration).</li>
-          <li><code>PR</code>: Practicum / Project laboratory profile (formal cover, TOC, and figures list).</li>
-          <li><code>TFG</code> / <code>MEM</code>: Bachelor Thesis / Degree Memory profile (tribunal page, multilingual abstracts, and Creative Commons license).</li>
-          <li><code>CAT</code>, <code>ES</code>, <code>EN</code>: Document language selection.</li>
-          <li><code>default</code>: Automatically loads common modules: <code>pxPRP</code>, <code>pxUML</code>, <code>pxSRC</code>, <code>pxTAB</code>, <code>pxLST</code>. Extra <code>\usepackage</code> calls are not needed!</li>
-          <li><code>CMP</code>: Compilers, automata, search graphs, and AI diagrams module.</li>
-          <li><code>GNT</code>: Gantt charts planning module.</li>
+          <li><code>PAC</code>: Continuous assessment in Catalan. Sets up running headers, table of contents, and the official anti-plagiarism declaration.</li>
+          <li><code>PEC</code>: Continuous assessment in Spanish. Equivalent structure configured for Spanish deliveries.</li>
+          <li><code>PR</code>: Practical laboratory reports. Automatically includes a formal university cover, table of contents, and list of figures.</li>
+          <li><code>TFG</code> / <code>MEM</code>: Bachelor Thesis memory. Includes official tribunal assessment sheets, multilingual abstracts, and CC licensing.</li>
+          <li><code>default</code>: Loads all standard tools (tables, code listings, figure management, UML). No extra <code>\usepackage</code> needed!</li>
+          <li><code>CMP</code>: Special module for Compilers, Automata, heuristic search graphs ($A^*$), and neural networks.</li>
         </ul>
 
         <div class="code-box">
@@ -138,19 +136,19 @@
             <button class="copy-btn" data-copy-target="#code-preamble-min">COPY</button>
           </div>
           <pre><code id="code-preamble-min"><span class="syn-comment">% Document class with PAC profile and default modules loaded</span>
-<span class="syn-kw">\documentclass</span><span class="syn-opt">[PAC,default]</span><span class="syn-arg">{P3CTeX}</span>
+\documentclass[PAC,default]{P3CTeX}
 
 <span class="syn-comment">% Academic & Student Identification Data</span>
-<span class="syn-cmd">\PECTeXconfig</span>{
-  <span class="syn-arg">data</span> = {
-    <span class="syn-opt">student</span>        = {Dídac Llorens},
-    <span class="syn-opt">grade</span>          = {Enginyeria Informàtica},
-    <span class="syn-opt">subj-fullname</span>  = {Compiladors i Llenguatges},
-    <span class="syn-opt">subj-shortname</span> = {COMP},
-    <span class="syn-opt">subj-code</span>      = {75.580},
-    <span class="syn-opt">ca-fullname</span>    = {Repte 1: Anàlisi Lèxica i Sintàctica},
-    <span class="syn-opt">ca-shortname</span>   = {PAC1},
-    <span class="syn-opt">date</span>           = {\today}
+\PECTeXconfig{
+  data = {
+    student        = {Estudiant UOC},
+    grade          = {Enginyeria Informàtica},
+    subj-fullname  = {Compiladors i Llenguatges},
+    subj-shortname = {COMP},
+    subj-code      = {75.580},
+    ca-fullname    = {Repte 1: Anàlisi Lèxica i Sintàctica},
+    ca-shortname   = {PAC1},
+    date           = {\today}
   }
 }</code></pre>
         </div>
@@ -172,20 +170,19 @@
     <!-- Chapter 03: Shared Preambles -->
     <section class="section" id="shared-preambles">
       <span class="panel-number">03 / ARCHITECTURE</span>
-      <h2>The Official Shared-Preamble Pattern</h2>
+      <h2>The Official Shared-Preamble Pattern (Reclaim Your Time)</h2>
       <div class="prose">
-        <p>In real university coursework, typing student metadata and subject codes across 4 PACs and 2 PRs per semester is tedious and error-prone. P3CTeX provides a battle-tested 3-tier hierarchy that separates global identity, subject configuration, and assignment content.</p>
+        <p>In a typical UOC semester you have 4 subjects, each with 3 or 4 PACs and 2 PRs. Retyping your name, student ID, subject codes, and bibliography configurations across 20 different documents is a waste of your study time. P3CTeX solves this with a clean 3-tier folder hierarchy:</p>
 
-        <h3>The Three-Tier Directory Structure</h3>
         <ol class="steps">
           <li>
-            <strong><code>SharedPreamble.tex</code> (Global):</strong> Lives in the root coursework folder. Sets your student name, degree (<em>Enginyeria Informàtica</em>), non-plagiarism declaration, and personal macros (such as <code>\itembf</code>).
+            <strong><code>SharedPreamble.tex</code> (Global):</strong> Sits in your root semester folder. Holds your personal student data, degree (<em>Enginyeria Informàtica</em>), anti-plagiarism setting, and custom shortcuts (like <code>\itembf</code>).
           </li>
           <li>
-            <strong><code>MINPreamble.tex</code> (Subject Level):</strong> Lives in each subject folder. Sets subject name, code, bibliography, and defines <code>\LoadPreamble{PAC1}{Nom de l'activitat}</code>.
+            <strong><code>MINPreamble.tex</code> (Subject Level):</strong> Sits inside each subject folder. Sets the subject name, code, bibliography file, and defines <code>\LoadPreamble{PAC1}{Nom de l'activitat}</code>.
           </li>
           <li>
-            <strong><code>PAC1/MinimalTemplatePAC.tex</code> (Assignment Body):</strong> The actual file you write! Only contains two lines of preamble setup, followed by <code>\begin{document}</code> and your answers.
+            <strong><code>PAC1/MinimalTemplatePAC.tex</code> (Assignment Body):</strong> The only file you actually touch! Loads the subject preamble, injects the activity name, and lets you focus 100% on answering the assignment questions.
           </li>
         </ol>
 
@@ -195,14 +192,14 @@
             <button class="copy-btn" data-copy-target="#code-shared-sub">COPY</button>
           </div>
           <pre><code id="code-shared-sub"><span class="syn-comment">% Load subject preamble relative to this file</span>
-<span class="syn-cmd">\input</span>{../MINPreamble.tex}
+\input{../MINPreamble.tex}
 
 <span class="syn-comment">% Inject assignment identifier and full activity title</span>
-<span class="syn-cmd">\LoadPreamble</span>{PAC1}{Anàlisi Lèxica i Sintàctica}
+\LoadPreamble{PAC1}{Anàlisi Lèxica i Sintàctica}
 
 \begin{document}
-<span class="syn-cmd">\section</span>{Exercici 1}
-<span class="syn-cmd">\subsection</span>{Pregunta A}
+\section{Exercici 1}
+\subsection{Pregunta A}
 La resposta a l'exercici es redacta directament aquí.
 \end{document}</code></pre>
         </div>
@@ -223,7 +220,7 @@ La resposta a l'exercici es redacta directament aquí.
             <div class="code-box-title"><span class="tag">LATEX</span> Comma-Separated Table</div>
             <button class="copy-btn" data-copy-target="#code-tab-flow">COPY</button>
           </div>
-          <pre><code id="code-tab-flow"><span class="syn-cmd">\pxTable</span><span class="syn-opt">[style=header]</span>{
+          <pre><code id="code-tab-flow">\pxTable[style=header]{
   Component, Estat, Mètrica
 }{
   Lexer (JLex), Complet, 120 tokens/s
@@ -242,10 +239,10 @@ La resposta a l'exercici es redacta directament aquí.
             <button class="copy-btn" data-copy-target="#code-fig-flow">COPY</button>
           </div>
           <pre><code id="code-fig-flow"><span class="syn-comment">% Inclusió segura d'imatge amb pxSRC</span>
-<span class="syn-cmd">\pxIMG</span><span class="syn-opt">[0.8\linewidth]</span>{img/pipeline}{Pipeline del Compilador}[fig:pipeline]
+\pxIMG[0.8\linewidth]{img/pipeline}{Pipeline del Compilador}[fig:pipeline]
 
 <span class="syn-comment">% Comparativa de dues imatges de costat</span>
-<span class="syn-cmd">\pxIMGpair</span><span class="syn-opt">[0.45\linewidth]</span>{img/ast_initial}{img/ast_optimized}{Arbre Sintàctic abans i després de l'optimització}[fig:ast-comp]</code></pre>
+\pxIMGpair[0.45\linewidth]{img/ast_initial}{img/ast_optimized}{Arbre Sintàctic abans i després de l'optimització}[fig:ast-comp]</code></pre>
         </div>
 
         <h3>3. Syntax-highlighted code with side comments (<code>pxLST</code>)</h3>
@@ -254,14 +251,14 @@ La resposta a l'exercici es redacta directament aquí.
             <div class="code-box-title"><span class="tag">LATEX</span> pxCode Listing</div>
             <button class="copy-btn" data-copy-target="#code-lst-flow">COPY</button>
           </div>
-          <pre><code id="code-lst-flow"><span class="syn-kw">\begin</span><span class="syn-arg">{pxCode}</span><span class="syn-opt">[language=pxJava]</span>{Exemple de Factorial}
+          <pre><code id="code-lst-flow">\begin{pxCode}[language=pxJava]{Exemple de Factorial}
 public class MathUtils {
     public static long factorial(int n) {
         if (n <= 1) return 1;
         return n * factorial(n - 1);
     }
 }
-<span class="syn-kw">\end</span><span class="syn-arg">{pxCode}</span></code></pre>
+\end{pxCode}</code></pre>
         </div>
       </div>
     </section>
@@ -271,7 +268,7 @@ public class MathUtils {
       <span class="panel-number">05 / ADVANCED</span>
       <h2>Laboratory Reports (PR) &amp; Bachelor Theses (TFG)</h2>
       <div class="prose">
-        <p>Large deliverables require formal university covers, multi-chapter memory management, and official assessment criteria.</p>
+        <p>Major milestone deliverables require official covers, multi-chapter memory management, and university assessment criteria.</p>
 
         <h3>Practicum Laboratory Reports (<code>\documentclass[PR,default]{P3CTeX}</code>)</h3>
         <p>The <code>PR</code> option automatically generates the full university cover page, table of contents, list of figures, and formatted chapter headers.</p>
@@ -316,12 +313,12 @@ public class MathUtils {
     </section>
   </main>
 
-  <!-- Site Footer (AAAAT Structure) -->
+  <!-- Site Footer -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
         <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
-        <p>Created by ScVr!a (DidacLL). Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
+        <p>Created by ScVr!a. Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
         <p>Licensed under GNU General Public License v3.0.</p>
       </div>
       <div class="footer-links">
@@ -346,7 +343,7 @@ public class MathUtils {
       </div>
     </div>
     <div class="container footer-bottom">
-      <span>© 2026 DidacLL / ScVr!a · "Procrastinar és l'única esperança"</span>
+      <span>© 2026 ScVr!a · "Procrastinar és l'única esperança"</span>
       <span>P3CTeX Documentation &amp; Generator Studio</span>
     </div>
   </footer>

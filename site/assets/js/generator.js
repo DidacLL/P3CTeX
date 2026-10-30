@@ -15,7 +15,7 @@
       modules: { default: true, CMP: false, GNT: false, TFG: false },
       toggles: { cover: false, toc: true, plagi: false },
       meta: {
-        student: 'Dídac Llorens',
+        student: 'Estudiant UOC',
         grade: 'Grau en Enginyeria Informàtica',
         subjFull: 'Compiladors i Llenguatges',
         subjShort: 'COMP',
@@ -31,7 +31,7 @@
       modules: { default: true, CMP: false, GNT: false, TFG: false },
       toggles: { cover: false, toc: true, plagi: false },
       meta: {
-        student: 'Dídac Llorens',
+        student: 'Estudiant UOC',
         grade: 'Grado en Ingeniería Informática',
         subjFull: 'Sistemas Operativos Avanzados',
         subjShort: 'SO',
@@ -47,7 +47,7 @@
       modules: { default: true, CMP: false, GNT: false, TFG: false },
       toggles: { cover: true, toc: true, plagi: false },
       meta: {
-        student: 'Dídac Llorens',
+        student: 'Estudiant UOC',
         grade: 'Grau en Enginyeria Informàtica',
         subjFull: 'Enginyeria del Software',
         subjShort: 'ES',
@@ -63,7 +63,7 @@
       modules: { default: true, CMP: true, GNT: false, TFG: false },
       toggles: { cover: false, toc: true, plagi: false },
       meta: {
-        student: 'Dídac Llorens',
+        student: 'Estudiant UOC',
         grade: 'Grau en Enginyeria Informàtica',
         subjFull: 'Compiladors i Teoria de la Computació',
         subjShort: 'COMP',
@@ -79,7 +79,7 @@
       modules: { default: true, CMP: false, GNT: true, TFG: true },
       toggles: { cover: true, toc: true, plagi: false },
       meta: {
-        student: 'Dídac Llorens',
+        student: 'Estudiant UOC',
         grade: 'Grau en Enginyeria Informàtica',
         subjFull: 'Treball Final de Grau',
         subjShort: 'TFG',

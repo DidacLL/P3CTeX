@@ -31,19 +31,19 @@
   </header>
 
   <main id="main">
-    <!-- Hero Section with Authentic Demopack Banner in Grid -->
+    <!-- Hero Section with Authentic Demopack Banner -->
     <section class="hero">
       <div class="container">
         <div class="hero-copy">
-          <p class="eyebrow">PEC.TeX · Open Source LaTeX Repository</p>
+          <p class="eyebrow">[ UOC COMPUTER ENGINEERING · ACADEMIC SURVIVAL TOOL ]</p>
           <h1>Procrastinar és l'única esperança.</h1>
           <p class="lede">
-            Ultimate UOC Template Generator based on official LaTeX styles defined by UOC. Built for computer engineering students facing PAC and PR deadlines who demand maximum typography polish with zero last-minute headaches.
+            The deadline on the Virtual Campus is 23:59. You have code to test and problems to solve — you shouldn't be fighting LaTeX geometry or wrestling with 50-line raw tables. P3CTeX provides official university formatting, resilient zero-crash figures, and computer science diagrams out of the box.
           </p>
           <div class="actions">
             <a href="generator.html" class="button">Launch Web Generator</a>
             <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="button secondary">Offline Tool (.html)</a>
-            <a href="tutorials.html" class="button secondary">See How It Works</a>
+            <a href="tutorials.html" class="button secondary">Read Student Guide</a>
           </div>
           <p class="hero-note">By ScVr!a · Official UOC styles · Pre-configured for MiKTeX &amp; TeX Live · GPL v3.0</p>
         </div>
@@ -51,29 +51,29 @@
       <img class="hero-art banner-contain" src="assets/images/pec-tex-banner.png" alt="P3CTeX ANSI Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" width="672" height="428" fetchpriority="high">
     </section>
 
-    <!-- Warm Parchment Sheet Container (AAAAT Architecture) -->
+    <!-- Main Content Container -->
     <div class="container">
-      <!-- 3 Practical Benefits -->
-      <section class="section" aria-label="Three practical benefits">
+      <!-- 3 Student Superpowers -->
+      <section class="section" aria-label="Three student benefits">
         <div class="cards">
           <article class="panel">
-            <span class="panel-number">01 / LASTMINUTE</span>
-            <h2>Zero-Boilerplate Assessments</h2>
-            <p>Pre-configured <code>\documentclass[PAC,default]{P3CTeX}</code> automatically generates official university headers, footers, covers, table of contents, and authorship declarations from a single metadata block.</p>
+            <span class="panel-number">01 / LASTMINUTE_SURVIVAL</span>
+            <h2>Focus on the Solution, Not the Markup</h2>
+            <p>Official UOC cover pages, running headers, footers, table of contents, and the mandatory anti-plagiarism declaration generate automatically from a single configuration block. Professors receive a pristine, standard deliverable every time.</p>
             <a href="tutorials.html#pac">Learn PAC workflow →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">02 / RESILIENT</span>
-            <h2>Zero-Crash Fallback Figures</h2>
-            <p>Missing benchmark screenshots or test output images will never crash <code>pdflatex</code> 15 minutes before the submission portal closes. <code>\pxIMG</code> generates calibrated visual placeholder cards preserving exact layout dimensions.</p>
+            <span class="panel-number">02 / ZERO_CRASH_PIPELINE</span>
+            <h2>Never Miss a Deadline Because of a Missing Screenshot</h2>
+            <p>Still running your lab benchmarks or missing an output graph 15 minutes before the portal closes? <code>\pxIMG</code> never halts compilation with fatal errors. It renders a clean placeholder preserving exact dimensions so your PDF compiles on time.</p>
             <a href="showcases.html#pxsrc">Explore pxSRC module →</a>
           </article>
 
           <article class="panel">
-            <span class="panel-number">03 / ARSENAL</span>
-            <h2>Built-in Engineering Diagrams</h2>
-            <p>Declare compiler Tombstone T-diagrams, DFA/NFA state transition tables, heuristic search graphs ($A^*$), and multilayer neural networks directly in LaTeX without fiddling with manual TikZ coordinates.</p>
+            <span class="panel-number">03 / ARSENAL_BUILTIN</span>
+            <h2>Instant Diagrams for Your Hardest Subjects</h2>
+            <p>Tombstone T-diagrams for Compilers, DFA state transition tables for Automata, $A^*$ search graphs for AI, and confusion matrices for Data Mining. Zero low-level TikZ coordinate math required.</p>
             <a href="showcases.html#pxcmp">Inspect pxCMP diagrams →</a>
           </article>
         </div>
@@ -95,32 +95,32 @@
             <button class="copy-btn" data-copy-target="#code-minimal-pac">COPY</button>
           </div>
           <pre><code id="code-minimal-pac"><span class="syn-comment">% Instant UOC PAC Skeleton</span>
-<span class="syn-kw">\documentclass</span><span class="syn-opt">[PAC,default]</span><span class="syn-arg">{P3CTeX}</span>
+\documentclass[PAC,default]{P3CTeX}
 
 <span class="syn-comment">% Declarative UOC Student & Subject Metadata</span>
-<span class="syn-cmd">\PECTeXconfig</span>{
-  <span class="syn-arg">data</span> = {
-    <span class="syn-opt">student</span>        = {Dídac Llorens},
-    <span class="syn-opt">grade</span>          = {Enginyeria Informàtica},
-    <span class="syn-opt">subj-fullname</span>  = {Compiladors i Llenguatges},
-    <span class="syn-opt">subj-shortname</span> = {COMP},
-    <span class="syn-opt">subj-code</span>      = {75.580},
-    <span class="syn-opt">ca-fullname</span>    = {Repte 1: Anàlisi Lèxica i Sintàctica},
-    <span class="syn-opt">ca-shortname</span>   = {PAC1},
-    <span class="syn-opt">date</span>           = {\today}
+\PECTeXconfig{
+  data = {
+    student        = {Estudiant UOC},
+    grade          = {Enginyeria Informàtica},
+    subj-fullname  = {Compiladors i Llenguatges},
+    subj-shortname = {COMP},
+    subj-code      = {75.580},
+    ca-fullname    = {Repte 1: Anàlisi Lèxica i Sintàctica},
+    ca-shortname   = {PAC1},
+    date           = {\today}
   }
 }
 
 \begin{document}
-<span class="syn-cmd">\section</span>{Exercici 1}
-<span class="syn-cmd">\subsection</span>{Pregunta A}
+\section{Exercici 1}
+\subsection{Pregunta A}
 Resposta a la primera pregunta de l'activitat d'avaluació contínua.
 
 % Taula de dades mitjançant pxTAB (sintaxi per comes)
-<span class="syn-cmd">\pxTable</span><span class="syn-opt">[style=header]</span>{Mètrica, Valor Mesurat, Estat}{Temps de compilació, 0.42 s, PASS}{Consum de memòria, 18.5 MB, PASS}
+\pxTable[style=header]{Mètrica, Valor Mesurat, Estat}{Temps de compilació, 0.42 s, PASS}{Consum de memòria, 18.5 MB, PASS}
 
 % Inclusió resilient de figura amb pxSRC (crea placeholder si la imatge no existeix)
-<span class="syn-cmd">\pxIMG</span><span class="syn-opt">[0.8\linewidth]</span>{img/pipeline}{Pipeline del compilador proposat}[fig:pipeline]
+\pxIMG[0.8\linewidth]{img/pipeline}{Pipeline del compilador proposat}[fig:pipeline]
 \end{document}</code></pre>
         </div>
       </section>
@@ -133,14 +133,14 @@ Resposta a la primera pregunta de l'activitat d'avaluació contínua.
 
         <div class="cards col-2">
           <article class="panel">
-            <h3>Model A: Self-Contained Document</h3>
+            <h3>Mode A: Fast One-Off Delivery</h3>
             <p>Everything in a single <code>.tex</code> file. Ideal for urgent deliveries, single PACs, or when sharing a single self-sufficient file with classmates. Requires zero directory hierarchy.</p>
             <a href="tutorials.html#pac">See standalone PAC tutorial →</a>
           </article>
 
           <article class="panel">
-            <h3>Model B: Shared-Preamble Hierarchy</h3>
-            <p>The official UOC template pattern. <code>SharedPreamble.tex</code> holds your personal identity and global macros; each subject has its own <code>SubjectPreamble.tex</code>, and your assignments simply invoke <code>\LoadPreamble{PAC1}{...}</code>.</p>
+            <h3>Mode B: The Semester Template (Shared Preambles)</h3>
+            <p>The official UOC template pattern. Configure your student info once in <code>SharedPreamble.tex</code> at the start of the semester. For every new assignment, just duplicate a folder and call <code>\LoadPreamble{PAC1}{...}</code>.</p>
             <a href="tutorials.html#shared-preambles">Explore shared preambles →</a>
           </article>
         </div>
@@ -154,7 +154,7 @@ Resposta a la primera pregunta de l'activitat d'avaluació contínua.
 
         <div class="cards col-2">
           <article class="panel">
-            <h3>pxSRC — Resilient Figures &amp; Image Lists</h3>
+            <h3>pxSRC — Zero-Crash Figures &amp; Image Lists</h3>
             <p>Safe image inclusion that replaces missing files with calibrated dimensioned placeholders. Includes <code>\pxIMGList</code> for automated batch caption sequences without manual repetition.</p>
             <a href="showcases.html#pxsrc">View pxSRC showcase →</a>
           </article>
@@ -212,12 +212,12 @@ Resposta a la primera pregunta de l'activitat d'avaluació contínua.
     </div>
   </main>
 
-  <!-- Site Footer (AAAAT Structure) -->
+  <!-- Site Footer -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
         <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
-        <p>Created by ScVr!a (DidacLL). Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
+        <p>Created by ScVr!a. Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
         <p>Licensed under GNU General Public License v3.0.</p>
       </div>
       <div class="footer-links">
@@ -242,7 +242,7 @@ Resposta a la primera pregunta de l'activitat d'avaluació contínua.
       </div>
     </div>
     <div class="container footer-bottom">
-      <span>© 2026 DidacLL / ScVr!a · "Procrastinar és l'única esperança"</span>
+      <span>© 2026 ScVr!a · "Procrastinar és l'única esperança"</span>
       <span>P3CTeX Documentation &amp; Generator Studio</span>
     </div>
   </footer>

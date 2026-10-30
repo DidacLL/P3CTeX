@@ -385,7 +385,7 @@ class TestTier4RealWorldWorkloads(unittest.TestCase):
                 "pxTAB": True
             },
             "metadata": {
-                "student": "Dídac Llorens",
+                "student": "Estudiant UOC",
                 "grade": "Grau en Enginyeria Informàtica",
                 "subjFullName": "Disseny de Compiladors",
                 "subjShortName": "DC",

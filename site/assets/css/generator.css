@@ -1,5 +1,5 @@
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (AAAAT Workshop Ergonomics)
+   P3CTeX LaTeX Generator Stylesheet (Pirate / Terminal Ergonomics)
    ========================================================================== */
 
 .generator-app {
@@ -11,28 +11,30 @@
 
 @media (min-width: 1024px) {
   .generator-app {
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1.15fr 0.85fr;
     align-items: start;
   }
 }
 
 /* Preset Toolbar */
 .preset-bar {
-  background: var(--sheet);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--rust);
-  padding: 14px 18px;
-  margin-bottom: 22px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-strong);
+  border-left: 4px solid var(--accent-amber);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-sm);
 }
 
 .preset-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 0.82rem;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   font-weight: 750;
-  color: var(--rust-dark);
+  color: var(--accent-amber);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -40,211 +42,205 @@
 .preset-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .preset-btn {
-  background: var(--paper);
-  border: 1px solid var(--edge);
-  color: var(--ink);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-strong);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
-  padding: 7px 12px;
+  padding: 8px 14px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .preset-btn:hover {
-  background: var(--sheet);
-  border-color: var(--rust);
+  background: #233748;
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
 }
 
 .preset-btn.active {
-  background: var(--rust);
-  color: var(--sheet);
-  border-color: var(--rust-dark);
+  background: var(--accent-rust);
+  color: #ffffff;
+  border-color: #b33920;
 }
 
 /* Config Groups */
 .config-group {
-  background: var(--sheet);
-  border: 1px solid var(--line);
-  margin-bottom: 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-dim);
+  border-radius: var(--radius-sm);
+  margin-bottom: 18px;
+  overflow: hidden;
 }
 
 .config-group-header {
-  background: rgba(56, 67, 58, 0.1);
+  background: var(--bg-panel-raised);
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
-  font-weight: 750;
-  font-size: 0.92rem;
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.config-group-header span.badge {
-  background: var(--machine-deep);
-  color: var(--sheet);
+  border-bottom: 1px solid var(--line-dim);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 2px 6px;
-  border-radius: 2px;
+  font-weight: 750;
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .config-group-body {
   padding: 16px;
 }
 
-/* Form Controls */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+.form-row {
+  margin-bottom: 14px;
 }
 
-@media (min-width: 640px) {
-  .form-grid.col-2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .form-grid.col-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.form-row:last-child {
+  margin-bottom: 0;
 }
 
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+.form-row label {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
 }
 
-.form-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.form-input, .form-select {
-  background: #fff;
-  border: 1px solid var(--edge);
-  padding: 8px 10px;
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
+.form-row input[type="text"],
+.form-row select {
+  width: 100%;
+  background: var(--bg-canvas);
+  border: 1px solid var(--line-strong);
+  color: var(--text-primary);
+  padding: 9px 12px;
   border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  transition: border-color 0.15s ease;
 }
 
-.form-input:focus, .form-select:focus {
+.form-row input[type="text"]:focus,
+.form-row select:focus {
   outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 2px rgba(36, 125, 121, 0.2);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.15);
 }
 
-/* Toggles */
-.toggle-grid {
+/* Checkbox and Toggle lists */
+.toggle-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 10px;
 }
 
-.toggle-label {
+.toggle-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fbf8f0;
-  border: 1px solid var(--line);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
   cursor: pointer;
-  user-select: none;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
 }
 
-.toggle-label:hover {
-  background: #fff;
-  border-color: var(--edge);
+.toggle-item input[type="checkbox"] {
+  accent-color: var(--accent-cyan);
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
 }
 
-.toggle-label input[type="checkbox"] {
-  accent-color: var(--rust);
-  width: 16px;
-  height: 16px;
+.toggle-item strong {
+  color: var(--text-primary);
 }
 
-.toggle-name {
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--ink);
-}
-
-.toggle-desc {
-  display: block;
-  font-size: 0.72rem;
-  color: var(--muted);
-}
-
-/* Sticky Preview Panel */
-.preview-pane {
+/* Preview Card */
+.generator-preview {
   position: sticky;
   top: 24px;
-  background: var(--machine-deep);
-  border: 1px solid #1a221a;
+}
+
+.preview-card {
+  background: var(--bg-code);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  box-shadow: 0 4px 16px rgba(10, 18, 10, 0.4);
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .preview-header {
-  background: #171e17;
-  border-bottom: 1px solid #2e382e;
-  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #111a22;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line-dim);
 }
 
 .preview-title {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--cyan);
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
 }
 
-.preview-editor-box {
-  background: #141b14;
-  padding: 14px 16px;
+.preview-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 6px var(--accent-green);
+}
+
+.preview-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-tool {
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-strong);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-tool:hover {
+  background: #233748;
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.btn-tool.primary {
+  background: var(--accent-rust);
+  border-color: #b33920;
+  color: #ffffff;
+}
+
+.btn-tool.primary:hover {
+  background: var(--accent-rust-hover);
+}
+
+.preview-code {
   margin: 0;
-  max-height: 540px;
+  padding: 18px;
+  max-height: 640px;
   overflow-y: auto;
   font-family: var(--font-mono);
-  font-size: 0.84rem;
+  font-size: 0.85rem;
   line-height: 1.5;
-  color: #e2ecd9;
-  white-space: pre;
-  tab-size: 2;
-  border-bottom: 1px solid #2e382e;
-}
-
-.preview-footer-bar {
-  background: #171e17;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.standalone-download-banner {
-  background: rgba(255, 249, 237, 0.05);
-  border: 1px dashed #475448;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: var(--sheet);
+  color: #edf4fa;
+  background: var(--bg-code);
 }
