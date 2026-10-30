@@ -1,0 +1,316 @@
+/* ==========================================================================
+   P3CTeX LaTeX Generator UI Stylesheet
+   Responsive Split-Panel Engineering Studio
+   ========================================================================== */
+
+.generator-section {
+  padding: 2.5rem 0 4rem 0;
+}
+
+.generator-layout {
+  display: grid;
+  grid-template-columns: minmax(420px, 1.15fr) minmax(480px, 1.25fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1040px) {
+  .generator-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Form Panel */
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line-medium);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.form-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--line-subtle);
+  padding-bottom: 0.65rem;
+}
+
+.form-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* Segmented Control Buttons */
+.segmented-control {
+  display: flex;
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--line-medium);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 3px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.segment-btn {
+  flex: 1;
+  min-width: 70px;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius-sm) - 2px);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-body);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.segment-btn:hover {
+  color: var(--text-ink);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.segment-btn.active {
+  background: var(--latex-blue);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Form Grid */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 580px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-ink);
+}
+
+.form-label-desc {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.form-input, .form-select {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--line-medium);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-ink);
+  background: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--latex-blue);
+  box-shadow: 0 0 0 3px var(--latex-blue-glow);
+}
+
+/* Switch & Checkbox Grid */
+.toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.toggle-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.toggle-card:hover {
+  background: #ffffff;
+  border-color: var(--latex-blue-light);
+}
+
+.toggle-card input[type="checkbox"] {
+  margin-top: 0.2rem;
+  accent-color: var(--latex-blue);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.toggle-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.toggle-name {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-ink);
+}
+
+.toggle-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* Sticky Preview Panel */
+.preview-panel {
+  position: sticky;
+  top: 80px;
+  background: var(--bg-surface-deep);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 100px);
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #090e17;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.preview-status {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-on-dark);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--latex-emerald);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(5, 150, 105, 0.8);
+}
+
+.file-name-badge {
+  color: var(--p3c-cyan);
+  font-weight: 600;
+}
+
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.preview-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 1.25rem;
+  background: #0f172a;
+}
+
+.preview-code {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #f8fafc;
+  margin: 0;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.preview-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  background: #090e17;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-on-dark-muted);
+}
+
+/* Offline Standalone Banner */
+.offline-banner {
+  background: linear-gradient(90deg, #1e3a8a 0%, #1e1b4b 100%);
+  border: 1px solid var(--latex-blue-light);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.offline-banner-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.offline-banner-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.offline-banner-desc {
+  font-size: 0.82rem;
+  color: var(--text-on-dark-muted);
+}

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P3CTeX LaTeX Generator — Standalone Offline Tool</title>
+  <style>
+    /* ==========================================================================
+       P3CTeX Standalone Offline Generator Stylesheet
+       100% Self-Contained · Zero External Fonts, Stylesheets, or Scripts
+       ========================================================================== */
+
+    :root {
+      --bg-page: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-soft: #f1f5f9;
+      --bg-surface-deep: #0f172a;
+      --text-ink: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-on-dark: #f8fafc;
+      --text-on-dark-muted: #94a3b8;
+
+      --p3c-primary: #000078;
+      --p3c-secondary: #0ea5e9;
+      --p3c-cyan: #73edff;
+      --latex-blue: #1d4ed8;
+      --latex-blue-light: #3b82f6;
+      --latex-blue-glow: rgba(59, 130, 246, 0.15);
+      --latex-crimson: #be123c;
+      --latex-crimson-hover: #9f1239;
+      --latex-emerald: #059669;
+      --latex-amber: #d97706;
+
+      --line-subtle: #e2e8f0;
+      --line-medium: #cbd5e1;
+      --line-dark: #334155;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+
+      --font-serif: "Latin Modern Roman", "Computer Modern", "Charter", "Georgia", serif;
+      --font-sans: system-ui, -apple-system, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      background-color: var(--bg-page);
+      color: var(--text-ink);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    a {
+      color: var(--latex-blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: 100%;
+      max-width: min(1360px, calc(100% - 2.5rem));
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .site-header {
+      background: var(--bg-surface-deep);
+      color: var(--text-on-dark);
+      border-bottom: 1px solid var(--line-dark);
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--p3c-primary), #1e1b4b);
+      border: 1px solid var(--p3c-secondary);
+      border-radius: var(--radius-sm);
+      color: #ffffff;
+      font-family: var(--font-serif);
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .brand-title .brand-accent {
+      color: var(--p3c-cyan);
+    }
+
+    .brand-tagline {
+      font-size: 0.75rem;
+      color: var(--text-on-dark-muted);
+    }
+
+    .offline-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(5, 150, 105, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(5, 150, 105, 0.4);
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--latex-emerald);
+      border-radius: 50%;
+    }
+
+    /* Layout */
+    .generator-section {
+      padding: 2rem 0 3.5rem 0;
+    }
+
+    .generator-layout {
+      display: grid;
+      grid-template-columns: minmax(420px, 1.15fr) minmax(480px, 1.25fr);
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1040px) {
+      .generator-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form Panel */
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--line-medium);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--line-subtle);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-ink);
+    }
+
+    .form-card-desc {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .segmented-control {
+      display: flex;
+      background: var(--bg-surface-soft);
+      border: 1px solid var(--line-medium);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      gap: 3px;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .segment-btn {
+      flex: 1;
+      min-width: 65px;
+      padding: 0.45rem 0.65rem;
+      background: transparent;
+      border: none;
+      border-radius: calc(var(--radius-sm) - 2px);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-body);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .segment-btn:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .segment-btn.active {
+      background: var(--latex-blue);
+      color: #ffffff;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 580px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-ink);
+    }
+
+    .form-input, .form-select {
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--line-medium);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      color: var(--text-ink);
+      background: #ffffff;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--latex-blue);
+      box-shadow: 0 0 0 3px var(--latex-blue-glow);
+    }
+
+    .toggle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .toggle-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--bg-surface-soft);
+      border: 1px solid var(--line-subtle);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-card:hover {
+      background: #ffffff;
+      border-color: var(--latex-blue-light);
+    }
+
+    .toggle-card input[type="checkbox"] {
+      margin-top: 0.15rem;
+      accent-color: var(--latex-blue);
+      width: 15px;
+      height: 15px;
+    }
+
+    .toggle-name {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-ink);
+      display: block;
+    }
+
+    .toggle-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.25;
+      display: block;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.15rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none !important;
+    }
+
+    .btn-primary {
+      background: var(--latex-crimson);
+      color: #ffffff;
+      border-color: var(--latex-crimson);
+    }
+
+    .btn-primary:hover {
+      background: var(--latex-crimson-hover);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    /* Preview Panel */
+    .preview-panel {
+      position: sticky;
+      top: 75px;
+      background: var(--bg-surface-deep);
+      border: 1px solid var(--line-dark);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 90px);
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.7rem 1rem;
+      background: #090e17;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .preview-status {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-on-dark);
+    }
+
+    .file-name-badge {
+      color: var(--p3c-cyan);
+      font-weight: 600;
+    }
+
+    .preview-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .preview-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 1.15rem;
+      background: #0f172a;
+    }
+
+    .preview-code {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: #f8fafc;
+      margin: 0;
+      white-space: pre;
+    }
+
+    .preview-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 1rem;
+      background: #090e17;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-on-dark-muted);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--bg-surface-deep);
+      color: var(--text-on-dark-muted);
+      border-top: 1px solid var(--line-dark);
+      padding: 2rem 0;
+      font-size: 0.85rem;
+      margin-top: 3rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Toast Notice */
+    .toast-notice {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-surface-deep);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--latex-emerald);
+      box-shadow: var(--shadow-xl);
+      font-size: 0.88rem;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: all 0.25s ease;
+    }
+
+    .toast-notice.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Header Landmark -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand-wrap">
+        <div class="brand-logo">P³C</div>
+        <div>
+          <div class="brand-title">P3C<span class="brand-accent">TeX</span> Standalone Generator</div>
+          <div class="brand-tagline">100% Offline-Capable · Zero External Dependencies</div>
+        </div>
+      </div>
+
+      <nav aria-label="Offline Navigation">
+        <span class="offline-badge">
+          <span class="status-dot"></span> Offline Ready
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main class="container generator-section">
+    <div class="generator-layout">
+      <!-- Form Controls Panel -->
+      <div class="form-panel">
+        <!-- 1. Presets -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="form-card-title">1. Document Preset &amp; Language</span>
+          </div>
+          <div class="form-card-desc">
+            Select an official UOC assessment profile to configure standard options.
+          </div>
+          <div class="segmented-control" role="group" aria-label="Presets">
+            <button type="button" class="segment-btn active" data-preset="PAC">PAC (Cat)</button>
+            <button type="button" class="segment-btn" data-preset="PEC">PEC (Esp)</button>
+            <button type="button" class="segment-btn" data-preset="CA">CA (Eng)</button>
+            <button type="button" class="segment-btn" data-preset="PR">PR (Report)</button>
+            <button type="button" class="segment-btn" data-preset="Custom">Custom</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-language">Language Setting</label>
+            <select id="input-language" class="form-select">
+              <option value="cat" selected>Catalan (cat) — babel[catalan]</option>
+              <option value="es">Spanish (es) — babel[spanish]</option>
+              <option value="en">English (en) — babel[english]</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2. Metadata -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="form-card-title">2. Student &amp; Course Metadata</span>
+          </div>
+          <div class="form-card-desc">
+            Injected via <code>\PECTeXconfig{data={...}}</code> into running headers and declarations.
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="meta-student">Student Legal Name</label>
+              <input type="text" id="meta-student" class="form-input" value="Nom Alumne">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meta-grade">Degree Program</label>
+              <input type="text" id="meta-grade" class="form-input" value="Grau d'Enginyeria Informàtica">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="meta-subj-fullname">Subject Full Name</label>
+              <input type="text" id="meta-subj-fullname" class="form-input" value="Disseny de Compiladors">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meta-subj-shortname">Subject Acronym</label>
+              <input type="text" id="meta-subj-shortname" class="form-input" value="DC">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="meta-subj-code">Subject Code</label>
+              <input type="text" id="meta-subj-code" class="form-input" value="05.597">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meta-ca-fullname">Activity Full Name</label>
+              <input type="text" id="meta-ca-fullname" class="form-input" value="PAC 1: Anàlisi Lèxica">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="meta-ca-shortname">Activity Tag</label>
+              <input type="text" id="meta-ca-shortname" class="form-input" value="PAC1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="meta-date">Date</label>
+              <input type="text" id="meta-date" class="form-input" value="\today">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Class Layout Options -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="form-card-title">3. Class Preamble Options</span>
+          </div>
+          <div class="toggle-grid">
+            <label class="toggle-card">
+              <input type="checkbox" id="chk-cover">
+              <div>
+                <span class="toggle-name">cover</span>
+                <span class="toggle-desc">Official cover page</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="chk-toc" checked>
+              <div>
+                <span class="toggle-name">toc</span>
+                <span class="toggle-desc">Table of Contents</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="chk-no-plagi" checked>
+              <div>
+                <span class="toggle-name">no-plagi</span>
+                <span class="toggle-desc">Authorship block</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="chk-debug">
+              <div>
+                <span class="toggle-name">debug</span>
+                <span class="toggle-desc">Verbose logs</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 4. Packages -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="form-card-title">4. Specialized Libraries &amp; Modules</span>
+          </div>
+          <div class="toggle-grid">
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxCALC" checked>
+              <div>
+                <span class="toggle-name">pxCALC</span>
+                <span class="toggle-desc">Worked math &amp; SI units</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxCMP" checked>
+              <div>
+                <span class="toggle-name">pxCMP</span>
+                <span class="toggle-desc">Automata &amp; T-diagrams</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxLST" checked>
+              <div>
+                <span class="toggle-name">pxLST</span>
+                <span class="toggle-desc">Darcula code listings</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxTAB" checked>
+              <div>
+                <span class="toggle-name">pxTAB</span>
+                <span class="toggle-desc">Branded tables</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxSRC" checked>
+              <div>
+                <span class="toggle-name">pxSRC</span>
+                <span class="toggle-desc">Safe figure placeholders</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxMEM">
+              <div>
+                <span class="toggle-name">pxMEM</span>
+                <span class="toggle-desc">\chapter &amp; region re-use</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxUML">
+              <div>
+                <span class="toggle-name">pxUML</span>
+                <span class="toggle-desc">UML class diagrams</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="pkg-pxREQ">
+              <div>
+                <span class="toggle-name">pxREQ</span>
+                <span class="toggle-desc">Requirements &amp; SWOT</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Starter Snippets -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <span class="form-card-title">5. Starter Document Snippets</span>
+          </div>
+          <div class="toggle-grid">
+            <label class="toggle-card">
+              <input type="checkbox" id="snip-intro" checked>
+              <div>
+                <span class="toggle-name">Introduction</span>
+                <span class="toggle-desc">\section starter</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="snip-calc" checked>
+              <div>
+                <span class="toggle-name">pxCALC Step</span>
+                <span class="toggle-desc">Voltage calculation</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="snip-automaton" checked>
+              <div>
+                <span class="toggle-name">DFA Automaton</span>
+                <span class="toggle-desc">TikZ state machine</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="snip-code" checked>
+              <div>
+                <span class="toggle-name">Code Box</span>
+                <span class="toggle-desc">\begin{pxCode} block</span>
+              </div>
+            </label>
+
+            <label class="toggle-card">
+              <input type="checkbox" id="snip-table" checked>
+              <div>
+                <span class="toggle-name">Data Table</span>
+                <span class="toggle-desc">\pxTable block</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Preview Panel -->
+      <div class="preview-panel">
+        <div class="preview-header">
+          <div class="preview-status">
+            <span class="status-dot"></span>
+            <span class="file-name-badge" id="filename-badge">DC_PAC1.tex</span>
+          </div>
+
+          <div class="preview-toolbar">
+            <button id="btn-copy-tex" class="btn btn-primary btn-sm">
+              Copy to Clipboard
+            </button>
+            <button id="btn-download-tex" class="btn btn-secondary btn-sm">
+              Download .tex
+            </button>
+          </div>
+        </div>
+
+        <div class="preview-scroll">
+          <pre><code id="preview-code" class="preview-code">% Live LaTeX Code Loading...</code></pre>
+        </div>
+
+        <div class="preview-footer">
+          <span id="preview-line-count">0 lines</span>
+          <span id="preview-char-count">0 chars</span>
+          <span>100% Offline Mode</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer Landmark -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        &copy; 2026 P3CTeX Project · Standalone Offline Edition. GNU GPL v3.0.
+      </div>
+      <div style="font-family: var(--font-mono); color: var(--p3c-cyan);">
+        Self-Contained Executable Bundle (Zero Network Requests)
+      </div>
+    </div>
+  </footer>
+
+  <div id="site-toast" class="toast-notice" role="status" aria-live="polite"></div>
+
+  <!-- Inline JavaScript Logic (Zero External Dependencies) -->
+  <script>
+    (function () {
+      'use strict';
+
+      const state = {
+        preset: 'PAC',
+        language: 'cat',
+        cover: false,
+        toc: true,
+        noPlagi: true,
+        debug: false,
+        packages: {
+          pxCALC: true,
+          pxCMP: true,
+          pxMEM: false,
+          pxSRC: true,
+          pxLST: true,
+          pxTAB: true,
+          pxUML: false,
+          pxREQ: false
+        },
+        metadata: {
+          student: 'Nom Alumne',
+          grade: "Grau d'Enginyeria Informàtica",
+          subjFullName: 'Disseny de Compiladors',
+          subjShortName: 'DC',
+          subjCode: '05.597',
+          caFullName: 'PAC 1: Anàlisi Lèxica',
+          caShortName: 'PAC1',
+          date: '\\today'
+        },
+        snippets: {
+          introSection: true,
+          calcExample: true,
+          cmpAutomaton: true,
+          codeListing: true,
+          tableExample: true
+        }
+      };
+
+      function showToast(msg) {
+        const t = document.getElementById('site-toast');
+        if (!t) return;
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(t._timeout);
+        t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
+      }
+
+      function copyText(text, cb) {
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(cb).catch(() => fallbackCopy(text, cb));
+        } else {
+          fallbackCopy(text, cb);
+        }
+      }
+
+      function fallbackCopy(text, cb) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.top = '-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          if (cb) cb();
+        } catch (e) {
+          alert('Could not copy automatically. Please select text manually.');
+        }
+      }
+
+      function generateLatexCode(st) {
+        const lines = [];
+        lines.push('% !TeX encoding = UTF-8');
+        lines.push(`% !TeX spellcheck = ${st.language === 'cat' ? 'ca_ES' : st.language === 'es' ? 'es_ES' : 'en_US'}`);
+        lines.push('%% =======================================================');
+        lines.push('%%  P3CTeX Document — Generated with Offline Standalone Generator');
+        lines.push(`%%  Target: ${st.metadata.caShortName || 'Activity'} — ${st.metadata.subjFullName || 'Subject'}`);
+        lines.push('%% =======================================================\n');
+
+        const classOpts = [];
+        if (st.preset !== 'Custom') {
+          classOpts.push(st.preset);
+          if (st.preset === 'PR') classOpts.push(st.language);
+        } else {
+          if (st.cover) classOpts.push('cover'); else classOpts.push('no-cover');
+          if (st.toc) classOpts.push('toc'); else classOpts.push('no-toc');
+          if (st.noPlagi) classOpts.push('no-plagi');
+          classOpts.push(st.language);
+        }
+
+        if (st.packages.pxCMP) classOpts.push('CMP');
+        if (st.packages.pxMEM) classOpts.push('MEM');
+        if (st.debug) classOpts.push('debug');
+
+        const optStr = classOpts.length > 0 ? `[${classOpts.join(',')}]` : '';
+        lines.push(`\\documentclass${optStr}{P3CTeX}\n`);
+
+        lines.push('%% Document Metadata Configuration');
+        lines.push('\\PECTeXconfig{');
+        lines.push('  data = {');
+        lines.push(`    student        = {${st.metadata.student || 'Nom Alumne'}},`);
+        lines.push(`    grade          = {${st.metadata.grade || "Grau d'Enginyeria Informàtica"}},`);
+        lines.push(`    subj-fullname  = {${st.metadata.subjFullName || 'Assignatura'}},`);
+        lines.push(`    subj-shortname = {${st.metadata.subjShortName || 'ASG'}},`);
+        lines.push(`    subj-code      = {${st.metadata.subjCode || '00.000'}},`);
+        lines.push(`    ca-fullname    = {${st.metadata.caFullName || 'Activitat'}},`);
+        lines.push(`    ca-shortname   = {${st.metadata.caShortName || 'PAC1'}},`);
+        lines.push(`    date           = {${st.metadata.date || '\\today'}}`);
+        lines.push('  }');
+        lines.push('}\n');
+
+        lines.push('%% Package Initializations');
+        if (st.packages.pxCALC) lines.push('\\usepackage{pxCALC}\n\\pxCalcSetup{prec=2, steps=3}');
+        if (st.packages.pxSRC) lines.push('\\usepackage{pxSRC}');
+        if (st.packages.pxLST) lines.push('\\usepackage{pxLST}\n\\pxLSTsetup[dark]{pxPython}');
+        if (st.packages.pxTAB) lines.push('\\usepackage{pxTAB}\n\\pxTABsetup{preset=p3c-header}');
+        if (st.packages.pxUML) lines.push('\\usepackage{pxUML}');
+        if (st.packages.pxREQ) lines.push('\\usepackage{pxREQ}');
+        lines.push('');
+
+        lines.push('\\begin{document}\n');
+
+        if (st.snippets.introSection) {
+          lines.push('\\section{Introducció}');
+          lines.push("En aquest document es presenten les solucions desenvolupades per a l'activitat.");
+          lines.push('\\bigskip\n');
+        }
+
+        if (st.packages.pxCALC && st.snippets.calcExample) {
+          lines.push('%% Worked Calculation');
+          lines.push("\\section{Càlculs d'Enginyeria (pxCALC)}");
+          lines.push('\\pxDefVar{Vcc}{5}[V]');
+          lines.push('\\pxDefVar{R1}{1000}[R_1]');
+          lines.push('\\pxDefVar{R2}{2000}[R_2]');
+          lines.push('\\pxDefFormula{Vout}{[Vcc] * [R2] / ([R1] + [R2])}[symbol=V_{out}, unit=\\volt]');
+          lines.push('\\noindent Resultat del divisor de tensió:');
+          lines.push('\\[');
+          lines.push('  \\pxSolve[prec=3]{Vout}');
+          lines.push('\\]\n');
+        }
+
+        if (st.packages.pxCMP && st.snippets.cmpAutomaton) {
+          lines.push('%% Automaton Diagram');
+          lines.push('\\section{Autòmat Finit Determinista (pxCMP)}');
+          lines.push('\\begin{center}');
+          lines.push('\\pxAutomaton[');
+          lines.push('  preset=p3c-uoc,');
+          lines.push('  states={q0/initial/at={(0,0)}, q1/accepting/at={(3,0)}},');
+          lines.push('  transitions={q0/q1/a, q1/q0/b, q1/q1/a}');
+          lines.push(']{}');
+          lines.push('\\end{center}\n');
+        }
+
+        if (st.packages.pxLST && st.snippets.codeListing) {
+          lines.push('%% Code Listing');
+          lines.push('\\section{Implementació de Codi (pxLST)}');
+          lines.push('\\begin{pxCode}[language=pxPython]{AlgorismePrincipal}');
+          lines.push('def process_batch(items):');
+          lines.push('    return [item.strip() for item in items if item]');
+          lines.push('\\end{pxCode}\n');
+        }
+
+        if (st.packages.pxTAB && st.snippets.tableExample) {
+          lines.push('%% Formatted Table');
+          lines.push('\\section{Resultats Experimentals (pxTAB)}');
+          lines.push('\\pxTable[preset=p3c-header]');
+          lines.push('  {Mètrica, Mètode Clàssic, Mètode P3CTeX}');
+          lines.push("  {Temps d'execució, 14.8 ms, 2.1 ms}");
+          lines.push('  {Consum de memòria, 12.4 MB, 3.2 MB}');
+          lines.push('  {Taxa d\'èxit, 94.2\\%, 99.8\\%}\n');
+        }
+
+        lines.push('\\end{document}');
+        return lines.join('\n');
+      }
+
+      function getFilename(st) {
+        const act = (st.metadata.caShortName || 'DOC').replace(/[^a-zA-Z0-9_-]/g, '');
+        const subj = (st.metadata.subjShortName || 'P3C').replace(/[^a-zA-Z0-9_-]/g, '');
+        return `${subj}_${act}.tex`;
+      }
+
+      function renderPreview() {
+        const codeEl = document.getElementById('preview-code');
+        const filenameEl = document.getElementById('filename-badge');
+        const lineEl = document.getElementById('preview-line-count');
+        const charEl = document.getElementById('preview-char-count');
+
+        if (!codeEl) return;
+        const code = generateLatexCode(state);
+        codeEl.textContent = code;
+
+        const fn = getFilename(state);
+        if (filenameEl) filenameEl.textContent = fn;
+        const lines = code.split('\n');
+        if (lineEl) lineEl.textContent = `${lines.length} lines`;
+        if (charEl) charEl.textContent = `${code.length} chars`;
+      }
+
+      function bind() {
+        document.querySelectorAll('[data-preset]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const p = btn.getAttribute('data-preset');
+            state.preset = p;
+
+            if (p === 'PAC') { state.language = 'cat'; state.cover = false; state.toc = true; state.noPlagi = true; }
+            else if (p === 'PEC') { state.language = 'es'; state.cover = false; state.toc = true; state.noPlagi = true; }
+            else if (p === 'CA') { state.language = 'en'; state.cover = false; state.toc = true; state.noPlagi = true; }
+            else if (p === 'PR') { state.cover = true; state.toc = true; state.noPlagi = true; }
+
+            const langSel = document.getElementById('input-language');
+            if (langSel) langSel.value = state.language;
+            const coverChk = document.getElementById('chk-cover');
+            if (coverChk) coverChk.checked = state.cover;
+            const tocChk = document.getElementById('chk-toc');
+            if (tocChk) tocChk.checked = state.toc;
+            const plagiChk = document.getElementById('chk-no-plagi');
+            if (plagiChk) plagiChk.checked = state.noPlagi;
+
+            renderPreview();
+          });
+        });
+
+        const langSel = document.getElementById('input-language');
+        if (langSel) {
+          langSel.addEventListener('change', (e) => {
+            state.language = e.target.value;
+            renderPreview();
+          });
+        }
+
+        const metaMap = [
+          ['meta-student', 'student'],
+          ['meta-grade', 'grade'],
+          ['meta-subj-fullname', 'subjFullName'],
+          ['meta-subj-shortname', 'subjShortName'],
+          ['meta-subj-code', 'subjCode'],
+          ['meta-ca-fullname', 'caFullName'],
+          ['meta-ca-shortname', 'caShortName'],
+          ['meta-date', 'date']
+        ];
+        metaMap.forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('input', (e) => { state.metadata[key] = e.target.value; renderPreview(); });
+        });
+
+        const optMap = [
+          ['chk-cover', 'cover'],
+          ['chk-toc', 'toc'],
+          ['chk-no-plagi', 'noPlagi'],
+          ['chk-debug', 'debug']
+        ];
+        optMap.forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.addEventListener('change', (e) => {
+              state[key] = e.target.checked;
+              state.preset = 'Custom';
+              document.querySelectorAll('[data-preset]').forEach(b => {
+                if (b.getAttribute('data-preset') === 'Custom') b.classList.add('active');
+                else b.classList.remove('active');
+              });
+              renderPreview();
+            });
+          }
+        });
+
+        ['pxCALC', 'pxCMP', 'pxMEM', 'pxSRC', 'pxTAB', 'pxLST', 'pxUML', 'pxREQ'].forEach(pkg => {
+          const el = document.getElementById(`pkg-${pkg}`);
+          if (el) el.addEventListener('change', (e) => { state.packages[pkg] = e.target.checked; renderPreview(); });
+        });
+
+        [
+          ['snip-intro', 'introSection'],
+          ['snip-calc', 'calcExample'],
+          ['snip-automaton', 'cmpAutomaton'],
+          ['snip-code', 'codeListing'],
+          ['snip-table', 'tableExample']
+        ].forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('change', (e) => { state.snippets[key] = e.target.checked; renderPreview(); });
+        });
+
+        const copyBtn = document.getElementById('btn-copy-tex');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', () => {
+            const code = generateLatexCode(state);
+            copyText(code, () => {
+              showToast('LaTeX source code copied to clipboard');
+            });
+          });
+        }
+
+        const downloadBtn = document.getElementById('btn-download-tex');
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', () => {
+            const code = generateLatexCode(state);
+            const fn = getFilename(state);
+            const blob = new Blob([code], { type: 'text/x-tex;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fn;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 250);
+            showToast(`Downloaded ${fn}`);
+          });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        bind();
+        renderPreview();
+      });
+    })();
+  </script>
+</body>
+</html>
