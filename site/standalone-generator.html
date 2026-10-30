@@ -1,906 +1,2254 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>P3CTeX LaTeX Generator — Standalone Offline Tool</title>
-  <style>
-    /* ==========================================================================
-       P3CTeX Standalone Offline Generator Stylesheet
-       100% Self-Contained · Zero External Fonts, Stylesheets, or Scripts
-       Aesthetic: AAAAT Workshop Surface & Ergonomics
-       ========================================================================== */
+  <title>Interactive Web Generator · P3CTeX Tooling</title>
+  <meta name="description" content="Generate compliant, ready-to-compile UOC LaTeX preambles and assessment skeletons with live preview, copy-to-clipboard, and .tex download.">
+  
+  
+  
+  
+<style>
+:root {
+  --paper:#cfc9b3;
+  --sheet:#eee5d0;
+  --paper-strong:#bdb79f;
+  --machine:#38433a;
+  --machine-raised:#50594b;
+  --machine-deep:#202920;
+  --ink:#24342e;
+  --muted:#475448;
+  --line:#9d9d83;
+  --edge:#778176;
+  --rust:#ae4827;
+  --rust-dark:#85331e;
+  --focus:#247d79;
+  --cyan:#a2e8da;
+  --page-width:min(1920px,calc(100% - clamp(24px,4vw,80px)));
+  font-family:'Segoe UI',Arial,sans-serif;
+  color:var(--ink);
+  color-scheme:light
+}
+* {
+  box-sizing:border-box
+}
+html {
+  scroll-behavior:auto;
+  scroll-padding-top:24px
+}
+body {
+  margin:0;
+  background:#171e19;
+  background-image:radial-gradient(ellipse at top,#455044 0,transparent 65%);
+  line-height:1.55
+}
+button,input,select,textarea {
+  font:inherit
+}
+a {
+  color:var(--rust-dark);
+  text-underline-offset:.2em
+}
+a:hover {
+  text-decoration-thickness:2px
+}
+button {
+  cursor:pointer
+}
+img {
+  display:block;
+  max-width:100%;
+  height:auto
+}
+h1,h2,h3 {
+  font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;
+  line-height:1.13;
+  letter-spacing:-.035em;
+  text-wrap:balance
+}
+h1 {
+  font-size:clamp(2rem,3vw,2.8rem);
+  font-weight:800;
+  margin:.18em 0 .42em
+}
+h2 {
+  font-size:clamp(1.6rem,2vw,2.1rem);
+  margin:0 0 .6em
+}
+h3 {
+  font-size:1.3rem;
+  margin:0 0 .55em;
+  letter-spacing:-.02em
+}
+p {
+  margin:0 0 1em
+}
+ul,ol {
+  padding-left:1.5em
+}
+code {
+  font-size:.91em;
+  overflow-wrap:anywhere
+}
+:focus-visible {
+  outline:3px solid var(--focus);
+  outline-offset:4px
+}
+.site-header :focus-visible,.hero :focus-visible,.site-footer :focus-visible {
+  outline-color:var(--cyan)
+}
+.skip-link {
+  position:fixed;
+  top:-100px;
+  left:12px;
+  z-index:30;
+  background:var(--sheet);
+  padding:12px
+}
+.skip-link:focus {
+  top:12px
+}
+.site-header {
+  background:var(--machine-deep)
+}
+.brand,.home .brand {
+  display:block;
+  width:100%;
+  aspect-ratio:6.4;
+  min-height:126px;
+  margin:0;
+  overflow:hidden;
+  position:relative
+}
+.brand img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  max-width:none;
+  object-fit:cover;
+  object-position:center 47%
+}
+.site-nav {
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  flex-wrap:nowrap;
+  background:linear-gradient(#4c5748,#303c32);
+  border-block:1px solid #81876b;
+  box-shadow:0 4px 8px #0a120a60
+}
+.site-nav a {
+  color:var(--sheet);
+  white-space:nowrap;
+  text-decoration:none;
+  font-weight:650;
+  font-size:.95rem;
+  padding:11px 25px;
+  border-inline:1px solid #fff9ed18;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center
+}
+.site-nav a:hover {
+  background:var(--machine-raised)
+}
+.site-nav a[aria-current=page] {
+  background:var(--paper);
+  color:var(--ink);
+  box-shadow:inset 0 -4px var(--rust)
+}
+.container {
+  width:var(--page-width);
+  margin-inline:auto
+}
+main.container,.home main>.container {
+  padding-inline:clamp(22px,3vw,48px);
+  margin-block:24px;
+  background:linear-gradient(110deg,#d6cdb5,#c4c3ac);
+  border:1px solid #8a8d75;
+  border-radius:0;
+  box-shadow:0 3px 18px #070e0780
+}
+.section {
+  padding-block:30px;
+  border-bottom:1px solid var(--line)
+}
+.eyebrow,.panel-number {
+  color:var(--rust-dark);
+  font-size:.74rem;
+  font-weight:750;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+  display:block
+}
+.lede {
+  font-size:1.14rem;
+  line-height:1.65;
+  max-width:640px
+}
+.hero {
+  width:var(--page-width);
+  margin:24px auto 0;
+  display:grid;
+  grid-template-columns:1fr 1.3fr;
+  background:linear-gradient(120deg,#424d40,#26352c);
+  color:var(--sheet);
+  border:1px solid #81876b;
+  border-bottom:3px solid var(--rust);
+  box-shadow:0 3px 18px #070e0780
+}
+.hero-art {
+  grid-column:2;
+  grid-row:1;
+  width:100%;
+  height:100%;
+  min-height:350px;
+  object-fit:cover;
+  object-position:76% center
+}
+.hero .container {
+  grid-column:1;
+  grid-row:1;
+  width:auto;
+  padding:28px clamp(24px,2.5vw,40px);
+  display:flex;
+  align-items:center
+}
+.hero-copy {
+  max-width:650px
+}
+.hero h1 {
+  font-size:clamp(2rem,2.7vw,2.6rem);
+  line-height:1.08
+}
+.hero .lede {
+  font-size:1rem
+}
+.hero-note {
+  font-size:.82rem;
+  color:#d4d3bb;
+  margin:0
+}
+.hero .eyebrow {
+  color:#e7a982
+}
+.hero .button.secondary {
+  background:transparent;
+  border-color:#a0aa91;
+  color:var(--sheet)
+}
+.hero .button.secondary:hover {
+  background:var(--machine-raised)
+}
+.actions {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin:24px 0
+}
+.button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  padding:10px 19px;
+  background:var(--rust);
+  border:1px solid var(--rust-dark);
+  color:var(--sheet);
+  font-weight:700;
+  text-decoration:none;
+  border-radius:2px
+}
+.button:hover {
+  background:var(--rust-dark);
+  text-decoration:none
+}
+.button.secondary {
+  color:var(--ink);
+  background:var(--sheet);
+  border-color:var(--line)
+}
+.button.secondary:hover {
+  background:var(--paper-strong)
+}
+.cards,.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:32px
+}
+.panel,.card {
+  padding:0 0 0 24px;
+  border-left:2px solid var(--line);
+  min-width:0
+}
+.panel h2 {
+  font-size:1.4rem
+}
+.panel>:last-child,.card>:last-child {
+  margin-bottom:0
+}
+.panel-number {
+  margin-bottom:14px
+}
+.section-heading {
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:52px;
+  align-items:end;
+  margin-bottom:28px
+}
+.section-heading h2 {
+  margin-bottom:0
+}
+.section-heading>p {
+  color:var(--muted);
+  margin:0;
+  max-width:440px
+}
+.split {
+  display:grid;
+  grid-template-columns:.85fr 1.4fr;
+  gap:44px;
+  align-items:center
+}
+.split:has(>figure:first-child) {
+  grid-template-columns:1.4fr .85fr
+}
+.split figure {
+  margin:0
+}
+.split img {
+  width:100%;
+  border:1px solid #b1a68b
+}
+.split h2 {
+  font-size:clamp(1.7rem,2.3vw,2.3rem)
+}
+figure {
+  margin:24px 0
+}
+.figure img {
+  width:100%;
+  border:1px solid #aaa189
+}
+.figure a {
+  display:block;
+  cursor:zoom-in
+}
+figcaption {
+  font-size:.84rem;
+  line-height:1.5;
+  color:var(--muted);
+  margin-top:10px
+}
+.product-proof {
+  background:var(--machine);
+  color:var(--sheet);
+  padding:44px clamp(20px,4vw,48px);
+  margin-block:24px;
+  border:0
+}
+.product-proof .eyebrow {
+  color:#edb493
+}
+.product-proof .section-heading>p,.product-proof figcaption {
+  color:#d8decf
+}
+.product-proof a {
+  color:#ffcdab
+}
+.product-proof .figure {
+  margin:24px 0 0
+}
+.product-proof img {
+  border:1px solid var(--edge)
+}
+.section-closer {
+  margin:20px 0 0;
+  font-weight:650
+}
+.page-intro {
+  padding:26px 0 20px;
+  max-width:none
+}
+.page-intro>p {
+  font-size:1.06rem;
+  max-width:78ch
+}
+.page-intro>.eyebrow {
+  font-size:.74rem
+}
+.prose {
+  max-width:76ch;
+  font-size:1rem
+}
+.prose p,.prose li {
+  line-height:1.65
+}
+.prose h3 {
+  margin-top:1.4em
+}
+.prose h2 {
+  margin-top:0
+}
+.prose img {
+  max-width:100%
+}
+.steps {
+  list-style:none;
+  counter-reset:steps;
+  margin:24px 0;
+  padding:0;
+  display:grid;
+  gap:0
+}
+.steps>li {
+  counter-increment:steps;
+  position:relative;
+  padding:15px 0 15px 46px;
+  border-top:1px solid var(--line)
+}
+.steps>li:before {
+  content:counter(steps);
+  position:absolute;
+  top:16px;
+  left:0;
+  background:var(--rust);
+  color:var(--sheet);
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  font-weight:750;
+  font-size:.9rem
+}
+.steps>li>:last-child {
+  margin-bottom:0
+}
+.callout {
+  margin:24px 0;
+  padding:20px 24px;
+  background:var(--sheet);
+  border-left:3px solid var(--rust)
+}
+.callout>:last-child {
+  margin-bottom:0
+}
+.toc {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 20px;
+  padding:16px 0;
+  border-block:1px solid var(--line);
+  margin:24px 0 0
+}
+.toc a {
+  font-size:.9rem;
+  font-weight:600;
+  padding:5px 0
+}
+.manual .page-intro {
+  max-width:none
+}
+.manual .guide-index {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:26px;
+  padding:22px 0
+}
+.guide-index-group h2 {
+  font-size:1rem;
+  letter-spacing:0;
+  margin:0 0 10px
+}
+.guide-index-group ul {
+  list-style:none;
+  padding:0;
+  margin:0
+}
+.guide-index-group li {
+  margin:0 0 6px
+}
+.guide-index-group a {
+  font-weight:400;
+  display:inline-block;
+  line-height:1.45;
+  padding:3px 0
+}
+.guide-section {
+  scroll-margin-top:24px
+}
+.manual .guide-section>h2 {
+  max-width:950px
+}
+.guide-steps {
+  padding-left:1.5em;
+  margin:16px 0 24px;
+  max-width:820px
+}
+.guide-steps>li {
+  padding-left:.3em;
+  margin:0 0 14px;
+  line-height:1.72
+}
+.guide-steps>li::marker {
+  color:var(--rust-dark);
+  font-weight:750
+}
+.guide-detail {
+  margin:16px 0;
+  padding:15px 18px;
+  background:var(--sheet);
+  border:1px solid var(--line)
+}
+.guide-detail summary {
+  cursor:pointer;
+  font-weight:650
+}
+.guide-detail p {
+  margin:14px 0 0
+}
+.guide-paths {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:30px;
+  margin:25px 0
+}
+.guide-paths article {
+  border-left:2px solid var(--rust);
+  padding:0 20px
+}
+.guide-paths h3 {
+  margin:0 0 10px
+}
+.guide-paths article>p {
+  margin-bottom:9px
+}
+.capabilities-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:24px 44px
+}
+.capabilities-grid>div {
+  padding-top:20px;
+  border-top:1px solid var(--line)
+}
+.capabilities-grid p {
+  max-width:490px
+}
+.capabilities-grid a,.capabilities-end a {
+  font-weight:650
+}
+.capabilities-end {
+  margin:24px 0 0
+}
+.download-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:26px
+}
+.download-card {
+  padding:24px;
+  background:var(--sheet);
+  border-top:3px solid var(--rust)
+}
+.download-card h2 {
+  font-size:1.9rem
+}
+.download-choice {
+  margin-top:24px;
+  border-top:1px solid var(--line);
+  padding-top:16px
+}
+.download-choice h3 {
+  font-size:1rem
+}
+.download-choice a {
+  display:inline-block;
+  margin:0 14px 7px 0;
+  font-weight:650
+}
+.download-card small {
+  display:block;
+  font-size:.82rem;
+  color:var(--muted)
+}
+.pdf-figure {
+  max-width:650px;
+  margin-inline:auto
+}
+.pdf-figure img {
+  width:100%
+}
+.document-pair {
+  display:grid;
+  grid-template-columns:1.65fr 1fr;
+  gap:28px;
+  align-items:start
+}
+.document-pair .figure {
+  margin:0
+}
+.document-pair .pdf-figure {
+  width:100%
+}
+.layout-samples {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  margin-block:24px
+}
+.layout-samples .figure {
+  margin:0;
+  min-width:0
+}
+.layout-samples figcaption {
+  font-size:.82rem
+}
+.artwork-feature {
+  padding-block:28px
+}
+.artwork-gallery {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+  margin-top:24px
+}
+.artwork-gallery figure {
+  margin:0
+}
+.artwork-gallery img {
+  width:100%;
+  height:260px;
+  object-fit:contain;
+  background:var(--paper-strong)
+}
+.artwork-feature>summary {
+  cursor:pointer;
+  font-size:1rem;
+  font-weight:650;
+  color:var(--rust-dark)
+}
+.built-intro {
+  display:grid;
+  grid-template-columns:1.3fr .8fr;
+  gap:48px;
+  align-items:start;
+  margin-top:36px
+}
+.built-intro .page-intro {
+  padding-top:12px
+}
+.built-intro .editorial-art {
+  margin:0
+}
+.built-intro img {
+  max-height:390px;
+  object-fit:contain;
+  object-position:top;
+  width:100%
+}
+.guide-art {
+  margin:0 0 32px
+}
+.guide-art img {
+  width:100%;
+  max-height:330px;
+  object-fit:cover;
+  object-position:center
+}
+.screenshot-note {
+  font-size:.86rem;
+  color:var(--muted);
+  margin-top:12px
+}
+.manual .prose table {
+  width:100%;
+  border-collapse:collapse;
+  margin:24px 0;
+  font-size:.95rem
+}
+.manual th {
+  background:var(--paper-strong);
+  text-align:left;
+  font-weight:700
+}
+.manual td,.manual th {
+  padding:13px 15px;
+  border:1px solid var(--line);
+  vertical-align:top;
+  line-height:1.5
+}
+.back-to-guide {
+  display:inline-block;
+  font-size:.85rem;
+  margin-top:18px
+}
+.site-footer {
+  background:var(--machine);
+  color:var(--paper);
+  padding:32px 0;
+  font-size:.88rem
+}
+.site-footer .container {
+  display:flex;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+  align-items:center
+}
+.site-footer p {
+  margin:0
+}
+.site-footer nav {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px
+}
+.site-footer a {
+  color:var(--paper)
+}
+.image-dialog {
+  width:min(1500px,96vw);
+  max-width:96vw;
+  max-height:95vh;
+  padding:16px;
+  border:1px solid var(--edge);
+  background:var(--machine);
+  color:var(--sheet)
+}
+.image-dialog::backdrop {
+  background:#101b17e6
+}
+.image-dialog img {
+  width:100%;
+  max-height:80vh;
+  object-fit:contain
+}
+.dialog-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:12px
+}
+.dialog-top p {
+  margin:0;
+  font-size:.85rem
+}
+.dialog-top button {
+  padding:8px 15px;
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid var(--line)
+}
+@media(min-width:1100px) {
+  .product-proof {
+    display:grid;
+    grid-template-columns:minmax(280px,.7fr) minmax(0,1.3fr);
+    gap:24px 40px
+  }
+  .product-proof .section-heading {
+    display:block;
+    align-self:end;
+    margin:0
+  }
+  .product-proof .section-heading>p {
+    margin-top:24px
+  }
+  .product-proof .product-shot {
+    grid-column:2;
+    grid-row:1 / span 2;
+    align-self:center;
+    margin:0
+  }
+  .product-proof .section-closer {
+    margin:0
+  }
+  .getting-started .page-intro {
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    column-gap:64px
+  }
+  .getting-started .page-intro>* {
+    grid-column:1
+  }
+  .getting-started .page-intro .toc {
+    grid-column:2;
+    grid-row:1 / span 3;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-self:center;
+    gap:6px 24px;
+    margin:0
+  }
+  .getting-started :is(#ready,#offer,#find,#profile) {
+    display:grid;
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    gap:20px 64px;
+    align-items:start
+  }
+  .getting-started :is(#ready,#offer,#find,#profile)>h2 {
+    grid-column:1/-1;
+    margin:0
+  }
+  .getting-started :is(#ready,#offer,#find,#profile)>.prose {
+    grid-column:1;
+    grid-row:2 / span 3
+  }
+  .getting-started :is(#ready,#offer,#find,#profile)>:is(.figure,.setup-pair) {
+    grid-column:2;
+    margin:0
+  }
+  .getting-started #find>.figure {
+    width:min(100%,496px);
+    justify-self:center
+  }
+  .getting-started #covers>.prose {
+    max-width:none;
+    display:grid;
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    column-gap:64px;
+    align-items:start
+  }
+  .getting-started #covers>.prose>* {
+    grid-column:1
+  }
+  .getting-started #covers>.prose>.figure {
+    grid-column:2;
+    grid-row:1 / span 4;
+    margin:0
+  }
+  .built main.container {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:64px
+  }
+  .built main>:is(.built-intro,.section:not(.prose)),
+  .built main>.section:last-child {
+    grid-column:1/-1
+  }
+  .built .section.prose {
+    max-width:none
+  }
+  .built .section.prose p {
+    max-width:78ch
+  }
+  .built-intro .editorial-art {
+    width:220px;
+    justify-self:center
+  }
+}
+@media(max-width:1000px) {
+.hero .container {
+    padding:26px
+  }
+.hero h1 {
+    font-size:2rem
+  }
+.hero-art {
+    min-height:350px
+  }
+.cards,.grid {
+    gap:24px
+  }
+.panel,.card {
+    padding-left:18px
+  }
+.manual .guide-index {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+.split,.split:has(>figure:first-child) {
+    grid-template-columns:1fr 1.2fr;
+    gap:28px
+  }
+}
+@media(max-width:700px) {
+.brand,.home .brand {
+    height:clamp(106px,32vw,224px);
+    min-height:0;
+    aspect-ratio:auto
+  }
+.brand img {
+    width:auto;
+    min-width:100%;
+    height:180%;
+    position:absolute;
+    left:-14%;
+    top:50%;
+    right:auto;
+    bottom:auto;
+    transform:translateY(-50%)
+  }
+.site-nav a {
+    padding:12px 4px;
+    min-height:46px;
+    font-size:.78rem;
+    flex:1 1 auto;
+    letter-spacing:-.02em
+  }
+.container {
+    width:calc(100% - 32px)
+  }
+.hero {
+    grid-template-columns:1fr
+  }
+.hero .container {
+    grid-column:1;
+    grid-row:1;
+    padding:28px 22px
+  }
+.hero-art {
+    grid-column:1;
+    grid-row:2;
+    min-height:0;
+    height:240px;
+    object-position:80% center
+  }
+.hero h1 {
+    font-size:clamp(1.95rem,7.9vw,2.75rem)
+  }
+.hero .lede {
+    font-size:1rem
+  }
+.hero .eyebrow {
+    font-size:.66rem
+  }
+.hero .actions {
+    gap:10px;
+    margin:20px 0
+  }
+.hero .button {
+    padding:9px 13px;
+    font-size:.86rem
+  }
+.cards,.grid,.download-grid,.split,.split:has(>figure:first-child),.section-heading,.capabilities-grid,.guide-paths,.document-pair,.built-intro {
+    grid-template-columns:1fr
+  }
+.section {
+    padding-block:34px
+  }
+.cards {
+    gap:26px
+  }
+.panel {
+    border-left:0;
+    border-top:1px solid var(--line);
+    padding:18px 0 0
+  }
+.panel h2 {
+    font-size:1.55rem
+  }
+.section-heading {
+    gap:18px
+  }
+.section-heading>p {
+    max-width:none
+  }
+.split {
+    gap:24px
+  }
+.split figure {
+    order:2
+  }
+.product-proof {
+    padding:28px 16px;
+    margin-inline:-16px
+  }
+.page-intro {
+    padding:30px 0 22px
+  }
+.page-intro>p {
+    font-size:1.03rem
+  }
+.toc {
+    gap:5px 18px
+  }
+.toc a {
+    font-size:.86rem
+  }
+.manual .guide-index {
+    gap:22px 16px
+  }
+.guide-index-group h2 {
+    font-size:.95rem
+  }
+.guide-art img {
+    height:175px;
+    object-position:75% center
+  }
+.artwork-gallery {
+    grid-template-columns:1fr 1fr;
+    gap:16px
+  }
+.artwork-gallery img {
+    height:180px
+  }
+.built-intro {
+    gap:22px;
+    margin-top:0
+  }
+.built-intro .editorial-art {
+    max-width:380px;
+    margin-inline:auto
+  }
+.built-intro img {
+    max-height:none
+  }
+.built-intro .page-intro {
+    padding-top:28px
+  }
+.manual .prose table {
+    display:block;
+    overflow-x:auto
+  }
+.manual td,.manual th {
+    min-width:150px;
+    padding:11px 12px
+  }
+.steps>li {
+    padding-left:40px
+  }
+.image-dialog {
+    padding:10px
+  }
+.dialog-top p {
+    font-size:.75rem
+  }
+.site-footer nav {
+    gap:12px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior:auto
+  }
+}
+ .guide-controls {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:24px;
+  margin:24px 0
+}
+.guide-controls p {
+  margin:0;
+  font-size:.94rem;
+  color:var(--muted)
+}
+.manual .guide-section {
+  padding:0
+}
+.guide-chapter>summary {
+  position:relative;
+  cursor:pointer;
+  padding:20px 40px 20px 24px;
+  list-style:none
+}
+.guide-chapter>summary::-webkit-details-marker {
+  display:none
+}
+.guide-chapter>summary:after {
+  content:'+';
+  position:absolute;
+  right:18px;
+  top:24px;
+  color:var(--rust-dark);
+  font-size:1.5rem
+}
+.guide-chapter[open]>summary:after {
+  content:'−'
+}
+.guide-chapter>summary h2 {
+  font-size:1.5rem;
+  margin:0 0 7px
+}
+.chapter-preview {
+  display:block;
+  color:var(--muted);
+  font-size:.96rem
+}
+.guide-chapter>summary:hover {
+  background:var(--sheet)
+}
+.guide-chapter[open]>summary {
+  background:var(--sheet);
+  border-left:3px solid var(--rust)
+}
+.chapter-content {
+  padding:26px 24px 36px
+}
+.chapter-content .figure {
+  max-width:1050px
+}
+.chapter-content .pdf-figure {
+  max-width:550px
+}
+.chapter-content .figure:has(img[src$='field-prominence.png']) {
+  max-width:675px
+}
+.chapter-content .figure:has(img[src$='field-prominence.png']) img {
+  width:auto
+}
+.manual .guide-section:last-child {
+  margin-bottom:42px
+}
+#covers .figure {
+  max-width:800px
+}
+#covers .figure img {
+  width:100%
+}
+@media(max-width:700px) {
+main.container,.home main>.container {
+    width:calc(100% - 16px);
+    padding-inline:16px;
+    margin-block:12px
+  }
+.hero {
+    width:calc(100% - 16px);
+    margin-top:12px
+  }
+.guide-controls {
+    display:block
+  }
+.guide-controls .button {
+    margin-top:16px;
+    font-size:.9rem
+  }
+.guide-chapter>summary {
+    padding:21px 32px 21px 0
+  }
+.guide-chapter>summary h2 {
+    font-size:1.25rem
+  }
+.guide-chapter>summary:after {
+    right:0;
+    top:18px
+  }
+.chapter-preview {
+    font-size:.9rem
+  }
+.chapter-content {
+    padding:22px 0 28px
+  }
+.guide-chapter[open]>summary {
+    padding-left:12px
+  }
+.guide-chapter[open]>summary:after {
+    right:8px
+  }
+}
+@media print {
+.site-header,.site-footer,.guide-controls,.back-to-guide {
+    display:none
+  }
+.guide-chapter>summary {
+    list-style:none
+  }
+.guide-chapter>summary:after {
+    display:none
+  }
+}
 
-    :root {
-      --paper: #cfc9b3;
-      --sheet: #eee5d0;
-      --machine: #38433a;
-      --machine-raised: #50594b;
-      --machine-deep: #202920;
-      --ink: #24342e;
-      --muted: #475448;
-      --line: #9d9d83;
-      --edge: #778176;
-      --rust: #ae4827;
-      --rust-dark: #85331e;
-      --focus: #247d79;
-      --cyan: #a2e8da;
-      --green: #2e8b57;
-      --page-width: min(1380px, calc(100% - clamp(24px, 4vw, 80px)));
-      --radius-sm: 3px;
-      --font-sans: 'Segoe UI', Arial, sans-serif;
-      --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-      --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
-    }
+  .dialog-top a {
+  color:var(--sheet);
+  font-size:.84rem;
+  white-space:nowrap
+}
+.dialog-top {
+  flex-wrap:wrap
+}
+@media(max-width:700px) {
+.dialog-top p {
+    flex-basis:100%
+  }
+}
+@media(max-width:360px) {
+.site-nav a {
+    font-size:.72rem;
+    padding-inline:2px
+  }
+}
+.setup-pair { display:grid; grid-template-columns:1fr 1.3fr; gap:28px; align-items:start; margin-top:24px; }
+.setup-pair .figure { margin:0; }
+@media(max-width:700px) { .setup-pair { grid-template-columns:1fr; gap:24px; } }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: #171e19;
-      background-image: radial-gradient(ellipse at top, #455044 0%, transparent 65%);
-      font-family: var(--font-sans);
-      color: var(--ink);
-      line-height: 1.55;
-      font-size: 16px;
-    }
+/* Engineering story reads in sequence, not in two disconnected desktop columns. */
+.built main>.toc { grid-column:1/-1; max-width:88ch; width:100%; margin-inline:auto; }
+.built main>.section.prose { grid-column:1/-1; max-width:88ch; width:100%; margin-inline:auto; }
+.built main>.section.prose p { max-width:78ch; }
+.built main>.section.prose a { overflow-wrap:anywhere; }
 
-    h1, h2, h3 { font-family: var(--font-heading); color: var(--ink); margin-top: 0; }
-    h1 { font-size: clamp(1.8rem, 2.6vw, 2.4rem); font-weight: 800; }
-    h2 { font-size: 1.3rem; font-weight: 700; color: var(--ink); }
-    h3 { font-size: 1.15rem; font-weight: 600; }
-    p { margin: 0 0 1rem; color: #31443c; }
 
-    .container {
-      width: var(--page-width);
-      margin-inline: auto;
-    }
+/* ==========================================================================
+   P3CTeX Extensions on top of AAAAT Architecture
+   ========================================================================== */
 
-    main.container {
-      padding: clamp(20px, 3vw, 40px);
-      margin-block: 24px;
-      background: linear-gradient(110deg, #d6cdb5, #c4c3ac);
-      border: 1px solid #8a8d75;
-      box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
-    }
+/* Header Brand Bar */
+.site-header {
+  background: var(--machine-deep);
+  border-bottom: 1px solid #81876b;
+}
+.header-brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px clamp(24px, 4vw, 80px);
+  width: var(--page-width);
+  margin: 0 auto;
+}
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.brand-title-text {
+  font-family: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--sheet);
+  letter-spacing: -0.02em;
+}
+.brand-badge {
+  font-family: 'Consolas', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--cyan);
+  background: rgba(162, 232, 218, 0.12);
+  border: 1px solid rgba(162, 232, 218, 0.3);
+  padding: 2px 7px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+.brand-motto {
+  font-family: 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: #a4ad9c;
+  display: none;
+}
+@media (min-width: 768px) {
+  .brand-motto {
+    display: inline;
+  }
+}
 
-    .offline-header {
-      background: var(--machine-deep);
-      border-bottom: 1px solid #81876b;
-      padding: 14px 0;
-    }
+/* Hero Modifications for P3CTeX Demopack Banner */
+.hero-art.banner-contain {
+  object-fit: contain;
+  background: #0f141a;
+  padding: 16px;
+  max-height: 400px;
+}
 
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+/* Terminal Code Box Component */
+.code-box {
+  background: #17211a;
+  border: 1px solid #50594b;
+  border-radius: 4px;
+  margin: 18px 0;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+.code-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #202920;
+  padding: 8px 14px;
+  border-bottom: 1px solid #38433a;
+  font-family: 'Consolas', monospace;
+  font-size: 0.8rem;
+}
+.code-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sheet);
+  font-weight: 600;
+}
+.code-box-title .tag {
+  color: var(--cyan);
+  background: rgba(162, 232, 218, 0.15);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.copy-btn {
+  background: #38433a;
+  color: var(--sheet);
+  border: 1px solid #50594b;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.copy-btn:hover {
+  background: var(--rust);
+  border-color: var(--rust-dark);
+}
+.code-box pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #e6edf3;
+  background: #17211a;
+}
+.code-box code {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
 
-    .brand-title {
-      font-family: var(--font-heading);
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--sheet);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+/* Syntax Highlighting */
+.syn-kw { color: #f09614; font-weight: bold; }
+.syn-cmd { color: #73edff; font-weight: bold; }
+.syn-opt { color: #e6a73c; }
+.syn-arg { color: #98c379; }
+.syn-comment { color: #778176; font-style: italic; }
 
-    .brand-badge {
-      background: var(--machine-raised);
-      border: 1px solid var(--edge);
-      color: var(--sheet);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 2px 6px;
-      border-radius: var(--radius-sm);
-    }
+/* Non-Intrusive Image Prompt Cards */
+.image-placeholder-card {
+  background: #dfd9c4;
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 16px 0;
+  color: var(--ink);
+}
+.slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Consolas', monospace;
+  font-size: 0.78rem;
+}
+.slot-id {
+  font-weight: 750;
+  color: var(--rust-dark);
+}
+.slot-ratio {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.prompt-expander {
+  margin-top: 6px;
+  font-size: 0.82rem;
+}
+.prompt-expander summary {
+  cursor: pointer;
+  color: var(--focus);
+  font-weight: 600;
+}
+.prompt-text {
+  background: var(--machine-deep);
+  color: var(--cyan);
+  padding: 8px 12px;
+  border-radius: 3px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin: 8px 0 0;
+  user-select: all;
+}
 
-    .offline-pill {
-      background: rgba(46, 139, 87, 0.2);
-      border: 1px solid var(--green);
-      color: var(--cyan);
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: var(--radius-sm);
-    }
+/* Multi-column layout helpers */
+.cards.col-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 768px) {
+  .cards.col-2 {
+    grid-template-columns: 1fr;
+  }
+}
 
-    .preset-bar {
-      background: var(--sheet);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--rust);
-      padding: 14px 18px;
-      margin-bottom: 22px;
-    }
+/* ==========================================================================
+   P3CTeX LaTeX Generator Stylesheet (AAAAT Workshop Ergonomics)
+   ========================================================================== */
 
-    .preset-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 0.82rem;
-      font-weight: 750;
-      color: var(--rust-dark);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+.generator-app {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-top: 20px;
+}
 
-    .preset-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+@media (min-width: 1024px) {
+  .generator-app {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+  }
+}
 
-    .preset-btn {
-      background: var(--paper);
-      border: 1px solid var(--edge);
-      color: var(--ink);
-      font-size: 0.84rem;
-      font-weight: 650;
-      padding: 7px 12px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-    }
+/* Preset Toolbar */
+.preset-bar {
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--rust);
+  padding: 14px 18px;
+  margin-bottom: 22px;
+}
 
-    .preset-btn:hover { background: var(--sheet); border-color: var(--rust); }
-    .preset-btn.active { background: var(--rust); color: var(--sheet); border-color: var(--rust-dark); }
+.preset-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: var(--rust-dark);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-    .generator-app {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 28px;
-      margin-top: 20px;
-    }
+.preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
-    @media (min-width: 1024px) {
-      .generator-app {
-        grid-template-columns: 1.1fr 0.9fr;
-        align-items: start;
-      }
-    }
+.preset-btn {
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 650;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
 
-    .config-group {
-      background: var(--sheet);
-      border: 1px solid var(--line);
-      margin-bottom: 16px;
-    }
+.preset-btn:hover {
+  background: var(--sheet);
+  border-color: var(--rust);
+}
 
-    .config-group-header {
-      background: rgba(56, 67, 58, 0.1);
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--line);
-      font-weight: 750;
-      font-size: 0.92rem;
-      color: var(--ink);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+.preset-btn.active {
+  background: var(--rust);
+  color: var(--sheet);
+  border-color: var(--rust-dark);
+}
 
-    .config-group-header span.badge {
-      background: var(--machine-deep);
-      color: var(--sheet);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 2px 6px;
-      border-radius: 2px;
-    }
+/* Config Groups */
+.config-group {
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  margin-bottom: 16px;
+}
 
-    .config-group-body { padding: 16px; }
+.config-group-header {
+  background: rgba(56, 67, 58, 0.1);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 750;
+  font-size: 0.92rem;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-    .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-    @media (min-width: 640px) {
-      .form-grid.col-2 { grid-template-columns: repeat(2, 1fr); }
-      .form-grid.col-3 { grid-template-columns: repeat(3, 1fr); }
-    }
+.config-group-header span.badge {
+  background: var(--machine-deep);
+  color: var(--sheet);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
 
-    .form-field { display: flex; flex-direction: column; gap: 5px; }
-    .form-label { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
-    .form-input, .form-select {
-      background: #fff;
-      border: 1px solid var(--edge);
-      padding: 8px 10px;
-      color: var(--ink);
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      border-radius: var(--radius-sm);
-    }
+.config-group-body {
+  padding: 16px;
+}
 
-    .toggle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-    .toggle-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #fbf8f0;
-      border: 1px solid var(--line);
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-    }
+/* Form Controls */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
 
-    .toggle-label:hover { background: #fff; border-color: var(--edge); }
-    .toggle-label input[type="checkbox"] { accent-color: var(--rust); width: 16px; height: 16px; }
-    .toggle-name { font-weight: 700; font-size: 0.85rem; color: var(--ink); }
-    .toggle-desc { display: block; font-size: 0.72rem; color: var(--muted); }
+@media (min-width: 640px) {
+  .form-grid.col-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .form-grid.col-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
-    .preview-pane {
-      position: sticky;
-      top: 24px;
-      background: var(--machine-deep);
-      border: 1px solid #1a221a;
-      border-radius: var(--radius-sm);
-      box-shadow: 0 4px 16px rgba(10, 18, 10, 0.4);
-      display: flex;
-      flex-direction: column;
-    }
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-    .preview-header {
-      background: #171e17;
-      border-bottom: 1px solid #2e382e;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
 
-    .preview-title {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--cyan);
-    }
+.form-input, .form-select {
+  background: #fff;
+  border: 1px solid var(--edge);
+  padding: 8px 10px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+}
 
-    .preview-editor-box {
-      background: #141b14;
-      padding: 14px 16px;
-      margin: 0;
-      max-height: 560px;
-      overflow-y: auto;
-      font-family: var(--font-mono);
-      font-size: 0.84rem;
-      line-height: 1.5;
-      color: #e2ecd9;
-      white-space: pre;
-      tab-size: 2;
-      border-bottom: 1px solid #2e382e;
-    }
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 2px rgba(36, 125, 121, 0.2);
+}
 
-    .preview-footer-bar { background: #171e17; padding: 12px 14px; }
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 9px 18px;
-      background: var(--rust);
-      border: 1px solid var(--rust-dark);
-      color: var(--sheet);
-      font-weight: 700;
-      font-size: 0.92rem;
-      cursor: pointer;
-      width: 100%;
-    }
+/* Toggles */
+.toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
 
-    .button:hover { background: var(--rust-dark); }
-    .copy-btn {
-      background: var(--machine-raised);
-      border: 1px solid var(--edge);
-      color: var(--sheet);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 3px 8px;
-      border-radius: 2px;
-      cursor: pointer;
-    }
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fbf8f0;
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+}
 
-    .copy-btn:hover { background: var(--focus); }
-    .offline-footer {
-      background: var(--machine-deep);
-      border-top: 1px solid #81876b;
-      padding: 24px 0;
-      margin-top: 48px;
-      text-align: center;
-      font-size: 0.82rem;
-      color: #8c9684;
-    }
-  </style>
+.toggle-label:hover {
+  background: #fff;
+  border-color: var(--edge);
+}
+
+.toggle-label input[type="checkbox"] {
+  accent-color: var(--rust);
+  width: 16px;
+  height: 16px;
+}
+
+.toggle-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.toggle-desc {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* Sticky Preview Panel */
+.preview-pane {
+  position: sticky;
+  top: 24px;
+  background: var(--machine-deep);
+  border: 1px solid #1a221a;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(10, 18, 10, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-header {
+  background: #171e17;
+  border-bottom: 1px solid #2e382e;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-title {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-editor-box {
+  background: #141b14;
+  padding: 14px 16px;
+  margin: 0;
+  max-height: 540px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: #e2ecd9;
+  white-space: pre;
+  tab-size: 2;
+  border-bottom: 1px solid #2e382e;
+}
+
+.preview-footer-bar {
+  background: #171e17;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.standalone-download-banner {
+  background: rgba(255, 249, 237, 0.05);
+  border: 1px dashed #475448;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--sheet);
+}
+
+</style>
 </head>
-<body>
-  <header class="offline-header">
-    <div class="container header-inner">
-      <div class="brand-title">
-        <span>P3CTeX</span>
-        <span style="color: var(--cyan);">//</span>
-        <span>LATEX GENERATOR</span>
-        <span class="brand-badge">STANDALONE OFFLINE EDITION</span>
-      </div>
-      <nav aria-label="Offline actions">
-        <span class="offline-pill">● 100% OFFLINE LOCAL EXECUTION</span>
-      </nav>
+<body class="generator">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="header-brand-bar">
+      <a class="brand-link" href="index.html" aria-label="P3CTeX Home">
+        <span class="brand-title-text">PEC.TeX // P3CTeX</span>
+        <span class="brand-badge">v1.1.0</span>
+      </a>
+      <span class="brand-motto">"Procrastinar és l'única esperança" · By ScVr!a</span>
     </div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="showcases.html">Showcases</a>
+      <a href="generator.html" aria-current="page">Generator Tool</a>
+      <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">Download ZIP</a>
+      <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </header>
 
-  <main class="container" id="main">
+  <!-- Main Parchment Sheet Container -->
+  <main id="main" class="container">
+    <header class="page-intro">
+      <p class="eyebrow">Interactive LaTeX Studio</p>
+      <h1>Generate your assessment skeleton.</h1>
+      <p class="lede">
+        Configure your subject metadata, pick a delivery preset, and toggle module capabilities. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
+      </p>
+    </header>
+
+    <!-- Preset Toolbar -->
     <div class="preset-bar">
       <div class="preset-header">
-        <span>CURATED ACADEMIC PRESETS</span>
-        <span style="color: var(--muted); font-size: 0.78rem; text-transform: none; font-weight: 500;">Click to load configuration</span>
+        <span>CURATED COURSEWORK PRESETS</span>
+        <span>ONE-CLICK POPULATE</span>
       </div>
       <div class="preset-buttons">
-        <button type="button" class="preset-btn active" data-preset="pac">[PAC] Continuous Evaluation</button>
-        <button type="button" class="preset-btn" data-preset="pr">[PR] Computer Science Lab</button>
-        <button type="button" class="preset-btn" data-preset="tfg">[TFG] Bachelor Thesis / Memory</button>
+        <button type="button" class="preset-btn active" data-preset="pac">[PAC] Catalan Assessment</button>
+        <button type="button" class="preset-btn" data-preset="pec">[PEC] Spanish Assessment</button>
+        <button type="button" class="preset-btn" data-preset="pr">[PR] Laboratory Practicum</button>
         <button type="button" class="preset-btn" data-preset="cmp">[CMP] Compilers &amp; Automata</button>
-        <button type="button" class="preset-btn" data-preset="req">[REQ] Requirements Specification</button>
+        <button type="button" class="preset-btn" data-preset="tfg">[TFG] Degree Thesis Memory</button>
       </div>
     </div>
 
+    <!-- Generator Grid -->
     <div class="generator-app">
-      <div class="form-column" id="generator-form">
-        <!-- 1. Metadata -->
+      <!-- Left Column: Controls -->
+      <div class="generator-controls">
+        <!-- 1. Profile & Language -->
         <div class="config-group">
-          <div class="config-group-header">
-            <span class="badge">01</span>
-            Academic &amp; Student Metadata
-          </div>
+          <div class="config-group-header">01 // Document Profile &amp; Language</div>
           <div class="config-group-body">
-            <div class="form-grid col-2">
-              <div class="form-field">
-                <label class="form-label" for="meta-student">Student Name</label>
-                <input type="text" id="meta-student" name="meta.student" class="form-input" value="Dídac Llorens">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="meta-niu">NIU / Student ID</label>
-                <input type="text" id="meta-niu" name="meta.niu" class="form-input" value="0131242">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="meta-subject">Subject Full Name</label>
-                <input type="text" id="meta-subject" name="meta.subject" class="form-input" value="Enginyeria del Software">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="meta-code">Subject Code</label>
-                <input type="text" id="meta-code" name="meta.subjCode" class="form-input" value="75.564">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="meta-ca-short">Activity Short Code</label>
-                <input type="text" id="meta-ca-short" name="meta.caShort" class="form-input" value="PAC 1">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="meta-ca-full">Activity Full Title</label>
-                <input type="text" id="meta-ca-full" name="meta.caFull" class="form-input" value="Repte 1: Modelat i Especificació">
-              </div>
+            <div class="form-row">
+              <label for="select-profile">Delivery Profile</label>
+              <select id="select-profile">
+                <option value="PAC">PAC — Continuous Assessment (Catalan, no cover, TOC)</option>
+                <option value="PEC">PEC — Evaluación Continua (Spanish, no cover, TOC)</option>
+                <option value="PR">PR — Laboratory Practicum (Formal cover, TOC, Figures)</option>
+                <option value="TFG">TFG — Bachelor Thesis (Tribunal, Bilingual, CC License)</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="select-lang">Document Language</label>
+              <select id="select-lang">
+                <option value="cat">Catalan (cat)</option>
+                <option value="es">Spanish (es)</option>
+                <option value="en">English (en)</option>
+              </select>
             </div>
           </div>
         </div>
 
-        <!-- 2. Class Options -->
+        <!-- 2. UOC Metadata -->
         <div class="config-group">
-          <div class="config-group-header">
-            <span class="badge">02</span>
-            Document Class &amp; Structure Options
-          </div>
+          <div class="config-group-header">02 // UOC Student &amp; Subject Metadata</div>
           <div class="config-group-body">
-            <div class="form-grid col-3" style="margin-bottom: 14px;">
-              <div class="form-field">
-                <label class="form-label" for="opts-fontsize">Base Font Size</label>
-                <select id="opts-fontsize" name="opts.fontsize" class="form-select">
-                  <option value="11pt" selected>11pt (Default UOC)</option>
-                  <option value="10pt">10pt (Dense)</option>
-                  <option value="12pt">12pt (Spacious)</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="opts-language">Language</label>
-                <select id="opts-language" name="opts.language" class="form-select">
-                  <option value="catalan" selected>Catalan</option>
-                  <option value="spanish">Spanish</option>
-                  <option value="english">English</option>
-                </select>
-              </div>
+            <div class="form-row">
+              <label for="input-student">Student Full Name</label>
+              <input type="text" id="input-student" value="Dídac Llorens">
             </div>
+            <div class="form-row">
+              <label for="input-grade">Degree / Degree Program</label>
+              <input type="text" id="input-grade" value="Grau en Enginyeria Informàtica">
+            </div>
+            <div class="form-row">
+              <label for="input-subjFull">Subject Full Name</label>
+              <input type="text" id="input-subjFull" value="Compiladors i Llenguatges">
+            </div>
+            <div class="form-row">
+              <label for="input-subjShort">Subject Acronym / Short Name</label>
+              <input type="text" id="input-subjShort" value="COMP">
+            </div>
+            <div class="form-row">
+              <label for="input-subjCode">Subject Code</label>
+              <input type="text" id="input-subjCode" value="75.580">
+            </div>
+            <div class="form-row">
+              <label for="input-caShort">Activity Short ID (e.g. PAC1, PR1)</label>
+              <input type="text" id="input-caShort" value="PAC1">
+            </div>
+            <div class="form-row">
+              <label for="input-caFull">Activity Full Name</label>
+              <input type="text" id="input-caFull" value="PAC 1: Anàlisi Lèxica i Sintàctica">
+            </div>
+          </div>
+        </div>
 
-            <div class="toggle-grid">
-              <label class="toggle-label">
-                <input type="checkbox" name="opts.cover" checked>
-                <div>
-                  <span class="toggle-name">cover</span>
-                  <span class="toggle-desc">Official UOC cover</span>
-                </div>
+        <!-- 3. Module Arsenal -->
+        <div class="config-group">
+          <div class="config-group-header">03 // Modular Package Arsenal</div>
+          <div class="config-group-body">
+            <div class="toggle-list">
+              <label class="toggle-item">
+                <input type="checkbox" id="mod-default" checked>
+                <span><strong>default bundle</strong> (pxPRP, pxUML, pxSRC, pxTAB, pxLST)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="opts.toc">
-                <div>
-                  <span class="toggle-name">toc</span>
-                  <span class="toggle-desc">Table of contents</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="mod-CMP">
+                <span><strong>CMP</strong> (Compilers, Automata, Search Graphs, Neural Nets)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="opts.CMP">
-                <div>
-                  <span class="toggle-name">CMP</span>
-                  <span class="toggle-desc">Compilers &amp; automata</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="mod-GNT">
+                <span><strong>GNT</strong> (Gantt Charts &amp; Project Planning)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="opts.draft">
-                <div>
-                  <span class="toggle-name">draft</span>
-                  <span class="toggle-desc">Fast draft compile mode</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="mod-TFG">
+                <span><strong>TFG</strong> (Degree Thesis Tribunal &amp; Bilingual Memory)</span>
               </label>
             </div>
           </div>
         </div>
 
-        <!-- 3. Packages -->
+        <!-- 4. Class Output Controls -->
         <div class="config-group">
-          <div class="config-group-header">
-            <span class="badge">03</span>
-            P3CTeX Modular Packages
-          </div>
+          <div class="config-group-header">04 // Document Output Controls</div>
           <div class="config-group-body">
-            <div class="toggle-grid">
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxCALC" checked>
-                <div>
-                  <span class="toggle-name">pxCALC</span>
-                  <span class="toggle-desc">Step-by-step calculations</span>
-                </div>
+            <div class="toggle-list">
+              <label class="toggle-item">
+                <input type="checkbox" id="tog-cover">
+                <span><strong>cover</strong> (Force university cover page)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxTAB" checked>
-                <div>
-                  <span class="toggle-name">pxTAB</span>
-                  <span class="toggle-desc">Tables &amp; presets</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="tog-toc" checked>
+                <span><strong>toc</strong> (Include table of contents)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxSRC" checked>
-                <div>
-                  <span class="toggle-name">pxSRC</span>
-                  <span class="toggle-desc">Resilient image fallbacks</span>
-                </div>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxLST" checked>
-                <div>
-                  <span class="toggle-name">pxLST</span>
-                  <span class="toggle-desc">Syntax-highlighted code</span>
-                </div>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxREQ">
-                <div>
-                  <span class="toggle-name">pxREQ</span>
-                  <span class="toggle-desc">User stories &amp; SWOT</span>
-                </div>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxUML">
-                <div>
-                  <span class="toggle-name">pxUML</span>
-                  <span class="toggle-desc">Class diagrams</span>
-                </div>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="pkg.pxMEM">
-                <div>
-                  <span class="toggle-name">pxMEM</span>
-                  <span class="toggle-desc">Thesis &amp; memory book</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="tog-plagi">
+                <span><strong>no-plagi</strong> (Official authorship &amp; anti-plagiarism declaration)</span>
               </label>
             </div>
           </div>
         </div>
 
-        <!-- 4. Advanced Usable Blobs -->
+        <!-- 5. Insertable Complex Blobs -->
         <div class="config-group">
-          <div class="config-group-header">
-            <span class="badge">04</span>
-            Advanced Usable Blobs Generator
-          </div>
+          <div class="config-group-header">05 // Insert Complex Blobs</div>
           <div class="config-group-body">
-            <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 12px;">
-              Inject complex LaTeX boilerplate that is tedious or error-prone to write by hand:
-            </p>
-            <div class="toggle-grid">
-              <label class="toggle-label">
-                <input type="checkbox" name="blob.multipageTable">
-                <div>
-                  <span class="toggle-name">pxTBLlong Table</span>
-                  <span class="toggle-desc">Multi-page table with running headers</span>
-                </div>
+            <div class="toggle-list">
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-table" checked>
+                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="blob.foreachLoop">
-                <div>
-                  <span class="toggle-name">\foreach Loop</span>
-                  <span class="toggle-desc">Batch subfigure iteration loop</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-codebox" checked>
+                <span><strong>pxCode Syntax Listing</strong> (Darcula framed code block)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="blob.cmpDiagrams">
-                <div>
-                  <span class="toggle-name">pxCMP Diagrams</span>
-                  <span class="toggle-desc">Tombstone &amp; DFA transition table</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-figure" checked>
+                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="blob.codebox" checked>
-                <div>
-                  <span class="toggle-name">pxLST Codebox</span>
-                  <span class="toggle-desc">Dark theme Java listing block</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-cmp">
+                <span><strong>pxCMP Compiler Diagram</strong> (Tombstone T-diagram &amp; DFA table)</span>
               </label>
-              <label class="toggle-label">
-                <input type="checkbox" name="blob.reqCard">
-                <div>
-                  <span class="toggle-name">pxREQ Card</span>
-                  <span class="toggle-desc">User story &amp; SWOT analysis</span>
-                </div>
+              <label class="toggle-item">
+                <input type="checkbox" id="blob-foreach">
+                <span><strong>pxIMGList Batch Loop</strong> (Sequential image sequence)</span>
               </label>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Live Preview -->
-      <div class="preview-column">
-        <div class="preview-pane">
+      <!-- Right Column: Sticky Live Preview -->
+      <div class="generator-preview">
+        <div class="preview-card">
           <div class="preview-header">
             <div class="preview-title">
+              <span class="preview-dot"></span>
               <span>LIVE LATEX PREVIEW</span>
             </div>
-            <button type="button" class="copy-btn" id="btn-copy-tex">COPY TEX RAW</button>
+            <div class="preview-actions">
+              <button type="button" class="btn-tool" id="btn-copy-latex">COPY PREAMBLE</button>
+              <button type="button" class="btn-tool primary" id="btn-download-tex">DOWNLOAD .TEX</button>
+            </div>
           </div>
+          <pre class="preview-code"><code id="latex-preview-code">% Generating LaTeX code...</code></pre>
+        </div>
 
-          <pre class="preview-editor-box" id="latex-preview"></pre>
-
-          <div class="preview-footer-bar">
-            <button type="button" class="button" id="btn-download-tex">
-              DOWNLOAD .TEX FILE
-            </button>
+        <!-- Compact Illustration Slot -->
+        <div class="image-placeholder-card" data-slot-id="IMG-GEN-11" data-aspect-ratio="16:10" style="margin-top: 20px;">
+          <div class="slot-header">
+            <span class="slot-id">IMG-GEN-11 · Standalone Generator UI Showcase</span>
+            <span class="slot-ratio">Aspect Ratio: 16:10</span>
           </div>
+          <details class="prompt-expander">
+            <summary>View generation prompt</summary>
+            <p class="prompt-text" id="prompt-gen-11">Futuristic tactical terminal user interface for a scientific document generator, multiple split panes with glowing monospace code, interactive slider knobs and toggle switches, phosphor green waveform monitor, sleek dark UI with amber and cyan telemetry readouts, clean vector UI design, high tech indie workstation --ar 16:10 --style raw</p>
+          </details>
         </div>
       </div>
     </div>
   </main>
 
-  <footer class="offline-footer">
-    <div class="container">
-      <p>P3CTeX Standalone Offline LaTeX Tooling · "Procrastinar és l'única esperança" · GPL v3.0</p>
+  <!-- Site Footer (AAAAT Structure) -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
+        <p>Created by ScVr!a (DidacLL). Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
+        <p>Licensed under GNU General Public License v3.0.</p>
+      </div>
+      <div class="footer-links">
+        <h5>Documentation</h5>
+        <ul>
+          <li><a href="tutorials.html#bootstrap">Installation &amp; Setup</a></li>
+          <li><a href="tutorials.html#preamble">Preamble Anatomy</a></li>
+          <li><a href="tutorials.html#shared-preambles">Shared Preambles</a></li>
+          <li><a href="tutorials.html#pac">PAC Workflow</a></li>
+          <li><a href="tutorials.html#pr">PR &amp; TFG</a></li>
+          <li><a href="tutorials.html#triage">Survival Triage</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h5>Tools &amp; Downloads</h5>
+        <ul>
+          <li><a href="generator.html">Web LaTeX Generator</a></li>
+          <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Offline Generator (.html)</a></li>
+          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
+          <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 DidacLL / ScVr!a · "Procrastinar és l'única esperança"</span>
+      <span>P3CTeX Documentation &amp; Generator Studio</span>
     </div>
   </footer>
+<script>
+/* ==========================================================================
+   P3CTeX Generator Engine
+   Reactive LaTeX Preamble & Assessment Boilerplate Synthesis
+   Factually compliant with P3CTeX.cls and official UOC styles
+   ========================================================================== */
 
-  <!-- Self-Contained JavaScript Compilation Engine -->
-  <script>
-    (function () {
-      'use strict';
+(function () {
+  'use strict';
 
-      const PRESETS = {
-        pac: {
-          docClass: 'P3CTeX',
-          classOpts: { cover: true, toc: false, CMP: false, draft: false, fontsize: '11pt', language: 'catalan' },
-          meta: {
-            student: 'Dídac Llorens',
-            niu: '0131242',
-            subject: 'Enginyeria del Software',
-            subjCode: '75.564',
-            caShort: 'PAC 1',
-            caFull: 'Repte 1: Modelat i Especificació de Requeriments',
-            title: 'PAC 1 — Solució Oficial'
-          },
-          packages: { pxCALC: true, pxCMP: false, pxMEM: false, pxSRC: true, pxLST: true, pxTAB: true, pxUML: true, pxREQ: true },
-          blobs: { multipageTable: false, foreachLoop: false, cmpDiagrams: false, codebox: true, reqCard: true }
-        },
-        pr: {
-          docClass: 'P3CTeX',
-          classOpts: { cover: true, toc: true, CMP: true, draft: false, fontsize: '11pt', language: 'catalan' },
-          meta: {
-            student: 'Dídac Llorens',
-            niu: '0131242',
-            subject: 'Compiladors i Llenguatges',
-            subjCode: '75.580',
-            caShort: 'PR 1',
-            caFull: 'Pràctica 1: Anàlisi Lèxica, Sintàctica i Bootstrapping',
-            title: 'Pràctica 1 — Memòria Tècnica'
-          },
-          packages: { pxCALC: true, pxCMP: true, pxMEM: false, pxSRC: true, pxLST: true, pxTAB: true, pxUML: false, pxREQ: false },
-          blobs: { multipageTable: true, foreachLoop: true, cmpDiagrams: true, codebox: true, reqCard: false }
-        },
-        tfg: {
-          docClass: 'P3CTeX',
-          classOpts: { cover: true, toc: true, CMP: true, draft: false, fontsize: '11pt', language: 'catalan' },
-          meta: {
-            student: 'Dídac Llorens',
-            niu: '0131242',
-            subject: 'Treball Final de Grau',
-            subjCode: '75.599',
-            caShort: 'TFG',
-            caFull: 'Memòria del Treball Final de Grau en Enginyeria Informàtica',
-            title: 'Disseny i Implementació d\'un Ecosistema de Tipografia Científica'
-          },
-          packages: { pxCALC: true, pxCMP: true, pxMEM: true, pxSRC: true, pxLST: true, pxTAB: true, pxUML: true, pxREQ: true },
-          blobs: { multipageTable: true, foreachLoop: false, cmpDiagrams: true, codebox: true, reqCard: true }
-        },
-        cmp: {
-          docClass: 'P3CTeX',
-          classOpts: { cover: true, toc: false, CMP: true, draft: false, fontsize: '11pt', language: 'catalan' },
-          meta: {
-            student: 'Dídac Llorens',
-            niu: '0131242',
-            subject: 'Teoria de la Computació',
-            subjCode: '75.520',
-            caShort: 'PAC 2',
-            caFull: 'Autòmats Finits, Gramàtiques i Models de Compilador',
-            title: 'Exercicis de Computabilitat i Diagrames de Tombstone'
-          },
-          packages: { pxCALC: true, pxCMP: true, pxMEM: false, pxSRC: true, pxLST: true, pxTAB: true, pxUML: false, pxREQ: false },
-          blobs: { multipageTable: false, foreachLoop: true, cmpDiagrams: true, codebox: false, reqCard: false }
-        },
-        req: {
-          docClass: 'P3CTeX',
-          classOpts: { cover: true, toc: false, CMP: false, draft: false, fontsize: '11pt', language: 'catalan' },
-          meta: {
-            student: 'Dídac Llorens',
-            niu: '0131242',
-            subject: 'Enginyeria de Requisits',
-            subjCode: '75.550',
-            caShort: 'PAC 3',
-            caFull: 'Especificació d\'Històries d\'Usuari i Matriu DAFO',
-            title: 'Document d\'Enginyeria de Requisits (IEEE 830)'
-          },
-          packages: { pxCALC: false, pxCMP: false, pxMEM: false, pxSRC: true, pxLST: false, pxTAB: true, pxUML: true, pxREQ: true },
-          blobs: { multipageTable: true, foreachLoop: false, cmpDiagrams: false, codebox: false, reqCard: true }
+  // Default Presets matching official P3CTeX conventions
+  const PRESETS = {
+    pac: {
+      profile: 'PAC',
+      lang: 'cat',
+      modules: { default: true, CMP: false, GNT: false, TFG: false },
+      toggles: { cover: false, toc: true, plagi: false },
+      meta: {
+        student: 'Dídac Llorens',
+        grade: 'Grau en Enginyeria Informàtica',
+        subjFull: 'Compiladors i Llenguatges',
+        subjShort: 'COMP',
+        subjCode: '75.580',
+        caShort: 'PAC1',
+        caFull: 'PAC 1: Anàlisi Lèxica i Sintàctica'
+      },
+      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+    },
+    pec: {
+      profile: 'PEC',
+      lang: 'es',
+      modules: { default: true, CMP: false, GNT: false, TFG: false },
+      toggles: { cover: false, toc: true, plagi: false },
+      meta: {
+        student: 'Dídac Llorens',
+        grade: 'Grado en Ingeniería Informática',
+        subjFull: 'Sistemas Operativos Avanzados',
+        subjShort: 'SO',
+        subjCode: '75.560',
+        caShort: 'PEC1',
+        caFull: 'PEC 1: Gestión de Procesos y Memoria Virtual'
+      },
+      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+    },
+    pr: {
+      profile: 'PR',
+      lang: 'cat',
+      modules: { default: true, CMP: false, GNT: false, TFG: false },
+      toggles: { cover: true, toc: true, plagi: false },
+      meta: {
+        student: 'Dídac Llorens',
+        grade: 'Grau en Enginyeria Informàtica',
+        subjFull: 'Enginyeria del Software',
+        subjShort: 'ES',
+        subjCode: '75.564',
+        caShort: 'PR1',
+        caFull: 'Pràctica 1: Disseny i Implementació del Sistema'
+      },
+      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: true }
+    },
+    cmp: {
+      profile: 'PAC',
+      lang: 'cat',
+      modules: { default: true, CMP: true, GNT: false, TFG: false },
+      toggles: { cover: false, toc: true, plagi: false },
+      meta: {
+        student: 'Dídac Llorens',
+        grade: 'Grau en Enginyeria Informàtica',
+        subjFull: 'Compiladors i Teoria de la Computació',
+        subjShort: 'COMP',
+        subjCode: '75.580',
+        caShort: 'PAC2',
+        caFull: 'PAC 2: Autòmats, Gramàtiques i Bootstrapping'
+      },
+      blobs: { table: false, codebox: false, figure: false, cmp: true, foreach: false }
+    },
+    tfg: {
+      profile: 'TFG',
+      lang: 'cat',
+      modules: { default: true, CMP: false, GNT: true, TFG: true },
+      toggles: { cover: true, toc: true, plagi: false },
+      meta: {
+        student: 'Dídac Llorens',
+        grade: 'Grau en Enginyeria Informàtica',
+        subjFull: 'Treball Final de Grau',
+        subjShort: 'TFG',
+        subjCode: '75.599',
+        caShort: 'MEM',
+        caFull: 'Memòria del Treball Final de Grau'
+      },
+      blobs: { table: true, codebox: true, figure: true, cmp: false, foreach: false }
+    }
+  };
+
+  // State
+  let state = JSON.parse(JSON.stringify(PRESETS.pac));
+
+  function init() {
+    bindPresetButtons();
+    bindFormInputs();
+    bindActions();
+    renderForm();
+    generateLatexCode();
+  }
+
+  function bindPresetButtons() {
+    const buttons = document.querySelectorAll('[data-preset]');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-preset');
+        if (PRESETS[key]) {
+          state = JSON.parse(JSON.stringify(PRESETS[key]));
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderForm();
+          generateLatexCode();
         }
-      };
+      });
+    });
+  }
 
-      let state = JSON.parse(JSON.stringify(PRESETS.pac));
-
-      function init() {
-        bindPresets();
-        bindForm();
-        bindActions();
-        renderForm();
-        generateLatexCode();
-      }
-
-      function bindPresets() {
-        document.querySelectorAll('[data-preset]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const key = btn.getAttribute('data-preset');
-            if (PRESETS[key]) {
-              state = JSON.parse(JSON.stringify(PRESETS[key]));
-              document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-              renderForm();
-              generateLatexCode();
-            }
-          });
+  function bindFormInputs() {
+    // Text inputs
+    const textFields = ['student', 'grade', 'subjFull', 'subjShort', 'subjCode', 'caShort', 'caFull'];
+    textFields.forEach(field => {
+      const el = document.getElementById('input-' + field);
+      if (el) {
+        el.addEventListener('input', () => {
+          state.meta[field] = el.value;
+          generateLatexCode();
         });
       }
+    });
 
-      function bindForm() {
-        const form = document.getElementById('generator-form');
-        if (!form) return;
-        const handler = (e) => {
-          const target = e.target;
-          const name = target.name;
-          if (!name) return;
-          if (name.startsWith('meta.')) {
-            state.meta[name.replace('meta.', '')] = target.value;
-          } else if (name.startsWith('opts.')) {
-            const k = name.replace('opts.', '');
-            state.classOpts[k] = target.type === 'checkbox' ? target.checked : target.value;
-          } else if (name.startsWith('pkg.')) {
-            state.packages[name.replace('pkg.', '')] = target.checked;
-          } else if (name.startsWith('blob.')) {
-            state.blobs[name.replace('blob.', '')] = target.checked;
-          }
+    // Profile radio/select
+    const profileEl = document.getElementById('select-profile');
+    if (profileEl) {
+      profileEl.addEventListener('change', () => {
+        state.profile = profileEl.value;
+        if (state.profile === 'PR' || state.profile === 'TFG') {
+          state.toggles.cover = true;
+        }
+        renderForm();
+        generateLatexCode();
+      });
+    }
+
+    // Language radio/select
+    const langEl = document.getElementById('select-lang');
+    if (langEl) {
+      langEl.addEventListener('change', () => {
+        state.lang = langEl.value;
+        generateLatexCode();
+      });
+    }
+
+    // Module checkboxes
+    ['default', 'CMP', 'GNT', 'TFG'].forEach(mod => {
+      const el = document.getElementById('mod-' + mod);
+      if (el) {
+        el.addEventListener('change', () => {
+          state.modules[mod] = el.checked;
           generateLatexCode();
-        };
-        form.addEventListener('input', handler);
-        form.addEventListener('change', handler);
+        });
       }
+    });
 
-      function renderForm() {
-        for (const [k, v] of Object.entries(state.meta)) {
-          const el = document.querySelector('[name="meta.' + k + '"]');
-          if (el) el.value = v;
-        }
-        for (const [k, v] of Object.entries(state.classOpts)) {
-          const el = document.querySelector('[name="opts.' + k + '"]');
-          if (el) {
-            if (el.type === 'checkbox') el.checked = !!v;
-            else el.value = v;
-          }
-        }
-        for (const [k, v] of Object.entries(state.packages)) {
-          const el = document.querySelector('[name="pkg.' + k + '"]');
-          if (el) el.checked = !!v;
-        }
-        for (const [k, v] of Object.entries(state.blobs)) {
-          const el = document.querySelector('[name="blob.' + k + '"]');
-          if (el) el.checked = !!v;
-        }
+    // Toggle checkboxes
+    ['cover', 'toc', 'plagi'].forEach(tog => {
+      const el = document.getElementById('tog-' + tog);
+      if (el) {
+        el.addEventListener('change', () => {
+          state.toggles[tog] = el.checked;
+          generateLatexCode();
+        });
       }
+    });
 
-      function generateLatexCode() {
-        const previewEl = document.getElementById('latex-preview');
-        if (!previewEl) return;
-
-        const opts = [];
-        if (state.classOpts.cover) opts.push('cover');
-        if (state.classOpts.toc) opts.push('toc');
-        if (state.classOpts.CMP) opts.push('CMP');
-        if (state.classOpts.draft) opts.push('draft');
-        if (state.classOpts.fontsize) opts.push(state.classOpts.fontsize);
-        if (state.classOpts.language && state.classOpts.language !== 'catalan') {
-          opts.push(state.classOpts.language);
-        }
-        const optString = opts.length > 0 ? '[' + opts.join(',') + ']' : '';
-
-        let out = '% !TeX encoding = UTF-8\n';
-        out += '% !TeX program = pdflatex\n';
-        out += '%% ==========================================================================\n';
-        out += '%% P3CTeX Document Boilerplate (Generated via Standalone Offline Tool)\n';
-        out += '%% Motto: "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a\n';
-        out += '%% ==========================================================================\n\n';
-
-        out += '\\documentclass' + optString + '{P3CTeX}\n\n';
-
-        out += '%% --- Metadades del Document & Identificacio UOC ---\n';
-        out += '\\PECTeXconfig{\n';
-        out += '  data = {\n';
-        out += '    student        = {' + (state.meta.student || 'Estudiant') + '},\n';
-        out += '    niu            = {' + (state.meta.niu || '0000000') + '},\n';
-        out += '    grade          = {Grau en Enginyeria Informatica},\n';
-        out += '    subj-fullname  = {' + (state.meta.subject || 'Assignatura') + '},\n';
-        out += '    subj-shortname = {' + (state.meta.subject ? state.meta.subject.substring(0, 4).toUpperCase() : 'UOC') + '},\n';
-        out += '    subj-code      = {' + (state.meta.subjCode || '00.000') + '},\n';
-        out += '    ca-fullname    = {' + (state.meta.caFull || 'PAC') + '},\n';
-        out += '    ca-shortname   = {' + (state.meta.caShort || 'PAC1') + '},\n';
-        out += '  }\n';
-        out += '}\n\n';
-
-        if (state.classOpts.cover) {
-          out += '%% --- Configuracio de Portada P3CTeX ---\n';
-          out += '\\PECTeXcover{fullcover, text-uppertitle=' + (state.meta.caShort || 'PAC1') + '}\n\n';
-        }
-
-        out += '%% --- Moduls d\'Arsenal P3CTeX ---\n';
-        if (state.packages.pxCALC) out += '\\usepackage{pxCALC}  % Calculs automatics i resolucio pas a pas\n';
-        if (state.packages.pxTAB)  out += '\\usepackage{pxTAB}   % Taules professionals i composicio de presets\n';
-        if (state.packages.pxSRC)  out += '\\usepackage{pxSRC}   % Gestio resilient d\'imatges i fallbacks\n';
-        if (state.packages.pxLST)  out += '\\usepackage{pxLST}   % Caixes de codi amb ressaltat de sintaxi\n';
-        if (state.packages.pxREQ)  out += '\\usepackage{pxREQ}   % Histories d\'usuari i matrius DAFO/SWOT\n';
-        if (state.packages.pxUML)  out += '\\usepackage{pxUML}   % Diagrames de classes i sequencia UML\n';
-        if (state.packages.pxMEM)  out += '\\usepackage{pxMEM}   % Estructura modular per a memories i TFG\n';
-        out += '\n';
-
-        if (state.packages.pxSRC) {
-          out += '%% Configuracio resilient de figures\n';
-          out += '\\pxSRCsetup{placeholder-color=blue, fallback=true}\n\n';
-        }
-        if (state.packages.pxTAB) {
-          out += '%% Estil base per a taules\n';
-          out += '\\pxTABsetup{style=header, headerbgcolor=blue!15, headertextcolor=blue!70!black}\n\n';
-        }
-
-        out += '\\begin{document}\n\n';
-        out += '\\section*{' + (state.meta.title || 'Resolucio de la Practica') + '}\n';
-        out += 'Document generat per a la resolucio oficial de l\'activitat \\textbf{' + (state.meta.caFull || 'PAC') + '}.\n\n';
-
-        if (state.blobs.multipageTable) {
-          out += '%% BLOB: Taula Multipagina de Gran Volum (pxTBLlong / longtable)\n';
-          out += '\\section{Registre Detallat d\'Execucio i Proves}\n';
-          out += '\\pxTBLlong[.95\\linewidth]{5}{\n';
-          out += '  \\textbf{ID} & \\textbf{Vector d\'Entrada} & \\textbf{Estat Esperat} & \\textbf{Temps (ms)} & \\textbf{Veredicte}\n';
-          out += '}{\n';
-          out += '  TC-01 & \\texttt{0x00FF (Init)}     & READY       & 1.24  & \\textbf{PASS} \\\\\n';
-          out += '  TC-02 & \\texttt{0x01A0 (Payload)}  & PROCESSING  & 4.85  & \\textbf{PASS} \\\\\n';
-          out += '  TC-03 & \\texttt{0x02B4 (Checksum)} & VERIFIED    & 2.10  & \\textbf{PASS} \\\\\n';
-          out += '  TC-04 & \\texttt{0x03FF (Overflow)} & REJECTED    & 0.88  & \\textbf{PASS} \\\\\n';
-          out += '  TC-05 & \\texttt{0x04C1 (Retry)}    & RECOVERED   & 12.40 & \\textbf{PASS} \\\\\n';
-          out += '}\n\n';
-        }
-
-        if (state.blobs.foreachLoop) {
-          out += '%% BLOB: Execucio Recursiva i Iterativa Automatica (\\foreach)\n';
-          out += '\\section{Galeria d\'Iteracions i Benchmarks Recursius}\n';
-          out += '\\noindent\\foreach \\iter/\\labelName in {1/Baseline, 2/Optimized-O2, 3/Vectorized-AVX2, 4/Final-JIT} {%\n';
-          out += '  \\begin{minipage}[t]{0.48\\linewidth}\n';
-          out += '    \\centering\n';
-          out += '    \\pxIMG[0.9\\linewidth]{benchmarks/step_\\iter}{\\labelName\\ (Iteracio \\iter)}[fig:bench_\\iter]\n';
-          out += '    \\vspace{1em}\n';
-          out += '  \\end{minipage}%\n';
-          out += '  \\hfill\\ifnum\\iter=2 \\par\\vspace{1em}\\fi\n';
-          out += '}\n\n';
-        }
-
-        if (state.blobs.cmpDiagrams && state.classOpts.CMP) {
-          out += '%% BLOB: Diagrames de Compilacio i Automats (pxCMP)\n';
-          out += '\\section{Arquitectura del Compilador i Taula de Transicio}\n';
-          out += '\\subsection{Diagrama de Tombstone}\n';
-          out += '\\pxTombstoneCompile[title={Compilacio de Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
-          out += '\\subsection{Taula de Transicio d\'Estats (DFA)}\n';
-          out += '\\pxTransitionTable[title={Taula de transicio d\'estats}]{a, b}{\n';
-          out += '  q_0 / initial   / q_1, q_0 / I;\n';
-          out += '  q_1 / normal    / q_1, q_2 / I;\n';
-          out += '  q_2 / accepting / q_0, q_2 / II\n';
-          out += '}\n\n';
-        }
-
-        if (state.blobs.codebox && state.packages.pxLST) {
-          out += '%% BLOB: Llistat de Codi Font Professional (pxLST)\n';
-          out += '\\section{Implementacio de l\'Algorisme}\n';
-          out += '\\pxCodeSet[dark]{pxJava}\n';
-          out += '\\begin{pxCode}[language=pxJava]{PipelineEngine}\n';
-          out += 'public class PipelineEngine {\n';
-          out += '    public boolean dispatch(byte[] data) {\n';
-          out += '        return data != null && data.length > 0;\n';
-          out += '    }\n';
-          out += '}\n';
-          out += '\\end{pxCode}\n\n';
-        }
-
-        if (state.blobs.reqCard && state.packages.pxREQ) {
-          out += '%% BLOB: Historia d\'Usuari i Matriu DAFO / SWOT (pxREQ)\n';
-          out += '\\section{Especificacio d\'Enginyeria de Requisits}\n';
-          out += '\\begin{pxUserStory}{US-01}\n';
-          out += '  \\pxAsA{Estudiant d\'Enginyeria de la UOC}\n';
-          out += '  \\pxIWant{Generar documents LaTeX amb plantilles oficials}\n';
-          out += '  \\pxSoThat{Puc lliurar PACs impecables a l\'avaluacio continuada}\n';
-          out += '  \\pxAcceptanceCriteria{Compilacio sense errors i tipografia estandarditzada}\n';
-          out += '\\end{pxUserStory}\n\n';
-        }
-
-        out += '\\section{Conclusions}\n';
-        out += 'El treball s\'ha desenvolupat complint amb la totalitat dels objectius proposats.\n\n';
-        out += '\\end{document}\n';
-
-        previewEl.textContent = out;
+    // Blobs checkboxes
+    ['table', 'codebox', 'figure', 'cmp', 'foreach'].forEach(blob => {
+      const el = document.getElementById('blob-' + blob);
+      if (el) {
+        el.addEventListener('change', () => {
+          state.blobs[blob] = el.checked;
+          generateLatexCode();
+        });
       }
+    });
+  }
 
-      function bindActions() {
-        const copyBtn = document.getElementById('btn-copy-tex');
-        if (copyBtn) {
-          copyBtn.addEventListener('click', async () => {
-            const previewEl = document.getElementById('latex-preview');
-            if (!previewEl) return;
-            try {
-              await navigator.clipboard.writeText(previewEl.textContent);
-              const orig = copyBtn.innerText;
-              copyBtn.innerText = 'COPIED!';
-              setTimeout(() => copyBtn.innerText = orig, 2000);
-            } catch (err) {
-              console.error(err);
-            }
-          });
-        }
+  function bindActions() {
+    const copyBtn = document.getElementById('btn-copy-latex');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const code = document.getElementById('latex-preview-code').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          const original = copyBtn.textContent;
+          copyBtn.textContent = 'COPIAT!';
+          setTimeout(() => { copyBtn.textContent = original; }, 2000);
+        });
+      });
+    }
 
-        const dlBtn = document.getElementById('btn-download-tex');
-        if (dlBtn) {
-          dlBtn.addEventListener('click', () => {
-            const previewEl = document.getElementById('latex-preview');
-            if (!previewEl) return;
-            const blob = new Blob([previewEl.textContent], { type: 'text/x-tex;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = (state.meta.caShort || 'P3CTeX-document').replace(/[^a-zA-Z0-9_-]/g, '_') + '.tex';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          });
-        }
-      }
+    const downloadBtn = document.getElementById('btn-download-tex');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        const code = document.getElementById('latex-preview-code').textContent;
+        const filename = (state.meta.caShort || 'assessment') + '.tex';
+        const blob = new Blob([code], { type: 'text/x-tex;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+  }
 
-      window.generateLatexCode = generateLatexCode;
-      document.addEventListener('DOMContentLoaded', init);
-    })();
-  </script>
+  function renderForm() {
+    // Populate text inputs
+    for (const key in state.meta) {
+      const el = document.getElementById('input-' + key);
+      if (el) el.value = state.meta[key];
+    }
+
+    const profileEl = document.getElementById('select-profile');
+    if (profileEl) profileEl.value = state.profile;
+
+    const langEl = document.getElementById('select-lang');
+    if (langEl) langEl.value = state.lang;
+
+    for (const mod in state.modules) {
+      const el = document.getElementById('mod-' + mod);
+      if (el) el.checked = state.modules[mod];
+    }
+
+    for (const tog in state.toggles) {
+      const el = document.getElementById('tog-' + tog);
+      if (el) el.checked = state.toggles[tog];
+    }
+
+    for (const blob in state.blobs) {
+      const el = document.getElementById('blob-' + blob);
+      if (el) el.checked = state.blobs[blob];
+    }
+  }
+
+  function generateLatexCode() {
+    // Build options list for \documentclass[...]{P3CTeX}
+    const opts = [];
+    opts.push(state.profile);
+    if (state.lang) opts.push(state.lang);
+    if (state.modules.default) opts.push('default');
+    if (state.modules.CMP) opts.push('CMP');
+    if (state.modules.GNT) opts.push('GNT');
+    if (state.modules.TFG && state.profile !== 'TFG') opts.push('TFG');
+
+    if (state.toggles.cover) opts.push('cover');
+    if (!state.toggles.toc) opts.push('no-toc');
+    if (state.toggles.plagi) opts.push('no-plagi');
+
+    const optString = opts.length > 0 ? '[' + opts.join(',') + ']' : '';
+
+    let out = '% !TeX encoding = UTF-8\n';
+    out += '%% ==========================================================================\n';
+    out += '%% P3CTeX Assessment Document · Universitat Oberta de Catalunya (UOC)\n';
+    out += '%% Generated with P3CTeX Web Generator Tool\n';
+    out += '%% "Procrastinar és l\'única esperança" · By ScVr!a\n';
+    out += '%% ==========================================================================\n\n';
+
+    out += '\\documentclass' + optString + '{P3CTeX}\n\n';
+
+    out += '%% Metadades acadèmiques oficials de la UOC\n';
+    out += '\\PECTeXconfig{\n';
+    out += '  data = {\n';
+    out += '    student        = {' + (state.meta.student || 'Nom Cognoms') + '},\n';
+    out += '    grade          = {' + (state.meta.grade || 'Enginyeria Informàtica') + '},\n';
+    out += '    subj-fullname  = {' + (state.meta.subjFull || 'Nom Assignatura') + '},\n';
+    out += '    subj-shortname = {' + (state.meta.subjShort || 'SIGLES') + '},\n';
+    out += '    subj-code      = {' + (state.meta.subjCode || '00.000') + '},\n';
+    out += '    ca-fullname    = {' + (state.meta.caFull || 'PAC1: Activitat') + '},\n';
+    out += '    ca-shortname   = {' + (state.meta.caShort || 'PAC1') + '},\n';
+    out += '    date           = {\\today}\n';
+    out += '  }\n';
+    out += '}\n\n';
+
+    out += '\\begin{document}\n\n';
+    out += '\\section{Exercici 1}\n';
+    out += '\\subsection{Pregunta A}\n';
+    out += 'La resposta al primer apartat de l\'activitat ' + (state.meta.caShort || 'PAC1') + ' es redacta aquí.\n\n';
+
+    // Insertable Blobs
+    if (state.blobs.table) {
+      out += '%% BLOB: Taula de dades mitjançant pxTAB (sintaxi declarativa per comes)\n';
+      out += '\\pxTable[style=header]{\n';
+      out += '  Mètrica, Valor Mesurat, Llindar, Estat\n';
+      out += '}{\n';
+      out += '  Latència de xarxa, 14.2 ms, < 50 ms, PASS\n';
+      out += '}{\n';
+      out += '  Taxa de transferència, 850 Mbps, > 500 Mbps, PASS\n';
+      out += '}{\n';
+      out += '  Pèrdua de paquets, 0.01 %, < 0.1 %, PASS\n';
+      out += '}\n\n';
+    }
+
+    if (state.blobs.codebox) {
+      out += '%% BLOB: Llistat de codi amb entorn pxCode i ressaltat de sintaxi (pxLST)\n';
+      out += '\\begin{pxCode}[language=pxJava]{Algorisme de Cerca}\n';
+      out += 'public class Solution {\n';
+      out += '    public static int binarySearch(int[] arr, int target) {\n';
+      out += '        int left = 0, right = arr.length - 1;\n';
+      out += '        while (left <= right) {\n';
+      out += '            int mid = left + (right - left) / 2;\n';
+      out += '            if (arr[mid] == target) return mid;\n';
+      out += '            if (arr[mid] < target) left = mid + 1;\n';
+      out += '            else right = mid - 1;\n';
+      out += '        }\n';
+      out += '        return -1;\n';
+      out += '    }\n';
+      out += '}\n';
+      out += '\\end{pxCode}\n\n';
+    }
+
+    if (state.blobs.figure) {
+      out += '%% BLOB: Inclusió segura de figura amb fallback automàtic (pxSRC)\n';
+      out += '\\pxIMG[0.75\\linewidth]{img/arquitectura}{Diagrama d\'arquitectura del sistema}[fig:arquitectura]\n\n';
+    }
+
+    if (state.blobs.cmp) {
+      out += '%% BLOB: Diagrames d\'Enginyeria de Compiladors i Autòmats (pxCMP)\n';
+      out += '\\subsection{Diagrama de Tombstone i Autòmat Finit}\n';
+      out += '\\pxTombstoneCompile[title={Compilador Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
+      out += '\\pxTransitionTable[title={Taula de transició de l\'autòmat}]{a, b}{\n';
+      out += '  q_0 / initial   / q_1, q_2 / I;\n';
+      out += '  q_1 / normal    / q_3, q_2 / I;\n';
+      out += '  q_2 / accepting / q_1, q_3 / II;\n';
+      out += '  q_3 / accepting / q_3, q_3 / II\n';
+      out += '}\n\n';
+      out += '\\pxAutomatonTrace[title={Traça de reconeixement de la paraula \\texttt{aba}}]{\n';
+      out += '  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1\n';
+      out += '}[Reconegut]\n\n';
+    }
+
+    if (state.blobs.foreach) {
+      out += '%% BLOB: Inclusió automàtica de llista d\'imatges (pxIMGList de pxSRC)\n';
+      out += '\\pxIMGList[0.7\\linewidth]{img/benchmark_pas_}{\n';
+      out += '  Pas 1: Captura de dades inicials,\n';
+      out += '  Pas 2: Filtratge i processament,\n';
+      out += '  Pas 3: Resultats de l\'avaluació\n';
+      out += '}\n\n';
+    }
+
+    out += '\\end{document}\n';
+
+    const codeEl = document.getElementById('latex-preview-code');
+    if (codeEl) {
+      codeEl.textContent = out;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+</script>
 </body>
 </html>
