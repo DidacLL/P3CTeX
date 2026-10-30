@@ -50,33 +50,111 @@
   </header>
 
   <main id="main">
-    <!-- Hero Section: What P3CTeX Actually Is -->
-    <section class="hero-editorial" aria-label="P3CTeX Overview">
-      <div class="container">
-        <div class="hero-lead-block">
-          <span class="section-tag">// OPEN-SOURCE LATEX REPOSITORY FOR UOC //</span>
-          <h1>PEC.TeX // <span class="accent-text">P3CTeX</span></h1>
-          <p class="hero-tagline">
-            Official LaTeX document class and modular packages for UOC Computer Engineering.
-          </p>
-          <p class="hero-summary">
-            P3CTeX is an open-source LaTeX repository based on official styles defined by the Universitat Oberta de Catalunya (UOC). It standardizes university typography (Arev), page geometry, covers, mandatory anti-plagiarism declarations, and computer science coursework macros into a unified document class.
-          </p>
+    <!-- Interactive Workstation Console (Two-Pane Hardware Instrument) -->
+    <section class="console-station" aria-label="P3CTeX Workstation Console">
+      <div class="console-top-strip">
+        <span class="console-id">// INSTRUMENT: P3CTEX-CORE-STATION // UNIT 01 //</span>
+        <span>OUTPUT: PDF/X-1a · 60Hz CRT MONITOR</span>
+      </div>
 
-          <div class="hero-actions">
+      <div class="console-split-deck">
+        <!-- Left: Control Deck -->
+        <div class="control-deck">
+          <div>
+            <span class="control-deck-tag">// UOC COMPUTER ENGINEERING · OFFICIAL LATEX CLASS //</span>
+            <h1>PEC.TeX // <span class="accent-text">P3CTeX</span></h1>
+            <p class="control-deck-lead">
+              Official LaTeX document class and modular package suite based on styles defined by Universitat Oberta de Catalunya (UOC). Replaces fragmented preambles with pre-configured Arev typography, page geometry, institutional covers, mandatory anti-plagiarism declarations, and computer science coursework macros.
+            </p>
+
+            <!-- Physical Profile Rocker Selector -->
+            <div class="deck-rocker-panel">
+              <span class="deck-rocker-label">SELECT SUBMISSION PROFILE:</span>
+              <div class="deck-rocker-buttons">
+                <button type="button" class="rocker-btn active" data-profile="pac">[● PAC / PEC]</button>
+                <button type="button" class="rocker-btn" data-profile="pr">[○ PR REPORT]</button>
+                <button type="button" class="rocker-btn" data-profile="tfg">[○ TFG THESIS]</button>
+              </div>
+
+              <div class="deck-readout-strip">
+                <div>MODE: <strong id="readout-profile-label">PAC (Continuous Assessment)</strong></div>
+                <div>COVER: <strong id="readout-cover">Disabled (No cover)</strong></div>
+                <div>TOC: <strong id="readout-toc">Automatic with declaration</strong></div>
+                <div>LANG: <strong id="readout-lang">Catalan (cat)</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keycap Action Buttons -->
+          <div class="deck-action-buttons">
             <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="btn btn-primary" target="_blank" rel="noopener">[⬇ DOWNLOAD RELEASE (ZIP)]</a>
-            <a href="tutorials.html#bootstrap" class="btn btn-secondary">[🕮 INSTALLATION &amp; SETUP GUIDE]</a>
+            <a href="tutorials.html#bootstrap" class="btn btn-secondary">[🕮 SETUP GUIDE]</a>
             <a href="generator.html" class="btn btn-ghost">[⚡ WEB GENERATOR HELPER]</a>
           </div>
+        </div>
 
-          <div class="hero-metadata-strip">
-            <span>PROFILES: PAC / PEC / CA / PR / TFG</span>
-            <span class="sep">/</span>
-            <span>ENGINE: PDFLATEX (MIKTEX / TEX LIVE)</span>
-            <span class="sep">/</span>
-            <span>LICENSE: GPL v3.0</span>
+        <!-- Right: Live Virtual CRT Terminal -->
+        <div class="crt-monitor-view">
+          <div class="crt-bezel-top">
+            <span class="crt-badge">
+              <span class="dot green"></span> [CRT-OUT-0] P3CTeX KERNEL BUFFER
+            </span>
+            <button class="copy-btn" data-copy-target="#code-minimal-pac">[📋 COPY SKELETON]</button>
+          </div>
+
+          <pre class="crt-code-display"><code id="code-minimal-pac">% Minimal P3CTeX PAC Continuous Assessment Skeleton
+\documentclass[PAC,default]{P3CTeX}
+
+% Declarative UOC Student & Subject Metadata
+\PECTeXconfig{
+  data = {
+    student        = {Estudiant UOC},
+    grade          = {Grau en Enginyeria Informàtica},
+    subj-fullname  = {Compiladors i Llenguatges},
+    subj-shortname = {COMP},
+    subj-code      = {75.580},
+    ca-fullname    = {PAC 1: Anàlisi Lèxica i Sintàctica},
+    ca-shortname   = {PAC1},
+    date           = {\today}
+  }
+}
+
+\begin{document}
+% Profile PAC: Portada desactivada; sumari i declaració de no plagi automàtics.
+
+\sectionuoc{Exercici 1}
+\subsection{Apartat A}
+Resolució del primer apartat del document...
+
+% Taula declarativa per comes amb pxTAB:
+\pxTable[style=header]{Mètrica, Valor Mesurat, Estat}{Temps d'execució, 0.42 s, PASS}{Memòria consumida, 18.5 MB, PASS}
+
+% Inclusió resilient de figura amb pxSRC:
+\pxIMG[0.8\linewidth]{img/arquitectura}{Diagrama de l'arquitectura proposada}[fig:arq]
+\end{document}</code></pre>
+
+          <div class="crt-bezel-bottom">
+            <span>pdflatex compilation: verified</span>
+            <span>BUFFER READY · UTF-8</span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Workshop Panoramic Viewport -->
+    <section class="workshop-viewport" aria-label="Late-night engineering workshop">
+      <div class="container">
+        <figure class="workshop-figure">
+          <div class="figure-hud-top">
+            <span>// WORKSHOP LAB · LATE-NIGHT STUDY DESK</span>
+            <span>"PROCRASTINAR ÉS L'ÚNICA ESPERANÇA" · By ScVr!a</span>
+          </div>
+          <img src="assets/images/hero-workshop.jpg" alt="P3CTeX late-night engineering workshop with vintage CRT terminal, compiler design textbooks and oscilloscope" width="1024" height="434" fetchpriority="high">
+          <div class="figure-hud-bottom">
+            <span>HARDWARE: CRT DISPLAY // COMPILER DESIGN TEXTBOOKS // SCHEMATICS // COFFEE</span>
+            <span>UOC COMPUTER ENGINEERING // BARCELONA</span>
+          </div>
+        </figure>
       </div>
     </section>
 
@@ -167,23 +245,6 @@ Resolució de l'exercici...
       </div>
     </section>
 
-    <!-- Workshop Illustration Viewport -->
-    <section class="workshop-viewport" aria-label="Late-night engineering workshop">
-      <div class="container">
-        <figure class="workshop-figure">
-          <div class="figure-hud-top">
-            <span>// WORKSHOP LAB · LATE-NIGHT STUDY DESK</span>
-            <span>"PROCRASTINAR ÉS L'ÚNICA ESPERANÇA" · By ScVr!a</span>
-          </div>
-          <img src="assets/images/hero-workshop.jpg" alt="P3CTeX late-night engineering workshop with vintage CRT terminal, compiler design textbooks and oscilloscope" width="1024" height="434" fetchpriority="high">
-          <div class="figure-hud-bottom">
-            <span>HARDWARE: CRT DISPLAY // COMPILER DESIGN TEXTBOOKS // SCHEMATICS // COFFEE</span>
-            <span>UOC COMPUTER ENGINEERING // BARCELONA</span>
-          </div>
-        </figure>
-      </div>
-    </section>
-
     <!-- Section 2: Delivery Profiles -->
     <section class="editorial-section" aria-label="Delivery Profiles">
       <div class="container">
@@ -253,64 +314,6 @@ Resolució de l'exercici...
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <!-- Interactive Skeleton Buffer -->
-        <div class="code-switch-bar">
-          <div class="switch-tabs">
-            <button class="rocker-btn active" data-profile="pac">[● PAC CONTINUOUS ASSESSMENT]</button>
-            <button class="rocker-btn" data-profile="pr">[○ PR PRACTICUM REPORT]</button>
-            <button class="rocker-btn" data-profile="tfg">[○ TFG THESIS MEMORY]</button>
-          </div>
-          <div class="switch-readout">
-            <span>MODE: <strong id="readout-profile-label">PAC (Continuous Assessment)</strong></span>
-            <span class="sep">|</span>
-            <span>COVER: <strong id="readout-cover">Disabled (No cover)</strong></span>
-            <span class="sep">|</span>
-            <span>TOC: <strong id="readout-toc">Enabled (Automatic)</strong></span>
-            <span class="sep">|</span>
-            <span>LANG: <strong id="readout-lang">Catalan (cat)</strong></span>
-          </div>
-        </div>
-
-        <div class="code-box">
-          <div class="code-box-header">
-            <div>
-              <span class="code-badge">LATEX</span>
-              <span class="code-filename">minimal-uoc.tex</span>
-            </div>
-            <button class="copy-btn" data-copy-target="#code-minimal-pac">[COPY SKELETON]</button>
-          </div>
-          <pre><code id="code-minimal-pac">% Minimal P3CTeX PAC Continuous Assessment Skeleton
-\documentclass[PAC,default]{P3CTeX}
-
-% Declarative UOC Student & Subject Metadata
-\PECTeXconfig{
-  data = {
-    student        = {Estudiant UOC},
-    grade          = {Grau en Enginyeria Informàtica},
-    subj-fullname  = {Compiladors i Llenguatges},
-    subj-shortname = {COMP},
-    subj-code      = {75.580},
-    ca-fullname    = {PAC 1: Anàlisi Lèxica i Sintàctica},
-    ca-shortname   = {PAC1},
-    date           = {\today}
-  }
-}
-
-\begin{document}
-% Profile PAC: Portada desactivada; sumari i declaració de no plagi automàtics.
-
-\sectionuoc{Exercici 1}
-\subsection{Apartat A}
-Resolució del primer apartat del document...
-
-% Taula declarativa per comes amb pxTAB:
-\pxTable[style=header]{Mètrica, Valor Mesurat, Estat}{Temps d'execució, 0.42 s, PASS}{Memòria consumida, 18.5 MB, PASS}
-
-% Inclusió resilient de figura amb pxSRC:
-\pxIMG[0.8\linewidth]{img/arquitectura}{Diagrama de l'arquitectura proposada}[fig:arq]
-\end{document}</code></pre>
         </div>
       </div>
     </section>

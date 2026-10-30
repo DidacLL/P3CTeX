@@ -333,64 +333,175 @@ code {
    Editorial Layout & Technical Datasheet Architecture (Zero-Card Design)
    ========================================================================== */
 
-/* Editorial Hero */
-.hero-editorial {
-  padding-top: clamp(24px, 4vw, 44px);
-  padding-bottom: clamp(20px, 3vw, 36px);
+/* ==========================================================================
+   Interactive Workstation Console (Two-Pane Hardware Instrument)
+   ========================================================================== */
+
+.console-station {
+  width: min(var(--max-width), calc(100% - var(--page-pad) * 2));
+  margin: 28px auto 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-base);
+  border-top: 3px solid var(--border-bright);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+.console-top-strip {
+  background: #11151c;
   border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-muted);
 }
 
-.hero-lead-block {
-  max-width: 920px;
+.console-top-strip .console-id {
+  color: var(--accent-amber);
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
-.section-tag {
-  display: inline-block;
+.console-split-deck {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  align-items: stretch;
+}
+
+@media (max-width: 920px) {
+  .console-split-deck {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left Controller Deck */
+.control-deck {
+  padding: clamp(24px, 3.5vw, 36px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+@media (max-width: 920px) {
+  .control-deck {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+}
+
+.control-deck-tag {
   font-family: var(--font-mono);
   font-size: 0.74rem;
   font-weight: 700;
   color: var(--accent-amber);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  display: block;
 }
 
-.hero-lead-block h1 {
-  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+.control-deck h1 {
+  font-size: clamp(2rem, 3.2vw, 2.7rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--text-white);
-  margin-bottom: 0.35em;
+  margin-bottom: 0.3em;
 }
 
-.hero-lead-block h1 .accent-text {
+.control-deck h1 .accent-text {
   color: #e06050;
 }
 
-.hero-tagline {
+.control-deck-lead {
+  font-size: 1.02rem;
+  line-height: 1.62;
+  color: var(--text-primary);
+  margin-bottom: 1.4em;
+}
+
+/* Tactile Rocker Switch Selector */
+.deck-rocker-panel {
+  background: var(--bg-recessed);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  padding: 12px 14px;
+  margin-bottom: 1.4em;
+}
+
+.deck-rocker-label {
   font-family: var(--font-mono);
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--accent-amber);
-  line-height: 1.45;
-  margin-bottom: 0.8em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
 }
 
+.deck-rocker-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
 
-.hero-summary {
-  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
-  line-height: 1.68;
+.rocker-btn {
+  background: var(--bg-deck);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 8px 6px;
+  text-align: center;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+.rocker-btn:hover {
+  background: #343e4f;
+  color: var(--text-white);
+  border-color: var(--border-bright);
+}
+
+.rocker-btn.active {
+  background: var(--btn-rust);
+  color: #ffffff;
+  border-color: var(--btn-rust-bevel);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.deck-readout-strip {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+}
+
+.deck-readout-strip strong {
   color: var(--text-primary);
-  margin-bottom: 1.6em;
-  max-width: 840px;
 }
 
-.hero-actions {
+/* Keycap Buttons */
+.deck-action-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 1.6em;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 .btn {
@@ -445,23 +556,63 @@ code {
   border-color: var(--border-bright);
 }
 
-.hero-metadata-strip {
+/* Right CRT Monitor Display */
+.crt-monitor-view {
+  background: var(--bg-crt-screen);
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.crt-bezel-top {
+  background: #0f141a;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
   font-family: var(--font-mono);
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  padding-top: 12px;
+  font-size: 0.76rem;
+}
+
+.crt-badge {
+  color: var(--crt-teal-bright);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crt-code-display {
+  margin: 0;
+  padding: 16px 18px;
+  flex-grow: 1;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: var(--bg-crt-screen);
+}
+
+.crt-code-display code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.crt-bezel-bottom {
+  background: #0f141a;
   border-top: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
-
-.hero-metadata-strip .sep {
-  color: var(--border-base);
-}
-
 
 /* Split Blueprint Comparison (What You Write vs What Professor Sees) */
 .split-blueprint {
