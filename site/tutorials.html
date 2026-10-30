@@ -44,20 +44,20 @@
   <!-- Main Content Container -->
   <main id="main" class="container">
     <header class="page-intro">
-      <p class="eyebrow">[ UOC COMPUTER ENGINEERING · PRACTICAL SURVIVAL GUIDE ]</p>
-      <h1>Mastering P3CTeX for coursework deadlines.</h1>
+      <p class="eyebrow">// UOC COMPUTER ENGINEERING · AUTHORING GUIDE</p>
+      <h1>P3CTeX Documentation &amp; Practical Tutorials</h1>
       <p class="lede">
-        You don't need to be a LaTeX wizard to produce clean, official university submissions. Set up your environment once, reuse your preambles across every semester, and write fast, resilient deliverables without formatting headaches.
+        A step-by-step guide to installing, configuring, and authoring university coursework with P3CTeX. Set up your local TeX distribution once, organize your semester with modular preambles, and leverage dedicated toolkits for tables, code, and CS diagrams.
       </p>
 
       <!-- Jump Navigation -->
       <nav class="toc" aria-label="Jump to tutorial chapter">
-        <a href="#bootstrap">01 / Setup</a>
-        <a href="#preamble">02 / Preamble</a>
-        <a href="#shared-preambles">03 / Shared Preambles</a>
-        <a href="#pac">04 / PAC Workflow</a>
-        <a href="#pr">05 / PR &amp; TFG</a>
-        <a href="#triage">06 / Survival Triage</a>
+        <a href="#bootstrap">01 / Setup &amp; TeXMF</a>
+        <a href="#preamble">02 / Class Options &amp; Metadata</a>
+        <a href="#shared-preambles">03 / Shared Preambles Architecture</a>
+        <a href="#pac">04 / Coursework Tools (pxTAB, pxSRC, pxLST)</a>
+        <a href="#pr">05 / Practicum &amp; Degree Thesis (PR, TFG, MEM)</a>
+        <a href="#triage">06 / Compilation Diagnostics</a>
       </nav>
     </header>
 
@@ -80,7 +80,7 @@
             <ul>
               <li><strong>MiKTeX:</strong> Open <em>MiKTeX Console</em> → <em>Settings</em> → <em>Directories</em> tab → Click <em>Add</em> → Select your extracted P3CTeX folder → Click <em>Tasks</em> → <em>Refresh file name database (FNDB)</em>.</li>
               <li><strong>TeX Live:</strong> Place the files into your personal <code>TEXMFHOME</code> directory or set <code>TEXINPUTS=".:/path/to/p3ctex//:"</code> in your environment.</li>
-              <li><strong>Emergency Fallback:</strong> If you're 15 minutes away from a deadline on a fresh laptop, just drop <code>P3CTeX.cls</code> and the <code>.sty</code> files directly into your assignment folder. LaTeX always finds local files!</li>
+              <li><strong>Local Directory Fallback:</strong> You can also place <code>P3CTeX.cls</code> and the <code>.sty</code> files directly in the same folder as your document (or into your Overleaf project root), where LaTeX always finds local class files.</li>
             </ul>
           </li>
         </ol>
@@ -295,12 +295,12 @@ public class MathUtils {
       </div>
     </section>
 
-    <!-- Chapter 06: Survival Triage -->
+    <!-- Chapter 06: Diagnostics & Troubleshooting -->
     <section class="section" id="triage">
-      <span class="panel-number">06 / TRIAGE</span>
-      <h2>Emergency Survival Triage (Last-Minute Fixes)</h2>
+      <span class="panel-number">06 / DIAGNOSTICS</span>
+      <h2>Compilation Diagnostics &amp; Common Issues</h2>
       <div class="prose">
-        <p>When compiling at 23:45 on deadline night, use these fast triage solutions:</p>
+        <p>Solutions to common configuration, font, and package questions when building with P3CTeX:</p>
 
         <details class="guide-detail">
           <summary>Error: ! LaTeX Error: File 'P3CTeX.cls' not found</summary>
@@ -340,7 +340,7 @@ public class MathUtils {
           <li><a href="#shared-preambles">Shared Preambles</a></li>
           <li><a href="#pac">PAC Workflow</a></li>
           <li><a href="#pr">PR &amp; TFG</a></li>
-          <li><a href="#triage">Survival Triage</a></li>
+          <li><a href="#triage">Compilation Diagnostics</a></li>
         </ul>
       </div>
       <div class="footer-links">
