@@ -58,7 +58,7 @@
         </button>
         <button type="button" class="selector-key" data-deck="deck-macros">
           <span class="key-index">03</span>
-          <span class="key-label">PACKAGE DOCUMENTATION</span>
+          <span class="key-label">MACRO REFERENCE</span>
         </button>
         <button type="button" class="selector-key" data-deck="deck-runbook">
           <span class="key-index">04</span>
@@ -307,39 +307,80 @@
       <!-- ==================================================================
            SECTION 03: PACKAGE DOCUMENTATION (MACRO SUITE REFERENCE)
            ================================================================== -->
-      <section id="deck-macros" class="console-deck" aria-label="Package Documentation">
+      <section id="deck-macros" class="console-deck" aria-label="Macro and Feature Reference">
         <div class="macro-stage-view">
           
-          <!-- Package Selector Bar (6 Core Bundled Packages) -->
-          <div class="macro-channel-bar">
+          <!-- Universal Live Filter & View Mode Switcher -->
+          <div class="macro-filter-toolbar">
+            <div class="filter-search-box">
+              <span class="search-icon">&#9889;</span>
+              <input type="text" id="macro-search-input" class="search-input" placeholder="Search macro, key, or task (e.g. grow, list, table, uml, annex, cover, bib, darcula, tfg)..." autocomplete="off" spellcheck="false">
+              <button type="button" id="macro-search-clear" class="search-clear-btn" title="Clear filter" style="display:none;">&#10005;</button>
+            </div>
+            
+            <div class="view-mode-rocker">
+              <span class="mode-label">VIEWPORT:</span>
+              <button type="button" class="mode-btn active" data-view="split">SPLIT VIEW</button>
+              <button type="button" class="mode-btn" data-view="wide-table">WIDE API TABLE</button>
+              <button type="button" class="mode-btn" data-view="wide-code">FULL CODE</button>
+            </div>
+          </div>
+
+          <!-- Package & Feature Selector Bar (9 Core Bundled Suites) -->
+          <div class="macro-channel-bar" id="macro-channel-bar">
             <button type="button" class="channel-key active" data-channel="pxtab">
               <span class="ch-id">pxTAB</span>
-              <span class="ch-name">Tables without column math</span>
+              <span class="ch-name">Tables</span>
             </button>
             <button type="button" class="channel-key" data-channel="pxsrc">
               <span class="ch-id">pxSRC</span>
-              <span class="ch-name">Resilient safe figures</span>
+              <span class="ch-name">Figures &amp; Lists</span>
             </button>
             <button type="button" class="channel-key" data-channel="pxlst">
               <span class="ch-id">pxLST</span>
-              <span class="ch-name">Darcula code listings</span>
+              <span class="ch-name">Darcula Code</span>
             </button>
             <button type="button" class="channel-key" data-channel="pxcmp">
               <span class="ch-id">pxCMP</span>
-              <span class="ch-name">Compilers &amp; automata</span>
+              <span class="ch-name">Compilers &amp; AI</span>
             </button>
             <button type="button" class="channel-key" data-channel="pxgnt">
               <span class="ch-id">pxGNT</span>
-              <span class="ch-name">Daily Gantt schedules</span>
+              <span class="ch-name">Daily Gantt</span>
             </button>
             <button type="button" class="channel-key" data-channel="pxuml">
               <span class="ch-id">pxUML</span>
-              <span class="ch-name">UML class diagrams</span>
+              <span class="ch-name">UML Architecture</span>
+            </button>
+            <button type="button" class="channel-key" data-channel="pxmem">
+              <span class="ch-id">pxMEM</span>
+              <span class="ch-name">Memories &amp; Annexes</span>
+            </button>
+            <button type="button" class="channel-key" data-channel="pxtfg">
+              <span class="ch-id">pxTFG</span>
+              <span class="ch-name">TFG Workcard</span>
+            </button>
+            <button type="button" class="channel-key" data-channel="pxgdx">
+              <span class="ch-id">pxGDX / pxTXT</span>
+              <span class="ch-name">Cover &amp; Overrides</span>
             </button>
           </div>
 
+          <!-- Dynamic Search Results Overlay (Visible only when filtering) -->
+          <div id="macro-search-results" class="macro-search-results-panel" style="display:none;">
+            <div class="search-results-header">
+              <span class="results-count" id="macro-search-count">0 MATCHES FOUND</span>
+              <span class="results-hint">Click any matching macro to view its documentation and full working example</span>
+            </div>
+            <div class="search-results-table-wrap">
+              <div class="api-table-wrapper" id="macro-search-table">
+                <!-- Dynamically generated rows -->
+              </div>
+            </div>
+          </div>
+
           <!-- Split Macro Showcase: API Reference Table + Compilable Code -->
-          <div class="macro-showcase-split">
+          <div class="macro-showcase-split" id="macro-showcase-split">
             
             <!-- Left: API Reference Table & Options -->
             <div class="macro-narrative">
@@ -356,35 +397,17 @@
               <div class="macro-api-box">
                 <span class="api-box-label">// COMMAND REFERENCE &amp; SIGNATURES:</span>
                 <div class="api-table-wrapper" id="macro-api-table">
-                  <div class="api-row header">
-                    <span class="api-col-cmd">Command / Syntax</span>
-                    <span class="api-col-desc">Purpose &amp; Parameters</span>
-                  </div>
-                  <div class="api-row">
-                    <code class="api-col-cmd">\pxTable[style=...]{head}{row1}{row2}</code>
-                    <span class="api-col-desc">Creates a comma-separated table with automatic column sizing.</span>
-                  </div>
-                  <div class="api-row">
-                    <code class="api-col-cmd">\pxTBLlong*[opts]{head}{rows...}</code>
-                    <span class="api-col-desc">Multi-page table that repeats headers across page breaks.</span>
-                  </div>
-                  <div class="api-row">
-                    <code class="api-col-cmd">styles: header | striped | boxed | grid</code>
-                    <span class="api-col-desc">Visual presentation themes without requiring TikZ.</span>
-                  </div>
+                  <!-- Populated by JS -->
                 </div>
               </div>
 
               <!-- Feature Summary -->
               <div class="macro-features-strip" id="macro-features-strip">
-                <div class="feat-pill"><strong>Syntax:</strong> Comma-separated row values</div>
-                <div class="feat-pill"><strong>Row striping:</strong> Alternating row background shading</div>
-                <div class="feat-pill"><strong>Multipage:</strong> Long table pagination with <code>\pxTBLlong*</code></div>
-                <div class="feat-pill"><strong>Backend:</strong> Built on longtable and booktabs</div>
+                <!-- Populated by JS -->
               </div>
 
               <div class="macro-doc-actions">
-                <a href="generator.html#tables" id="macro-showcase-url" class="doc-link-btn">⚡ Visual Generator →</a>
+                <a href="generator.html#tables" id="macro-showcase-url" class="doc-link-btn">&#9889; Visual Generator &rarr;</a>
                 <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="doc-link-btn secondary">GitHub Source</a>
               </div>
             </div>
@@ -394,35 +417,24 @@
               <div class="code-display-header">
                 <span class="disp-label">VERIFIED CODE EXAMPLE:</span>
                 <button class="tactile-copy-action mini" data-copy-target="#macro-code-target">
-                  <span class="copy-icon">📋</span>
+                  <span class="copy-icon">&#128203;</span>
                   <span class="copy-text">COPY SNIPPET</span>
                 </button>
               </div>
-              <pre class="macro-pre"><code id="macro-code-target">% Create a complete table with comma-separated values:
-\pxTable[style=header]
-  {Mètrica / Paràmetre, Valor Mesurat, Llindar, Estat}
-  {Temps d'execució, 0.42 s, < 1.00 s, PASS}
-  {Consum de Memòria, 18.5 MB, < 64.0 MB, PASS}
-  {Complexitat Temporal, O(n log n), O(n^2), OPTIMAL}
-  {Taxa d'encert (Cache), 96.8 %, > 90.0 %, PASS}
-  {Cobertura de Tests, 94.2 %, > 80.0 %, PASS}</code></pre>
+              <pre class="macro-pre"><code id="macro-code-target"></code></pre>
 
               <!-- Syntax & Argument Breakdown Notes -->
               <div class="macro-syntax-notes" id="macro-syntax-notes">
                 <span class="notes-label">// PARAMETER &amp; SYNTAX BREAKDOWN:</span>
                 <ul class="notes-list" id="macro-notes-list">
-                  <li><code>[style=header]</code>: High-contrast header row with subtle separator borders.</li>
-                  <li><code>{Mètrica, Valor, Estat}</code>: Header row with comma-separated column titles.</li>
-                  <li><code>{row...}</code>: Subsequent argument braces form table rows automatically.</li>
-                  <li>Zero manual width arithmetic needed; columns fit content proportionally.</li>
+                  <!-- Populated by JS -->
                 </ul>
               </div>
             </div>
 
           </div>
 
-        </div>
-      </section>
+        </div></section>
 
       <!-- ==================================================================
            SECTION 04: INSTALLATION & SETUP (LOCAL COMPILATION RUNBOOK)

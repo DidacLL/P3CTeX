@@ -988,34 +988,127 @@ html, body {
 }
 
 /* ==========================================================================
-   DECK 03: PACKAGE DOCUMENTATION [ BAY-03 // MACRO CHANNELS ]
+   DECK 03: MACRO & FEATURE REFERENCE CONSOLE [ 9 SUITES & FILTER BUS ]
    ========================================================================== */
 .macro-stage-view {
   display: flex;
   flex-direction: column;
   height: 100%;
+  gap: 6px;
+  min-height: 0;
+}
+
+/* Macro Filter Toolbar & Viewport Mode Switcher */
+.macro-filter-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
+  background: #0b0f16;
+  border: 1px solid var(--bezel-border);
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.filter-search-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  background: #05070a;
+  border: 1px solid var(--bezel-subtle);
+  padding: 3px 8px;
+}
+.filter-search-box .search-icon {
+  color: var(--phosphor-amber);
+  font-size: 11px;
+}
+.filter-search-box .search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-heading);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.filter-search-box .search-input::placeholder {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.search-clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 10px;
+  padding: 0 4px;
+}
+.search-clear-btn:hover {
+  color: var(--text-heading);
+}
+
+.view-mode-rocker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.view-mode-rocker .mode-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-right: 4px;
+}
+.view-mode-rocker .mode-btn {
+  background: #111622;
+  border: 1px solid var(--bezel-border);
+  border-top: 1px solid var(--bezel-subtle);
+  border-bottom: 2px solid #000;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.08s ease;
+}
+.view-mode-rocker .mode-btn:hover {
+  background: #182030;
+  color: var(--text-heading);
+}
+.view-mode-rocker .mode-btn.active {
+  background: #080b10;
+  border-color: var(--phosphor-amber);
+  border-top: 2px solid #000;
+  border-bottom: 1px solid var(--bezel-highlight);
+  color: var(--phosphor-amber);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
 }
 
 .macro-channel-bar {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 3px;
+  flex-shrink: 0;
 }
 .channel-key {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background: #11151e;
   border: 1px solid var(--bezel-border);
   border-top: 1px solid var(--bezel-subtle);
   border-bottom: 2px solid #000;
-  padding: 5px 6px;
+  padding: 4px 5px;
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 9.5px;
   cursor: pointer;
   transition: all 0.08s ease;
   text-align: left;
+  min-width: 0;
 }
 .channel-key .ch-id {
   font-family: var(--font-mono);
@@ -1045,12 +1138,106 @@ html, body {
   color: var(--phosphor-amber);
 }
 
-.macro-showcase-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+/* Search results overlay */
+.macro-search-results-panel {
   flex: 1;
   min-height: 0;
+  background: var(--chassis-panel);
+  border: 1px solid var(--phosphor-amber);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+.search-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--bezel-border);
+  padding-bottom: 4px;
+}
+.search-results-header .results-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--phosphor-amber);
+}
+.search-results-header .results-hint {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+.search-results-table-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.search-match-row {
+  display: grid;
+  grid-template-columns: 100px minmax(280px, 1.3fr) 1.2fr 80px;
+  gap: 8px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #131a26;
+  font-size: 10px;
+  cursor: pointer;
+  transition: background 0.08s ease;
+  align-items: center;
+}
+.search-match-row:hover {
+  background: #151d2c;
+}
+.search-match-suite {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--phosphor-steel);
+}
+.search-match-cmd {
+  font-family: var(--font-mono);
+  color: var(--phosphor-cyan);
+  word-break: break-all;
+}
+.search-match-desc {
+  color: var(--text-primary);
+  font-size: 9.5px;
+}
+.search-match-action {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--phosphor-green);
+  text-align: right;
+}
+
+.macro-showcase-split {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  transition: all 0.1s ease;
+}
+
+/* Wide Modes */
+.macro-showcase-split.view-wide-table {
+  grid-template-columns: 1fr !important;
+}
+.macro-showcase-split.view-wide-table .macro-narrative {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.macro-showcase-split.view-wide-table .macro-code-display {
+  display: none !important;
+}
+
+.macro-showcase-split.view-wide-code {
+  grid-template-columns: 1fr !important;
+}
+.macro-showcase-split.view-wide-code .macro-narrative {
+  display: none !important;
+}
+.macro-showcase-split.view-wide-code .macro-code-display {
+  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .macro-narrative {
@@ -1107,11 +1294,11 @@ html, body {
 }
 .api-row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 6px;
-  padding: 4px 6px;
+  grid-template-columns: minmax(240px, 1.35fr) 1fr;
+  gap: 8px;
+  padding: 5px 8px;
   border-bottom: 1px solid #141a24;
-  align-items: center;
+  align-items: baseline;
 }
 .api-row:last-child {
   border-bottom: none;
@@ -1127,13 +1314,15 @@ html, body {
 .api-col-cmd {
   font-family: var(--font-mono);
   color: var(--phosphor-cyan);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 10px;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.35;
 }
 .api-col-desc {
   color: var(--text-secondary);
   font-size: 9.5px;
+  line-height: 1.35;
 }
 
 .macro-features-strip {
@@ -1203,7 +1392,8 @@ html, body {
   letter-spacing: 0.06em;
 }
 .macro-pre {
-  flex: 1;
+  flex-shrink: 0;
+  max-height: 52%;
   padding: 8px 10px;
   margin: 0;
   font-family: var(--font-mono);
@@ -1218,11 +1408,13 @@ html, body {
 .macro-syntax-notes {
   background: #0a0d14;
   border-top: 1px solid var(--bezel-border);
-  padding: 6px 8px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  flex-shrink: 0;
+  gap: 4px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 .notes-label {
   font-size: 8.5px;
@@ -1534,6 +1726,81 @@ html, body {
 }
 .foot-link:hover {
   color: var(--text-heading);
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUTS FOR NARROW VIEWPORTS & SPLIT PREVIEWS
+   ========================================================================== */
+@media (max-width: 1180px) {
+  .macro-channel-bar {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 2px;
+  }
+  .channel-key {
+    flex: 0 0 auto;
+    min-width: 110px;
+  }
+  .macro-showcase-split {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .macro-showcase-split .macro-narrative,
+  .macro-showcase-split .macro-code-display {
+    min-height: 380px;
+  }
+  .tutorial-split-view {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .tutorial-code-col,
+  .tutorial-guide-col {
+    min-height: 340px;
+  }
+  .overview-stage-split {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 820px) {
+  .console-masthead {
+    height: auto;
+    padding: 6px 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .masthead-telemetry {
+    display: none;
+  }
+  .console-selector-ribbon {
+    height: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding: 3px 6px;
+  }
+  .selector-key {
+    padding: 4px 8px;
+    font-size: 9.5px;
+    flex: 0 0 auto;
+  }
+  .macro-filter-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+  }
+  .view-mode-rocker {
+    justify-content: flex-end;
+  }
+  .search-match-row {
+    grid-template-columns: 80px 1fr;
+    gap: 4px;
+  }
+  .search-match-desc,
+  .search-match-action {
+    grid-column: 2;
+  }
 }
 
 
@@ -2274,7 +2541,7 @@ function setupDeckSwitcher() {
   const modeLabels = {
     'deck-overview': 'SECTION: [01 // OVERVIEW]',
     'deck-templates': 'SECTION: [02 // STEP-BY-STEP TUTORIAL]',
-    'deck-macros': 'SECTION: [03 // PACKAGE DOCUMENTATION]',
+    'deck-macros': 'SECTION: [03 // MACRO & FEATURE REFERENCE]',
     'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]'
   };
 
@@ -2385,7 +2652,7 @@ const tutorialSteps = {
 
 % 3. Running headers and footers (gdxSTYLE):
 \\PECTeXpage{
-  header-left      = {\\raisebox{0.075cm}{\\includegraphics[height=0.9cm]{img/pxhlogo.png}}},
+  header-left      = {\\raisebox{0.075cm}{ìncludegraphics[height=0.9cm]{img/pxhlogo.png}}},
   header-center    = {\\mdseries COMP \\par\\noindent \\bfseries PAC 1},
   header-right     = {\\raggedleft\\mdseries Estudiant UOC \\par\\noindent\\bfseries 75.580},
   footer-left      = {\\textcolor{gray}{\\small PAC1-COMP}},
@@ -2414,10 +2681,10 @@ const tutorialSteps = {
 
 % Fast structured lists:
 \\begin{itemize}
-  \\itembf Objectiu:: Desenvolupar l'analitzador lèxic.
+  ìtembf Objectiu:: Desenvolupar l'analitzador lèxic.
   \\subitembf Restricció:: Temps d'execució inferior a 1 segon.
-  \\itemT Metodologia: Implementació amb taules DFA mínimes.;
-\\end{itemize}
+  ìtemT Metodologia: Implementació amb taules DFA mínimes.;
+ènd{itemize}
 
 % Fixed width parbox and horizontal filling:
 \\BOX{0.48}:{Columna Esquerra}\\FL\\BOX{0.48}:{Columna Dreta}
@@ -2431,14 +2698,14 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
     refLabel: '// BUILT-IN SHORTHANDS:',
     refTable: [
       { k: '\\textbc{text}', v: 'Typesets bold text in the official primary institutional theme color.' },
-      { k: '\\itembf Label: Text', v: 'Quick bold-item definition inside itemize environments.' },
+      { k: 'ìtembf Label: Text', v: 'Quick bold-item definition inside itemize environments.' },
       { k: '\\subitembf Label: Text', v: 'Indented secondary bold sub-item bullet.' },
       { k: '\\BOX{width}:{content};', v: 'Fixed-fraction width parbox container (\\BOX{0.5}:{...};).' },
       { k: '\\REF{label}', v: 'Renders a superscript gray page reference badge (e.g. Pàg[14]).' },
       { k: '\\EXPAND{content}', v: 'Scales wide formulas or tables to fit \\linewidth perfectly.' }
     ],
     tipTitle: '💡 Built-in Table Row Helpers',
-    tipText: 'When using standard LaTeX tabulars, P3CTeX provides \\headRow and \\oddRow with \\adjH row height struts for rapid zebra striping.'
+    tipText: 'When using standard LaTeX tabulars, P3CTeX provides \\headRow and òddRow with \\adjH row height struts for rapid zebra striping.'
   },
   4: {
     num: '04',
@@ -2491,7 +2758,7 @@ public class Parser {
         return parseExpression(0);
     }
 }
-\\end{pxCode}
+ènd{pxCode}
 
 % 3. pxSRC: Safe figure inclusion (draws vector placeholder if file missing):
 \\pxIMG[0.75\\linewidth]{img/dfa_transitions}{Autòmat de transició d'estats}[fig:dfa]`,
@@ -2563,7 +2830,7 @@ Descripció detallada del mòdul semàntic...
 
 % Annexes switch numbering to letter format (Annex A, Annex B...) automatically:
 \\pxMEMannex{Codi Font Complet del Mòdul Sintàctic}{
-  \\input{src/syntax_analyzer.tex}
+  ìnput{src/syntax_analyzer.tex}
 }
 
 % Reusing sections from previous PR submissions without file duplication:
@@ -2695,80 +2962,125 @@ function setupChannelRocker() {
   const notesListTarget = document.getElementById('macro-notes-list');
   const urlTarget = document.getElementById('macro-showcase-url');
 
-  const channelData = {
+  // Search & Viewport mode elements
+  const searchInput = document.getElementById('macro-search-input');
+  const searchClear = document.getElementById('macro-search-clear');
+  const searchResults = document.getElementById('macro-search-results');
+  const searchCount = document.getElementById('macro-search-count');
+  const searchTable = document.getElementById('macro-search-table');
+  const showcaseSplit = document.getElementById('macro-showcase-split');
+  const viewModeBtns = document.querySelectorAll('.view-mode-rocker .mode-btn');
+
+    const channelData = {
     pxtab: {
-      title: 'Tables (pxTAB)',
+      id: 'pxTAB',
+      title: 'Tables & Multipage Data (pxTAB)',
       badge: 'booktabs + longtable',
-      desc: 'Creates LaTeX tables from comma-separated rows. Includes automatic alternating row shading (zebra striping) and multi-page page breaks using longtable and booktabs without manual column width calculations.',
+      desc: 'Creates clean LaTeX tables from comma-separated rows without column math. Features automatic alternating row shading (zebra striping), multi-page longtable pagination, custom cell alignments, and variable-driven matrix rendering.',
       apiRows: [
-        { cmd: '\\pxTable[style=...]{head}{row1}{row2}', desc: 'Creates a comma-separated table with automatic column sizing.' },
-        { cmd: '\\pxTBLlong*[opts]{head}{rows...}', desc: 'Multi-page table that repeats headers across page breaks.' },
-        { cmd: 'styles: header | striped | boxed | grid', desc: 'Visual presentation themes without manual TikZ coding.' }
+        { cmd: '\\pxTable[style=...]{head}{row1}{row2}...', desc: 'Standard table from comma-separated rows. Styles: striped, header, boxed, grid.' },
+        { cmd: 'style=striped | header | boxed | grid', desc: 'Presentation theme: striped (zebra rows), header (bold bar), boxed (border), grid (mesh).' },
+        { cmd: '\\pxTableHeadBodyRows[opts]{head}{body}', desc: 'Explicit separation of column headers and multiline row block without column counting.' },
+        { cmd: '\\pxTBLlong*[opts]{head}{rows...}', desc: 'Multipage table that repeats headers and rules across page-breaks without manual TikZ.' },
+        { cmd: '\\pxTableFromList[opts]{list-data}', desc: 'Populates a structured table dynamically from an expl3 comma-separated list variable.' },
+        { cmd: '\\pxTableRow{c1, c2, ...}', desc: 'Defines an explicit single row with custom cell styling or manual horizontal separators.' },
+        { cmd: '\\pxTableMatrix{rows}', desc: 'Renders matrix format data directly without requiring math mode brackets or environments.' },
+        { cmd: '\\pxTABsetup{key=val,...}', desc: 'Configures default style, zebra background color, and cell padding globally.' }
       ],
       features: [
-        '<strong>Syntax:</strong> Comma-separated row values',
-        '<strong>Row striping:</strong> Alternating row background shading',
-        '<strong>Multipage:</strong> Long table pagination with \\pxTBLlong*',
-        '<strong>Backend:</strong> Built on longtable and booktabs'
+        '<strong>Zero column math:</strong> Proportional column widths calculated dynamically from content',
+        '<strong>Zebra striping:</strong> Low-strain alternating row shading out of the box',
+        '<strong>Multipage tables:</strong> Long table pagination with automated header repeat via \\pxTBLlong*',
+        '<strong>Expl3 backend:</strong> Built on longtable, booktabs, and colortbl without external dependencies'
       ],
-      code: `% Create a complete table with comma-separated values:
-\\pxTable[style=header]
+      code: `% 1. Standard table with comma-separated values and zebra striping:
+\\pxTable[style=striped]
   {Mètrica / Paràmetre, Valor Mesurat, Llindar, Estat}
   {Temps d'execució, 0.42 s, < 1.00 s, PASS}
   {Consum de Memòria, 18.5 MB, < 64.0 MB, PASS}
   {Complexitat Temporal, O(n log n), O(n^2), OPTIMAL}
   {Taxa d'encert (Cache), 96.8 %, > 90.0 %, PASS}
-  {Cobertura de Tests, 94.2 %, > 80.0 %, PASS}`,
+  {Cobertura de Tests, 94.2 %, > 80.0 %, PASS}
+
+% 2. Multipage long table repeating headers on every page break:
+\\pxTBLlong*[style=grid]
+  {Codi Test, Mòdul Semàntic, Entorn, Resultat}
+  {TC-01, Lexer Tokenizer, OpenJDK 21, VALID}
+  {TC-02, Parser LR(1), OpenJDK 21, VALID}
+  {TC-03, Taula de Símbols, OpenJDK 21, VALID}
+  {TC-04, Generador Codi, OpenJDK 21, VALID}`,
       notes: [
-        '<code>[style=header]</code>: High-contrast header row with subtle separator borders.',
-        '<code>{Mètrica, Valor, Estat}</code>: Header row with comma-separated column titles.',
-        '<code>{row...}</code>: Subsequent argument braces form table rows automatically.',
-        'Zero manual width arithmetic needed; columns fit content proportionally.'
+        '<code>[style=striped]</code>: Alternates row backgrounds with low-strain shaded fills.',
+        '<code>{head}</code>: Comma-separated column headers; sets the number of columns automatically.',
+        '<code>{row...}</code>: Subsequent arguments form table rows automatically without & or \\\\ separators.',
+        '<code>\\pxTBLlong*</code>: Handles multi-page tables spanning page boundaries cleanly.',
+        'Zero manual width arithmetic needed; columns balance text proportionally.'
       ],
       url: 'generator.html#tables'
     },
     pxsrc: {
-      title: 'Figures & Graphics (pxSRC)',
+      id: 'pxSRC',
+      title: 'Figures, Graphics & Automated Lists (pxSRC)',
       badge: 'resilient vector fallback',
-      desc: 'Scales graphics proportionally to text width using \\pxIMG. If an image file path is missing from disk, it displays a calibrated placeholder box instead of halting pdflatex compilation.',
+      desc: 'Safely scales graphics to text width fractions. If an image file path is missing from disk, it displays a calibrated vector placeholder box instead of halting pdflatex compilation before deadlines.',
       apiRows: [
-        { cmd: '\\pxIMG[width]{file}{caption}[label]', desc: 'Main figure command with missing-file fallback placeholder.' },
-        { cmd: '\\pxIMGgrid[opts]{rows...}', desc: 'Balanced multi-image grid layout for side-by-side diagrams.' },
-        { cmd: 'Formats: PDF, PNG, JPG', desc: 'Native vector and raster graphic support.' }
+        { cmd: '\\pxIMG[width]{file}{caption}[label]', desc: 'Primary safe figure command; auto-scales to linewidth; falls back to vector placeholder if missing.' },
+        { cmd: '\\pxIMGpair[w]{left}{right}[col]{caption}[label]', desc: 'Side-by-side dual image comparison in a single float with balanced captions.' },
+        { cmd: '\\pxIMGList[width]{prefix}[caption-prefix]{caps...}', desc: 'Generates consecutively numbered images (prefix1, prefix2...) automatically from comma list.' },
+        { cmd: '\\listoffigures', desc: 'Typesets the standard List of Figures (LOF), populated automatically by \\pxIMG.' },
+        { cmd: '\\pxSRCsetup{key=val,...}', desc: 'Configures default-width, pair-width, placeholder-color, and float-spec globally.' },
+        { cmd: '\\pxDEFimagewidth{dim}', desc: 'Sets default width fallback for standalone images (default: 0.8\\linewidth).' },
+        { cmd: '\\pxDEFimageplaceholdercolor{col}', desc: 'Sets fill color for missing image placeholders (default: light gray with border).' }
       ],
       features: [
-        '<strong>Missing image fallback:</strong> Vector placeholder if file not found',
-        '<strong>Proportional scaling:</strong> Default width set to text width fraction',
-        '<strong>Unified binding:</strong> Binds caption, label, and file path in one macro',
-        '<strong>File formats:</strong> PNG, JPG, and PDF vector graphics'
+        '<strong>Zero-halt fallback:</strong> Draws calibrated placeholder box if graphic file is missing',
+        '<strong>Automated lists:</strong> \\pxIMGList expands numbered sequence figures automatically',
+        '<strong>Dual comparison:</strong> \\pxIMGpair places two figures side by side with shared label',
+        '<strong>Format support:</strong> Native PDF vector, PNG, and JPG raster graphics'
       ],
-      code: `% Include an image with automatic missing-file fallback:
+      code: `% 1. Standard safe figure with vector fallback if file is missing:
 \\pxIMG[0.85\\linewidth]{img/arquitectura}
-  {Diagrama de l'arquitectura proposada}[fig:arq]`,
+  {Diagrama de l'arquitectura proposada}[fig:arq]
+
+% 2. Dual comparative figure side-by-side:
+\\pxIMGpair{img/bench_v1}{img/bench_v2}
+  {Comparativa de rendiment abans i després de l'optimització}[fig:bench]
+
+% 3. Automated consecutively numbered figures (expands to img/step1.png ... img/step3.png):
+\\pxIMGList[0.7\\linewidth]{img/step}[Fase ]{
+  Anàlisi de requeriments i especificació,
+  Disseny conceptual de la base de dades,
+  Implementació dels serveis RESTful
+}`,
       notes: [
         '<code>[0.85\\linewidth]</code>: Proportional width relative to page text width.',
-        '<code>{img/arquitectura}</code>: Path to graphic file (omitting extension allows PDF/PNG auto-detection).',
-        '<code>{caption}</code>: Sets the figure caption and adds it to List of Figures (LOF).',
-        '<code>[fig:arq]</code>: Generates label for \\ref{fig:arq} cross-references.'
+        '<code>{img/arquitectura}</code>: Path to graphic file (omitting extension resolves .pdf/.png automatically).',
+        '<code>{caption}</code>: Formats caption and registers entry in \\listoffigures automatically.',
+        '<code>[fig:arq]</code>: Generates label for \\ref{fig:arq} cross-references.',
+        'Missing image files render a crisp labeled box instead of halting compilation.'
       ],
       url: 'generator.html#uml'
     },
     pxlst: {
-      title: 'Code Listings (pxLST)',
+      id: 'pxLST',
+      title: 'Darcula Source Code Listings (pxLST)',
       badge: 'Darcula + Pure LaTeX',
-      desc: 'Formats source code listings with gutters, line numbers, and language syntax coloring. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML using pure LaTeX (no external Python or pygments dependencies).',
+      desc: 'JetBrains Darcula dark code blocks with line numbers, gutter styling, and syntax highlighting for 17+ languages using pure LaTeX (zero Python, pygments, or shell-escape dependencies).',
       apiRows: [
-        { cmd: '\\begin{pxCode}[language=...]{Title}', desc: 'Primary code listing box with Darcula theme and gutter.' },
-        { cmd: '\\pxCodeFile[lang]{path}[title]', desc: 'External source file inclusion with line numbers.' },
-        { cmd: '\\pxCodeIn[lang]{code}', desc: 'Inline styled code token or short statement.' }
+        { cmd: '\\begin{pxCode}[language=...]{Header Title}', desc: 'Primary code listing container with Darcula dark theme, gutter, and line numbers.' },
+        { cmd: '\\pxCodeFile[lang]{path}[title]', desc: 'Directly includes external source file with syntax coloring and line gutter.' },
+        { cmd: '\\pxCodeFileInput[lang]{path}{start}{end}', desc: 'Inlines specific line range from external source file without duplicating code.' },
+        { cmd: '\\pxCodeIn[lang]{code}', desc: 'Typesets an inline monospace code token with language syntax color.' },
+        { cmd: 'Languages: 17+ built-in', desc: 'Java, Python, C, C++, SQL, Bash, R, Rust, JS, TS, Go, PHP, HTML, CSS, JSON, YAML, LaTeX.' },
+        { cmd: '\\pxCodeSet{key=val,...}', desc: 'Configures tab size, font family, line numbering step, and background tones.' }
       ],
       features: [
-        '<strong>Dependencies:</strong> Pure LaTeX, zero external tools',
-        '<strong>Languages:</strong> Java, Python, C, SQL, Bash, R, YAML',
-        '<strong>Line numbers:</strong> Automatic gutter with line counts',
-        '<strong>Typography:</strong> Monospace fonts with character spacing'
+        '<strong>Pure LaTeX:</strong> Zero Python, pygments, or shell-escape dependencies',
+        '<strong>17+ Languages:</strong> Java, Python, C, C++, SQL, Bash, R, Rust, JS, TS, Go, YAML...',
+        '<strong>Line numbers:</strong> Low-strain muted gutter with automatic line numbers',
+        '<strong>Line range slicing:</strong> Pull exact lines from project repositories'
       ],
-      code: `% Bloc de codi font amb tema fosc Darcula i números de línia:
+      code: `% 1. Darcula dark code listing with syntax highlighting and line numbers:
 \\begin{pxCode}[language=Java]{Lexer.java}
 package edu.uoc.compiler;
 
@@ -2786,33 +3098,43 @@ public class Lexer {
         return Character.isDigit(c) ? Token.NUMBER : Token.ID;
     }
 }
-\\end{pxCode}`,
+\\end{pxCode}
+
+% 2. Inline specific line range directly from repository file:
+\\pxCodeFileInput[Java]{src/Parser.java}{45}{68}`,
       notes: [
-        '<code>[language=Java]</code>: Syntax highlighting engine (supports Python, C, SQL, Bash, R, YAML).',
-        '<code>{Lexer.java}</code>: Mandatory second argument displayed in the code box header bar.',
-        'Built entirely with tcolorbox and listings; requires zero Python or external pygments.'
+        '<code>[language=Java]</code>: Syntax highlighting engine (supports 17+ languages).',
+        '<code>{Lexer.java}</code>: Displayed in the code box header bar alongside language badge.',
+        '<code>\\pxCodeFileInput</code>: Slices lines 45 to 68 directly from source file on disk.',
+        'Built with listings and tcolorbox; fully offline compilable with standard pdflatex.'
       ],
       url: 'generator.html#code'
     },
     pxcmp: {
-      title: 'Compilers & Automata (pxCMP)',
+      id: 'pxCMP',
+      title: 'Compilers, Automata & AI Visualizers (pxCMP)',
       badge: 'Computer Science Diagrams',
-      desc: 'Macros for Computer Science coursework (Compilers, Automata, and Theory of Computation). Generates Tombstone compiler diagrams (\\pxTombstoneCompile), DFA/NFA state transition tables (\\pxTransitionTable), and BNF grammar blocks (\\pxBNF).',
+      desc: 'Complete diagramming suite for Computer Science coursework: Compilers, Theory of Computation, and AI. Renders Tombstone compiler T-diagrams, DFA/NFA state transition tables, BNF production grammars, and neural/decision networks.',
       apiRows: [
-        { cmd: '\\pxTombstoneCompile[opts]{Prog}{Src}{Tgt}{Impl}', desc: '4-piece compiler execution T-diagram.' },
-        { cmd: '\\pxTransitionTable{state,0,1; ...}', desc: 'State machine transition table for DFAs and NFAs.' },
-        { cmd: '\\pxBNF{productions}', desc: 'Formatted context-free grammar production block.' }
+        { cmd: '\\pxTombstoneCompile[opts]{Prog}{Src}{Tgt}{Impl}', desc: '4-piece compiler execution T-diagram (Program, Source, Target, Implementation).' },
+        { cmd: '\\pxTombstoneChain{...}', desc: 'Multi-stage compilation pipeline chain (e.g. C -> Intermediate -> x86).' },
+        { cmd: '\\pxTransitionTable{state,0,1; ...}', desc: 'Semicolon-delimited state transition matrix for DFAs and NFAs.' },
+        { cmd: '\\pxBNF{productions}', desc: 'Formatted context-free grammar production block with alignment operators.' },
+        { cmd: '\\pxAutomaton[opts]{states}{transitions}', desc: 'TikZ state machine diagram with initial and accepting states.' },
+        { cmd: '\\pxDecisionTree / \\pxNeuralNet', desc: 'Visualizes decision trees, neural network topologies, and layer activation.' },
+        { cmd: '\\pxConfusionMatrix{data}', desc: 'Confusion matrix visualizer for machine learning classifier validation.' },
+        { cmd: '\\pxMemoryMap / \\pxRegisterMap', desc: 'Memory segment allocation and hardware CPU register map visualizers.' }
       ],
       features: [
-        '<strong>Tombstone diagrams:</strong> Compiler pipeline T-diagrams',
-        '<strong>Transition tables:</strong> State machine tables for DFAs and NFAs',
-        '<strong>Formal grammar:</strong> Context-free grammar BNF production blocks',
-        '<strong>Course alignment:</strong> Compiladors, Teoria de la Computació'
+        '<strong>Tombstone diagrams:</strong> Compiler pipeline T-diagrams with \\pxTombstoneCompile',
+        '<strong>Transition matrices:</strong> Automata state transition tables for DFAs and NFAs',
+        '<strong>Formal grammar:</strong> Context-free grammar BNF production blocks with alignment',
+        '<strong>AI & Hardware:</strong> Decision trees, confusion matrices, and memory layout registers'
       ],
-      code: `% Diagrama d'execució Tombstone de 4 peces:
+      code: `% 1. 4-piece compiler execution Tombstone T-diagram:
 \\pxTombstoneCompile[title=Compilador Mini-C]{Mini-C}{C}{JVM}{Java}
 
-% Taula de transicions d'estats per a autòmats finits:
+% 2. State transition matrix for finite automata:
 \\pxTransitionTable{
   state, 0, 1;
   q0, q1, q0;
@@ -2820,35 +3142,38 @@ public class Lexer {
   q2, q2, q1
 }
 
-% Produccions formals en notació BNF:
+% 3. Context-free grammar production rules:
 \\pxBNF{
-  <expr>  ::= <term> ("+" | "-") <expr> | <term> \\\\
-  <term>  ::= <factor> ("*" | "/") <term> | <factor> \\\\
-  <factor>::= "(" <expr> ")" | <id> | <num>
+  <expr>   ::= <term> ("+" | "-") <expr> | <term> \\\\
+  <term>   ::= <factor> ("*" | "/") <term> | <factor> \\\\
+  <factor> ::= "(" <expr> ")" | <id> | <num>
 }`,
       notes: [
         '<code>\\pxTombstoneCompile</code>: 4 mandatory arguments: {Program}{Source}{Target}{Implementation}.',
         '<code>\\pxTransitionTable</code>: Semicolon-delimited rows for finite automata state matrices.',
-        '<code>\\pxBNF</code>: Renders aligned formal grammar productions for compiler design.'
+        '<code>\\pxBNF</code>: Renders aligned formal grammar productions for compiler design.',
+        'Supports multi-stage compilation pipelines with <code>\\pxTombstoneChain</code>.'
       ],
       url: 'generator.html#compilers'
     },
     pxgnt: {
-      title: 'Daily Gantt Schedules (pxGNT)',
+      id: 'pxGNT',
+      title: 'Daily-Resolution Gantt Timelines (pxGNT)',
       badge: 'Daily Calendar Resolution',
-      desc: 'Generates daily-resolution Gantt project planning charts using \\pxGantt and \\pxGanttItem. Automatically renders consecutive calendar blocks with day-level milestone tracking for project planning and PAC submissions.',
+      desc: 'Generates daily-resolution Gantt project planning charts using calendar dates (DD/MM/YYYY). Automatically partitions long multi-month timelines into consecutive page blocks for milestone tracking.',
       apiRows: [
-        { cmd: '\\pxGantt{start=...,end=...,days-per-block=...}', desc: 'Initializes calendar timeline environment.' },
-        { cmd: '\\pxGanttItem{Label}{start}{end}', desc: 'Task bar clipped to current date block.' },
-        { cmd: '\\pxGanttEnd', desc: 'Finalizes and renders portrait blocks.' }
+        { cmd: '\\pxGantt{start=DD/MM/YYYY, end=DD/MM/YYYY, days-per-block=...}', desc: 'Initializes calendar timeline environment with date bounds.' },
+        { cmd: '\\pxGanttItem{Task Label}{start-date}{end-date}', desc: 'Draws a task bar clipped to current date block.' },
+        { cmd: '\\pxGanttEnd', desc: 'Finalizes and renders portrait blocks with day numbers and calendar grid.' },
+        { cmd: 'days-per-block=30', desc: 'Partitions long timelines into clean 30-day blocks fitting on standard portrait pages.' }
       ],
       features: [
-        '<strong>Resolution:</strong> Daily calendar planning',
-        '<strong>Syntax:</strong> \\pxGantt, \\pxGanttItem, \\pxGanttEnd',
-        '<strong>Block division:</strong> Multi-week or multi-month blocks',
+        '<strong>Resolution:</strong> Daily calendar planning using DD/MM/YYYY dates',
+        '<strong>Block division:</strong> Splits long timelines into readable 30-day page blocks',
+        '<strong>Automatic clipping:</strong> Multi-block tasks connect cleanly across boundaries',
         '<strong>Backend:</strong> Pure TikZ timeline rendering'
       ],
-      code: `% Project planning Gantt chart:
+      code: `% Daily-resolution Gantt timeline split into 30-day blocks:
 \\pxGantt{
   start=01/03/2026,
   end=30/04/2026,
@@ -2862,93 +3187,367 @@ public class Lexer {
       notes: [
         'Dates formatted as <code>DD/MM/YYYY</code>.',
         '<code>days-per-block=30</code>: Splits long multi-month timelines into readable consecutive page blocks.',
-        'Tasks automatically clipped and connected across block boundaries.'
+        'Tasks automatically clipped and connected across block boundaries.',
+        'Zero manual geometry calculations needed; bars align to exact day coordinates.'
       ],
       url: 'generator.html#gantt'
     },
     pxuml: {
-      title: 'UML Class & Object Diagrams (pxUML)',
-      badge: 'pgf-umlcd + TikZ',
-      desc: 'Creates clean object-oriented class and relationship diagrams with \\pxUMLClass and \\drawclass. Fully handles attributes, methods, inheritance, and instances with clean, legible typography.',
+      id: 'pxUML',
+      title: 'UML Class & Architecture Modeling (pxUML)',
+      badge: 'Single Source of Truth',
+      desc: 'Decouples UML class models from TikZ diagram placement. Classes are registered once into the pxPRP property registry with attributes and methods, then rendered as diagrams or printed directly as textual specification lists.',
       apiRows: [
-        { cmd: '\\pxUMLClass[type]{Name}{attrs}{ops}', desc: 'Defines UML class with typed members.' },
-        { cmd: '\\drawclass{Name}[x,y]', desc: 'Places and renders class on a TikZ canvas.' },
-        { cmd: '\\drawinstance{Name}[x,y]{Class}{attrs}', desc: 'Renders an instantiated object block.' }
+        { cmd: '\\pxUMLClass[type]{Name}[parent]{attrs}[ops]<impl>', desc: 'Registers a classifier into the property registry without drawing.' },
+        { cmd: '\\drawclass{Name}[x,y]', desc: 'Renders the registered class with attributes, methods, and inheritance lines on TikZ canvas.' },
+        { cmd: '\\drawsimpleclass{Name}[x,y]', desc: 'Renders compact class box showing only name and attributes.' },
+        { cmd: '\\drawinstance{ObjName}[x,y]{ClassName}{attr-values}', desc: 'Renders an instantiated runtime object box.' },
+        { cmd: '\\printAttributes{Name} / \\printOperations{Name}', desc: 'Outputs formatted itemized specification lists of class members in report body.' },
+        { cmd: '\\pxUMLDiagram{...}', desc: 'Environment container for drawing classes and inheritance connectors.' }
       ],
       features: [
-        '<strong>Class definitions:</strong> \\pxUMLClass[type]{Name}{attrs}{ops}',
-        '<strong>Drawing placement:</strong> \\drawclass{Name}[x,y]',
-        '<strong>Palette:</strong> UOC brand-matched contrast palette',
+        '<strong>Single source of truth:</strong> Diagram and written specifications share one definition',
+        '<strong>Visibility prefixes:</strong> + public, - private, # protected',
+        '<strong>Connectors:</strong> Automatic inheritance and implementation connectors',
         '<strong>Backend:</strong> Built on pgf-umlcd and TikZ'
       ],
-      code: `% Definició declarativa d'una classe UML:
-\\pxUMLClass{GestorUsuari}{
-  - id: Integer \\\\
-  - email: String \\\\
-  - actiu: Boolean
-}{
-  + autenticar(pass: String): Boolean \\\\
-  + actualitzarPerfil(): Void \\\\
-  + tancarSessio(): Void
+      code: `% 1. Register UML classes into the registry:
+\\pxUMLClass[class]{Token}[Object]{
+  - type : TokenType,
+  - lexeme : String,
+  - line : int
+}[
+  + getLexeme() : String,
+  + getType() : TokenType,
+  + toString() : String
+]
+
+\\pxUMLClass[class]{Lexer}{
+  - input : String,
+  - cursor : int
+}[
+  + nextToken() : Token,
+  + hasMoreTokens() : boolean
+]
+
+% 2. Render UML Diagram on TikZ canvas:
+\\pxUMLDiagram{
+  \\drawclass{Token}[0,0]
+  \\drawclass{Lexer}[6,0]
 }
 
-% Dibuix de la classe sobre un llenç TikZ:
-\\begin{tikzpicture}
-  \\drawclass{GestorUsuari}[0,0]
-\\end{tikzpicture}`,
+% 3. Print members as specification list in deliverable text:
+\\printAttributes{Token}
+\\printOperations{Token}`,
       notes: [
-        '<code>\\pxUMLClass</code> defines attributes (second arg) and methods (third arg).',
+        '<code>\\pxUMLClass</code> registers members into the internal dictionary.',
         '<code>\\drawclass{Name}[x,y]</code> places the defined classifier on the TikZ grid.',
-        'Supports visibility prefixes (<code>+</code> public, <code>-</code> private, <code>#</code> protected).'
+        '<code>\\printAttributes</code> typesets class attributes as a clean itemized specification list.',
+        'Prevents divergence between graphical diagrams and textual report specifications.'
       ],
       url: 'generator.html#uml'
+    },
+    pxmem: {
+      id: 'pxMEM',
+      title: 'Multi-Chapter Reports, Annexes & Bibliography (pxMEM)',
+      badge: 'TFG & Multi-PR Reports',
+      desc: 'Transforms P3CTeX into a multi-chapter report without changing base article geometry. Handles numbered chapters, lettered annexes, cross-PR section extraction (%<*tag> blocks), and automatic bibliography TOC placement.',
+      apiRows: [
+        { cmd: '\\chapter{Title}', desc: 'Starts a new numbered chapter with automatic page break and section counter reset.' },
+        { cmd: '\\appendix', desc: 'Switches section numbering to alphabetic (Annex A, Annex B...).' },
+        { cmd: '\\pxMEMannex{Title}{content}', desc: 'Standalone letter-numbered annex with automated TOC registration.' },
+        { cmd: '\\pxMEMsource{id}{file.tex}', desc: 'Registers an existing assessment .tex file for modular content reuse.' },
+        { cmd: '\\pxMEMinclude{id}{region}', desc: 'Inlines lines bounded by %<*region> ... %</region> from registered source.' },
+        { cmd: '\\pxBib[style]{bibfile}', desc: 'Typesets bibliography on a fresh page and injects "Bibliografia" into TOC.' },
+        { cmd: '\\listoftables / \\listoffigures', desc: 'Automated table of contents, figures, and tables lists.' }
+      ],
+      features: [
+        '<strong>Chapter hierarchy:</strong> Full chapter support on standard article geometry',
+        '<strong>Lettered annexes:</strong> Annex A, Annex B with auto TOC integration',
+        '<strong>Cross-PR slicing:</strong> Extract tagged blocks (%<*tag>) without file duplication',
+        '<strong>Unified bibliography:</strong> Automatic page-break and TOC entry with \\pxBib'
+      ],
+      code: `% Requires MEM profile: \\documentclass[MEM,PR,default]{P3CTeX}
+
+\\chapter{Desenvolupament del Projecte}
+\\section{Arquitectura del Compilador}
+Descripció detallada del mòdul semàntic...
+
+% Annexes switch numbering to letter format (Annex A, Annex B...) automatically:
+\\pxMEMannex{Codi Font Complet del Mòdul Sintàctic}{
+  \\input{src/syntax_analyzer.tex}
+}
+
+% Reusing sections from previous PR submissions without duplicating files:
+\\pxMEMsource{pr1}{../PR1/lliurament_pr1.tex}
+\\pxMEMinclude{pr1}{benchmark_results} % extracts %<*benchmark_results> block
+
+% Bibliography: automatically adds 'Bibliografia' to TOC on a fresh page:
+\\pxBib[apalike]{references}`,
+      notes: [
+        '<code>\\chapter{Title}</code>: Resets section counters and outputs header banner.',
+        '<code>\\pxMEMannex</code>: Lettered appendix with auto-generated TOC bookmark.',
+        '<code>\\pxMEMinclude</code>: Pulls tagged regions (%<*tag>) from PR1/PR2 into final memory.',
+        '<code>\\pxBib</code>: Handles page Roman numbering and TOC orchestration.'
+      ],
+      url: 'generator.html'
+    },
+    pxtfg: {
+      id: 'pxTFG',
+      title: 'TFG Official Thesis & Degree Workcards (pxTFG)',
+      badge: 'Official UOC TFG Frontmatter',
+      desc: 'Formats official university bachelor thesis (TFG / Treball de Final de Grau) deliverables. Generates the mandatory academic workcard (fitxa del treball), bilingual Catalan/English abstracts, license declaration page, and official frontmatter.',
+      apiRows: [
+        { cmd: '\\pxTFGsetup{key=val,...}', desc: 'Configures thesis records: title, author, tutor, field, keywords, credits, date.' },
+        { cmd: '\\pxTFGabstract{lang}{text}', desc: 'Registers localized abstract (ca Catalan, en English, es Spanish).' },
+        { cmd: '\\pxTFGworkcard', desc: 'Typesets the official UOC academic workcard table (Fitxa del Treball).' },
+        { cmd: '\\pxTFGabstracts', desc: 'Renders all registered multilingual abstracts with keywords.' },
+        { cmd: '\\pxTFGlicencepage', desc: 'Typesets the Creative Commons / copyright distribution license page.' },
+        { cmd: '\\pxTFGfrontmatter', desc: 'Orchestrates complete preambles: cover, license, workcard, abstracts, and TOC.' },
+        { cmd: '\\pxTFGcoverdetails', desc: 'Generates formal evaluation tribunal signatures and defense dates.' }
+      ],
+      features: [
+        '<strong>Official workcard:</strong> Generates UOC Fitxa del Treball table',
+        '<strong>Multilingual abstracts:</strong> Catalan, English, and Spanish abstracts',
+        '<strong>License declaration:</strong> Creative Commons and copyright distribution page',
+        '<strong>Unified pipeline:</strong> Single command \\pxTFGfrontmatter generates full preamble'
+      ],
+      code: `% Configure TFG Thesis Metadata:
+\\pxTFGsetup{
+  title    = {Compilador i Entorn d'Execució per a Llenguatges Específics},
+  author   = {Nom i Cognoms de l'Estudiant},
+  tutor    = {Dra. Maria Garcia (Consultora)},
+  field    = {Enginyeria Informàtica (Computació)},
+  credits  = {12 ECTS},
+  date     = {Juny 2026}
+}
+
+% Multilingual thesis abstracts:
+\\pxTFGabstract{ca}{Aquest Treball de Final de Grau presenta el disseny...}
+\\pxTFGabstract{en}{This Bachelor's Thesis presents the design and implementation...}
+
+% Complete frontmatter generation:
+\\pxTFGfrontmatter`,
+      notes: [
+        '<code>\\pxTFGsetup</code>: Central registry for degree, credits, tutor, and keywords.',
+        '<code>\\pxTFGworkcard</code>: Exact formatted table required by degree evaluation boards.',
+        '<code>\\pxTFGfrontmatter</code>: Handles page Roman numbering and TOC orchestration.',
+        'Ensures 100% compliance with university academic committee regulations.'
+      ],
+      url: 'generator.html'
+    },
+    pxgdx: {
+      id: 'pxGDX',
+      title: 'Dynamic Sizing, Layout & Overrides (pxGDX / pxTXT)',
+      badge: 'Layout Engines & Overrides',
+      desc: 'Controls page geometry, dynamic content fitting, custom cover configurations, running headers/footers, automated lists, and language literal overrides from a single unified API.',
+      apiRows: [
+        { cmd: '\\pxGrow*[factor]{content}[max-height]', desc: 'Scales any content box to fit a fraction of \\linewidth while capping max vertical height.' },
+        { cmd: '\\EXPAND{content}', desc: 'Proportional visual expansion shorthand for tables and figures.' },
+        { cmd: '\\pxFill / \\pxCenter{content}', desc: 'Elastic horizontal glue and centering macros.' },
+        { cmd: '\\BOX{width}:{content};', desc: 'Sized horizontal container box (\\parbox[c]{width\\linewidth}{...}).' },
+        { cmd: '\\pxPageRule*', desc: 'Machined horizontal rule across running pages.' },
+        { cmd: '\\GL{acronym} / \\GL*{acronym}', desc: 'Glossary acronym expander (\\GL short, \\GL* full name).' },
+        { cmd: '\\PECTeXcover{key=val,...}', desc: 'Custom cover page layout registers: text-title, text-subtitle, add-picture, image-square.' },
+        { cmd: '\\PECTeXpage{key=val,...}', desc: 'Running headers and footers bays (header-left, header-right, footer-center).' },
+        { cmd: '\\renewcommand{\\pxDEFtocname}{...}', desc: 'Language string overrides (\\pxDEFtocname, \\pxDEFpximgname, \\pxDEFpxcodename, \\pxDEFnoplagi).' }
+      ],
+      features: [
+        '<strong>Capped dynamic scaling:</strong> \\pxGrow* scales width while enforcing maximum height',
+        '<strong>Header/footer control:</strong> 3 header bays and 3 footer bays with \\PECTeXpage',
+        '<strong>Direct cover overrides:</strong> Direct layout adjustments with \\PECTeXcover',
+        '<strong>Language overrides:</strong> Full customization of Catalan/Spanish/English strings'
+      ],
+      code: `% 1. Scale large diagram or table to fit exactly 90% linewidth, max 140pt:
+\\pxGrow*[0.90]{
+  \\begin{tikzpicture}
+    % Complex architecture diagram...
+  \\end{tikzpicture}
+}[140pt]
+
+% 2. Custom Cover Page Text and Image Overrides:
+\\PECTeXcover{
+  text-title      = {PROPOSTA D'ENGINYERIA DE COMPILADORS},
+  text-subtitle   = {PAC 1 // Anàlisi Sintàctica i Lexical},
+  text-backtitle  = {UOC ESTUDIS D'INFORMATICA},
+  image-square    = {img/uoc_seal.png}
+}
+
+% 3. Running Headers & Footers Configuration:
+\\PECTeXpage{
+  header-left     = {\\small\\textsf{PAC 1 // Compiladors}},
+  header-right    = {\\small\\textsf{Curs 2025/2026}},
+  footer-center   = {\\thepage\\ / \\pageref{LastPage}}
+}
+
+% 4. Language String Overrides:
+\\renewcommand{\\pxDEFtocname}{Taula de Continguts Detallada}
+\\renewcommand{\\pxDEFpximgname}{Figura}
+\\renewcommand{\\pxDEFpxcodename}{Llistat de Codi Font}`,
+      notes: [
+        '<code>\\pxGrow*</code>: Prevents oversized TikZ or tables from pushing content to next page.',
+        '<code>\\PECTeXpage</code>: footer-center is reserved for page numbering.',
+        '<code>pxTXT</code> strings are safe to override in preamble with standard <code>\\renewcommand</code>.',
+        'Allows complete document internationalization and brand customization.'
+      ],
+      url: 'generator.html'
     }
   };
 
+  function renderChannel(ch) {
+    const d = channelData[ch];
+    if (!d) return;
+
+    keys.forEach(k => {
+      if (k.getAttribute('data-channel') === ch) {
+        k.classList.add('active');
+      } else {
+        k.classList.remove('active');
+      }
+    });
+
+    if (titleTarget) titleTarget.innerHTML = d.title;
+    if (backendBadgeTarget) backendBadgeTarget.textContent = d.badge;
+    if (descTarget) descTarget.textContent = d.desc;
+    if (codeTarget) codeTarget.textContent = d.code;
+    if (urlTarget) urlTarget.setAttribute('href', d.url);
+
+    if (apiTableTarget && d.apiRows) {
+      apiTableTarget.innerHTML = `
+        <div class="api-row header">
+          <span class="api-col-cmd">Command / Syntax</span>
+          <span class="api-col-desc">Purpose &amp; Parameters</span>
+        </div>
+        ` + d.apiRows.map(r => `
+        <div class="api-row">
+          <code class="api-col-cmd">${escapeHTML(r.cmd)}</code>
+          <span class="api-col-desc">${escapeHTML(r.desc)}</span>
+        </div>
+      `).join('');
+    }
+
+    if (featuresTarget && d.features) {
+      featuresTarget.innerHTML = d.features
+        .map(f => `<div class="feat-pill">${f}</div>`)
+        .join('');
+    }
+
+    if (notesListTarget && d.notes) {
+      notesListTarget.innerHTML = d.notes
+        .map(n => `<li>${n}</li>`)
+        .join('');
+    }
+  }
+
+  function escapeHTML(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  // 1. Channel Button Clicks
   keys.forEach(k => {
     k.addEventListener('click', () => {
       const ch = k.getAttribute('data-channel');
-      if (!channelData[ch]) return;
+      if (searchInput) searchInput.value = '';
+      if (searchClear) searchClear.style.display = 'none';
+      if (searchResults) searchResults.style.display = 'none';
+      if (showcaseSplit) showcaseSplit.style.display = 'grid';
+      renderChannel(ch);
+    });
+  });
 
-      keys.forEach(key => key.classList.remove('active'));
-      k.classList.add('active');
-
-      const d = channelData[ch];
-      if (titleTarget) titleTarget.innerHTML = d.title;
-      if (backendBadgeTarget) backendBadgeTarget.textContent = d.badge;
-      if (descTarget) descTarget.textContent = d.desc;
-      if (codeTarget) codeTarget.textContent = d.code;
-      if (urlTarget) urlTarget.setAttribute('href', d.url);
-
-      if (apiTableTarget && d.apiRows) {
-        apiTableTarget.innerHTML = `
-          <div class="api-row header">
-            <span class="api-col-cmd">Command / Syntax</span>
-            <span class="api-col-desc">Purpose &amp; Parameters</span>
-          </div>
-          ` + d.apiRows.map(r => `
-          <div class="api-row">
-            <code class="api-col-cmd">${r.cmd}</code>
-            <span class="api-col-desc">${r.desc}</span>
-          </div>
-        `).join('');
-      }
-
-      if (featuresTarget) {
-        featuresTarget.innerHTML = d.features
-          .map(f => `<div class="feat-pill">${f}</div>`)
-          .join('');
-      }
-
-      if (notesListTarget && d.notes) {
-        notesListTarget.innerHTML = d.notes
-          .map(n => `<li>${n}</li>`)
-          .join('');
+  // 2. Viewport Mode Rocker (Split View / Wide API Table / Full Code)
+  viewModeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewModeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.getAttribute('data-view');
+      if (!showcaseSplit) return;
+      showcaseSplit.classList.remove('view-wide-table', 'view-wide-code');
+      if (mode === 'wide-table') {
+        showcaseSplit.classList.add('view-wide-table');
+      } else if (mode === 'wide-code') {
+        showcaseSplit.classList.add('view-wide-code');
       }
     });
   });
-}
 
+  // 3. Live Macro Search / Filter Bus across all 9 suites
+  if (searchInput && searchResults && searchTable) {
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) {
+        searchResults.style.display = 'none';
+        if (showcaseSplit) showcaseSplit.style.display = 'grid';
+        if (searchClear) searchClear.style.display = 'none';
+        return;
+      }
+
+      if (searchClear) searchClear.style.display = 'block';
+      if (showcaseSplit) showcaseSplit.style.display = 'none';
+      searchResults.style.display = 'flex';
+
+      const matches = [];
+      Object.keys(channelData).forEach(chKey => {
+        const suite = channelData[chKey];
+        suite.apiRows.forEach(row => {
+          if (row.cmd.toLowerCase().includes(q) || row.desc.toLowerCase().includes(q) || suite.title.toLowerCase().includes(q) || suite.id.toLowerCase().includes(q)) {
+            matches.push({ chKey, suiteId: suite.id, suiteTitle: suite.title, cmd: row.cmd, desc: row.desc });
+          }
+        });
+      });
+
+      if (searchCount) {
+        searchCount.textContent = `${matches.length} MATCH${matches.length === 1 ? '' : 'ES'} FOUND FOR "${q.toUpperCase()}"`;
+      }
+
+      if (matches.length === 0) {
+        searchTable.innerHTML = `<div style="padding: 16px; color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">NO MACROS OR FEATURES FOUND MATCHING "${escapeHTML(q)}". TRY "TABLE", "GROW", "UML", "ANNEX", "GANTT", "CODE", OR "COVER".</div>`;
+      } else {
+        searchTable.innerHTML = `
+          <div class="search-match-row" style="background:#0d121a; font-family:var(--font-mono); font-size:8.5px; color:var(--text-muted); font-weight:700;">
+            <span>SUITE</span>
+            <span>COMMAND / SIGNATURE</span>
+            <span>CAPABILITY &amp; PARAMETERS</span>
+            <span style="text-align:right;">ACTION</span>
+          </div>
+        ` + matches.map(m => `
+          <div class="search-match-row" data-goto-channel="${m.chKey}">
+            <span class="search-match-suite">${m.suiteId}</span>
+            <code class="search-match-cmd">${escapeHTML(m.cmd)}</code>
+            <span class="search-match-desc">${escapeHTML(m.desc)}</span>
+            <span class="search-match-action">INSPECT &rarr;</span>
+          </div>
+        `).join('');
+
+        searchTable.querySelectorAll('.search-match-row[data-goto-channel]').forEach(rowEl => {
+          rowEl.addEventListener('click', () => {
+            const ch = rowEl.getAttribute('data-goto-channel');
+            searchInput.value = '';
+            searchClear.style.display = 'none';
+            searchResults.style.display = 'none';
+            if (showcaseSplit) showcaseSplit.style.display = 'grid';
+            renderChannel(ch);
+          });
+        });
+      }
+    });
+
+    if (searchClear) {
+      searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.style.display = 'none';
+        searchResults.style.display = 'none';
+        if (showcaseSplit) showcaseSplit.style.display = 'grid';
+      });
+    }
+  }
+
+  // Initialize with pxTAB
+  renderChannel('pxtab');
+}
 /* --------------------------------------------------------------------------
    4. One-Click Clipboard Actions
    -------------------------------------------------------------------------- */
