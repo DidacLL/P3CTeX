@@ -1,5 +1,5 @@
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (AAAAT Analog Workshop System)
+   P3CTeX LaTeX Generator Stylesheet (Deep Navy Terminal Ergonomics)
    ========================================================================== */
 
 .generator-app {
@@ -18,13 +18,13 @@
 
 /* Preset Toolbar */
 .preset-bar {
-  background: var(--sheet);
-  border: 1px solid var(--line);
-  border-left: 5px solid var(--rust);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-base);
+  border-left: 4px solid var(--amber);
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: var(--radius-sm);
-  box-shadow: 0 2px 8px rgba(36, 52, 46, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .preset-header {
@@ -35,7 +35,7 @@
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 750;
-  color: var(--rust-dark);
+  color: var(--amber);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -47,9 +47,9 @@
 }
 
 .preset-btn {
-  background: #fdfbf7;
-  border: 1px solid var(--line);
-  color: var(--ink);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-dim);
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
@@ -60,35 +60,35 @@
 }
 
 .preset-btn:hover {
-  background: var(--paper);
-  border-color: var(--rust);
-  color: var(--rust-dark);
+  background: #23354c;
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
 .preset-btn.active {
   background: var(--rust);
   color: #ffffff;
   border-color: var(--rust-dark);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Config Groups */
 .config-group {
-  background: var(--sheet);
-  border: 1px solid var(--line);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-dim);
   border-radius: var(--radius-sm);
   margin-bottom: 18px;
   overflow: hidden;
 }
 
 .config-group-header {
-  background: #e2dac4;
+  background: var(--bg-panel-raised);
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--line-dim);
   font-family: var(--font-mono);
   font-weight: 750;
   font-size: 0.82rem;
-  color: var(--rust-dark);
+  color: var(--cyan);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -109,16 +109,16 @@
   display: block;
   font-size: 0.84rem;
   font-weight: 650;
-  color: var(--ink);
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
 .form-row input[type="text"],
 .form-row select {
   width: 100%;
-  background: #ffffff;
-  border: 1px solid var(--line);
-  color: var(--ink);
+  background: var(--bg-deep);
+  border: 1px solid var(--line-dim);
+  color: var(--text-primary);
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
@@ -129,8 +129,8 @@
 .form-row input[type="text"]:focus,
 .form-row select:focus {
   outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 3px rgba(36, 125, 121, 0.2);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.15);
 }
 
 /* Checkbox and Toggle lists */
@@ -145,18 +145,18 @@
   gap: 10px;
   cursor: pointer;
   font-size: 0.88rem;
-  color: var(--ink);
+  color: var(--text-secondary);
 }
 
 .toggle-item input[type="checkbox"] {
-  accent-color: var(--rust);
-  width: 18px;
-  height: 18px;
+  accent-color: var(--cyan);
+  width: 17px;
+  height: 17px;
   cursor: pointer;
 }
 
 .toggle-item strong {
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
 /* Preview Card */
@@ -166,20 +166,20 @@
 }
 
 .preview-card {
-  background: var(--code-bg);
-  border: 1px solid var(--machine-raised);
+  background: var(--bg-code);
+  border: 1px solid var(--line-base);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .preview-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #19251c;
+  background: #111a26;
   padding: 10px 16px;
-  border-bottom: 1px solid #2d3b30;
+  border-bottom: 1px solid var(--line-dim);
 }
 
 .preview-title {
@@ -189,7 +189,7 @@
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 750;
-  color: var(--sheet);
+  color: var(--text-secondary);
   letter-spacing: 0.08em;
 }
 
@@ -207,9 +207,9 @@
 }
 
 .btn-tool {
-  background: var(--machine-raised);
-  border: 1px solid #5a695c;
-  color: var(--sheet);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-bright);
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
@@ -220,8 +220,9 @@
 }
 
 .btn-tool:hover {
-  background: #4e5c51;
-  color: #ffffff;
+  background: #23354c;
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
 .btn-tool.primary {
@@ -231,7 +232,7 @@
 }
 
 .btn-tool.primary:hover {
-  background: #c9512d;
+  background: var(--rust-hover);
 }
 
 .preview-code {
@@ -242,8 +243,8 @@
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.55;
-  color: var(--code-ink);
-  background: var(--code-bg);
+  color: var(--text-primary);
+  background: var(--bg-code);
 }
 
 .preview-code code {

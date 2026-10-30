@@ -13,51 +13,51 @@
 /* Inlined site.css */
 /* ==========================================================================
    P3CTeX — Academic Coursework & Engineering Tooling Suite
-   Aesthetic: AAAAT Analog Workshop System · Indie Retrofuturistic Tooling
-   Demopack ANSI Culture · "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
+   Visual Identity: Authentic Demopack / Retro Engineering Palette
+   Tone: Matte Slate Chassis · Crisp Neutral Ink · Analog Amber & Rust Accents
+   "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
    ========================================================================== */
 
 :root {
-  /* AAAAT Parchment & Analog Machine Palette */
-  --paper: #cfc9b3;
-  --sheet: #eee5d0;
-  --paper-strong: #bdb79f;
-  --machine: #27332a;
-  --machine-raised: #3c493f;
-  --machine-deep: #161f18;
-  --ink: #1f2b23;
-  --muted: #475448;
-  --line: #8f927b;
-  --edge: #6f7568;
+  /* P3CTeX Retro Demopack Palette (Sampled from authentic demopack banner #262C36) */
+  --bg-deep: #191e25;
+  --bg-canvas: #212731;
+  --bg-panel: #262c36;
+  --bg-panel-raised: #2e3541;
+  --bg-card: #272e39;
+  --bg-code: #161a20;
 
-  /* Accent & Action Tokens */
-  --rust: #b54524;
-  --rust-dark: #8c3217;
-  --focus: #247d79;
-  --cyan: #5eead4;
-  --cyan-bright: #7dfbf5;
-  --amber: #ffb454;
-  --green: #38ef7d;
+  /* Muted Hardware Border & Line Systems */
+  --line-dim: #313945;
+  --line-base: #3e4857;
+  --line-bright: #526074;
 
-  /* Dark Code & Terminal Surfaces */
-  --code-bg: #0f1712;
-  --code-raised: #18241d;
-  --code-border: #28382c;
-  --code-ink: #ecf3f9;
-  --code-muted: #8ca294;
+  /* Crisp Neutral Legible Ink */
+  --text-white: #f5f7fa;
+  --text-primary: #e1e6ec;
+  --text-secondary: #b2becb;
+  --text-muted: #8391a3;
+  --text-dim: #5a6676;
+
+  /* Retro Analog Accents (Muted, Hardware-Inspired, Zero Neon Glow) */
+  --retro-rust: #c84630;
+  --retro-rust-hover: #db533c;
+  --retro-rust-dark: #9e3422;
+  --retro-amber: #cca044;
+  --retro-amber-dim: #997833;
+  --retro-teal: #6b9e9e;
+  --retro-teal-bright: #82b5b5;
+  --retro-green: #5ca16e;
 
   /* Dimensions & Spacing */
-  --page-width: min(1360px, calc(100% - clamp(24px, 4vw, 80px)));
+  --page-width: min(1360px, calc(100% - clamp(20px, 4vw, 64px)));
   --radius-sm: 2px;
   --radius-md: 4px;
 
   /* Typography */
   --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  --font-sans: 'Segoe UI', Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
   --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
-
-  color: var(--ink);
-  color-scheme: light;
 }
 
 * {
@@ -71,11 +71,14 @@ html {
 
 body {
   margin: 0;
-  background: #171e19;
-  background-image: radial-gradient(ellipse at 50% 0%, #455044 0%, transparent 65%);
-  color: var(--ink);
+  background-color: var(--bg-deep);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--text-primary);
   font-family: var(--font-sans);
-  line-height: 1.55;
+  line-height: 1.6;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
@@ -85,14 +88,15 @@ button, input, select, textarea {
 }
 
 a {
-  color: var(--rust-dark);
-  text-underline-offset: 0.2em;
+  color: var(--retro-teal-bright);
+  text-decoration: none;
+  text-underline-offset: 0.22em;
   transition: color 0.15s ease;
 }
 
 a:hover {
-  text-decoration-thickness: 2px;
-  color: var(--rust);
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 button {
@@ -108,20 +112,20 @@ img {
 /* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  color: var(--ink);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  color: var(--text-white);
   margin-top: 0;
 }
 
 h1 {
   font-size: clamp(2rem, 3.2vw, 2.85rem);
   font-weight: 800;
-  margin: 0.18em 0 0.42em;
+  margin: 0.15em 0 0.4em;
 }
 
 h2 {
-  font-size: clamp(1.55rem, 2.2vw, 2.15rem);
+  font-size: clamp(1.5rem, 2.2vw, 2.15rem);
   font-weight: 750;
   margin: 0 0 0.55em;
 }
@@ -130,35 +134,39 @@ h3 {
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0 0 0.5em;
+  color: var(--text-white);
   letter-spacing: -0.015em;
 }
 
 p {
-  margin: 0 0 1.05em;
+  margin: 0 0 1.1em;
+  color: var(--text-secondary);
 }
 
 ul, ol {
   padding-left: 1.5em;
   margin: 0 0 1.2em;
+  color: var(--text-secondary);
 }
 
 li {
-  margin-bottom: 0.4em;
+  margin-bottom: 0.45em;
 }
 
 code {
   font-family: var(--font-mono);
   font-size: 0.9em;
-  background: rgba(36, 52, 46, 0.08);
-  color: var(--rust-dark);
-  padding: 1px 5px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--retro-teal-bright);
+  border: 1px solid var(--line-dim);
+  padding: 1px 6px;
   border-radius: 2px;
   overflow-wrap: anywhere;
 }
 
 :focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 4px;
+  outline: 2px solid var(--retro-teal-bright);
+  outline-offset: 3px;
 }
 
 .skip-link {
@@ -166,12 +174,12 @@ code {
   top: -100px;
   left: 12px;
   z-index: 50;
-  background: var(--sheet);
-  color: var(--ink);
+  background: var(--bg-panel-raised);
+  color: var(--text-white);
   padding: 10px 16px;
   font-weight: 700;
-  border: 1px solid var(--line);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--line-bright);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .skip-link:focus {
@@ -179,24 +187,33 @@ code {
 }
 
 /* ==========================================================================
-   Header & Masthead (AAAAT Alignment)
+   Site Header & Demopack Masthead
    ========================================================================== */
 
 .site-header {
-  background: var(--machine-deep);
+  background: #14181f;
+  border-bottom: 2px solid var(--line-base);
 }
 
 .brand {
   display: block;
   width: 100%;
   aspect-ratio: 6.4;
-  min-height: 126px;
+  min-height: 110px;
   margin: 0;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #101812 0%, #1a271e 60%, #121c15 100%);
-  border-bottom: 1px solid #4a5648;
+  background: #1b2029;
+  border-bottom: 1px solid var(--line-dim);
   text-decoration: none;
+}
+
+.brand img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .masthead-canvas {
@@ -207,11 +224,9 @@ code {
   justify-content: center;
   align-items: center;
   padding: 16px 24px;
-  color: var(--sheet);
-  position: relative;
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(94, 234, 212, 0.07) 0%, transparent 75%),
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0px, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 3px);
+  color: var(--text-primary);
+  background: 
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 3px);
 }
 
 .masthead-title-row {
@@ -227,85 +242,85 @@ code {
   font-size: clamp(1.8rem, 3.2vw, 2.6rem);
   font-weight: 900;
   letter-spacing: 0.12em;
-  color: #ffffff;
-  text-shadow: 0 0 12px rgba(94, 234, 212, 0.4);
+  color: var(--text-white);
 }
 
 .masthead-badge {
-  background: var(--rust);
+  background: var(--retro-rust);
   color: #ffffff;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   padding: 3px 8px;
   border-radius: 2px;
-  border: 1px solid var(--rust-dark);
+  border: 1px solid var(--retro-rust-dark);
 }
 
 .masthead-sub-row {
   margin-top: 6px;
   font-family: var(--font-mono);
   font-size: clamp(0.72rem, 1.2vw, 0.88rem);
-  color: var(--paper);
+  color: var(--text-secondary);
   letter-spacing: 0.08em;
   text-align: center;
 }
 
 .masthead-motto {
-  color: var(--amber);
+  color: var(--retro-amber);
   font-weight: 700;
 }
 
-/* Site Navigation (AAAAT Style Tab Bar) */
+/* Site Navigation (Tab Bar) */
 .site-nav {
   display: flex;
   justify-content: center;
   align-items: stretch;
   flex-wrap: nowrap;
-  background: linear-gradient(#4c5748, #303c32);
-  border-block: 1px solid #81876b;
-  box-shadow: 0 4px 8px rgba(10, 18, 10, 0.4);
+  background: #1a2029;
+  border-block: 1px solid var(--line-base);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
   overflow-x: auto;
 }
 
 .site-nav a {
-  color: var(--sheet);
+  color: var(--text-secondary);
   white-space: nowrap;
   text-decoration: none;
   font-weight: 650;
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   padding: 12px 24px;
-  border-inline: 1px solid rgba(255, 249, 237, 0.12);
+  border-inline: 1px solid rgba(255, 255, 255, 0.04);
   min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .site-nav a:hover {
-  background: var(--machine-raised);
+  background: var(--bg-panel);
+  color: var(--text-white);
 }
 
 .site-nav a[aria-current=page] {
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow: inset 0 -4px var(--rust);
+  background: var(--bg-panel);
+  color: var(--text-white);
+  box-shadow: inset 0 -3px var(--retro-rust);
 }
 
 .site-nav a.nav-action {
-  background: rgba(181, 69, 36, 0.35);
-  color: #fff;
-  border-inline-color: rgba(181, 69, 36, 0.6);
+  background: rgba(200, 70, 48, 0.2);
+  color: #ffffff;
+  border-inline-color: rgba(200, 70, 48, 0.4);
 }
 
 .site-nav a.nav-action:hover {
-  background: var(--rust);
+  background: var(--retro-rust);
 }
 
 /* ==========================================================================
-   Hero Section (AAAAT 2-Column Split Grid)
+   Hero Section (Balanced 2-Column Split Grid)
    ========================================================================== */
 
 .hero {
@@ -313,11 +328,10 @@ code {
   margin: 24px auto 0;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  background: linear-gradient(120deg, #424d40, #26352c);
-  color: var(--sheet);
-  border: 1px solid #81876b;
-  border-bottom: 3px solid var(--rust);
-  box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
+  background: var(--bg-canvas);
+  border: 1px solid var(--line-base);
+  border-bottom: 3px solid var(--retro-rust);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 
@@ -340,7 +354,7 @@ code {
 }
 
 .hero-copy .lede {
-  color: var(--sheet);
+  color: var(--text-primary);
   font-size: 1.12rem;
   line-height: 1.62;
   margin-bottom: 1.4em;
@@ -350,39 +364,38 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #111a14;
-  border-left: 1px solid #5a6657;
+  background: #171c23;
+  border-left: 1px solid var(--line-base);
   padding: 24px;
-  position: relative;
 }
 
 @media (max-width: 900px) {
   .hero-art-chassis {
     border-left: none;
-    border-top: 1px solid #5a6657;
+    border-top: 1px solid var(--line-base);
   }
 }
 
 .crt-terminal-frame {
   width: 100%;
   max-width: 480px;
-  background: #090e0b;
-  border: 2px solid #586955;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-bright);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6), 0 6px 18px rgba(0, 0, 0, 0.5);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
 .crt-titlebar {
-  background: #202b23;
-  border-bottom: 1px solid #3c4c40;
+  background: #1d232c;
+  border-bottom: 1px solid var(--line-dim);
   padding: 6px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  color: var(--sheet);
+  color: var(--text-secondary);
   letter-spacing: 0.05em;
 }
 
@@ -398,24 +411,22 @@ code {
   display: inline-block;
 }
 
-.crt-dot.red { background: #d94328; }
-.crt-dot.amber { background: #ffb454; }
-.crt-dot.green { background: #38ef7d; }
+.crt-dot.red { background: #c84630; }
+.crt-dot.amber { background: #cca044; }
+.crt-dot.green { background: #5ca16e; }
 
 .crt-screen {
   padding: 16px;
-  background: #060a08;
+  background: var(--bg-code);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
 .crt-screen img {
   max-width: 100%;
   height: auto;
-  border: 1px solid #2d3d30;
-  box-shadow: 0 0 12px rgba(94, 234, 212, 0.2);
+  border: 1px solid var(--line-dim);
 }
 
 .actions {
@@ -426,46 +437,47 @@ code {
 }
 
 .button {
-  background: var(--rust);
+  background: var(--retro-rust);
   color: #ffffff;
   font-weight: 700;
   font-size: 0.95rem;
-  padding: 11px 22px;
+  padding: 10px 22px;
   border-radius: var(--radius-sm);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--rust-dark);
+  border: 1px solid var(--retro-rust-dark);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   transition: all 0.15s ease;
 }
 
 .button:hover {
-  background: #c9512d;
+  background: var(--retro-rust-hover);
   color: #ffffff;
+  text-decoration: none;
 }
 
 .button.secondary {
-  background: var(--machine-raised);
-  color: var(--sheet);
-  border-color: #6a7667;
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--line-base);
 }
 
 .button.secondary:hover {
-  background: #4e5c51;
+  background: #37404e;
   color: #ffffff;
 }
 
 .hero-note {
   font-size: 0.85rem;
-  color: var(--paper);
+  color: var(--text-muted);
   font-family: var(--font-mono);
   margin: 0;
 }
 
 /* ==========================================================================
-   Parchment Sheet Container (AAAAT Style Workspace)
+   Main Terminal Chassis Container
    ========================================================================== */
 
 .container {
@@ -476,15 +488,14 @@ code {
 main.container, .home main > .container {
   padding-inline: clamp(22px, 3vw, 48px);
   margin-block: 24px;
-  background: linear-gradient(110deg, #d6cdb5, #c4c3ac);
-  border: 1px solid #8a8d75;
-  border-radius: 0;
-  box-shadow: 0 3px 18px rgba(7, 14, 7, 0.5);
+  background: var(--bg-canvas);
+  border: 1px solid var(--line-base);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
 
 .section {
-  padding-block: 32px;
-  border-bottom: 1px solid var(--line);
+  padding-block: 36px;
+  border-bottom: 1px solid var(--line-dim);
 }
 
 .section:last-child {
@@ -496,7 +507,7 @@ main.container, .home main > .container {
 }
 
 .eyebrow, .panel-number {
-  color: var(--rust-dark);
+  color: var(--retro-amber);
   font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.12em;
@@ -509,7 +520,7 @@ main.container, .home main > .container {
 .lede {
   font-size: 1.12rem;
   line-height: 1.62;
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
 /* Cards & Panels */
@@ -525,26 +536,27 @@ main.container, .home main > .container {
 }
 
 .panel {
-  background: var(--sheet);
-  border: 1px solid var(--line);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-dim);
+  border-top: 3px solid var(--line-bright);
   padding: 24px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
 .panel:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(36, 52, 46, 0.15);
+  border-color: var(--retro-teal-bright);
 }
 
 .panel h2, .panel h3 {
   margin: 0 0 0.5em;
-  color: var(--ink);
+  color: var(--text-white);
 }
 
 .panel p {
-  color: var(--ink);
+  color: var(--text-secondary);
   flex-grow: 1;
 }
 
@@ -568,50 +580,104 @@ main.container, .home main > .container {
   }
 }
 
+/* Steps list */
+.steps {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: step-counter;
+}
+
+.steps li {
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 42px;
+  margin-bottom: 1.4em;
+}
+
+.steps li::before {
+  content: counter(step-counter, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: var(--retro-amber);
+  font-size: 0.95rem;
+}
+
+/* Jump Navigation (TOC) */
+nav.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-dim);
+  padding: 12px 18px;
+  margin-block: 20px;
+  border-radius: var(--radius-sm);
+}
+
+nav.toc a {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 650;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 2px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line-dim);
+}
+
+nav.toc a:hover {
+  color: #ffffff;
+  border-color: var(--retro-teal-bright);
+  text-decoration: none;
+}
+
 /* ==========================================================================
-   Code Boxes (Dark Engineering Surfaces)
+   Code Boxes (Dark Monospace Engineering Surfaces)
    ========================================================================== */
 
 .code-box {
-  background: var(--code-bg);
-  border: 1px solid var(--machine-raised);
+  background: var(--bg-code);
+  border: 1px solid var(--line-base);
   border-radius: var(--radius-sm);
   margin: 18px 0;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .code-box-header {
-  background: #19251c;
+  background: #1c222b;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 14px;
-  border-bottom: 1px solid #2d3b30;
+  border-bottom: 1px solid var(--line-dim);
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--sheet);
+  color: var(--text-secondary);
 }
 
 .code-badge {
-  background: rgba(94, 234, 212, 0.15);
-  color: var(--cyan);
-  border: 1px solid rgba(94, 234, 212, 0.3);
+  background: rgba(107, 158, 158, 0.15);
+  color: var(--retro-teal-bright);
+  border: 1px solid rgba(107, 158, 158, 0.35);
   padding: 2px 7px;
   border-radius: 2px;
-  font-weight: 700;
+  font-weight: 750;
   margin-right: 8px;
 }
 
 .code-filename {
   font-weight: 600;
-  color: var(--paper);
+  color: var(--text-primary);
 }
 
 .copy-btn {
-  background: var(--machine-raised);
-  color: var(--sheet);
-  border: 1px solid #5a695c;
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--line-base);
   padding: 4px 10px;
   border-radius: 2px;
   font-family: var(--font-mono);
@@ -622,9 +688,9 @@ main.container, .home main > .container {
 }
 
 .copy-btn:hover {
-  background: var(--rust);
+  background: var(--retro-rust);
   color: #ffffff;
-  border-color: var(--rust-dark);
+  border-color: var(--retro-rust-dark);
 }
 
 .code-box pre {
@@ -634,8 +700,8 @@ main.container, .home main > .container {
   font-family: var(--font-mono);
   font-size: 0.88rem;
   line-height: 1.55;
-  color: var(--code-ink);
-  background: var(--code-bg);
+  color: var(--text-primary);
+  background: var(--bg-code);
 }
 
 .code-box code {
@@ -643,23 +709,24 @@ main.container, .home main > .container {
   color: inherit;
   padding: 0;
   font-size: inherit;
+  border: none;
   border-radius: 0;
 }
 
 /* Syntax Highlighting */
-.syn-kw { color: #f09614; font-weight: bold; }
-.syn-cmd { color: #7dfbf5; font-weight: bold; }
-.syn-opt { color: #ffb454; }
-.syn-arg { color: #82e293; }
-.syn-comment { color: #728a79; font-style: italic; }
+.syn-kw { color: #cca044; font-weight: bold; }
+.syn-cmd { color: #82b5b5; font-weight: bold; }
+.syn-opt { color: #d69850; }
+.syn-arg { color: #8ec09b; }
+.syn-comment { color: #6b7a8c; font-style: italic; }
 
 /* ==========================================================================
-   Image Placeholder Cards (Subtle, Compact, Collapsible)
+   Image Placeholder Cards (Compact, Collapsible)
    ========================================================================== */
 
 .image-placeholder-card {
-  background: rgba(39, 51, 42, 0.08);
-  border: 1px dashed var(--line);
+  background: var(--bg-panel);
+  border: 1px dashed var(--line-bright);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   margin: 20px 0;
@@ -675,11 +742,11 @@ main.container, .home main > .container {
 
 .slot-id {
   font-weight: 750;
-  color: var(--rust-dark);
+  color: var(--retro-amber);
 }
 
 .slot-ratio {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 0.74rem;
 }
 
@@ -689,34 +756,34 @@ main.container, .home main > .container {
 
 .prompt-expander summary {
   cursor: pointer;
-  color: var(--rust);
+  color: var(--retro-teal-bright);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   font-weight: 650;
 }
 
 .prompt-text {
-  background: #121c15;
-  color: #9ee6df;
+  background: var(--bg-code);
+  color: #b5cdd6;
   padding: 10px 14px;
   border-radius: 2px;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   line-height: 1.5;
   margin: 8px 0 0;
-  border: 1px solid #29382c;
+  border: 1px solid var(--line-dim);
   user-select: all;
 }
 
 /* ==========================================================================
-   Site Footer (AAAAT Style Footer)
+   Site Footer
    ========================================================================== */
 
 .site-footer {
-  background: var(--machine-deep);
-  border-top: 1px solid #4a5648;
+  background: #14181f;
+  border-top: 2px solid var(--line-base);
   padding: 40px 0 28px;
-  color: var(--paper);
+  color: var(--text-muted);
   font-size: 0.88rem;
 }
 
@@ -741,12 +808,12 @@ main.container, .home main > .container {
 }
 
 .footer-brand p {
-  color: var(--paper);
+  color: var(--text-secondary);
   font-size: 0.88rem;
 }
 
 .footer-links h5 {
-  color: var(--amber);
+  color: var(--retro-amber);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   letter-spacing: 0.08em;
@@ -765,17 +832,17 @@ main.container, .home main > .container {
 }
 
 .footer-links a {
-  color: var(--sheet);
+  color: var(--text-secondary);
   text-decoration: none;
 }
 
 .footer-links a:hover {
-  color: var(--cyan);
+  color: #ffffff;
   text-decoration: underline;
 }
 
 .footer-bottom {
-  border-top: 1px solid #303d32;
+  border-top: 1px solid var(--line-dim);
   margin-top: 30px;
   padding-top: 16px;
   display: flex;
@@ -783,13 +850,13 @@ main.container, .home main > .container {
   justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--line);
+  color: var(--text-dim);
 }
 
 
 /* Inlined generator.css */
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (AAAAT Analog Workshop System)
+   P3CTeX LaTeX Generator Stylesheet (Deep Navy Terminal Ergonomics)
    ========================================================================== */
 
 .generator-app {
@@ -808,13 +875,13 @@ main.container, .home main > .container {
 
 /* Preset Toolbar */
 .preset-bar {
-  background: var(--sheet);
-  border: 1px solid var(--line);
-  border-left: 5px solid var(--rust);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-base);
+  border-left: 4px solid var(--amber);
   padding: 16px 20px;
   margin-bottom: 24px;
   border-radius: var(--radius-sm);
-  box-shadow: 0 2px 8px rgba(36, 52, 46, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .preset-header {
@@ -825,7 +892,7 @@ main.container, .home main > .container {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 750;
-  color: var(--rust-dark);
+  color: var(--amber);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -837,9 +904,9 @@ main.container, .home main > .container {
 }
 
 .preset-btn {
-  background: #fdfbf7;
-  border: 1px solid var(--line);
-  color: var(--ink);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-dim);
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
@@ -850,35 +917,35 @@ main.container, .home main > .container {
 }
 
 .preset-btn:hover {
-  background: var(--paper);
-  border-color: var(--rust);
-  color: var(--rust-dark);
+  background: #23354c;
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
 .preset-btn.active {
   background: var(--rust);
   color: #ffffff;
   border-color: var(--rust-dark);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Config Groups */
 .config-group {
-  background: var(--sheet);
-  border: 1px solid var(--line);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-dim);
   border-radius: var(--radius-sm);
   margin-bottom: 18px;
   overflow: hidden;
 }
 
 .config-group-header {
-  background: #e2dac4;
+  background: var(--bg-panel-raised);
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--line-dim);
   font-family: var(--font-mono);
   font-weight: 750;
   font-size: 0.82rem;
-  color: var(--rust-dark);
+  color: var(--cyan);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -899,16 +966,16 @@ main.container, .home main > .container {
   display: block;
   font-size: 0.84rem;
   font-weight: 650;
-  color: var(--ink);
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
 .form-row input[type="text"],
 .form-row select {
   width: 100%;
-  background: #ffffff;
-  border: 1px solid var(--line);
-  color: var(--ink);
+  background: var(--bg-deep);
+  border: 1px solid var(--line-dim);
+  color: var(--text-primary);
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
@@ -919,8 +986,8 @@ main.container, .home main > .container {
 .form-row input[type="text"]:focus,
 .form-row select:focus {
   outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 3px rgba(36, 125, 121, 0.2);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.15);
 }
 
 /* Checkbox and Toggle lists */
@@ -935,18 +1002,18 @@ main.container, .home main > .container {
   gap: 10px;
   cursor: pointer;
   font-size: 0.88rem;
-  color: var(--ink);
+  color: var(--text-secondary);
 }
 
 .toggle-item input[type="checkbox"] {
-  accent-color: var(--rust);
-  width: 18px;
-  height: 18px;
+  accent-color: var(--cyan);
+  width: 17px;
+  height: 17px;
   cursor: pointer;
 }
 
 .toggle-item strong {
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
 /* Preview Card */
@@ -956,20 +1023,20 @@ main.container, .home main > .container {
 }
 
 .preview-card {
-  background: var(--code-bg);
-  border: 1px solid var(--machine-raised);
+  background: var(--bg-code);
+  border: 1px solid var(--line-base);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .preview-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #19251c;
+  background: #111a26;
   padding: 10px 16px;
-  border-bottom: 1px solid #2d3b30;
+  border-bottom: 1px solid var(--line-dim);
 }
 
 .preview-title {
@@ -979,7 +1046,7 @@ main.container, .home main > .container {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 750;
-  color: var(--sheet);
+  color: var(--text-secondary);
   letter-spacing: 0.08em;
 }
 
@@ -997,9 +1064,9 @@ main.container, .home main > .container {
 }
 
 .btn-tool {
-  background: var(--machine-raised);
-  border: 1px solid #5a695c;
-  color: var(--sheet);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-bright);
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
@@ -1010,8 +1077,9 @@ main.container, .home main > .container {
 }
 
 .btn-tool:hover {
-  background: #4e5c51;
-  color: #ffffff;
+  background: #23354c;
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
 .btn-tool.primary {
@@ -1021,7 +1089,7 @@ main.container, .home main > .container {
 }
 
 .btn-tool.primary:hover {
-  background: #c9512d;
+  background: var(--rust-hover);
 }
 
 .preview-code {
@@ -1032,8 +1100,8 @@ main.container, .home main > .container {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.55;
-  color: var(--code-ink);
-  background: var(--code-bg);
+  color: var(--text-primary);
+  background: var(--bg-code);
 }
 
 .preview-code code {
@@ -1048,18 +1116,10 @@ main.container, .home main > .container {
 <body class="generator">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Header & Masthead Banner (AAAAT Alignment) -->
+  <!-- Header with Authentic Demopack CRT Banner -->
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="P3CTeX home — Ultimate UOC Template Generator &amp; LaTeX Engineering Suite">
-      <div class="masthead-canvas">
-        <div class="masthead-title-row">
-          <span class="masthead-logo">PEC.TeX // P3CTeX</span>
-          <span class="masthead-badge">v1.1.0</span>
-        </div>
-        <div class="masthead-sub-row">
-          <span class="masthead-motto">"Procrastinar és l'única esperança"</span> · ULTIMATE UOC TEMPLATE GENERATOR · By ScVr!a
-        </div>
-      </div>
+    <a class="brand" href="index.html" aria-label="P3CTeX — Ultimate UOC Template Generator">
+      <img src="assets/images/brand-banner.jpg" alt="P3CTeX Authentic CRT Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" width="1024" height="338" fetchpriority="high">
     </a>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html">Home</a>
