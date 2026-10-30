@@ -1,0 +1,20 @@
+\documentclass[PAC,annexes,glossaries]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcount\annexexecutions
+\newglossaryentry{evidence}{name={Annex term},description={ANNEX-GLOSSARY-CONTENT}}
+\pxAddAnnex[label=ann:first]{Preamble evidence}{
+  \global\advance\annexexecutions by 1
+  PREAMBLE-ANNEX-CONTENT. \gls{evidence}.
+}
+\AddToHook{enddocument}[annex-test]{%
+  \ifnum\annexexecutions=2\else\PackageError{annex-test}{Automatic annex count wrong}{}\fi
+}
+\DeclareHookRule{enddocument}{annex-test}{after}{pxGLS}
+\begin{document}
+MAIN-BODY-CONTENT. See annexes \ref{ann:first} and \ref{ann:second}.
+\pxAddAnnex[label=ann:second]{Body evidence}{
+  \global\advance\annexexecutions by 1
+  BODY-ANNEX-CONTENT.
+}
+\ifnum\annexexecutions=0\else\PackageError{annex-test}{Annex printed prematurely}{}\fi
+\end{document}

@@ -14,7 +14,11 @@
    \seq_map_inline:Nn \l__pxann_print_seq {##1}
    \group_end:}
 \ProcessKeysOptions{pxANN}
-\AtEndDocument{\seq_if_empty:NF \g__pxann_pending_seq
-  {\PackageWarning{pxANN}{Queued~annexes~were~not~printed.~Use~\string\pxPrintAnnexes}}}
+% Annex content must execute before automatic glossaries so its terms contribute.
+\AddToHook{enddocument}[pxANN]{
+  \bool_if:NT \l__pxann_auto_bool {\pxPrintAnnexes}
+  \seq_if_empty:NF \g__pxann_pending_seq
+    {\PackageWarning{pxANN}{Queued~annexes~remain~unprinted.~Use~\string\pxPrintAnnexes~or~print=auto}}}
+\DeclareHookRule{enddocument}{pxANN}{before}{pxGLS}
 \endinput
 

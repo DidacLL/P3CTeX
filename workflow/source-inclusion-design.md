@@ -61,3 +61,9 @@ The previously observed EN,PAC Babel option clash remains a separate known issue
 - Enabling glossaries automatically prints lists. Students need no printing command. The class-level automatic regression and the manual-plus-automatic regression passed with three LaTeX runs; rendered output was checked.
 - pxSRC manages external resources, not only TeX documents. Added literal as=text rendering, configurable region comment prefixes/suffixes, and Python/CSV coverage. Existing as=code handles external program files; graphical resources retain the existing image APIs. CSV is displayed literally, not parsed into a table.
 - Seven focused regression documents passed with three runs each after these corrections, including PAC/PR/MEM source integration. Python markers select only the intended fragment; CSV TeX-like text does not execute. Updated user guide and common test registration.
+
+## Automatic annex correction
+
+Queued annexes now print automatically at document end, before automatic glossaries. Explicit printing drains the queue and prevents duplication; print=manual opts out. Definitions may occur in the preamble or body. Five regression documents passed three runs each, including PAC/PR/MEM integration. Rendered automatic test confirms main body, annex A, annex B, then glossary containing a term used only in annex A.
+
+Next requested feature: space-limited source previews that queue the complete source automatically. Owner confirmed code and literal text first. Measure rendered complete-line prefixes, including wrapping and code-box decoration; preserve full source in the annex. Native TeX and images are outside this preview iteration.

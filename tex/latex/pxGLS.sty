@@ -19,6 +19,6 @@
 \ProcessKeysOptions{pxGLS}
 \bool_set_true:N \l__pxgls_backend_locked_bool
 \tl_if_eq:NnT \l__pxgls_backend_tl {noindex}{\makenoidxglossaries}
-\AtEndDocument{\bool_if:NT \l__pxgls_auto_bool{\pxPrintGlossaries}}
+\AddToHook{enddocument}[pxGLS]{\bool_if:NT \l__pxgls_auto_bool{\pxPrintGlossaries}}
 \endinput
 

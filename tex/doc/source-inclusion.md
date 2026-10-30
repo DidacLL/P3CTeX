@@ -87,10 +87,10 @@ Run LaTeX, makeglossaries JOB, then LaTeX again. Backend choice is fixed at load
     \pxAddAnnex[label=ann:source]{Original results}{
       \pxUseSource[label-prefix=ann:]{pr-one}
     }
-    \pxPrintAnnexes
+    % Optional: \pxPrintAnnexes places pending annexes here.
 
 Immediate and queued annexes share A, B, C numbering in printing order. Printing
-drains the queue once. Unprinted queued annexes generate an end warning.
+drains the queue once. Pending annexes print automatically at the end, before automatic glossaries so terms used in annexes are included. Set \pxAnnexSetup{print=manual} only to opt out of automatic printing; unprinted queued annexes then generate a warning.
 Main section, equation, figure and table counters resume after each annex.
 level=auto uses chapters in MEM and sections in PAC/PR. Use sections inside chapter
 annexes and subsections inside section annexes; source headings are not rewritten.

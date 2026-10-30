@@ -7,10 +7,15 @@
 \tl_new:N \l__pxann_label_tl
 \tl_new:N \l__pxann_level_tl
 \tl_new:N \l__pxann_name_tl
+\bool_new:N \l__pxann_auto_bool
 \bool_new:N \l__pxann_toc_bool
 \bool_new:N \l__pxann_pagebreak_bool
 \keys_define:nn {pxANN}
   {
+    print .choice:,
+    print / auto .code:n = {\bool_set_true:N \l__pxann_auto_bool},
+    print / manual .code:n = {\bool_set_false:N \l__pxann_auto_bool},
+    print .initial:n = auto,
     label .tl_set:N = \l__pxann_label_tl,
     name .tl_set:N = \l__pxann_name_tl,
     name .initial:n = \appendixname,
