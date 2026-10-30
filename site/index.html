@@ -138,47 +138,42 @@
             </div>
           </div>
 
-          <!-- Right Column: Quick Start Cheatsheet & Spec Summary -->
+          <!-- Right Column: Visual Brand & Direct Tool Pathways (NO CODE ON OVERVIEW) -->
           <div class="overview-visual-panel">
-            <div class="quickstart-box">
-              <div class="quickstart-header">
-                <span>MINIMAL SKELETON (COPY &amp; COMPILE)</span>
-                <button class="tactile-copy-action mini" data-copy-target="#code-quick-starter">[COPY]</button>
-              </div>
-              <pre class="quickstart-pre"><code id="code-quick-starter">\documentclass[PAC,default]{P3CTeX}
+            <div class="visual-art-frame">
+              <img src="assets/images/brand-banner.jpg" alt="P3CTeX CRT terminal artwork: Procrastinar és l'única esperança" width="1024" height="338" fetchpriority="high">
+            </div>
 
-\PECTeXconfig{
-  data = {
-    student        = {Nom i Cognoms},
-    grade          = {El Teu Grau o Màster},
-    subj-fullname  = {Nom de l'Assignatura},
-    subj-code      = {00.000},
-    ca-fullname    = {PAC 1: Nom de l'Activitat},
-    ca-shortname   = {PAC1},
-    date           = {\today}
-  }
-}
+            <!-- Clear Action Modules Directing to Specific Tools -->
+            <div class="overview-tools-directory">
+              <a href="generator.html" class="directory-card highlight">
+                <div class="dir-icon">⚡</div>
+                <div class="dir-info">
+                  <strong>Interactive Generator Studio</strong>
+                  <span>Scaffold custom documents, CSV tables, Gantt timelines, UML, and compiler diagrams with live preview.</span>
+                </div>
+                <span class="dir-arrow">&rarr;</span>
+              </a>
 
-\begin{document}
-\section{Exercici 1}
-Resolució de l'exercici...
-\end{document}</code></pre>
+              <button type="button" class="directory-card" data-jump-deck="deck-templates">
+                <div class="dir-icon">📄</div>
+                <div class="dir-info">
+                  <strong>Starter Skeletons</strong>
+                  <span>Browse minimal working templates for PAC continuous assessment, PR practicum reports, and MEM memories.</span>
+                </div>
+                <span class="dir-arrow">&rarr;</span>
+              </button>
             </div>
 
             <div class="overview-fast-specs">
               <div class="spec-stat-item">
-                <span class="stat-label">ACADEMIC SCOPE</span>
-                <strong class="stat-value">Any UOC Degree or Master (Configured via data keys)</strong>
+                <span class="stat-label">LOCAL ENGINE</span>
+                <strong class="stat-value">pdflatex (MiKTeX &amp; TeX Live &bull; 100% Offline)</strong>
               </div>
               <div class="spec-stat-item">
-                <span class="stat-label">LOCAL ENGINE</span>
-                <strong class="stat-value">pdflatex (MiKTeX &amp; TeX Live) &bull; 100% Offline</strong>
+                <span class="stat-label">LICENSE &amp; AUTHOR</span>
+                <strong class="stat-value">GNU GPL v3.0 &bull; By ScVr!a</strong>
               </div>
-            </div>
-
-            <div class="quickstart-compile-strip">
-              <span>COMPILE COMMAND:</span>
-              <code>pdflatex your-submission.tex</code>
             </div>
           </div>
 
