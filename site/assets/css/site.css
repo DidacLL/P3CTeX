@@ -1,50 +1,47 @@
 /* ==========================================================================
    P3CTeX — Academic Coursework & Engineering Tooling Suite
-   Visual Identity: Authentic Demopack / Retro Engineering Palette
-   Tone: Matte Slate Chassis · Crisp Neutral Ink · Analog Amber & Rust Accents
+   Visual Identity: Retrofuturistic Indie Engineering Terminal
+   Aesthetic: Hardware Console · Demopack ANSI · Tactile Industrial Workstation
    "PROCRASTINAR ES LA UNICA ESPERANZA" · By ScVr!a
    ========================================================================== */
 
 :root {
-  /* P3CTeX Retro Demopack Palette (Sampled from authentic demopack banner #262C36) */
-  --bg-deep: #191e25;
-  --bg-canvas: #212731;
-  --bg-panel: #262c36;
-  --bg-panel-raised: #2e3541;
-  --bg-card: #272e39;
-  --bg-code: #161a20;
+  /* Vintage Hardware Chassis Palette (Sampled from Demopack #262C36) */
+  --chassis-bg: #14181f;
+  --chassis-surface: #1b212b;
+  --chassis-panel: #222935;
+  --chassis-card: #262e3b;
+  --chassis-raised: #2f3846;
+  --chassis-recessed: #0e1217;
 
-  /* Muted Hardware Border & Line Systems */
-  --line-dim: #313945;
-  --line-base: #3e4857;
-  --line-bright: #526074;
+  /* Industrial Border & Mechanical Bevels */
+  --line-dark: #2a3341;
+  --line-mid: #3b4759;
+  --line-light: #52637a;
+  --line-accent: #6b829e;
 
-  /* Crisp Neutral Legible Ink */
-  --text-white: #f5f7fa;
-  --text-primary: #e1e6ec;
-  --text-secondary: #b2becb;
-  --text-muted: #8391a3;
-  --text-dim: #5a6676;
+  /* High-Contrast Technical Typography */
+  --text-bright: #ffffff;
+  --text-main: #e2e8f0;
+  --text-dim: #9aa8b8;
+  --text-dark: #627284;
 
-  /* Retro Analog Accents (Muted, Hardware-Inspired, Zero Neon Glow) */
-  --retro-rust: #c84630;
-  --retro-rust-hover: #db533c;
-  --retro-rust-dark: #9e3422;
-  --retro-amber: #cca044;
-  --retro-amber-dim: #997833;
-  --retro-teal: #6b9e9e;
-  --retro-teal-bright: #82b5b5;
-  --retro-green: #5ca16e;
-
-  /* Dimensions & Spacing */
-  --page-width: min(1360px, calc(100% - clamp(20px, 4vw, 64px)));
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  /* Retro Analog Hardware Telemetry Tokens */
+  --btn-rust: #c84630;
+  --btn-rust-hover: #db533c;
+  --btn-rust-active: #a13420;
+  --led-amber: #d49b42;
+  --led-green: #3ecf8e;
+  --crt-teal: #6b9e9e;
+  --crt-teal-bright: #89c4c4;
 
   /* Typography */
   --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --font-heading: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+
+  /* Dimensions */
+  --page-width: min(1360px, calc(100% - clamp(20px, 4vw, 64px)));
 }
 
 * {
@@ -58,12 +55,12 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--bg-deep);
+  background-color: var(--chassis-bg);
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 28px 28px;
-  color: var(--text-primary);
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--text-main);
   font-family: var(--font-sans);
   line-height: 1.6;
   font-size: 16px;
@@ -75,10 +72,10 @@ button, input, select, textarea {
 }
 
 a {
-  color: var(--retro-teal-bright);
+  color: var(--crt-teal-bright);
   text-decoration: none;
   text-underline-offset: 0.22em;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 a:hover {
@@ -96,12 +93,15 @@ img {
   height: auto;
 }
 
-/* Typography Hierarchy */
+/* ==========================================================================
+   Typography Hierarchy (Technical & Grounded)
+   ========================================================================== */
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   line-height: 1.18;
   letter-spacing: -0.025em;
-  color: var(--text-white);
+  color: var(--text-bright);
   margin-top: 0;
 }
 
@@ -112,28 +112,28 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(1.5rem, 2.2vw, 2.15rem);
+  font-size: clamp(1.45rem, 2.2vw, 2.1rem);
   font-weight: 750;
   margin: 0 0 0.55em;
 }
 
 h3 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 0.5em;
-  color: var(--text-white);
+  color: var(--text-bright);
   letter-spacing: -0.015em;
 }
 
 p {
   margin: 0 0 1.1em;
-  color: var(--text-secondary);
+  color: var(--text-main);
 }
 
 ul, ol {
   padding-left: 1.5em;
   margin: 0 0 1.2em;
-  color: var(--text-secondary);
+  color: var(--text-main);
 }
 
 li {
@@ -142,17 +142,17 @@ li {
 
 code {
   font-family: var(--font-mono);
-  font-size: 0.9em;
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--retro-teal-bright);
-  border: 1px solid var(--line-dim);
-  padding: 1px 6px;
+  font-size: 0.88em;
+  background: var(--chassis-recessed);
+  color: var(--crt-teal-bright);
+  border: 1px solid var(--line-mid);
+  padding: 2px 6px;
   border-radius: 2px;
   overflow-wrap: anywhere;
 }
 
 :focus-visible {
-  outline: 2px solid var(--retro-teal-bright);
+  outline: 2px solid var(--crt-teal-bright);
   outline-offset: 3px;
 }
 
@@ -161,11 +161,11 @@ code {
   top: -100px;
   left: 12px;
   z-index: 50;
-  background: var(--bg-panel-raised);
-  color: var(--text-white);
+  background: var(--chassis-raised);
+  color: var(--text-bright);
   padding: 10px 16px;
   font-weight: 700;
-  border: 1px solid var(--line-bright);
+  border: 1px solid var(--line-light);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
@@ -174,12 +174,12 @@ code {
 }
 
 /* ==========================================================================
-   Site Header & Demopack Masthead
+   Header & Uncropped Demopack Banner Station
    ========================================================================== */
 
 .site-header {
-  background: #10141a;
-  border-bottom: 2px solid var(--line-base);
+  background: var(--chassis-recessed);
+  border-bottom: 2px solid var(--line-mid);
 }
 
 .brand {
@@ -200,25 +200,27 @@ code {
   display: block;
 }
 
-/* Site Navigation (Tab Bar) */
+/* Retro Function-Key Navigation Bar */
 .site-nav {
   display: flex;
   justify-content: center;
   align-items: stretch;
   flex-wrap: nowrap;
   background: #171d26;
-  border-block: 1px solid var(--line-base);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  border-block: 1px solid var(--line-mid);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   overflow-x: auto;
 }
 
 .site-nav a {
-  color: var(--text-secondary);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
   white-space: nowrap;
   text-decoration: none;
   font-weight: 650;
-  font-size: 0.94rem;
-  padding: 12px 24px;
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  padding: 12px 22px;
   border-inline: 1px solid rgba(255, 255, 255, 0.04);
   min-height: 48px;
   display: flex;
@@ -228,14 +230,14 @@ code {
 }
 
 .site-nav a:hover {
-  background: var(--bg-panel);
-  color: var(--text-white);
+  background: var(--chassis-surface);
+  color: var(--text-bright);
 }
 
 .site-nav a[aria-current=page] {
-  background: var(--bg-panel);
-  color: var(--text-white);
-  box-shadow: inset 0 -3px var(--retro-rust);
+  background: var(--chassis-surface);
+  color: var(--text-bright);
+  box-shadow: inset 0 -3px var(--btn-rust);
 }
 
 .site-nav a.nav-action {
@@ -245,22 +247,22 @@ code {
 }
 
 .site-nav a.nav-action:hover {
-  background: var(--retro-rust);
+  background: var(--btn-rust);
 }
 
 /* ==========================================================================
-   Hero Section (AAAAT-Aligned Clean Split Grid — NO Nested Fake Windows)
+   Hero Console Station (Clean Split Grid: Copy Left, Artwork Right)
    ========================================================================== */
 
 .hero {
   width: var(--page-width);
   margin: 24px auto 0;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  background: var(--bg-canvas);
-  border: 1px solid var(--line-base);
-  border-bottom: 3px solid var(--retro-rust);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  grid-template-columns: 1.15fr 0.85fr;
+  background: var(--chassis-surface);
+  border: 1px solid var(--line-mid);
+  border-bottom: 3px solid var(--btn-rust);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
 
@@ -271,24 +273,24 @@ code {
 }
 
 .hero-copy {
-  padding: clamp(28px, 4vw, 48px);
+  padding: clamp(28px, 4vw, 44px);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .hero-copy h1 {
-  color: var(--text-white);
+  color: var(--text-bright);
   margin: 0.15em 0 0.45em;
-  font-size: clamp(2.1rem, 3.4vw, 3rem);
+  font-size: clamp(2rem, 3.2vw, 2.85rem);
   line-height: 1.15;
 }
 
 .hero-copy .lede {
-  color: var(--text-primary);
-  font-size: 1.12rem;
-  line-height: 1.65;
-  margin-bottom: 1.5em;
+  color: var(--text-main);
+  font-size: 1.08rem;
+  line-height: 1.62;
+  margin-bottom: 1.4em;
 }
 
 .hero-art {
@@ -298,14 +300,14 @@ code {
   object-fit: cover;
   object-position: center;
   display: block;
-  border-left: 1px solid var(--line-base);
+  border-left: 1px solid var(--line-mid);
 }
 
 @media (max-width: 900px) {
   .hero-art {
     border-left: none;
-    border-top: 1px solid var(--line-base);
-    min-height: 260px;
+    border-top: 1px solid var(--line-mid);
+    min-height: 250px;
   }
 }
 
@@ -316,42 +318,52 @@ code {
   margin-bottom: 14px;
 }
 
+/* Tactile Hardware Buttons */
 .button {
-  background: var(--retro-rust);
+  background: var(--btn-rust);
   color: #ffffff;
+  font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.95rem;
-  padding: 10px 22px;
-  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  padding: 10px 20px;
+  border-radius: 2px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--retro-rust-dark);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--btn-rust-active);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: all 0.15s ease;
 }
 
 .button:hover {
-  background: var(--retro-rust-hover);
+  background: var(--btn-rust-hover);
   color: #ffffff;
   text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.button:active {
+  background: var(--btn-rust-active);
+  transform: translateY(1px);
 }
 
 .button.secondary {
-  background: var(--bg-panel-raised);
-  color: var(--text-primary);
-  border: 1px solid var(--line-base);
+  background: var(--chassis-card);
+  color: var(--text-main);
+  border: 1px solid var(--line-mid);
 }
 
 .button.secondary:hover {
-  background: #37404e;
+  background: var(--chassis-raised);
+  border-color: var(--line-light);
   color: #ffffff;
 }
 
 .hero-note {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.82rem;
+  color: var(--text-dim);
   font-family: var(--font-mono);
   margin: 0;
 }
@@ -368,14 +380,14 @@ code {
 main.container, .home main > .container {
   padding-inline: clamp(22px, 3vw, 48px);
   margin-block: 24px;
-  background: var(--bg-canvas);
-  border: 1px solid var(--line-base);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  background: var(--chassis-surface);
+  border: 1px solid var(--line-mid);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .section {
   padding-block: 36px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid var(--line-dark);
 }
 
 .section:last-child {
@@ -387,23 +399,23 @@ main.container, .home main > .container {
 }
 
 .eyebrow, .panel-number {
-  color: var(--retro-amber);
+  color: var(--led-amber);
   font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   display: block;
   font-family: var(--font-mono);
 }
 
 .lede {
-  font-size: 1.12rem;
+  font-size: 1.1rem;
   line-height: 1.62;
-  color: var(--text-primary);
+  color: var(--text-main);
 }
 
-/* Cards & Panels */
+/* Hardware Instrument Panels */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -416,10 +428,10 @@ main.container, .home main > .container {
 }
 
 .panel {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
-  border-top: 3px solid var(--line-bright);
-  padding: 24px;
+  background: var(--chassis-card);
+  border: 1px solid var(--line-dark);
+  border-top: 3px solid var(--line-mid);
+  padding: 22px;
   display: flex;
   flex-direction: column;
   transition: transform 0.15s ease, border-color 0.15s ease;
@@ -427,23 +439,24 @@ main.container, .home main > .container {
 
 .panel:hover {
   transform: translateY(-2px);
-  border-color: var(--retro-teal-bright);
+  border-color: var(--crt-teal-bright);
 }
 
 .panel h2, .panel h3 {
   margin: 0 0 0.5em;
-  color: var(--text-white);
+  color: var(--text-bright);
 }
 
 .panel p {
-  color: var(--text-secondary);
+  color: var(--text-dim);
   flex-grow: 1;
 }
 
 .panel a {
   margin-top: 10px;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
 }
 
 /* Split Sections */
@@ -481,8 +494,38 @@ main.container, .home main > .container {
   top: 0;
   font-family: var(--font-mono);
   font-weight: 800;
-  color: var(--retro-amber);
+  color: var(--led-amber);
   font-size: 0.95rem;
+}
+
+/* Technical Data Matrix Table */
+.data-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  margin-top: 16px;
+  background: var(--chassis-recessed);
+  border: 1px solid var(--line-mid);
+}
+
+.data-matrix-table th {
+  background: #19202a;
+  color: var(--led-amber);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-mid);
+  letter-spacing: 0.05em;
+}
+
+.data-matrix-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-dark);
+  color: var(--text-main);
+}
+
+.data-matrix-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 /* Jump Navigation (TOC) */
@@ -490,8 +533,8 @@ nav.toc {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
+  background: var(--chassis-panel);
+  border: 1px solid var(--line-dark);
   padding: 12px 18px;
   margin-block: 20px;
   border-radius: var(--radius-sm);
@@ -501,47 +544,47 @@ nav.toc a {
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
-  color: var(--text-secondary);
-  padding: 4px 10px;
+  color: var(--text-dim);
+  padding: 5px 12px;
   border-radius: 2px;
-  background: var(--bg-deep);
-  border: 1px solid var(--line-dim);
+  background: var(--chassis-recessed);
+  border: 1px solid var(--line-dark);
 }
 
 nav.toc a:hover {
   color: #ffffff;
-  border-color: var(--retro-teal-bright);
+  border-color: var(--crt-teal-bright);
   text-decoration: none;
 }
 
 /* ==========================================================================
-   Code Boxes (Dark Monospace Engineering Surfaces)
+   Code Boxes (Technical Terminal Inserts)
    ========================================================================== */
 
 .code-box {
-  background: var(--bg-code);
-  border: 1px solid var(--line-base);
-  border-radius: var(--radius-sm);
+  background: var(--chassis-recessed);
+  border: 1px solid var(--line-mid);
+  border-radius: 2px;
   margin: 18px 0;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 .code-box-header {
-  background: #1c222b;
+  background: #18202b;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 14px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid var(--line-dark);
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--text-secondary);
+  color: var(--text-dim);
 }
 
 .code-badge {
   background: rgba(107, 158, 158, 0.15);
-  color: var(--retro-teal-bright);
+  color: var(--crt-teal-bright);
   border: 1px solid rgba(107, 158, 158, 0.35);
   padding: 2px 7px;
   border-radius: 2px;
@@ -551,14 +594,14 @@ nav.toc a:hover {
 
 .code-filename {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
 }
 
 .copy-btn {
-  background: var(--bg-panel-raised);
-  color: var(--text-primary);
-  border: 1px solid var(--line-base);
-  padding: 4px 10px;
+  background: var(--chassis-panel);
+  color: var(--text-main);
+  border: 1px solid var(--line-mid);
+  padding: 4px 12px;
   border-radius: 2px;
   font-family: var(--font-mono);
   font-size: 0.74rem;
@@ -568,9 +611,9 @@ nav.toc a:hover {
 }
 
 .copy-btn:hover {
-  background: var(--retro-rust);
+  background: var(--btn-rust);
   color: #ffffff;
-  border-color: var(--retro-rust-dark);
+  border-color: var(--btn-rust-active);
 }
 
 .code-box pre {
@@ -580,8 +623,8 @@ nav.toc a:hover {
   font-family: var(--font-mono);
   font-size: 0.88rem;
   line-height: 1.55;
-  color: var(--text-primary);
-  background: var(--bg-code);
+  color: var(--text-main);
+  background: var(--chassis-recessed);
 }
 
 .code-box code {
@@ -593,21 +636,21 @@ nav.toc a:hover {
   border-radius: 0;
 }
 
-/* Syntax Highlighting */
-.syn-kw { color: #cca044; font-weight: bold; }
-.syn-cmd { color: #82b5b5; font-weight: bold; }
+/* Syntax Highlighting (Muted Retro Tones) */
+.syn-kw { color: var(--led-amber); font-weight: bold; }
+.syn-cmd { color: var(--crt-teal-bright); font-weight: bold; }
 .syn-opt { color: #d69850; }
 .syn-arg { color: #8ec09b; }
-.syn-comment { color: #6b7a8c; font-style: italic; }
+.syn-comment { color: #5c6c7e; font-style: italic; }
 
 /* ==========================================================================
    Image Placeholder Cards (Compact, Collapsible)
    ========================================================================== */
 
 .image-placeholder-card {
-  background: var(--bg-panel);
-  border: 1px dashed var(--line-bright);
-  border-radius: var(--radius-sm);
+  background: var(--chassis-panel);
+  border: 1px dashed var(--line-light);
+  border-radius: 2px;
   padding: 12px 16px;
   margin: 20px 0;
 }
@@ -622,11 +665,11 @@ nav.toc a:hover {
 
 .slot-id {
   font-weight: 750;
-  color: var(--retro-amber);
+  color: var(--led-amber);
 }
 
 .slot-ratio {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 0.74rem;
 }
 
@@ -636,14 +679,14 @@ nav.toc a:hover {
 
 .prompt-expander summary {
   cursor: pointer;
-  color: var(--retro-teal-bright);
+  color: var(--crt-teal-bright);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   font-weight: 650;
 }
 
 .prompt-text {
-  background: var(--bg-code);
+  background: var(--chassis-recessed);
   color: #b5cdd6;
   padding: 10px 14px;
   border-radius: 2px;
@@ -651,7 +694,7 @@ nav.toc a:hover {
   font-size: 0.8rem;
   line-height: 1.5;
   margin: 8px 0 0;
-  border: 1px solid var(--line-dim);
+  border: 1px solid var(--line-dark);
   user-select: all;
 }
 
@@ -660,10 +703,10 @@ nav.toc a:hover {
    ========================================================================== */
 
 .site-footer {
-  background: #14181f;
-  border-top: 2px solid var(--line-base);
+  background: #0f1318;
+  border-top: 2px solid var(--line-mid);
   padding: 40px 0 28px;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 0.88rem;
 }
 
@@ -688,12 +731,12 @@ nav.toc a:hover {
 }
 
 .footer-brand p {
-  color: var(--text-secondary);
+  color: var(--text-dim);
   font-size: 0.88rem;
 }
 
 .footer-links h5 {
-  color: var(--retro-amber);
+  color: var(--led-amber);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   letter-spacing: 0.08em;
@@ -712,7 +755,7 @@ nav.toc a:hover {
 }
 
 .footer-links a {
-  color: var(--text-secondary);
+  color: var(--text-dim);
   text-decoration: none;
 }
 
@@ -722,7 +765,7 @@ nav.toc a:hover {
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--line-dim);
+  border-top: 1px solid var(--line-dark);
   margin-top: 30px;
   padding-top: 16px;
   display: flex;
@@ -730,5 +773,5 @@ nav.toc a:hover {
   justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--text-dim);
+  color: var(--text-dark);
 }

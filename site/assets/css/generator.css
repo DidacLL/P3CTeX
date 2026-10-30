@@ -1,5 +1,5 @@
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (Deep Navy Terminal Ergonomics)
+   P3CTeX LaTeX Generator Stylesheet (Retro Engineering Terminal)
    ========================================================================== */
 
 .generator-app {
@@ -18,13 +18,13 @@
 
 /* Preset Toolbar */
 .preset-bar {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-base);
-  border-left: 4px solid var(--amber);
+  background: var(--chassis-card);
+  border: 1px solid var(--line-mid);
+  border-left: 4px solid var(--led-amber);
   padding: 16px 20px;
   margin-bottom: 24px;
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 
 .preset-header {
@@ -35,7 +35,7 @@
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 750;
-  color: var(--amber);
+  color: var(--led-amber);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -47,49 +47,49 @@
 }
 
 .preset-btn {
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-dim);
-  color: var(--text-primary);
+  background: var(--chassis-panel);
+  border: 1px solid var(--line-mid);
+  color: var(--text-main);
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 650;
   padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .preset-btn:hover {
-  background: #23354c;
-  border-color: var(--cyan);
-  color: var(--cyan);
+  background: var(--chassis-raised);
+  border-color: var(--crt-teal-bright);
+  color: #ffffff;
 }
 
 .preset-btn.active {
-  background: var(--rust);
+  background: var(--btn-rust);
   color: #ffffff;
-  border-color: var(--rust-dark);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-color: var(--btn-rust-active);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 /* Config Groups */
 .config-group {
-  background: var(--bg-panel);
-  border: 1px solid var(--line-dim);
-  border-radius: var(--radius-sm);
+  background: var(--chassis-panel);
+  border: 1px solid var(--line-dark);
+  border-radius: 2px;
   margin-bottom: 18px;
   overflow: hidden;
 }
 
 .config-group-header {
-  background: var(--bg-panel-raised);
+  background: #18202b;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid var(--line-dark);
   font-family: var(--font-mono);
   font-weight: 750;
-  font-size: 0.82rem;
-  color: var(--cyan);
-  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  color: var(--crt-teal-bright);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -107,30 +107,32 @@
 
 .form-row label {
   display: block;
-  font-size: 0.84rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
   font-weight: 650;
-  color: var(--text-secondary);
+  color: var(--text-dim);
   margin-bottom: 6px;
+  letter-spacing: 0.02em;
 }
 
 .form-row input[type="text"],
 .form-row select {
   width: 100%;
-  background: var(--bg-deep);
-  border: 1px solid var(--line-dim);
-  color: var(--text-primary);
+  background: var(--chassis-recessed);
+  border: 1px solid var(--line-mid);
+  color: var(--text-bright);
   padding: 9px 12px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .form-row input[type="text"]:focus,
 .form-row select:focus {
   outline: none;
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.15);
+  border-color: var(--crt-teal-bright);
+  box-shadow: 0 0 0 2px rgba(107, 158, 158, 0.25);
 }
 
 /* Checkbox and Toggle lists */
@@ -145,18 +147,18 @@
   gap: 10px;
   cursor: pointer;
   font-size: 0.88rem;
-  color: var(--text-secondary);
+  color: var(--text-main);
 }
 
 .toggle-item input[type="checkbox"] {
-  accent-color: var(--cyan);
+  accent-color: var(--btn-rust);
   width: 17px;
   height: 17px;
   cursor: pointer;
 }
 
 .toggle-item strong {
-  color: var(--text-primary);
+  color: var(--text-bright);
 }
 
 /* Preview Card */
@@ -166,9 +168,9 @@
 }
 
 .preview-card {
-  background: var(--bg-code);
-  border: 1px solid var(--line-base);
-  border-radius: var(--radius-sm);
+  background: var(--chassis-recessed);
+  border: 1px solid var(--line-mid);
+  border-radius: 2px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
@@ -177,9 +179,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #111a26;
+  background: #18202b;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dim);
+  border-bottom: 1px solid var(--line-dark);
 }
 
 .preview-title {
@@ -189,7 +191,7 @@
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 750;
-  color: var(--text-secondary);
+  color: var(--text-dim);
   letter-spacing: 0.08em;
 }
 
@@ -197,8 +199,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green);
+  background: var(--led-green);
+  box-shadow: 0 0 6px var(--led-green);
 }
 
 .preview-actions {
@@ -207,32 +209,31 @@
 }
 
 .btn-tool {
-  background: var(--bg-panel-raised);
-  border: 1px solid var(--line-bright);
-  color: var(--text-primary);
+  background: var(--chassis-panel);
+  border: 1px solid var(--line-mid);
+  color: var(--text-main);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
   padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .btn-tool:hover {
-  background: #23354c;
-  border-color: var(--cyan);
-  color: var(--cyan);
+  background: var(--chassis-raised);
+  color: #ffffff;
 }
 
 .btn-tool.primary {
-  background: var(--rust);
-  border-color: var(--rust-dark);
+  background: var(--btn-rust);
+  border-color: var(--btn-rust-active);
   color: #ffffff;
 }
 
 .btn-tool.primary:hover {
-  background: var(--rust-hover);
+  background: var(--btn-rust-hover);
 }
 
 .preview-code {
@@ -243,8 +244,8 @@
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.55;
-  color: var(--text-primary);
-  background: var(--bg-code);
+  color: var(--text-main);
+  background: var(--chassis-recessed);
 }
 
 .preview-code code {
