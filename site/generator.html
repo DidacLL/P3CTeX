@@ -3,275 +3,428 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Interactive Web Generator · P3CTeX Tooling</title>
-  <meta name="description" content="Generate compliant, ready-to-compile UOC LaTeX preambles and assessment skeletons with live preview, copy-to-clipboard, and .tex download.">
+  <title>LaTeX Generator Studio · P3CTeX</title>
+  <meta name="description" content="Interactive multi-asset LaTeX studio for UOC coursework: generate document starters, data tables, Gantt charts, UML diagrams, code listings, and automata tables.">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/generator.css">
-  <script src="assets/js/site.js" defer></script>
   <script src="assets/js/generator.js" defer></script>
 </head>
-<body class="generator">
-  <a class="skip-link" href="#main">Skip to content</a>
+<body class="console-workstation">
+  <a class="skip-link" href="#studio-stage">Skip to generator studio</a>
 
-  <!-- Header with Hardware Telemetry Masthead & CRT Demopack Screen Mount -->
-  <header class="site-header">
-    <!-- Top Telemetry Status Bar -->
-    <div class="telemetry-ticker-bar" aria-label="Hardware telemetry diagnostics">
-      <div class="telemetry-left">
-        <span class="led-indicator"><span class="led-dot green"></span> SYS: ONLINE</span>
-        <span class="led-indicator"><span class="led-dot amber"></span> GENERATOR: READY</span>
-        <span>KERNEL: <strong>P3CTeX.cls v1.1</strong></span>
-        <span>ARCH: <strong>pdflatex (MiKTeX / TeX Live)</strong></span>
+  <div class="console-viewport">
+
+    <!-- Top Masthead Header -->
+    <header class="console-masthead">
+      <div class="masthead-brand">
+        <a href="index.html" class="brand-badge" aria-label="P3CTeX Home">
+          <span class="badge-icon">⌸</span>
+          <span class="badge-title">P3CTeX</span>
+          <span class="badge-ver">STUDIO</span>
+        </a>
+        <span class="brand-tagline">Multi-Asset LaTeX Generator</span>
       </div>
-      <div class="telemetry-right">
-        <span>LOC: <strong>UOC BARCELONA</strong></span>
-        <span>DIST: <strong>GPL v3.0</strong></span>
-        <span class="led-indicator"><span class="led-dot rust"></span> BY ScVr!a</span>
+
+      <div class="masthead-telemetry">
+        <span class="telemetry-item status"><span class="led-pulse green"></span> STUDIO READY</span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item">6 GENERATOR TOOLS LOADED</span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item">OUTPUT: <strong>READY TO PASTE OR COMPILE</strong></span>
       </div>
-    </div>
 
-    <a class="brand" href="index.html" aria-label="P3CTeX — Ultimate UOC Template Generator">
-      <img src="assets/images/brand-banner.jpg" alt="P3CTeX Authentic CRT Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" width="1024" height="338" fetchpriority="high">
-    </a>
-    <nav class="site-nav" aria-label="Main navigation">
-      <a href="index.html">[F1 // HOME]</a>
-      <a href="tutorials.html">[F2 // TUTORIALS]</a>
-      <a href="showcases.html">[F3 // SHOWCASES]</a>
-      <a href="generator.html" aria-current="page">[F4 // GENERATOR]</a>
-      <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">[F5 // DOWNLOAD_ZIP]</a>
-      <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">[F6 // GITHUB]</a>
-    </nav>
-  </header>
-
-  <!-- Main Hardware Terminal Container -->
-  <main id="main" class="container">
-    <header class="page-intro">
-      <p class="eyebrow">Interactive LaTeX Studio</p>
-      <h1>Generate your assessment skeleton.</h1>
-      <p class="lede">
-        Configure your subject metadata, select your official delivery profile, and activate modular tools. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
-      </p>
+      <div class="masthead-actions">
+        <a href="index.html" class="action-btn ghost">← WORKSTATION HOME</a>
+        <button type="button" class="action-btn rust" id="btn-copy-main">📋 COPY CODE</button>
+        <button type="button" class="action-btn cyan" id="btn-download-main">⬇ DOWNLOAD FILE</button>
+      </div>
     </header>
 
-    <!-- Preset Toolbar: Deliverable Profiles Only -->
-    <div class="preset-bar">
-      <div class="preset-header">
-        <span>CURATED COURSEWORK PRESETS (DELIVERABLE PROFILES)</span>
-        <span>ONE-CLICK POPULATE</span>
+    <!-- Tool Selector Ribbon (6 Specialized Generator Tabs) -->
+    <nav class="console-selector-ribbon" aria-label="Generator Tool Selectors">
+      <div class="selector-track">
+        <button type="button" class="selector-key active" data-tool="tool-document">
+          <span class="key-index">01</span>
+          <span class="key-label">DOCUMENT STARTER</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-tables">
+          <span class="key-index">02</span>
+          <span class="key-label">DATA TABLES</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-gantt">
+          <span class="key-index">03</span>
+          <span class="key-label">GANTT TIMELINE</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-uml">
+          <span class="key-index">04</span>
+          <span class="key-label">UML &amp; ARCHITECTURE</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-code">
+          <span class="key-index">05</span>
+          <span class="key-label">CODE LISTINGS</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-compiler">
+          <span class="key-index">06</span>
+          <span class="key-label">COMPILERS &amp; AUTOMATA</span>
+        </button>
       </div>
-      <div class="preset-buttons">
-        <button type="button" class="preset-btn active" data-preset="pac">[PAC] Catalan Assessment</button>
-        <button type="button" class="preset-btn" data-preset="pec">[PEC] Spanish Assessment</button>
-        <button type="button" class="preset-btn" data-preset="pr">[PR] Laboratory Practicum</button>
-        <button type="button" class="preset-btn" data-preset="tfg">[TFG] Degree Thesis Memory</button>
-        <button type="button" class="preset-btn" data-preset="ca">[CA] English Assessment</button>
+      <div class="selector-meta">
+        <span class="mode-readout" id="active-tool-readout">TOOL: [01 // DOCUMENT STARTER]</span>
       </div>
-    </div>
+    </nav>
 
-    <!-- Generator Grid -->
-    <div class="generator-app">
-      <!-- Left Column: Controls -->
-      <div class="generator-controls">
-        <!-- 1. Profile & Language -->
-        <div class="config-group">
-          <div class="config-group-header">01 // Delivery Profile &amp; Language</div>
-          <div class="config-group-body">
-            <div class="form-row">
-              <label for="select-profile">Official Delivery Profile</label>
-              <select id="select-profile">
-                <option value="PAC">PAC — Continuous Assessment in Catalan (no cover, with TOC &amp; anti-plagiarism)</option>
-                <option value="PEC">PEC — Evaluación Continua en Español (no cover, with TOC &amp; anti-plagiarism)</option>
-                <option value="PR">PR — Laboratory / Practicum Report (Institutional cover, TOC, figures)</option>
-                <option value="TFG">TFG — Bachelor's Thesis Memory (Tribunal evaluation sheet, bilingual abstracts, CC license)</option>
-                <option value="CA">CA — Continuous Assessment in English (no cover, with TOC)</option>
-              </select>
+    <!-- Main Generator Stage (Split: Left Form / Right Output) -->
+    <main id="studio-stage" class="console-stage">
+      <div class="studio-split-deck">
+
+        <!-- ==============================================================
+             LEFT PANE: Interactive Tool Configurator Form
+             ============================================================== -->
+        <div class="studio-form-pane">
+
+          <!-- TOOL 01: DOCUMENT STARTER -->
+          <div id="tool-document" class="generator-panel active">
+            <div class="panel-intro">
+              <h2>Document Starter Boilerplate</h2>
+              <p>Configure a complete, ready-to-compile <code>.tex</code> document pre-configured for UOC guidelines.</p>
             </div>
-            <div class="form-row">
-              <label for="select-lang">Document Language</label>
-              <select id="select-lang">
-                <option value="cat">Catalan (cat)</option>
-                <option value="es">Spanish (es)</option>
-                <option value="en">English (en)</option>
-              </select>
+
+            <!-- Deliverable Selector -->
+            <div class="form-section">
+              <label class="section-label">01 // TARGET DELIVERABLE</label>
+              <div class="pill-selector" id="doc-deliverable-pills">
+                <button type="button" class="pill-btn active" data-profile="PAC">
+                  <strong>PAC</strong>
+                  <span>Continuous Assessment</span>
+                </button>
+                <button type="button" class="pill-btn" data-profile="PR">
+                  <strong>PR</strong>
+                  <span>Practicum &amp; Lab Report</span>
+                </button>
+                <button type="button" class="pill-btn" data-profile="TFG">
+                  <strong>TFG</strong>
+                  <span>Bachelor Thesis</span>
+                </button>
+              </div>
             </div>
+
+            <!-- Coursework Metadata -->
+            <div class="form-section">
+              <label class="section-label">02 // COURSEWORK &amp; STUDENT METADATA</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="doc-student">Student Name</label>
+                  <input type="text" id="doc-student" value="Estudiant UOC">
+                </div>
+                <div class="input-field">
+                  <label for="doc-degree">Degree / Academic Program</label>
+                  <input type="text" id="doc-degree" value="Grau en Enginyeria Informàtica">
+                </div>
+                <div class="input-field">
+                  <label for="doc-subject">Subject Full Name</label>
+                  <input type="text" id="doc-subject" value="Compiladors i Llenguatges">
+                </div>
+                <div class="input-field">
+                  <label for="doc-subjcode">Subject Code &amp; Acronym</label>
+                  <input type="text" id="doc-subjcode" value="75.580 (COMP)">
+                </div>
+                <div class="input-field">
+                  <label for="doc-title">Activity Title</label>
+                  <input type="text" id="doc-title" value="PAC 1: Anàlisi Lèxica i Sintàctica">
+                </div>
+                <div class="input-field">
+                  <label for="doc-lang">Document Language</label>
+                  <select id="doc-lang">
+                    <option value="cat" selected>Catalan (cat)</option>
+                    <option value="es">Spanish (es)</option>
+                    <option value="en">English (en)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Included Sample Elements -->
+            <div class="form-section">
+              <label class="section-label">03 // INCLUDE SAMPLE ELEMENTS IN SKELETON</label>
+              <div class="checkbox-row">
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-table" checked>
+                  <span>Sample Data Table</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-figure" checked>
+                  <span>Resilient Image Placeholder</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-code" checked>
+                  <span>Formatted Code Box</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-tombstone">
+                  <span>Compiler Diagram</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 02: DATA TABLES -->
+          <div id="tool-tables" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Data Table Snippet Generator</h2>
+              <p>Generate clean LaTeX tables without wrestling with ampersands (<code>&amp;</code>) or calculating column widths.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // TABLE OPTIONS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="tbl-caption">Table Caption</label>
+                  <input type="text" id="tbl-caption" value="Comparativa de Rendiment dels Algorismes">
+                </div>
+                <div class="input-field">
+                  <label for="tbl-label">Label Reference</label>
+                  <input type="text" id="tbl-label" value="tab:rendiment">
+                </div>
+                <div class="input-field">
+                  <label for="tbl-style">Visual Style</label>
+                  <select id="tbl-style">
+                    <option value="header" selected>Header Row with Alternating Zebra Shading</option>
+                    <option value="simple">Simple Borderless Clean Table</option>
+                    <option value="compact">Compact Scientific Grid</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="tbl-multipage">Table Length</label>
+                  <select id="tbl-multipage">
+                    <option value="single" selected>Single-page Table (\pxTable)</option>
+                    <option value="multi">Multi-page Long Table (\pxTBLlong*)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // TABLE HEADERS (COMMA-SEPARATED)</label>
+              <div class="input-field">
+                <input type="text" id="tbl-headers" value="Algorisme, Complexitat Temporal, Memòria Utilitzada, Estat">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">03 // TABLE ROWS (ONE ROW PER LINE, COMMA-SEPARATED)</label>
+              <div class="input-field">
+                <textarea id="tbl-rows" rows="4">QuickSort, O(n log n), 4.2 MB, PASS
+MergeSort, O(n log n), 8.5 MB, PASS
+BubbleSort, O(n^2), 1.1 MB, TIMEOUT
+RadixSort, O(nk), 12.0 MB, PASS</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 03: GANTT TIMELINE -->
+          <div id="tool-gantt" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Project Gantt &amp; Timeline Generator</h2>
+              <p>Generate schedule charts for Practicum (PR) project plans and Bachelor Thesis (TFG) milestones.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // PROJECT TIMELINE PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="gnt-title">Project Title</label>
+                  <input type="text" id="gnt-title" value="Cronograma de Treball (TFG)">
+                </div>
+                <div class="input-field">
+                  <label for="gnt-duration">Total Duration</label>
+                  <input type="text" id="gnt-duration" value="16 Setmanes (Semestre)">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // SCHEDULE TASKS &amp; MILESTONES (CSV)</label>
+              <div class="input-field">
+                <textarea id="gnt-tasks" rows="6">Fase 1: Anàlisi de Requeriments, Setmana 1 - 3, Finalitzat
+Fase 2: Disseny de l'Arquitectura, Setmana 4 - 6, Finalitzat
+Fase 3: Implementació del Nucli, Setmana 7 - 11, En curs
+Fase 4: Proves i Optimització, Setmana 12 - 14, Pendent
+Fase 5: Redacció de la Memòria, Setmana 14 - 16, Pendent</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 04: ARCHITECTURE & UML -->
+          <div id="tool-uml" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Architecture &amp; UML Diagram Generator</h2>
+              <p>Generate clean LaTeX structural diagrams without wrestling with raw TikZ coordinates.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // DIAGRAM TYPE</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="uml-type">Diagram Style</label>
+                  <select id="uml-type">
+                    <option value="layers" selected>Layered Architecture (Frontend / API / DB)</option>
+                    <option value="class">UML Class Diagram</option>
+                    <option value="component">Component Pipeline Diagram</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="uml-caption">Diagram Caption</label>
+                  <input type="text" id="uml-caption" value="Diagrama de l'Arquitectura en Capes">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // COMPONENTS / ENTITIES</label>
+              <div class="input-field">
+                <textarea id="uml-elements" rows="4">Capa de Presentació: Single-Page Application (HTML5 / Vanilla JS)
+Capa de Negoci: Microserveis REST API (Node.js / Express)
+Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 05: CODE LISTINGS -->
+          <div id="tool-code" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Formatted Code Listing Generator</h2>
+              <p>Generate syntax-highlighted code boxes with gutters, line numbers, and clean frames.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // CODE LISTING PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="code-lang">Programming Language</label>
+                  <select id="code-lang">
+                    <option value="Java" selected>Java</option>
+                    <option value="Python">Python</option>
+                    <option value="C">C / C++</option>
+                    <option value="SQL">SQL</option>
+                    <option value="Bash">Bash / Shell</option>
+                    <option value="YAML">YAML / JSON</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="code-caption">Listing Caption &amp; Filename</label>
+                  <input type="text" id="code-caption" value="LexerTokenAnalyzer.java">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // CODE SNIPPET</label>
+              <div class="input-field">
+                <textarea id="code-body" rows="6">public class LexerTokenAnalyzer {
+    public static void main(String[] args) {
+        String source = "int result = 42;";
+        TokenStream tokens = Lexer.scan(source);
+        System.out.println("Tokens scanned: " + tokens.size());
+    }
+}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 06: COMPILERS & AUTOMATA -->
+          <div id="tool-compiler" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Compilers &amp; Automata Diagram Generator</h2>
+              <p>Generate Tombstone compiler diagrams (T-diagrams) and DFA/NFA state transition tables.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // AUTOMATON OR COMPILER TOOL</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="cmp-type">Diagram Type</label>
+                  <select id="cmp-type">
+                    <option value="tombstone" selected>Tombstone Compiler Diagram (T-Diagram)</option>
+                    <option value="dfa">DFA State Transition Table</option>
+                    <option value="parse-tree">Grammar Parse Tree</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="cmp-caption">Caption</label>
+                  <input type="text" id="cmp-caption" value="Esquema de Compilació Tombstone">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="cmp-tombstone-inputs">
+              <label class="section-label">02 // TOMBSTONE T-DIAGRAM PARAMETERS</label>
+              <div class="form-grid-3">
+                <div class="input-field">
+                  <label for="cmp-source">Source Language (S)</label>
+                  <input type="text" id="cmp-source" value="CUP">
+                </div>
+                <div class="input-field">
+                  <label for="cmp-target">Target Language (T)</label>
+                  <input type="text" id="cmp-target" value="Java">
+                </div>
+                <div class="input-field">
+                  <label for="cmp-impl">Implementation Language (I)</label>
+                  <input type="text" id="cmp-impl" value="JVM Bytecode">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ==============================================================
+             RIGHT PANE: Live Output Code Viewer & Actions
+             ============================================================== -->
+        <div class="studio-output-pane">
+          <div class="output-header-bar">
+            <div class="output-meta">
+              <span class="output-dot"></span>
+              <strong id="output-filename">OUTPUT: minimal-pac.tex</strong>
+              <span class="output-mode-badge" id="output-mode-badge">FULL DOCUMENT</span>
+            </div>
+            <div class="output-action-group">
+              <button type="button" class="action-btn-sm ghost" id="btn-copy-pane">📋 COPY</button>
+              <button type="button" class="action-btn-sm cyan" id="btn-download-pane">⬇ DOWNLOAD</button>
+            </div>
+          </div>
+
+          <div class="output-code-canvas">
+            <pre class="canvas-pre"><code id="studio-output-target">% Output will render here...</code></pre>
+          </div>
+
+          <div class="output-footer-strip">
+            <span id="output-stats-line">ENCODING: UTF-8 &bull; ENGINE: pdflatex &bull; READY TO COMPILE</span>
           </div>
         </div>
 
-        <!-- 2. UOC Metadata -->
-        <div class="config-group">
-          <div class="config-group-header">02 // UOC Student &amp; Subject Metadata</div>
-          <div class="config-group-body">
-            <div class="form-row">
-              <label for="input-student">Student Full Name</label>
-              <input type="text" id="input-student" value="Estudiant UOC">
-            </div>
-            <div class="form-row">
-              <label for="input-grade">Degree / Engineering Program</label>
-              <input type="text" id="input-grade" value="Grau en Enginyeria Informàtica">
-            </div>
-            <div class="form-row">
-              <label for="input-subjFull">Subject Full Name</label>
-              <input type="text" id="input-subjFull" value="Compiladors i Llenguatges">
-            </div>
-            <div class="form-row">
-              <label for="input-subjShort">Subject Acronym / Short Name</label>
-              <input type="text" id="input-subjShort" value="COMP">
-            </div>
-            <div class="form-row">
-              <label for="input-subjCode">Subject Code</label>
-              <input type="text" id="input-subjCode" value="75.580">
-            </div>
-            <div class="form-row">
-              <label for="input-caShort">Activity Short ID (e.g. PAC1, PR1)</label>
-              <input type="text" id="input-caShort" value="PAC1">
-            </div>
-            <div class="form-row">
-              <label for="input-caFull">Activity Full Name</label>
-              <input type="text" id="input-caFull" value="PAC 1: Anàlisi Lèxica i Sintàctica">
-            </div>
-          </div>
-        </div>
+      </div>
+    </main>
 
-        <!-- 3. Module Arsenal (Real Public Names) -->
-        <div class="config-group">
-          <div class="config-group-header">03 // Modular Package Arsenal (Tools &amp; Modules)</div>
-          <div class="config-group-body">
-            <div class="toggle-list">
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-default" checked>
-                <span><strong>Core Student Arsenal</strong> (<code>default</code>: Painless Tables, Zero-Crash Figures, IDE Code Boxes, UML)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-CMP">
-                <span><strong>Compilers &amp; Automata Tools</strong> (<code>CMP</code>: Tombstone diagrams, DFA/NFA state tables, $A^*$ search, ML)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-GNT">
-                <span><strong>Project Timeline &amp; Planning</strong> (<code>GNT</code>: Gantt charts for milestone schedules)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-TFG">
-                <span><strong>Degree Thesis Memory Structure</strong> (<code>TFG</code> / <code>MEM</code>: Tribunal sheet, bilingual abstracts, CC license)</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Class Output Controls -->
-        <div class="config-group">
-          <div class="config-group-header">04 // Document Output Controls</div>
-          <div class="config-group-body">
-            <div class="toggle-list">
-              <label class="toggle-item">
-                <input type="checkbox" id="tog-cover">
-                <span><strong>cover</strong> (Force institutional university cover page)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="tog-toc" checked>
-                <span><strong>toc</strong> (Generate table of contents)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="tog-plagi">
-                <span><strong>no-plagi</strong> (Official authorship &amp; anti-plagiarism declaration)</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. Insertable Complex Blobs -->
-        <div class="config-group">
-          <div class="config-group-header">05 // Insert Complex Blobs</div>
-          <div class="config-group-body">
-            <div class="toggle-list">
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-table" checked>
-                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax with auto-wrapping)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-longtable">
-                <span><strong>pxTBLlong* Multipage Table</strong> (Auto-repeating header across page breaks)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-codebox" checked>
-                <span><strong>pxCode Syntax Box</strong> (Dark IDE framed code listing with line numbers)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-figure" checked>
-                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder if image missing)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-cmp">
-                <span><strong>pxCMP Compiler &amp; Automaton</strong> (Tombstone T-diagram &amp; DFA transition table)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-graph">
-                <span><strong>pxGraph A* Search Graph</strong> (Heuristic search graph with $h(n)$ and $g(n)$ costs)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-ml">
-                <span><strong>pxCMP Machine Learning</strong> (Confusion matrix with $F_1$ metrics &amp; MLP neural net)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-foreach">
-                <span><strong>pxIMGList Batch Loop</strong> (Sequential multi-image listing)</span>
-              </label>
-            </div>
-          </div>
-        </div>
+    <!-- Bottom Telemetry Status Strip -->
+    <footer class="console-telemetry-footer">
+      <div class="footer-status-left">
+        <span class="dot-live"></span>
+        <span class="status-txt">P3CTeX STUDIO ACTIVE</span>
+        <span class="sep">&bull;</span>
+        <span class="license-txt">GNU General Public License v3.0</span>
+        <span class="sep">&bull;</span>
+        <span class="author-txt">By ScVr!a // UOC Computer Engineering</span>
       </div>
 
-      <!-- Right Column: Sticky Live Preview -->
-      <div class="generator-preview">
-        <div class="preview-card">
-          <div class="preview-header">
-            <div class="preview-title">
-              <span class="preview-dot"></span>
-              <span>LIVE LATEX PREVIEW</span>
-            </div>
-            <div class="preview-actions">
-              <button type="button" class="btn-tool" id="btn-copy-latex">COPY PREAMBLE</button>
-              <button type="button" class="btn-tool primary" id="btn-download-tex">DOWNLOAD .TEX</button>
-            </div>
-          </div>
-          <pre class="preview-code"><code id="latex-preview-code">% Generating LaTeX code...</code></pre>
-        </div>
+      <div class="footer-links-right">
+        <a href="index.html" class="foot-link">Home Workstation</a>
+        <a href="tutorials.html" class="foot-link">Tutorials</a>
+        <a href="showcases.html" class="foot-link">Macro Showcases</a>
+        <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="foot-link">Offline Tool (.html)</a>
+        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="foot-link">GitHub</a>
       </div>
-    </div>
-  </main>
+    </footer>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
-        <p>Created by ScVr!a. Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
-        <p>Licensed under GNU General Public License v3.0.</p>
-      </div>
-      <div class="footer-links">
-        <h5>Documentation</h5>
-        <ul>
-          <li><a href="tutorials.html#bootstrap">Installation &amp; Setup</a></li>
-          <li><a href="tutorials.html#preamble">Preamble Anatomy</a></li>
-          <li><a href="tutorials.html#shared-preambles">Shared Preambles</a></li>
-          <li><a href="tutorials.html#pac">PAC Workflow</a></li>
-          <li><a href="tutorials.html#pr">PR &amp; TFG</a></li>
-          <li><a href="tutorials.html#triage">Survival Triage</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h5>Tools &amp; Downloads</h5>
-        <ul>
-          <li><a href="generator.html">Web LaTeX Generator</a></li>
-          <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Offline Generator (.html)</a></li>
-          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
-          <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub Repository</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <span>© 2026 ScVr!a · "Procrastinar és l'única esperança"</span>
-      <span>P3CTeX Documentation &amp; Generator Studio</span>
-    </div>
-  </footer>
+  </div>
 </body>
 </html>

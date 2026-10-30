@@ -19,11 +19,11 @@ function setupDeckSwitcher() {
   const readout = document.getElementById('active-mode-readout');
 
   const modeLabels = {
-    'deck-templates': 'SECTION: [01 // STARTER TEMPLATES]',
-    'deck-macros': 'SECTION: [02 // PACKAGES & MACROS]',
-    'deck-runbook': 'SECTION: [03 // INSTALLATION & SETUP]',
-    'deck-specs': 'SECTION: [04 // DELIVERABLE GUIDE]',
-    'deck-workshop': 'SECTION: [05 // ABOUT P3CTeX]'
+    'deck-overview': 'SECTION: [01 // OVERVIEW]',
+    'deck-templates': 'SECTION: [02 // STARTER TEMPLATES]',
+    'deck-macros': 'SECTION: [03 // PACKAGES & MACROS]',
+    'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]',
+    'deck-specs': 'SECTION: [05 // DELIVERABLE GUIDE]'
   };
 
   function activateDeck(targetDeckId) {
@@ -51,6 +51,14 @@ function setupDeckSwitcher() {
   keys.forEach(key => {
     key.addEventListener('click', () => {
       const targetDeckId = key.getAttribute('data-deck');
+      activateDeck(targetDeckId);
+      window.location.hash = targetDeckId.replace('deck-', '');
+    });
+  });
+
+  document.querySelectorAll('[data-jump-deck]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetDeckId = btn.getAttribute('data-jump-deck');
       activateDeck(targetDeckId);
       window.location.hash = targetDeckId.replace('deck-', '');
     });
@@ -107,7 +115,7 @@ function setupProfileRocker() {
 \\begin{document}
 % Profile PAC: Portada desactivada; sumari i declaració de no plagi automàtics.
 
-\\sectionuoc{Exercici 1}
+\\section{Exercici 1}
 \\subsection{Apartat A}
 Resolució del primer apartat del document...
 
@@ -120,10 +128,10 @@ Resolució del primer apartat del document...
     },
     pr: {
       filename: 'minimal-pr.tex',
-      title: 'PR (Practicum & Lab Report)',
-      desc: 'Comprehensive report profile for lab projects and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, list of figures, and formal academic integrity declaration for 20–50 page projects.',
+      title: 'PR (Project & Practicum Report)',
+      desc: 'Report profile for lab deliverables and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, and figure list for 20–50 page project reports.',
       cover: 'Institutional Cover with UOC Logo',
-      toc: 'Full TOC, List of Figures & Tables',
+      toc: 'Full TOC and Figure Index',
       font: 'Arev Sans 11pt (Lab Report Standard)',
       code: `% Minimal P3CTeX PR Practicum Report Skeleton
 \\documentclass[PR,default]{P3CTeX}
@@ -145,48 +153,93 @@ Resolució del primer apartat del document...
 \\begin{document}
 % Profile PR: Portada institucional i sumari generats automàticament.
 
-\\sectionuoc{1. Introducció i Abast}
+\\section{1. Introducció i Abast}
 Descripció dels requeriments i l'arquitectura desenvolupada...
 
-\\sectionuoc{2. Arquitectura de l'Aplicació}
+\\section{2. Arquitectura de l'Aplicació}
 \\pxIMG[0.85\\linewidth]{img/diagrama_classes}{Diagrama de classes del domini}[fig:class]
 
-\\sectionuoc{3. Resultats i Mètriques}
+\\section{3. Resultats i Mètriques}
 \\pxTable[style=header]{Mòdul, Cobertura, Estat}{Autenticació, 94%, PASS}{Processament, 88%, PASS}
 \\end{document}`
     },
-    tfg: {
-      filename: 'minimal-tfg.tex',
-      title: 'TFG (Bachelor Thesis Memory)',
-      desc: 'Academic monograph profile for Bachelor’s Thesis (TFG). Generates official evaluation tribunal sheets, bilingual Catalan/English abstracts, Creative Commons copyright block, chapter formatting, and appendices.',
-      cover: 'Tribunal Evaluation Sheet + CC License',
-      toc: 'Academic Memory Chapter TOC',
-      font: 'Arev Sans 11pt (Academic Memory)',
-      code: `% Minimal P3CTeX TFG Bachelor Thesis Memory Skeleton
-\\documentclass[TFG,MEM,default]{P3CTeX}
+    mem: {
+      filename: 'minimal-mem.tex',
+      title: 'MEM (Multi-Chapter Memory / Report)',
+      desc: 'Generic memory support module for reports, practicums, or theses requiring numbered chapters. Adds \\chapter, appendix management with \\pxMEMannex, List of Figures (LOF), List of Tables (LOT), and source snippet reuse without changing the base article layout.',
+      cover: 'Institutional Cover & LOF/LOT Indexes',
+      toc: 'Chapter & Section TOC',
+      font: 'Arev Sans 11pt',
+      code: `% Minimal P3CTeX Multi-Chapter Memory (MEM) Skeleton
+\\documentclass[MEM,PR,default]{P3CTeX}
 
-% Declarative UOC Student & Thesis Metadata
 \\PECTeXconfig{
   data = {
-    student        = {Estudiant UOC},
-    grade          = {Grau en Enginyeria Informàtica},
-    subj-fullname  = {Treball de Final de Grau},
-    subj-shortname = {TFG},
-    subj-code      = {75.999},
-    ca-fullname    = {Memòria de TFG: Disseny d'un Sistema Distribuït},
+    student        = {Nom i Cognoms},
+    grade          = {El Teu Grau o Màster},
+    subj-fullname  = {Nom de l'Assignatura o Projecte},
+    subj-code      = {00.000},
+    ca-fullname    = {Memòria Tècnica del Projecte},
     ca-shortname   = {MEM},
     date           = {\\today}
   }
 }
 
 \\begin{document}
-% Profile TFG: Fitxa d'avaluació, llicència CC i resums multilingües.
+\\chapter{Introducció i Context}
+\\section{Objectius del Projecte}
+Descripció dels requeriments tècnics...
+
+\\chapter{Arquitectura del Sistema}
+\\section{Mòduls Principals}
+\\pxTable[style=header]{Mòdul, Descripció, Estat}{Nucli, Processament, PASS}
+
+% Annex amb numeració A, B, C...
+\\pxMEMannex{Manual d'Instal·lació}{
+Instruccions per desplegar el sistema en entorns locals...
+}
+\\end{document}`
+    },
+    tfg: {
+      filename: 'minimal-tfg.tex',
+      title: 'TFG (Final Degree Project Front Matter)',
+      desc: 'UOC TFG-specific front matter module. Adds the official project work card (\\pxTFGworkcard), multilingual abstracts (\\pxTFGabstract{CAT/ES/EN}{...}), tutor and PRA metadata, and Creative Commons license page (\\pxTFGlicencepage). Combine with MEM if chapters are needed.',
+      cover: 'TFG Work Card & CC License Page',
+      toc: 'Preliminary Content & TOC',
+      font: 'Arev Sans 11pt',
+      code: `% Minimal P3CTeX TFG Project Skeleton
+\\documentclass[TFG,MEM,default]{P3CTeX}
+
+\\PECTeXconfig{
+  data = {
+    student        = {Nom i Cognoms},
+    grade          = {Grau en Enginyeria Informàtica},
+    subj-fullname  = {Treball Final de Grau},
+    subj-code      = {75.599},
+    ca-fullname    = {Títol del Treball Final de Grau},
+    ca-shortname   = {TFG},
+    date           = {\\today}
+  }
+}
+
+% Metadades específiques de TFG:
+\\pxTFGsetup{
+  tutor   = {Nom del Tutor/a},
+  PRA     = {Nom del Professor/a Responsable},
+  area    = {Àrea de Coneixement},
+  credits = {12}
+}
+
+% Resum bilingüe:
+\\pxTFGabstract{CAT}{Resum en català del projecte de final de grau...}
+\\pxTFGabstract{EN}{Abstract in English describing the project scope...}
+
+\\begin{document}
+% La portada, fitxa del TFG, resums i índexs es generen automàticament.
 
 \\chapter{Introducció}
-Context del projecte de final de grau...
-
-\\chapter{Disseny del Sistema}
-Detalls d'implementació i esquemes d'enginyeria...
+\\section{Motivació}
+Descripció de la motivació del projecte...
 \\end{document}`
     }
   };
@@ -224,15 +277,15 @@ function setupChannelRocker() {
 
   const channelData = {
     pxtab: {
-      title: 'pxTAB • Data Tables Without the LaTeX Pain',
-      desc: 'Standard LaTeX tables are painful: counting column widths, escaping ampersands, and calculating hlines at 2:00 AM. pxTAB replaces all that with simple comma-separated rows. It handles alternating row shading (zebra striping) and multipage tables automatically.',
+      title: 'Tables (pxTAB)',
+      desc: 'Creates LaTeX tables from comma-separated rows. Includes automatic alternating row shading (zebra striping) and multi-page page breaks using longtable and booktabs without manual column width calculations.',
       features: [
-        '<strong>Simple syntax:</strong> Comma-separated values, zero ampersand wrestling',
-        '<strong>Auto zebra shading:</strong> Alternating row colors for easy reading',
-        '<strong>Multipage support:</strong> Automatically splits long tables across pages',
-        '<strong>Zero compilation crashes:</strong> Built on robust longtable and booktabs'
+        '<strong>Syntax:</strong> Comma-separated row values',
+        '<strong>Row striping:</strong> Alternating row background shading',
+        '<strong>Multipage:</strong> Long table pagination with \\pxTBLlong*',
+        '<strong>Backend:</strong> Built on longtable and booktabs'
       ],
-      code: `% Create a clean table with comma-separated values:
+      code: `% Create a table from comma-separated values:
 \\pxTable[style=header]
   {Mètrica, Valor Mesurat, Estat}
   {Temps d'execució, 0.42 s, PASS}
@@ -241,29 +294,29 @@ function setupChannelRocker() {
       url: 'showcases.html#pxtab'
     },
     pxsrc: {
-      title: 'pxSRC • Resilient Figures & Image Fallbacks',
-      desc: 'Including images in LaTeX often breaks builds when a collaborator deletes a file or a path is slightly off. \\pxIMG automatically fits images to text width and includes a failsafe: if an image is missing from disk, it displays a clear placeholder diagram instead of halting compilation right before your deadline.',
+      title: 'Figures & Graphics (pxSRC)',
+      desc: 'Scales graphics proportionally to text width using \\pxIMG. If an image file path is missing from disk, it displays a calibrated placeholder box instead of halting pdflatex compilation.',
       features: [
-        '<strong>Failsafe placeholder:</strong> Never crashes pdflatex if an image file is missing',
-        '<strong>Auto proportioning:</strong> Automatically scales figures to text width',
-        '<strong>Unified labels:</strong> Binds caption, label, and file path in one command',
-        '<strong>Format support:</strong> Works with PNG, JPG, and vector PDF diagrams'
+        '<strong>Missing image fallback:</strong> Vector placeholder if file not found',
+        '<strong>Proportional scaling:</strong> Default width set to text width fraction',
+        '<strong>Unified binding:</strong> Binds caption, label, and file path in one macro',
+        '<strong>File formats:</strong> PNG, JPG, and PDF vector graphics'
       ],
-      code: `% Include an image that will never break the compilation:
+      code: `% Include an image with automatic missing-file fallback:
 \\pxIMG[0.85\\linewidth]{img/arquitectura}
   {Diagrama de l'arquitectura proposada}[fig:arq]`,
       url: 'showcases.html#pxsrc'
     },
     pxlst: {
-      title: 'pxLST • Formatted Code Listings',
-      desc: 'Include syntax-highlighted code with line numbers, clear borders, and dedicated captioning. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML without requiring external Python pygments or shell escape privileges.',
+      title: 'Code Listings (pxLST)',
+      desc: 'Formats source code listings with gutters, line numbers, and language syntax coloring. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML using pure LaTeX (no external Python or pygments dependencies).',
       features: [
-        '<strong>Zero external tools:</strong> 100% pure LaTeX, no Python or pygments needed',
-        '<strong>7 languages pre-configured:</strong> Java, Python, C, SQL, Bash, R, YAML',
-        '<strong>Line numbers & gutter:</strong> Clear, professional code presentation',
-        '<strong>Easy copy-paste:</strong> Optimized typography with JetBrains and Consolas'
+        '<strong>Dependencies:</strong> Pure LaTeX, zero external tools',
+        '<strong>Languages:</strong> Java, Python, C, SQL, Bash, R, YAML',
+        '<strong>Line numbers:</strong> Automatic gutter with line counts',
+        '<strong>Typography:</strong> Monospace fonts with character spacing'
       ],
-      code: `% Syntax-highlighted code block with line numbering:
+      code: `% Formatted code listing with line numbers:
 \\begin{pxCode}[language=Java,caption=Lexer.java]
 public class Lexer {
   public static void main(String[] args) {
@@ -274,13 +327,13 @@ public class Lexer {
       url: 'showcases.html#pxlst'
     },
     pxcmp: {
-      title: 'pxCMP • Compilers & Automata Tools',
-      desc: 'Dedicated macros specifically designed for Computer Engineering courses like Compilers, Automata, and Theory of Computation. Easily draw multi-stage Tombstone compiler diagrams, state machine transition tables, and syntactic parse trees without manual TikZ coding.',
+      title: 'Compilers & Automata (pxCMP)',
+      desc: 'Macros for Computer Science coursework (Compilers, Automata, and Theory of Computation). Generates Tombstone compiler diagrams (\\pxTombstoneCompile), DFA/NFA state transition tables (\\pxTransitionTable), and parse trees.',
       features: [
-        '<strong>Tombstone T-diagrams:</strong> \\pxTombstoneCompile for compiler pipelines',
-        '<strong>Transition tables:</strong> \\pxTransitionTable for DFA and NFA state machines',
-        '<strong>Parse trees:</strong> Syntactic derivation trees for grammars',
-        '<strong>Target courses:</strong> Compiladors, Teoria de la Computació'
+        '<strong>Tombstone diagrams:</strong> Compiler pipeline T-diagrams',
+        '<strong>Transition tables:</strong> State machine tables for DFAs and NFAs',
+        '<strong>Parse trees:</strong> Syntactic derivation tree representation',
+        '<strong>Course alignment:</strong> Compiladors, Teoria de la Computació'
       ],
       code: `% Draw a compiler Tombstone diagram:
 \\pxTombstoneCompile{CUP}{Parser}{Java}

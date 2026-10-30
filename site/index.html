@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>P3CTeX · UOC LaTeX Document Class &amp; Package Suite</title>
-  <meta name="description" content="Official UOC LaTeX document class and modular packages for Computer Engineering coursework (PAC/PEC), practicum reports (PR), and bachelor theses (TFG).">
+  <meta name="description" content="LaTeX document class and package suite for Universitat Oberta de Catalunya (UOC) assessments (PAC/PEC), practicum reports (PR), and academic memories.">
   <link rel="stylesheet" href="assets/css/site.css">
   <script src="assets/js/site.js" defer></script>
 </head>
@@ -25,7 +25,7 @@
           <span class="badge-title">P3CTeX</span>
           <span class="badge-ver">v1.1</span>
         </a>
-        <span class="brand-tagline">UOC Computer Engineering LaTeX Class</span>
+        <span class="brand-tagline">UOC Coursework &amp; Academic Reports LaTeX Class</span>
       </div>
 
       <div class="masthead-telemetry">
@@ -48,29 +48,29 @@
     <!-- Console Section Selector Ribbon -->
     <nav class="console-selector-ribbon" aria-label="Navigation Sections">
       <div class="selector-track">
-        <button type="button" class="selector-key active" data-deck="deck-templates">
+        <button type="button" class="selector-key active" data-deck="deck-overview">
           <span class="key-index">01</span>
+          <span class="key-label">OVERVIEW</span>
+        </button>
+        <button type="button" class="selector-key" data-deck="deck-templates">
+          <span class="key-index">02</span>
           <span class="key-label">STARTER TEMPLATES</span>
         </button>
         <button type="button" class="selector-key" data-deck="deck-macros">
-          <span class="key-index">02</span>
+          <span class="key-index">03</span>
           <span class="key-label">PACKAGES &amp; MACROS</span>
         </button>
         <button type="button" class="selector-key" data-deck="deck-runbook">
-          <span class="key-index">03</span>
+          <span class="key-index">04</span>
           <span class="key-label">INSTALLATION &amp; SETUP</span>
         </button>
         <button type="button" class="selector-key" data-deck="deck-specs">
-          <span class="key-index">04</span>
-          <span class="key-label">DELIVERABLE GUIDE</span>
-        </button>
-        <button type="button" class="selector-key" data-deck="deck-workshop">
           <span class="key-index">05</span>
-          <span class="key-label">ABOUT P3CTeX</span>
+          <span class="key-label">DELIVERABLE GUIDE</span>
         </button>
       </div>
       <div class="selector-meta">
-        <span class="mode-readout" id="active-mode-readout">SECTION: [01 // STARTER TEMPLATES]</span>
+        <span class="mode-readout" id="active-mode-readout">SECTION: [01 // OVERVIEW]</span>
       </div>
     </nav>
 
@@ -78,9 +78,117 @@
     <main id="console-stage" class="console-stage">
 
       <!-- ==================================================================
-           SECTION 01: STARTER TEMPLATES (PAC / PR / TFG)
+           SECTION 01: OVERVIEW (CLEAN, BREATHING LANDING STAGE)
+           Zero clutter at first sight · Clear explanation of purpose
            ================================================================== -->
-      <section id="deck-templates" class="console-deck active" aria-label="Starter Templates">
+      <section id="deck-overview" class="console-deck active" aria-label="Product Overview">
+        <div class="overview-stage-split">
+          
+          <!-- Left Column: Direct Technical Description & Deliverable Options -->
+          <div class="overview-narrative-panel">
+            <div class="overview-category-badge">
+              <span class="badge-dot"></span>
+              <span>UNIVERSITAT OBERTA DE CATALUNYA &bull; ALL DEGREES &bull; GPLv3</span>
+            </div>
+
+            <h1 class="overview-hero-headline">
+              P3CTeX: LaTeX Document Class for UOC Coursework &amp; Reports
+            </h1>
+
+            <p class="overview-hero-lead">
+              A LaTeX document class (<code>P3CTeX.cls</code>) for Universitat Oberta de Catalunya students across any degree or master's program. Pre-configures official submission layouts, declarative student metadata, tables, figures, and code listings for compilation with standard <code>pdflatex</code>.
+            </p>
+
+            <div class="overview-pillars-grid">
+              <div class="pillar-row">
+                <span class="pillar-icon">&bull;</span>
+                <div class="pillar-content">
+                  <strong>\documentclass[PAC,default]{P3CTeX} &mdash; Continuous Assessment (PAC / PEC / CA)</strong>
+                  <span>Starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism declaration. Blank cover page is disabled per coursework rules.</span>
+                </div>
+              </div>
+
+              <div class="pillar-row">
+                <span class="pillar-icon">&bull;</span>
+                <div class="pillar-content">
+                  <strong>\documentclass[PR,default]{P3CTeX} &mdash; Project &amp; Practicum Reports (PR)</strong>
+                  <span>Generates institutional cover page, table of contents, and list of figures for project deliverables.</span>
+                </div>
+              </div>
+
+              <div class="pillar-row">
+                <span class="pillar-icon">&bull;</span>
+                <div class="pillar-content">
+                  <strong>Modular Extensions: MEM &bull; TFG &bull; CMP &bull; GNT</strong>
+                  <span>Load <code>MEM</code> for multi-chapter memories (adds <code>\chapter</code>, appendices, LOF/LOT); load <code>TFG</code> for UOC thesis front matter (work card, abstracts, CC license); load <code>CMP</code> for compiler diagrams; load <code>GNT</code> for Gantt charts.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="overview-cta-strip">
+              <button type="button" class="cta-action-btn primary" data-jump-deck="deck-templates">
+                <span>📄 STARTER TEMPLATES</span>
+              </button>
+              <a href="generator.html" class="cta-action-btn secondary">
+                <span>⚡ SNIPPET &amp; DOC GENERATOR</span>
+              </a>
+              <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="cta-action-btn ghost" target="_blank" rel="noopener">
+                <span>⬇ DOWNLOAD ZIP (v1.1)</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Quick Start Cheatsheet & Spec Summary -->
+          <div class="overview-visual-panel">
+            <div class="quickstart-box">
+              <div class="quickstart-header">
+                <span>MINIMAL SKELETON (COPY &amp; COMPILE)</span>
+                <button class="tactile-copy-action mini" data-copy-target="#code-quick-starter">[COPY]</button>
+              </div>
+              <pre class="quickstart-pre"><code id="code-quick-starter">\documentclass[PAC,default]{P3CTeX}
+
+\PECTeXconfig{
+  data = {
+    student        = {Nom i Cognoms},
+    grade          = {El Teu Grau o Màster},
+    subj-fullname  = {Nom de l'Assignatura},
+    subj-code      = {00.000},
+    ca-fullname    = {PAC 1: Nom de l'Activitat},
+    ca-shortname   = {PAC1},
+    date           = {\today}
+  }
+}
+
+\begin{document}
+\section{Exercici 1}
+Resolució de l'exercici...
+\end{document}</code></pre>
+            </div>
+
+            <div class="overview-fast-specs">
+              <div class="spec-stat-item">
+                <span class="stat-label">ACADEMIC SCOPE</span>
+                <strong class="stat-value">Any UOC Degree or Master (Configured via data keys)</strong>
+              </div>
+              <div class="spec-stat-item">
+                <span class="stat-label">LOCAL ENGINE</span>
+                <strong class="stat-value">pdflatex (MiKTeX &amp; TeX Live) &bull; 100% Offline</strong>
+              </div>
+            </div>
+
+            <div class="quickstart-compile-strip">
+              <span>COMPILE COMMAND:</span>
+              <code>pdflatex your-submission.tex</code>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SECTION 02: STARTER TEMPLATES (CODE BUFFER + SELECTOR)
+           ================================================================== -->
+      <section id="deck-templates" class="console-deck" aria-label="Starter Templates">
         <div class="deck-split-view">
           
           <!-- Left: Code Editor Buffer -->
@@ -118,7 +226,7 @@
 \begin{document}
 % Profile PAC: Portada desactivada; sumari i declaració de no plagi automàtics.
 
-\sectionuoc{Exercici 1}
+\section{Exercici 1}
 \subsection{Apartat A}
 Resolució del primer apartat del document...
 
@@ -150,15 +258,22 @@ Resolució del primer apartat del document...
               <button type="button" class="profile-switch" data-profile="pr">
                 <span class="sw-badge">PR</span>
                 <div class="sw-content">
-                  <strong class="sw-name">Practicum &amp; Lab Report</strong>
-                  <span class="sw-desc">Formal cover page, full TOC &amp; figures</span>
+                  <strong class="sw-name">Practicum &amp; Project Report</strong>
+                  <span class="sw-desc">Institutional cover page, full TOC &amp; figures</span>
+                </div>
+              </button>
+              <button type="button" class="profile-switch" data-profile="mem">
+                <span class="sw-badge">MEM</span>
+                <div class="sw-content">
+                  <strong class="sw-name">Multi-Chapter Memory (MEM)</strong>
+                  <span class="sw-desc">Adds \chapter, appendices, LOF/LOT (for reports &amp; TFG)</span>
                 </div>
               </button>
               <button type="button" class="profile-switch" data-profile="tfg">
                 <span class="sw-badge">TFG</span>
                 <div class="sw-content">
-                  <strong class="sw-name">Bachelor Thesis Memory</strong>
-                  <span class="sw-desc">Tribunal evaluation sheet &amp; chapters</span>
+                  <strong class="sw-name">Final Degree Project (TFG)</strong>
+                  <span class="sw-desc">UOC work card, tutor/PRA, multilingual abstracts</span>
                 </div>
               </button>
             </div>
@@ -192,7 +307,7 @@ Resolució del primer apartat del document...
       </section>
 
       <!-- ==================================================================
-           SECTION 02: PACKAGES & MACROS (pxTAB, pxSRC, pxLST, pxCMP)
+           SECTION 03: PACKAGES & MACROS (pxTAB, pxSRC, pxLST, pxCMP)
            ================================================================== -->
       <section id="deck-macros" class="console-deck" aria-label="Packages and Macros">
         <div class="macro-stage-view">
@@ -220,21 +335,21 @@ Resolució del primer apartat del document...
           <!-- Active Macro Showcase Area -->
           <div class="macro-showcase-split">
             <div class="macro-narrative">
-              <h2 class="macro-hero-title" id="macro-hero-title">pxTAB &bull; Data Tables Without the LaTeX Pain</h2>
+              <h2 class="macro-hero-title" id="macro-hero-title">Tables (pxTAB)</h2>
               <p class="macro-hero-desc" id="macro-hero-desc">
-                Standard LaTeX tables are painful: counting column widths, escaping ampersands, and calculating hlines at 2:00 AM. <code>pxTAB</code> replaces all that with simple comma-separated rows. It handles alternating row shading (zebra striping) and multipage tables automatically.
+                Creates LaTeX tables from comma-separated rows. Includes automatic alternating row shading (zebra striping) and multi-page page breaks using longtable and booktabs without manual column width calculations.
               </p>
 
               <div class="macro-features-strip" id="macro-features-strip">
-                <div class="feat-pill"><strong>Simple syntax:</strong> Comma-separated values, zero ampersand wrestling</div>
-                <div class="feat-pill"><strong>Auto zebra shading:</strong> Alternating row colors for easy reading</div>
-                <div class="feat-pill"><strong>Multipage support:</strong> Automatically splits long tables across pages</div>
-                <div class="feat-pill"><strong>Zero compilation crashes:</strong> Built on robust longtable and booktabs</div>
+                <div class="feat-pill"><strong>Syntax:</strong> Comma-separated row values</div>
+                <div class="feat-pill"><strong>Row striping:</strong> Alternating row background shading</div>
+                <div class="feat-pill"><strong>Multipage:</strong> Long table pagination with <code>\pxTBLlong*</code></div>
+                <div class="feat-pill"><strong>Backend:</strong> Built on longtable and booktabs</div>
               </div>
 
               <div class="macro-doc-actions">
                 <a href="showcases.html#pxtab" id="macro-showcase-url" class="doc-link-btn">View Compiled Table Examples →</a>
-                <a href="tutorials.html" class="doc-link-btn secondary">Full Reference Guide</a>
+                <a href="tutorials.html" class="doc-link-btn secondary">Package Documentation</a>
               </div>
             </div>
 
@@ -259,7 +374,7 @@ Resolució del primer apartat del document...
       </section>
 
       <!-- ==================================================================
-           SECTION 03: INSTALLATION & SETUP (LOCAL MIKTEX & TEX LIVE)
+           SECTION 04: INSTALLATION & SETUP (LOCAL MIKTEX & TEX LIVE)
            ================================================================== -->
       <section id="deck-runbook" class="console-deck" aria-label="Installation and Setup">
         <div class="runbook-stage-view">
@@ -343,7 +458,7 @@ Resolució del primer apartat del document...
       </section>
 
       <!-- ==================================================================
-           SECTION 04: DELIVERABLE GUIDE (PAC vs PR vs TFG)
+           SECTION 05: DELIVERABLE GUIDE (PAC vs PR vs TFG)
            ================================================================== -->
       <section id="deck-specs" class="console-deck" aria-label="Deliverable Guide">
         <div class="specs-stage-view">
@@ -357,90 +472,51 @@ Resolució del primer apartat del document...
             <table class="matrix-spec-table">
               <thead>
                 <tr>
-                  <th scope="col">DELIVERABLE TYPE</th>
-                  <th scope="col">PAC (Continuous Assessment)</th>
-                  <th scope="col">PR (Practicum &amp; Lab Report)</th>
-                  <th scope="col">TFG (Bachelor's Final Thesis)</th>
+                  <th scope="col">OPTION / MODULE</th>
+                  <th scope="col">PAC / PEC / CA (Assessment)</th>
+                  <th scope="col">PR (Project / Practicum)</th>
+                  <th scope="col">MEM (Memory Structure)</th>
+                  <th scope="col">TFG (Thesis Front Matter)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">Target Coursework</th>
-                  <td>Semester continuous assessment PAC / PEC</td>
-                  <td>20–50 page lab reports and practicums</td>
-                  <td>Final degree thesis monograph memory</td>
+                  <th scope="row">Purpose</th>
+                  <td>Semester continuous assessment deliverables</td>
+                  <td>20–50 page practicum and lab reports</td>
+                  <td>Any multi-chapter report or thesis memory</td>
+                  <td>UOC Final Degree / Master project front matter</td>
                 </tr>
                 <tr>
                   <th scope="row">Cover Page</th>
-                  <td><strong>Bypassed</strong> (Starts immediately on p. 1)</td>
-                  <td><strong>Institutional Cover</strong> with UOC branding</td>
-                  <td><strong>Official Tribunal Evaluation Sheet</strong> + CC license</td>
+                  <td><strong>Bypassed</strong> (Starts on p. 1)</td>
+                  <td><strong>Institutional Cover</strong> with UOC logo</td>
+                  <td>Inherited from base class (PR / TFG)</td>
+                  <td><strong>UOC Work Card</strong> + CC license page</td>
                 </tr>
                 <tr>
                   <th scope="row">Table of Contents</th>
-                  <td>Auto-generated with anti-plagiarism pledge</td>
-                  <td>Full TOC, List of Figures &amp; Tables</td>
-                  <td>Multi-level chapter memory TOC</td>
+                  <td>Auto-generated with plagiarism declaration</td>
+                  <td>Full TOC, LOF, and LOT sections</td>
+                  <td>Appends LOF and LOT after class TOC</td>
+                  <td>Prints TFG preliminary matter before TOC</td>
                 </tr>
                 <tr>
                   <th scope="row">Document Structure</th>
-                  <td><code>\sectionuoc{...}</code> exercises</td>
-                  <td>Sections, subsections, appendices</td>
-                  <td><code>\chapter{...}</code> academic memory</td>
+                  <td>Standard <code>\section</code>, <code>\subsection</code></td>
+                  <td>Standard sections, subsections</td>
+                  <td><strong>Adds <code>\chapter{...}</code></strong>, <code>\pxMEMannex</code></td>
+                  <td><code>\pxTFGsetup</code>, <code>\pxTFGabstract{...}</code></td>
                 </tr>
                 <tr>
-                  <th scope="row">Included Packages</th>
-                  <td>pxTAB (tables), pxSRC (figures), pxLST (code)</td>
-                  <td>pxTAB, pxSRC, pxLST</td>
-                  <td>pxTAB, pxSRC, pxLST, pxCMP, biblatex</td>
-                </tr>
-                <tr>
-                  <th scope="row">Configuration</th>
+                  <th scope="row">Class Activation</th>
                   <td><code>\documentclass[PAC,default]{P3CTeX}</code></td>
                   <td><code>\documentclass[PR,default]{P3CTeX}</code></td>
+                  <td><code>\documentclass[MEM,PR,default]{P3CTeX}</code></td>
                   <td><code>\documentclass[TFG,MEM,default]{P3CTeX}</code></td>
                 </tr>
               </tbody>
             </table>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ==================================================================
-           SECTION 05: ABOUT P3CTeX
-           ================================================================== -->
-      <section id="deck-workshop" class="console-deck" aria-label="About P3CTeX">
-        <div class="workshop-stage-view">
-          
-          <div class="workshop-media-frame">
-            <img src="assets/images/hero-workshop.jpg" alt="P3CTeX late-night engineering workshop overlooking cyberpunk Barcelona skyline at 3am" width="1024" height="434" fetchpriority="high">
-            <div class="workshop-hud-overlay">
-              <span class="hud-tag">ORIGIN: UOC COMPUTER ENGINEERING</span>
-              <span class="hud-tag">LOCATION: BARCELONA</span>
-              <span class="hud-tag">STATUS: OPEN SOURCE</span>
-            </div>
-          </div>
-
-          <div class="workshop-manifesto">
-            <div class="manifesto-col">
-              <h3>BUILT FOR REAL DEADLINES</h3>
-              <p>
-                P3CTeX was created by a UOC Computer Engineering student who got tired of wasting the final two hours before a 23:59 submission fighting broken table borders, misaligned figures, and cryptic LaTeX compile errors.
-              </p>
-            </div>
-            <div class="manifesto-col">
-              <h3>"PROCRASTINAR ÉS L'ÚNICA ESPERANÇA"</h3>
-              <p>
-                When you're writing code and finishing your report in the middle of the night, your LaTeX template should just work. Single declarative config, resilient figures, and tables that never crash pdflatex.
-              </p>
-            </div>
-            <div class="manifesto-col">
-              <h3>100% FREE &amp; OPEN SOURCE</h3>
-              <p>
-                Zero subscriptions, zero cloud lock-in. Works with standard, local TeX distributions (MiKTeX and TeX Live). Released under the GNU General Public License v3.0 by ScVr!a.
-              </p>
-            </div>
           </div>
 
         </div>

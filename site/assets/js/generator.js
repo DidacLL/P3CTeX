@@ -1,417 +1,357 @@
 /* ==========================================================================
-   P3CTeX Generator Engine
-   Reactive LaTeX Preamble & Assessment Boilerplate Synthesis
-   Factually compliant with P3CTeX.cls and official UOC styles
-   "Procrastinar és l'única esperança" · By ScVr!a
+   P3CTeX LaTeX Generator Studio — Client Controller
+   Multi-Asset Reactive LaTeX Generator (Document, Tables, Gantt, UML, Code, Compilers)
    ========================================================================== */
 
-(function () {
-  'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  let activeTool = 'tool-document';
+  let activeProfile = 'PAC';
 
-  // Deliverable Coursework Presets matching official P3CTeX conventions
-  const PRESETS = {
-    pac: {
-      profile: 'PAC',
-      lang: 'cat',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Compiladors i Llenguatges',
-        subjShort: 'COMP',
-        subjCode: '75.580',
-        caShort: 'PAC1',
-        caFull: 'PAC 1: Anàlisi Lèxica i Sintàctica'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
-    },
-    pec: {
-      profile: 'PEC',
-      lang: 'es',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grado en Ingeniería Informática',
-        subjFull: 'Sistemas Operativos Avanzados',
-        subjShort: 'SO',
-        subjCode: '75.560',
-        caShort: 'PEC1',
-        caFull: 'PEC 1: Gestión de Procesos y Memoria Virtual'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
-    },
-    pr: {
-      profile: 'PR',
-      lang: 'cat',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: true, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Enginyeria del Software',
-        subjShort: 'ES',
-        subjCode: '75.564',
-        caShort: 'PR1',
-        caFull: 'Pràctica 1: Disseny i Implementació del Sistema'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: true }
-    },
-    tfg: {
-      profile: 'TFG',
-      lang: 'cat',
-      modules: { default: true, CMP: false, GNT: true, TFG: true },
-      toggles: { cover: true, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Treball Final de Grau',
-        subjShort: 'TFG',
-        subjCode: '75.599',
-        caShort: 'MEM',
-        caFull: 'Memòria del Treball Final de Grau'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: false }
-    },
-    ca: {
-      profile: 'CA',
-      lang: 'en',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Bachelor in Computer Science',
-        subjFull: 'Distributed Systems Architecture',
-        subjShort: 'DSA',
-        subjCode: '75.590',
-        caShort: 'CA1',
-        caFull: 'Continuous Assessment 1: Consensus Protocols'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
-    }
+  // UI Elements
+  const toolKeys = document.querySelectorAll('.selector-key[data-tool]');
+  const panels = document.querySelectorAll('.generator-panel');
+  const activeToolReadout = document.getElementById('active-tool-readout');
+  const outputTarget = document.getElementById('studio-output-target');
+  const outputFilename = document.getElementById('output-filename');
+  const outputModeBadge = document.getElementById('output-mode-badge');
+  const btnCopyMain = document.getElementById('btn-copy-main');
+  const btnCopyPane = document.getElementById('btn-copy-pane');
+  const btnDownloadMain = document.getElementById('btn-download-main');
+  const btnDownloadPane = document.getElementById('btn-download-pane');
+
+  const toolLabels = {
+    'tool-document': 'TOOL: [01 // DOCUMENT STARTER]',
+    'tool-tables': 'TOOL: [02 // DATA TABLES]',
+    'tool-gantt': 'TOOL: [03 // GANTT TIMELINE]',
+    'tool-uml': 'TOOL: [04 // UML & ARCHITECTURE]',
+    'tool-code': 'TOOL: [05 // CODE LISTINGS]',
+    'tool-compiler': 'TOOL: [06 // COMPILERS & AUTOMATA]'
   };
 
-  // State
-  let state = JSON.parse(JSON.stringify(PRESETS.pac));
-
-  function init() {
-    bindPresetButtons();
-    bindFormInputs();
-    bindActions();
-    renderForm();
-    generateLatexCode();
-  }
-
-  function bindPresetButtons() {
-    const buttons = document.querySelectorAll('[data-preset]');
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.getAttribute('data-preset');
-        if (PRESETS[key]) {
-          state = JSON.parse(JSON.stringify(PRESETS[key]));
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          renderForm();
-          generateLatexCode();
-        }
-      });
+  // 1. Tool Tab Switching
+  toolKeys.forEach(k => {
+    k.addEventListener('click', () => {
+      const targetTool = k.getAttribute('data-tool');
+      activateTool(targetTool);
     });
+  });
+
+  function activateTool(toolId) {
+    activeTool = toolId;
+    panels.forEach(p => {
+      if (p.id === toolId) p.classList.add('active');
+      else p.classList.remove('active');
+    });
+
+    toolKeys.forEach(k => {
+      if (k.getAttribute('data-tool') === toolId) k.classList.add('active');
+      else k.classList.remove('active');
+    });
+
+    if (activeToolReadout && toolLabels[toolId]) {
+      activeToolReadout.textContent = toolLabels[toolId];
+    }
+    renderActiveTool();
   }
 
-  function bindFormInputs() {
-    // Text inputs
-    const textFields = ['student', 'grade', 'subjFull', 'subjShort', 'subjCode', 'caShort', 'caFull'];
-    textFields.forEach(field => {
-      const el = document.getElementById('input-' + field);
-      if (el) {
-        el.addEventListener('input', () => {
-          state.meta[field] = el.value;
-          generateLatexCode();
-        });
+  // 2. Document Profile Switcher (PAC / PR / TFG)
+  const profilePills = document.querySelectorAll('#doc-deliverable-pills .pill-btn');
+  profilePills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      profilePills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeProfile = pill.getAttribute('data-profile');
+
+      // Auto-adjust metadata fields based on profile
+      const titleInput = document.getElementById('doc-title');
+      if (activeProfile === 'PAC') {
+        titleInput.value = 'PAC 1: Anàlisi Lèxica i Sintàctica';
+      } else if (activeProfile === 'PR') {
+        titleInput.value = 'Memòria de Projecte de Laboratori (PR1)';
+      } else if (activeProfile === 'TFG') {
+        titleInput.value = "Memòria de Treball Final de Grau: Disseny d'un Sistema Distribuït";
+      }
+      renderActiveTool();
+    });
+  });
+
+  // 3. Form Input Change Listeners
+  const allInputs = document.querySelectorAll('.studio-form-pane input, .studio-form-pane select, .studio-form-pane textarea');
+  allInputs.forEach(input => {
+    input.addEventListener('input', renderActiveTool);
+    input.addEventListener('change', renderActiveTool);
+  });
+
+  // 4. Render Active Tool Code Generator
+  function renderActiveTool() {
+    if (activeTool === 'tool-document') {
+      renderDocumentStarter();
+    } else if (activeTool === 'tool-tables') {
+      renderTableSnippet();
+    } else if (activeTool === 'tool-gantt') {
+      renderGanttSnippet();
+    } else if (activeTool === 'tool-uml') {
+      renderUmlSnippet();
+    } else if (activeTool === 'tool-code') {
+      renderCodeSnippet();
+    } else if (activeTool === 'tool-compiler') {
+      renderCompilerSnippet();
+    }
+  }
+
+  // Generator 1: Document Starter
+  function renderDocumentStarter() {
+    const student = document.getElementById('doc-student').value.trim() || 'Estudiant UOC';
+    const degree = document.getElementById('doc-degree').value.trim() || 'Grau en Enginyeria Informàtica';
+    const subject = document.getElementById('doc-subject').value.trim() || 'Compiladors i Llenguatges';
+    const subjCodeRaw = document.getElementById('doc-subjcode').value.trim() || '75.580 (COMP)';
+    const title = document.getElementById('doc-title').value.trim() || 'PAC 1: Treball Pràctic';
+    const lang = document.getElementById('doc-lang').value;
+
+    const incTable = document.getElementById('doc-inc-table').checked;
+    const incFigure = document.getElementById('doc-inc-figure').checked;
+    const incCode = document.getElementById('doc-inc-code').checked;
+    const incTombstone = document.getElementById('doc-inc-tombstone').checked;
+
+    let classOpt = activeProfile === 'TFG' ? 'TFG,MEM,default' : `${activeProfile},default`;
+    let filename = `minimal-${activeProfile.toLowerCase()}.tex`;
+
+    outputFilename.textContent = `OUTPUT: ${filename}`;
+    outputModeBadge.textContent = 'FULL DOCUMENT';
+
+    let code = `% ==============================================================================
+% P3CTeX Document Starter (${activeProfile})
+% Configured for UOC Academic Coursework & Reports
+% Compile with: pdflatex ${filename}
+% ==============================================================================
+\\documentclass[${classOpt}]{P3CTeX}
+
+\\PECTeXconfig{
+  data = {
+    student        = {${student}},
+    grade          = {${degree}},
+    subj-fullname  = {${subject}},
+    subj-shortname = {${subjCodeRaw.includes('(') ? subjCodeRaw.split('(')[1].replace(')', '').trim() : 'SUBJ'}},
+    subj-code      = {${subjCodeRaw.includes('(') ? subjCodeRaw.split('(')[0].trim() : subjCodeRaw}},
+    ca-fullname    = {${title}},
+    ca-shortname   = {${activeProfile}1},
+    date           = {\\today}
+  }
+}
+
+\\begin{document}
+`;
+
+    if (activeProfile === 'PAC') {
+      code += `% PAC Profile: Portada desactivada; sumari i declaració de no plagi automàtics.\n\n`;
+      code += `\\section{1. Resolució d'Exercicis}\n`;
+      code += `Descripció dels procediments i anàlisi de requeriments...\n\n`;
+    } else if (activeProfile === 'PR') {
+      code += `% PR Profile: Portada formal i sumari generats automàticament.\n\n`;
+      code += `\\section{1. Introducció i Abast del Projecte}\n`;
+      code += `Aquest document recull la memòria tècnica del projecte desenvolupat...\n\n`;
+    } else {
+      code += `% TFG Profile: Fitxa d'avaluació de tribunal i estructura per capítols.\n\n`;
+      code += `\\chapter{Introducció}\n`;
+      code += `Descripció del context i objectius del Treball Final de Grau...\n\n`;
+    }
+
+    if (incTable) {
+      code += `% Taula declarativa per comes (paquet pxTAB):\n`;
+      code += `\\pxTable[style=header]\n  {Mètrica, Valor Mesurat, Estat}\n  {Temps d'execució, 0.42 s, PASS}\n  {Memòria consumida, 18.5 MB, PASS}\n\n`;
+    }
+
+    if (incFigure) {
+      code += `% Figura amb placeholder resilient (paquet pxSRC):\n`;
+      code += `\\pxIMG[0.85\\linewidth]{img/arquitectura}{Esquema de l'arquitectura proposada}[fig:arq]\n\n`;
+    }
+
+    if (incCode) {
+      code += `% Bloc de codi amb ressaltat de sintaxi i números de línia (paquet pxLST):\n`;
+      code += `\\begin{pxCode}[language=Java,caption=LexerAnalyzer.java]\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("Lexer ready.");\n    }\n}\n\\end{pxCode}\n\n`;
+    }
+
+    if (incTombstone) {
+      code += `% Diagrama Tombstone de compilació (paquet pxCMP):\n`;
+      code += `\\pxTombstoneCompile{CUP}{Parser}{Java}\n\n`;
+    }
+
+    code += `\\end{document}\n`;
+    outputTarget.textContent = code;
+  }
+
+  // Generator 2: Data Tables
+  function renderTableSnippet() {
+    const caption = document.getElementById('tbl-caption').value.trim() || 'Taula de Dades';
+    const label = document.getElementById('tbl-label').value.trim() || 'tab:dades';
+    const style = document.getElementById('tbl-style').value;
+    const isMulti = document.getElementById('tbl-multipage').value === 'multi';
+    const headers = document.getElementById('tbl-headers').value.trim();
+    const rows = document.getElementById('tbl-rows').value.trim().split('\n').filter(r => r.trim());
+
+    outputFilename.textContent = `OUTPUT: table-snippet.tex`;
+    outputModeBadge.textContent = 'TABLE SNIPPET';
+
+    let macroName = isMulti ? '\\pxTBLlong*' : '\\pxTable';
+    let code = `% ==============================================================================\n`;
+    code += `% Taula LaTeX generada amb P3CTeX (pxTAB)\n`;
+    code += `% Inseriu aquest bloc al vostre document .tex\n`;
+    code += `% ==============================================================================\n`;
+    code += `${macroName}[style=${style}]\n`;
+    code += `  {${headers}}`;
+
+    rows.forEach(row => {
+      code += `\n  {${row.trim()}}`;
+    });
+
+    outputTarget.textContent = code;
+  }
+
+  // Generator 3: Gantt Timelines
+  function renderGanttSnippet() {
+    const title = document.getElementById('gnt-title').value.trim() || 'Cronograma de Treball';
+    const duration = document.getElementById('gnt-duration').value.trim();
+    const tasks = document.getElementById('gnt-tasks').value.trim().split('\n').filter(t => t.trim());
+
+    outputFilename.textContent = `OUTPUT: gantt-timeline.tex`;
+    outputModeBadge.textContent = 'TIMELINE SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Cronograma de Treball / Diagrama Gantt per a PR i TFG\n`;
+    code += `% Requereix el paquet GNT o pgfgantt\n`;
+    code += `% ==============================================================================\n`;
+    code += `\\begin{table}[htbp]\n\\centering\n`;
+    code += `\\caption{${title} (${duration})}\n\\label{tab:gantt}\n`;
+    code += `\\pxTable[style=header]\n`;
+    code += `  {Tasca / Fase del Projecte, Interval Temporal, Estat Actual}`;
+
+    tasks.forEach(task => {
+      code += `\n  {${task.trim()}}`;
+    });
+
+    code += `\n\\end{table}\n`;
+    outputTarget.textContent = code;
+  }
+
+  // Generator 4: Architecture & UML
+  function renderUmlSnippet() {
+    const type = document.getElementById('uml-type').value;
+    const caption = document.getElementById('uml-caption').value.trim() || 'Diagrama';
+    const elements = document.getElementById('uml-elements').value.trim().split('\n').filter(e => e.trim());
+
+    outputFilename.textContent = `OUTPUT: architecture-diagram.tex`;
+    outputModeBadge.textContent = 'DIAGRAM SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Diagrama d'Arquitectura / UML per a memòries d'enginyeria\n`;
+    code += `% ==============================================================================\n`;
+    code += `\\begin{figure}[htbp]\n\\centering\n`;
+    code += `\\pxTable[style=compact]\n  {Capa del Sistema, Descripció dels Components}`;
+
+    elements.forEach(el => {
+      const parts = el.split(':');
+      if (parts.length === 2) {
+        code += `\n  {${parts[0].trim()}, ${parts[1].trim()}}`;
+      } else {
+        code += `\n  {Component, ${el.trim()}}`;
       }
     });
 
-    // Profile select
-    const profileEl = document.getElementById('select-profile');
-    if (profileEl) {
-      profileEl.addEventListener('change', () => {
-        state.profile = profileEl.value;
-        if (state.profile === 'PR' || state.profile === 'TFG') {
-          state.toggles.cover = true;
-        } else {
-          state.toggles.cover = false;
-        }
-        renderForm();
-        generateLatexCode();
-      });
-    }
-
-    // Language select
-    const langEl = document.getElementById('select-lang');
-    if (langEl) {
-      langEl.addEventListener('change', () => {
-        state.lang = langEl.value;
-        generateLatexCode();
-      });
-    }
-
-    // Module checkboxes
-    ['default', 'CMP', 'GNT', 'TFG'].forEach(mod => {
-      const el = document.getElementById('mod-' + mod);
-      if (el) {
-        el.addEventListener('change', () => {
-          state.modules[mod] = el.checked;
-          generateLatexCode();
-        });
-      }
-    });
-
-    // Toggle checkboxes
-    ['cover', 'toc', 'plagi'].forEach(tog => {
-      const el = document.getElementById('tog-' + tog);
-      if (el) {
-        el.addEventListener('change', () => {
-          state.toggles[tog] = el.checked;
-          generateLatexCode();
-        });
-      }
-    });
-
-    // Blobs checkboxes
-    ['table', 'codebox', 'figure', 'cmp', 'graph', 'ml', 'longtable', 'foreach'].forEach(blob => {
-      const el = document.getElementById('blob-' + blob);
-      if (el) {
-        el.addEventListener('change', () => {
-          state.blobs[blob] = el.checked;
-          // Auto-enable CMP module if a CMP-dependent blob is selected
-          if ((blob === 'cmp' || blob === 'graph' || blob === 'ml') && el.checked) {
-            state.modules.CMP = true;
-            const cmpCheck = document.getElementById('mod-CMP');
-            if (cmpCheck) cmpCheck.checked = true;
-          }
-          generateLatexCode();
-        });
-      }
-    });
+    code += `\n\\caption{${caption}}\n\\label{fig:arquitectura}\n\\end{figure}\n`;
+    outputTarget.textContent = code;
   }
 
-  function bindActions() {
-    const copyBtn = document.getElementById('btn-copy-latex');
-    if (copyBtn) {
-      copyBtn.addEventListener('click', () => {
-        const code = document.getElementById('latex-preview-code').textContent;
-        navigator.clipboard.writeText(code).then(() => {
-          const original = copyBtn.textContent;
-          copyBtn.textContent = 'COPIAT!';
-          setTimeout(() => { copyBtn.textContent = original; }, 2000);
-        });
-      });
-    }
+  // Generator 5: Code Listings
+  function renderCodeSnippet() {
+    const lang = document.getElementById('code-lang').value;
+    const caption = document.getElementById('code-caption').value.trim() || 'CodiFont';
+    const body = document.getElementById('code-body').value;
 
-    const downloadBtn = document.getElementById('btn-download-tex');
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', () => {
-        const code = document.getElementById('latex-preview-code').textContent;
-        const filename = (state.meta.caShort || 'assessment') + '.tex';
-        const blob = new Blob([code], { type: 'text/x-tex;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-    }
+    outputFilename.textContent = `OUTPUT: code-listing.tex`;
+    outputModeBadge.textContent = 'CODE SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Bloc de Codi Formatat amb P3CTeX (pxLST)\n`;
+    code += `% ==============================================================================\n`;
+    code += `\\begin{pxCode}[language=${lang},caption={${caption}}]\n`;
+    code += body;
+    code += `\n\\end{pxCode}\n`;
+
+    outputTarget.textContent = code;
   }
 
-  function renderForm() {
-    // Populate text inputs
-    for (const key in state.meta) {
-      const el = document.getElementById('input-' + key);
-      if (el) el.value = state.meta[key];
+  // Generator 6: Compilers & Automata
+  function renderCompilerSnippet() {
+    const type = document.getElementById('cmp-type').value;
+    const caption = document.getElementById('cmp-caption').value.trim() || 'Esquema de Compilació';
+
+    outputFilename.textContent = `OUTPUT: compiler-diagram.tex`;
+    outputModeBadge.textContent = 'COMPILER SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Eines per a Compiladors i Teoria de la Computació (P3CTeX pxCMP)\n`;
+    code += `% ==============================================================================\n`;
+
+    if (type === 'tombstone') {
+      const src = document.getElementById('cmp-source').value.trim() || 'CUP';
+      const tgt = document.getElementById('cmp-target').value.trim() || 'Java';
+      const impl = document.getElementById('cmp-impl').value.trim() || 'JVM';
+      code += `% Diagrama Tombstone en T per a pipelines de compilació:\n`;
+      code += `\\pxTombstoneCompile{${src}}{${tgt}}{${impl}}\n`;
+    } else if (type === 'dfa') {
+      code += `% Taula de transicions per a autòmats finits deterministes (DFA):\n`;
+      code += `\\pxTransitionTable{\n  state, 0, 1;\n  q0, q1, q0;\n  q1, q0, q1\n}\n`;
+    } else {
+      code += `% Arbre de derivació sintàctica:\n`;
+      code += `\\pxParseTree{E -> E + T | T}\n`;
     }
 
-    const profileEl = document.getElementById('select-profile');
-    if (profileEl) profileEl.value = state.profile;
-
-    const langEl = document.getElementById('select-lang');
-    if (langEl) langEl.value = state.lang;
-
-    for (const mod in state.modules) {
-      const el = document.getElementById('mod-' + mod);
-      if (el) el.checked = state.modules[mod];
-    }
-
-    for (const tog in state.toggles) {
-      const el = document.getElementById('tog-' + tog);
-      if (el) el.checked = state.toggles[tog];
-    }
-
-    for (const blob in state.blobs) {
-      const el = document.getElementById('blob-' + blob);
-      if (el) el.checked = state.blobs[blob];
-    }
+    outputTarget.textContent = code;
   }
 
-  function generateLatexCode() {
-    // Build options list for \documentclass[...]{P3CTeX}
-    const opts = [];
-    opts.push(state.profile);
-    if (state.lang) opts.push(state.lang);
-    if (state.modules.default) opts.push('default');
-    if (state.modules.CMP) opts.push('CMP');
-    if (state.modules.GNT) opts.push('GNT');
-    if (state.modules.TFG && state.profile !== 'TFG') opts.push('TFG');
-
-    if (state.toggles.cover) opts.push('cover');
-    if (!state.toggles.toc) opts.push('no-toc');
-    if (state.toggles.plagi) opts.push('no-plagi');
-
-    const optString = opts.length > 0 ? '[' + opts.join(',') + ']' : '';
-
-    let out = '% !TeX encoding = UTF-8\n';
-    out += '%% ==========================================================================\n';
-    out += '%% P3CTeX Assessment Document · Universitat Oberta de Catalunya (UOC)\n';
-    out += '%% Generated with P3CTeX Web Generator Tool\n';
-    out += '%% "Procrastinar és l\'única esperança" · By ScVr!a\n';
-    out += '%% ==========================================================================\n\n';
-
-    out += '\\documentclass' + optString + '{P3CTeX}\n\n';
-
-    out += '%% Metadades acadèmiques oficials de la UOC\n';
-    out += '\\PECTeXconfig{\n';
-    out += '  data = {\n';
-    out += '    student        = {' + (state.meta.student || 'Estudiant UOC') + '},\n';
-    out += '    grade          = {' + (state.meta.grade || 'Enginyeria Informàtica') + '},\n';
-    out += '    subj-fullname  = {' + (state.meta.subjFull || 'Nom Assignatura') + '},\n';
-    out += '    subj-shortname = {' + (state.meta.subjShort || 'SIGLES') + '},\n';
-    out += '    subj-code      = {' + (state.meta.subjCode || '00.000') + '},\n';
-    out += '    ca-fullname    = {' + (state.meta.caFull || 'PAC1: Activitat') + '},\n';
-    out += '    ca-shortname   = {' + (state.meta.caShort || 'PAC1') + '},\n';
-    out += '    date           = {\\today}\n';
-    out += '  }\n';
-    out += '}\n\n';
-
-    out += '\\begin{document}\n\n';
-    out += '\\sectionuoc{Exercici 1}\n';
-    out += '\\subsection{Pregunta A}\n';
-    out += 'La resposta al primer apartat de l\'activitat ' + (state.meta.caShort || 'PAC1') + ' es redacta aquí.\n\n';
-
-    // Insertable Blobs
-    if (state.blobs.table) {
-      out += '%% BLOB: Taula de dades mitjançant pxTAB (sintaxi declarativa per comes)\n';
-      out += '\\pxTable[style=header]{\n';
-      out += '  Mètrica, Valor Mesurat, Llindar, Estat\n';
-      out += '}{\n';
-      out += '  Latència de xarxa, 14.2 ms, < 50 ms, PASS\n';
-      out += '}{\n';
-      out += '  Taxa de transferència, 850 Mbps, > 500 Mbps, PASS\n';
-      out += '}{\n';
-      out += '  Pèrdua de paquets, 0.01 %, < 0.1 %, PASS\n';
-      out += '}\n\n';
-    }
-
-    if (state.blobs.longtable) {
-      out += '%% BLOB: Taula multipàgina pxTBLlong* per a llistats extensos de dades\n';
-      out += '\\begin{pxTBLlong*}[header-repeat=true]{cols={0.25\\linewidth, 0.45\\linewidth, 0.3\\linewidth}}\n';
-      out += '  Codi / ID, Descripció del Mòdul, Estat de Verificació;\n';
-      out += '  MOD-01, Gestió de Memòria i Paginació Virtual, COMPLETAT;\n';
-      out += '  MOD-02, Planificador de Processos Round-Robin, COMPLETAT;\n';
-      out += '  MOD-03, Sistema de Fitxers Basat en Inodes, EN REVISIÓ;\n';
-      out += '  MOD-04, Controlador de Dispositius I/O en Bloc, PENDENT\n';
-      out += '\\end{pxTBLlong*}\n\n';
-    }
-
-    if (state.blobs.codebox) {
-      out += '%% BLOB: Llistat de codi amb entorn pxCode i ressaltat de sintaxi (pxLST)\n';
-      out += '\\begin{pxCode}[language=pxJava]{Algorisme de Cerca}\n';
-      out += 'public class Solution {\n';
-      out += '    public static int binarySearch(int[] arr, int target) {\n';
-      out += '        int left = 0, right = arr.length - 1;\n';
-      out += '        while (left <= right) {\n';
-      out += '            int mid = left + (right - left) / 2;\n';
-      out += '            if (arr[mid] == target) return mid;\n';
-      out += '            if (arr[mid] < target) left = mid + 1;\n';
-      out += '            else right = mid - 1;\n';
-      out += '        }\n';
-      out += '        return -1;\n';
-      out += '    }\n';
-      out += '}\n';
-      out += '\\end{pxCode}\n\n';
-    }
-
-    if (state.blobs.figure) {
-      out += '%% BLOB: Inclusió segura de figura amb fallback automàtic (pxSRC)\n';
-      out += '\\pxIMG[0.75\\linewidth]{img/arquitectura}{Diagrama d\'arquitectura del sistema}[fig:arquitectura]\n\n';
-    }
-
-    if (state.blobs.cmp) {
-      out += '%% BLOB: Diagrames de Compiladors i Autòmats (pxCMP)\n';
-      out += '\\subsection{Diagrama de Tombstone i Autòmat Finit}\n';
-      out += '\\pxTombstoneCompile[title={Compilador Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
-      out += '\\pxTransitionTable[title={Taula de transició de l\'autòmat}]{a, b}{\n';
-      out += '  q_0 / initial   / q_1, q_2 / I;\n';
-      out += '  q_1 / normal    / q_3, q_2 / I;\n';
-      out += '  q_2 / accepting / q_1, q_3 / II;\n';
-      out += '  q_3 / accepting / q_3, q_3 / II\n';
-      out += '}\n\n';
-      out += '\\pxAutomatonTrace[title={Traça de reconeixement de la paraula \\texttt{aba}}]{\n';
-      out += '  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1\n';
-      out += '}[Reconegut]\n\n';
-    }
-
-    if (state.blobs.graph) {
-      out += '%% BLOB: Graf de Cerca Heurística A* (pxCMP)\n';
-      out += '\\pxGraph[title={Graf de cerca heurística $A^*$} travessant estats]{\n';
-      out += '  A / A / 0,0 / start / $h=20$;\n';
-      out += '  B / B / 2.2,1.1 / path / {$g=4, f=16$};\n';
-      out += '  C / C / 2.2,-1.1 / visited / $h=15$;\n';
-      out += '  D / D / 4.4,1.1 / open / $h=10$;\n';
-      out += '  G / G / 4.4,-1.1 / goal / $h=0$\n';
-      out += '}{\n';
-      out += '  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12\n';
-      out += '}\n\n';
-    }
-
-    if (state.blobs.ml) {
-      out += '%% BLOB: Intel·ligència Artificial: Matriu de Confusió i Xarxa Neuronal (pxCMP)\n';
-      out += '\\pxConfusionMatrix[title={Avaluació del Classificador}]\n';
-      out += '  {Positiu, Negatiu}\n';
-      out += '  {45 (TP), 5 (FP); 3 (FN), 47 (TN)}\n';
-      out += '  [Precisió = 0.90 \\quad|\\quad Sensibilitat = 0.9375 \\quad|\\quad $F_1 = 0.9184$]\n\n';
-      out += '\\pxNeuralNet[title={Perceptró Multicapa (MLP)}]{\n';
-      out += '  Entrada / x_0, x_1, x_2 / input;\n';
-      out += '  Capa Oculta / h_0, h_1, h_2 / ReLU;\n';
-      out += '  Sortida / Y / Softmax\n';
-      out += '}[x_0 -> h_0 / 1; x_1 -> h_1 / 1; h_0 -> Y / 0.5]\n\n';
-    }
-
-    if (state.blobs.foreach) {
-      out += '%% BLOB: Inclusió automàtica de llista d\'imatges (pxIMGList de pxSRC)\n';
-      out += '\\pxIMGList[0.7\\linewidth]{img/benchmark_pas_}{\n';
-      out += '  Pas 1: Captura de dades inicials,\n';
-      out += '  Pas 2: Filtratge i processament,\n';
-      out += '  Pas 3: Resultats de l\'avaluació\n';
-      out += '}\n\n';
-    }
-
-    out += '\\end{document}\n';
-
-    const codeEl = document.getElementById('latex-preview-code');
-    if (codeEl) {
-      codeEl.textContent = out;
-    }
+  // 5. Copy Actions
+  function copyOutput(btn) {
+    const text = outputTarget.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '<span>COPIED!</span>';
+      setTimeout(() => {
+        btn.innerHTML = original;
+      }, 1800);
+    }).catch(err => console.error('Copy failed:', err));
   }
 
-  // Expose generateLatexCode globally for testing / offline usage
-  window.generateLatexCode = generateLatexCode;
+  btnCopyMain.addEventListener('click', () => copyOutput(btnCopyMain));
+  btnCopyPane.addEventListener('click', () => copyOutput(btnCopyPane));
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  // 6. Download Actions
+  function downloadOutput() {
+    const text = outputTarget.textContent;
+    let filename = outputFilename.textContent.replace('OUTPUT: ', '').trim() || 'p3ctex-export.tex';
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  btnDownloadMain.addEventListener('click', downloadOutput);
+  btnDownloadPane.addEventListener('click', downloadOutput);
+
+  // Initial render & URL hash support
+  const hash = window.location.hash.replace('#', '');
+  if (hash) {
+    const target = 'tool-' + hash;
+    if (document.getElementById(target)) {
+      activateTool(target);
+    } else {
+      renderActiveTool();
+    }
   } else {
-    init();
+    renderActiveTool();
   }
-})();
+});

@@ -3,53 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Standalone Offline LaTeX Generator · P3CTeX Tooling</title>
-  <meta name="description" content="Generate compliant, ready-to-compile UOC LaTeX preambles and assessment skeletons with live preview, copy-to-clipboard, and .tex download.">
-  
+  <title>LaTeX Generator Studio · P3CTeX</title>
+  <meta name="description" content="Interactive multi-asset LaTeX studio for UOC coursework: generate document starters, data tables, Gantt charts, UML diagrams, code listings, and automata tables.">
   
   
   
 <style>
 /* Inlined site.css */
 /* ==========================================================================
-   P3CTeX Emergency Engineering Workstation MK-II
-   Architecture: Fixed-Viewport Interactive Console (Zero Vertical Scroll Slop)
-   Design: Retrofuturistic High-Density Hardware Instrument Deck
-   "PROCRASTINAR ÉS L'ÚNICA ESPERANÇA" · By ScVr!a
+   P3CTeX Workspace — Restful Academic Slate Aesthetic
+   Design: Sophisticated, Low-Strain Dark Theme (Linear / GitHub Dimmed Grade)
+   Zero Playschool Contrast · Zero Garish Neon · Pure Editorial Balance
    ========================================================================== */
 
 :root {
-  /* Deep Space Canvas Palette */
-  --bg-void: #05080c;
-  --bg-deck: #0a0e15;
-  --bg-stage: #080c12;
-  --bg-subtle: #101622;
-  --bg-editor: #06090e;
+  /* Warm Graphite & Deep Charcoal Canvas (No Pitch-Black Void) */
+  --bg-canvas: #0e1217;
+  --bg-surface: #141820;
+  --bg-elevated: #1a202a;
+  --bg-recessed: #0a0d11;
+  --bg-code: #0b0e13;
 
-  /* Architectural Hairlines & Datum Rules (Zero Generic Card Borders) */
-  --hairline-dim: rgba(255, 255, 255, 0.08);
-  --hairline-base: #1e2838;
-  --hairline-bright: #2e3e56;
+  /* Restful, Low-Contrast Structural Borders */
+  --border-subtle: #202733;
+  --border-base: #2a3342;
+  --border-focus: #3d495c;
 
-  /* Phosphor & Retro Hardware Luminescence */
-  --phosphor-green: #22c55e;
-  --phosphor-green-glow: rgba(34, 197, 94, 0.3);
-  --phosphor-amber: #f59e0b;
-  --phosphor-amber-glow: rgba(245, 158, 11, 0.25);
-  --phosphor-cyan: #38bdf8;
-  --phosphor-cyan-glow: rgba(56, 189, 248, 0.25);
-  --action-rust: #e11d48;
-  --action-rust-hover: #f43f5e;
+  /* Controlled, Matte Hardware Accents (Single Warm Ochre Accent) */
+  --accent-ochre: #d49a44;
+  --accent-ochre-dim: rgba(212, 154, 68, 0.12);
+  --accent-ochre-border: rgba(212, 154, 68, 0.35);
 
-  /* Typography Colors */
-  --txt-pure: #ffffff;
-  --txt-primary: #e2e8f0;
-  --txt-secondary: #94a3b8;
-  --txt-muted: #64748b;
+  --accent-steel: #568ec2;
+  --accent-steel-dim: rgba(86, 142, 194, 0.12);
 
-  /* Typographic Font Families */
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --accent-olive: #489b6b;
+
+  /* Calibrated Low-Strain Typography */
+  --text-heading: #e2e7ee;
+  --text-primary: #b8c3d0;
+  --text-secondary: #8593a6;
+  --text-muted: #566476;
+
+  /* Typography Stacks */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 * {
@@ -62,15 +60,15 @@ html, body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background-color: var(--bg-void);
-  color: var(--txt-primary);
-  font-family: var(--font-mono);
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
   font-size: 13.5px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Off-Screen Accessibility Link */
+/* Accessibility */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -81,44 +79,38 @@ html, body {
 }
 .skip-link:focus {
   position: fixed;
-  top: 10px;
-  left: 10px;
-  width: auto;
-  height: auto;
-  z-index: 99999;
-  background: var(--phosphor-amber);
-  color: #000000;
-  padding: 8px 14px;
-  font-weight: 700;
+  top: 8px;
+  left: 8px;
+  z-index: 9999;
+  background: var(--accent-ochre);
+  color: #000;
+  padding: 6px 12px;
+  font-weight: 600;
 }
 
 /* ==========================================================================
-   FIXED VIEWPORT CONTAINER (100vh / 100vw)
+   FIXED VIEWPORT CONTAINER (100vh)
    ========================================================================== */
 .console-viewport {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background-color: var(--bg-void);
-  background-image: 
-    linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-color: var(--bg-canvas);
   overflow: hidden;
 }
 
 /* ==========================================================================
-   TOP MASTHEAD HEADER DECK
+   TOP MASTHEAD HEADER
    ========================================================================== */
 .console-masthead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  padding: 0 20px;
-  background: var(--bg-deck);
-  border-bottom: 1px solid var(--hairline-base);
+  height: 48px;
+  padding: 0 18px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
   gap: 16px;
 }
@@ -126,193 +118,193 @@ html, body {
 .masthead-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
-.masthead-brand .brand-badge {
+.brand-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   text-decoration: none;
-  color: var(--txt-pure);
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  font-size: 16px;
+  color: var(--text-heading);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
 }
 .brand-badge .badge-icon {
-  color: var(--phosphor-cyan);
-  font-size: 18px;
+  color: var(--accent-steel);
+  font-size: 16px;
 }
 .brand-badge .badge-ver {
-  font-size: 11px;
-  color: var(--phosphor-amber);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  padding: 1px 5px;
-  letter-spacing: 0;
+  font-size: 10.5px;
+  color: var(--accent-ochre);
+  background: var(--accent-ochre-dim);
+  border: 1px solid var(--accent-ochre-border);
+  padding: 1px 4px;
+  border-radius: 2px;
 }
 .brand-tagline {
-  font-size: 11px;
-  color: var(--txt-muted);
-  border-left: 1px solid var(--hairline-bright);
-  padding-left: 12px;
-  letter-spacing: 0.02em;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 10px;
 }
 
 .masthead-telemetry {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 11.5px;
-  color: var(--txt-secondary);
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .telemetry-sep {
-  color: var(--hairline-bright);
+  color: var(--border-base);
 }
 .telemetry-item strong {
-  color: var(--txt-primary);
+  color: var(--text-heading);
+  font-weight: 600;
 }
 .telemetry-item.status {
-  color: var(--phosphor-green);
+  color: var(--accent-olive);
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-weight: 700;
+  gap: 5px;
+  font-weight: 600;
 }
 .led-pulse {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background-color: var(--phosphor-green);
-  box-shadow: 0 0 8px var(--phosphor-green);
-}
-.telemetry-motto {
-  color: var(--phosphor-amber);
-  font-style: italic;
-  font-size: 11px;
+  background-color: var(--accent-olive);
 }
 
 .masthead-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 .action-btn {
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 600;
   text-decoration: none;
-  transition: all 0.15s ease;
-  border: 1px solid transparent;
+  border-radius: 3px;
+  border: 1px solid var(--border-base);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  transition: all 0.12s ease;
+  cursor: pointer;
+}
+.action-btn:hover {
+  background: #222936;
+  border-color: var(--border-focus);
+  color: var(--text-heading);
 }
 .action-btn.cyan {
-  background: rgba(56, 189, 248, 0.12);
-  color: var(--phosphor-cyan);
-  border-color: rgba(56, 189, 248, 0.35);
+  border-color: rgba(86, 142, 194, 0.4);
+  color: var(--accent-steel);
 }
 .action-btn.cyan:hover {
-  background: var(--phosphor-cyan);
-  color: #000;
-  box-shadow: 0 0 10px var(--phosphor-cyan-glow);
+  background: var(--accent-steel-dim);
+  border-color: var(--accent-steel);
 }
 .action-btn.rust {
-  background: var(--action-rust);
-  color: #fff;
+  background: #251c1c;
+  border-color: #593535;
+  color: #df9494;
 }
 .action-btn.rust:hover {
-  background: var(--action-rust-hover);
-  box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
+  background: #362424;
+  border-color: #8c4e4e;
+  color: #fff;
 }
 .action-btn.ghost {
-  color: var(--txt-secondary);
-  border-color: var(--hairline-base);
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
 }
 .action-btn.ghost:hover {
-  color: #fff;
-  border-color: var(--hairline-bright);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-subtle);
+  color: var(--text-heading);
 }
 
 /* ==========================================================================
-   TACTICAL SELECTOR RIBBON
+   NAVIGATION SELECTOR RIBBON
    ========================================================================== */
 .console-selector-ribbon {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 44px;
-  padding: 0 20px;
-  background: var(--bg-void);
-  border-bottom: 1px solid var(--hairline-base);
+  height: 38px;
+  padding: 0 18px;
+  background: var(--bg-canvas);
+  border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
 .selector-track {
   display: flex;
-  gap: 4px;
-  overflow-x: auto;
+  gap: 2px;
 }
 .selector-key {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: transparent;
-  color: var(--txt-secondary);
+  color: var(--text-secondary);
   border: none;
   border-bottom: 2px solid transparent;
-  padding: 10px 14px;
+  padding: 8px 12px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 11.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.12s ease;
+  transition: all 0.1s ease;
 }
 .selector-key .key-index {
-  color: var(--txt-muted);
+  color: var(--text-muted);
   font-size: 10px;
 }
 .selector-key:hover {
-  color: var(--txt-pure);
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-heading);
+  background: rgba(255, 255, 255, 0.02);
 }
 .selector-key.active {
-  color: var(--phosphor-amber);
-  border-bottom: 2px solid var(--phosphor-amber);
-  background: rgba(245, 158, 11, 0.06);
+  color: var(--text-heading);
+  border-bottom: 2px solid var(--accent-ochre);
 }
 .selector-key.active .key-index {
-  color: var(--phosphor-amber);
+  color: var(--accent-ochre);
 }
 
 .selector-meta .mode-readout {
-  font-size: 11px;
-  color: var(--txt-muted);
-  letter-spacing: 0.05em;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 /* ==========================================================================
-   MAIN CONSOLE STAGE (100% Remaining Height, No Page Scroll)
+   MAIN CONSOLE STAGE (100% Remaining Viewport, Zero Scroll)
    ========================================================================== */
 .console-stage {
   flex: 1;
   min-height: 0;
   position: relative;
   overflow: hidden;
-  background: var(--bg-stage);
+  background: var(--bg-canvas);
 }
 
 .console-deck {
   display: none;
   height: 100%;
   width: 100%;
-  padding: 16px 20px;
+  padding: 18px;
   overflow: hidden;
 }
 .console-deck.active {
@@ -321,12 +313,253 @@ html, body {
 }
 
 /* ==========================================================================
-   DECK 01: SKELETON CODES (Dual Split Screen)
+   DECK 01: OVERVIEW (Restful Editorial Composition)
+   ========================================================================== */
+.overview-stage-split {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: 24px;
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.overview-narrative-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 0;
+  padding-right: 10px;
+}
+
+.overview-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--accent-steel);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.overview-category-badge .badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-steel);
+}
+
+.overview-hero-headline {
+  font-size: clamp(20px, 2.1vw, 26px);
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.overview-hero-headline .accent-text {
+  color: var(--accent-ochre);
+}
+
+.overview-hero-lead {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.overview-pillars-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.pillar-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 2px solid var(--accent-ochre);
+  padding: 8px 12px;
+  border-radius: 2px;
+}
+.pillar-icon {
+  color: var(--accent-ochre);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.pillar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pillar-content strong {
+  font-size: 12px;
+  color: var(--text-heading);
+  font-weight: 600;
+}
+.pillar-content span {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.pillar-content code {
+  font-family: var(--font-mono);
+  color: var(--accent-ochre);
+  background: rgba(212, 154, 68, 0.08);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.overview-cta-strip {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+.cta-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid var(--border-base);
+  transition: all 0.12s ease;
+}
+.cta-action-btn.primary {
+  background: var(--bg-elevated);
+  border-color: var(--accent-ochre-border);
+  color: var(--accent-ochre);
+}
+.cta-action-btn.primary:hover {
+  background: var(--accent-ochre);
+  color: #0e1217;
+}
+.cta-action-btn.secondary {
+  background: var(--bg-surface);
+  border-color: var(--border-base);
+  color: var(--text-primary);
+}
+.cta-action-btn.secondary:hover {
+  background: var(--bg-elevated);
+  color: var(--text-heading);
+}
+.cta-action-btn.ghost {
+  background: transparent;
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+.cta-action-btn.ghost:hover {
+  border-color: var(--border-base);
+  color: var(--text-primary);
+}
+
+.overview-visual-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 12px;
+  gap: 10px;
+  border-radius: 3px;
+}
+.quickstart-box {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.quickstart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding: 0 10px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.quickstart-pre {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.45;
+  color: #9cdcfe;
+  white-space: pre;
+}
+.overview-fast-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+}
+.spec-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stat-label {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.stat-value {
+  font-size: 10.5px;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.quickstart-compile-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  padding: 5px 8px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.quickstart-compile-strip span {
+  color: var(--text-muted);
+}
+.quickstart-compile-strip code {
+  color: var(--accent-olive);
+  font-size: 11px;
+}
+
+/* ==========================================================================
+   DECK 02: STARTER TEMPLATES
    ========================================================================== */
 .deck-split-view {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 16px;
+  grid-template-columns: 1fr 320px;
+  gap: 14px;
   height: 100%;
   min-height: 0;
 }
@@ -336,270 +569,280 @@ html, body {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: var(--bg-editor);
-  border: 1px solid var(--hairline-base);
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
 }
 
 .buffer-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 38px;
-  padding: 0 14px;
-  background: var(--bg-subtle);
-  border-bottom: 1px solid var(--hairline-base);
+  height: 36px;
+  padding: 0 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 .buffer-meta {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11.5px;
+  font-size: 11px;
+  font-family: var(--font-mono);
 }
 .buffer-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: var(--phosphor-amber);
+  background: var(--accent-ochre);
 }
 .buffer-title {
-  color: var(--txt-pure);
-  font-weight: 700;
+  color: var(--text-heading);
+  font-weight: 600;
 }
 .buffer-tag {
-  color: var(--txt-muted);
-  font-size: 10.5px;
+  color: var(--text-muted);
+  font-size: 10px;
 }
 
 .tactile-copy-action {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(245, 158, 11, 0.12);
-  color: var(--phosphor-amber);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  padding: 4px 10px;
+  gap: 5px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-base);
+  padding: 4px 8px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.12s ease;
 }
 .tactile-copy-action:hover {
-  background: var(--phosphor-amber);
-  color: #000;
+  background: var(--border-focus);
+  color: #fff;
 }
 .tactile-copy-action.copied {
-  background: var(--phosphor-green);
-  color: #000;
-  border-color: var(--phosphor-green);
+  background: var(--accent-olive);
+  color: #fff;
+  border-color: var(--accent-olive);
 }
 .tactile-copy-action.mini {
-  padding: 2px 8px;
-  font-size: 10.5px;
+  padding: 2px 6px;
+  font-size: 10px;
 }
 
 .buffer-editor-area {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 14px 16px;
-  background: var(--bg-editor);
+  padding: 14px;
+  background: var(--bg-code);
 }
 .editor-pre {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.55;
-  color: #bbf7d0;
+  color: #9cdcfe;
   white-space: pre;
 }
 
-/* Profile Sidebar */
 .profile-sidebar-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: var(--bg-deck);
-  border: 1px solid var(--hairline-base);
-  padding: 14px 16px;
-  gap: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 12px;
+  gap: 10px;
+  border-radius: 3px;
   overflow-y: auto;
 }
 .sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10.5px;
-  color: var(--txt-muted);
-  letter-spacing: 0.08em;
-  border-bottom: 1px solid var(--hairline-dim);
-  padding-bottom: 6px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 5px;
 }
 
 .profile-rocker-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 .profile-switch {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--hairline-base);
-  padding: 8px 12px;
-  color: var(--txt-secondary);
-  font-family: var(--font-mono);
+  gap: 10px;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  padding: 7px 10px;
+  color: var(--text-secondary);
+  border-radius: 2px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.12s ease;
+  transition: all 0.1s ease;
 }
 .profile-switch .sw-badge {
-  font-weight: 800;
-  font-size: 13px;
-  color: var(--txt-muted);
-  width: 34px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  width: 32px;
   flex-shrink: 0;
 }
 .profile-switch .sw-content {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 .profile-switch .sw-name {
-  font-size: 12px;
-  color: var(--txt-primary);
+  font-size: 11.5px;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 .profile-switch .sw-desc {
-  font-size: 10.5px;
-  color: var(--txt-muted);
+  font-size: 10px;
+  color: var(--text-muted);
 }
 .profile-switch:hover {
-  border-color: var(--hairline-bright);
+  border-color: var(--border-base);
+  color: var(--text-heading);
 }
 .profile-switch.active {
-  background: rgba(56, 189, 248, 0.08);
-  border-color: var(--phosphor-cyan);
+  background: var(--bg-elevated);
+  border-color: var(--accent-ochre-border);
 }
 .profile-switch.active .sw-badge {
-  color: var(--phosphor-cyan);
+  color: var(--accent-ochre);
 }
 .profile-switch.active .sw-name {
-  color: #fff;
-}
-.profile-switch.active .sw-desc {
-  color: var(--txt-secondary);
+  color: var(--text-heading);
 }
 
 .profile-specs-readout {
   flex: 1;
   min-height: 0;
-  border-top: 1px solid var(--hairline-dim);
-  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .specs-title {
-  font-size: 13.5px;
-  color: var(--phosphor-amber);
+  font-size: 12.5px;
+  color: var(--accent-ochre);
+  font-weight: 600;
   margin: 0;
 }
 .specs-summary {
-  font-size: 11.5px;
-  color: var(--txt-secondary);
+  font-size: 11px;
+  color: var(--text-secondary);
   line-height: 1.45;
   margin: 0;
 }
 .specs-dl {
   display: grid;
-  grid-template-columns: 110px 1fr;
-  row-gap: 5px;
-  font-size: 11px;
-  margin-top: 6px;
+  grid-template-columns: 95px 1fr;
+  row-gap: 4px;
+  font-size: 10.5px;
+  margin-top: 4px;
 }
 .specs-dl dt {
-  color: var(--txt-muted);
-  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 .specs-dl dd {
-  color: var(--txt-primary);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .sidebar-action-box {
   margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid var(--hairline-dim);
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
 }
 .sidebar-action-box .action-label {
   display: block;
-  font-size: 10px;
-  color: var(--txt-muted);
-  margin-bottom: 4px;
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-bottom: 3px;
 }
 .sidebar-action-box .cmd-pill {
   display: block;
-  background: var(--bg-editor);
-  color: var(--phosphor-green);
-  padding: 6px 8px;
-  font-size: 11px;
-  border: 1px solid var(--hairline-base);
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  padding: 5px 8px;
+  font-size: 10.5px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
 }
 
 /* ==========================================================================
-   DECK 02: CO-PROCESSOR ARSENAL
+   DECK 03: PACKAGES & MACROS
    ========================================================================== */
 .macro-stage-view {
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 14px;
+  gap: 12px;
 }
 
 .macro-channel-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 .channel-key {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--bg-deck);
-  border: 1px solid var(--hairline-base);
-  padding: 10px 12px;
-  color: var(--txt-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
   cursor: pointer;
-  transition: all 0.12s ease;
+  border-radius: 2px;
+  transition: all 0.1s ease;
   text-align: left;
 }
 .channel-key .ch-id {
-  color: var(--txt-muted);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
   font-size: 10px;
-  font-weight: 800;
 }
 .channel-key:hover {
-  border-color: var(--hairline-bright);
-  color: var(--txt-pure);
+  border-color: var(--border-base);
+  color: var(--text-heading);
 }
 .channel-key.active {
-  background: rgba(56, 189, 248, 0.08);
-  border-color: var(--phosphor-cyan);
-  color: var(--txt-pure);
+  background: var(--bg-elevated);
+  border-color: var(--accent-ochre-border);
+  color: var(--text-heading);
 }
 .channel-key.active .ch-id {
-  color: var(--phosphor-cyan);
+  color: var(--accent-ochre);
 }
 
 .macro-showcase-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
   flex: 1;
   min-height: 0;
 }
@@ -607,164 +850,180 @@ html, body {
 .macro-narrative {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  background: var(--bg-deck);
-  border: 1px solid var(--hairline-base);
-  padding: 20px;
+  gap: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 16px;
+  border-radius: 3px;
   overflow-y: auto;
 }
 .macro-hero-title {
-  font-size: 16px;
-  color: var(--phosphor-cyan);
+  font-size: 14.5px;
+  color: var(--text-heading);
+  font-weight: 600;
   margin: 0;
 }
 .macro-hero-desc {
-  font-size: 13px;
-  color: var(--txt-secondary);
-  line-height: 1.6;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
   margin: 0;
 }
 .macro-features-strip {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 10px 0;
+  gap: 5px;
+  margin: 6px 0;
 }
 .feat-pill {
-  font-size: 11.5px;
-  color: var(--phosphor-amber);
-  background: rgba(245, 158, 11, 0.06);
-  border-left: 2px solid var(--phosphor-amber);
+  font-size: 11px;
+  color: var(--text-primary);
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-left: 2px solid var(--accent-ochre);
   padding: 4px 8px;
+  border-radius: 2px;
+}
+.feat-pill strong {
+  color: var(--text-heading);
 }
 .macro-doc-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: auto;
 }
 .doc-link-btn {
   display: inline-block;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--phosphor-cyan);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent-steel);
   text-decoration: none;
-  padding: 6px 12px;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 5px 10px;
+  border: 1px solid var(--border-base);
+  background: var(--bg-elevated);
+  border-radius: 2px;
 }
 .doc-link-btn:hover {
-  background: var(--phosphor-cyan);
-  color: #000;
+  border-color: var(--accent-steel);
 }
 .doc-link-btn.secondary {
-  color: var(--txt-secondary);
-  border-color: var(--hairline-base);
+  color: var(--text-secondary);
 }
 
 .macro-code-display {
   display: flex;
   flex-direction: column;
-  background: var(--bg-editor);
-  border: 1px solid var(--hairline-base);
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
   height: 100%;
 }
 .code-display-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 36px;
-  padding: 0 12px;
-  background: var(--bg-subtle);
-  border-bottom: 1px solid var(--hairline-base);
+  height: 34px;
+  padding: 0 10px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .code-display-header .disp-label {
-  font-size: 11px;
-  color: var(--txt-muted);
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
 }
 .macro-pre {
   flex: 1;
-  padding: 16px;
+  padding: 14px;
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: #fde68a;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #ce9178;
   overflow: auto;
 }
 
 /* ==========================================================================
-   DECK 03: LOCAL RUNBOOK
+   DECK 04: INSTALLATION & SETUP
    ========================================================================== */
 .runbook-stage-view {
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 14px;
+  gap: 12px;
 }
 .runbook-header-strip {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--hairline-base);
-  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 6px;
 }
 .runbook-title {
-  font-size: 14px;
-  color: var(--phosphor-amber);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-heading);
   margin: 0;
 }
 .runbook-tag {
-  font-size: 11px;
-  color: var(--txt-muted);
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
 }
 
 .runbook-grid-flow {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
   flex: 1;
   min-height: 0;
 }
 .runbook-step-row {
   display: flex;
-  gap: 12px;
-  background: var(--bg-deck);
-  border: 1px solid var(--hairline-base);
-  padding: 14px;
+  gap: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 12px;
+  border-radius: 3px;
 }
 .step-num {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--phosphor-cyan);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-ochre);
   line-height: 1;
 }
 .step-body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
 }
 .step-headline strong {
   display: block;
-  font-size: 12px;
-  color: var(--txt-pure);
+  font-size: 11.5px;
+  color: var(--text-heading);
 }
 .step-headline .step-note {
-  font-size: 11px;
-  color: var(--txt-muted);
+  font-size: 10.5px;
+  color: var(--text-muted);
 }
 .step-code-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-editor);
-  border: 1px solid var(--hairline-bright);
-  padding: 6px 10px;
-  margin-top: 4px;
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+  padding: 5px 8px;
+  margin-top: 3px;
+  border-radius: 2px;
 }
 .step-code-box code {
-  color: var(--phosphor-green);
-  font-size: 11.5px;
+  font-family: var(--font-mono);
+  color: #4ec9b0;
+  font-size: 11px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -774,170 +1033,118 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  padding: 12px 16px;
-  gap: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 2px solid var(--accent-olive);
+  padding: 10px 14px;
+  gap: 12px;
+  border-radius: 3px;
 }
 .strip-text strong {
   display: block;
-  font-size: 12px;
-  color: var(--phosphor-green);
+  font-size: 11.5px;
+  color: var(--text-heading);
 }
 .strip-text span {
-  font-size: 11.5px;
-  color: var(--txt-secondary);
+  font-size: 11px;
+  color: var(--text-secondary);
 }
 .offline-download-btn {
-  background: var(--phosphor-green);
-  color: #000;
-  font-weight: 800;
-  font-size: 11.5px;
-  padding: 8px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-base);
+  color: var(--accent-olive);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 11px;
+  padding: 6px 12px;
   text-decoration: none;
   white-space: nowrap;
+  border-radius: 2px;
+}
+.offline-download-btn:hover {
+  background: var(--accent-olive);
+  color: #fff;
 }
 
 /* ==========================================================================
-   DECK 04: SPEC MATRIX
+   DECK 05: DELIVERABLE GUIDE
    ========================================================================== */
 .specs-stage-view {
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 12px;
+  gap: 10px;
 }
 .specs-stage-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--hairline-base);
-  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 6px;
 }
 .specs-matrix-title {
-  font-size: 14px;
-  color: var(--phosphor-cyan);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-heading);
   margin: 0;
 }
 .specs-matrix-sub {
-  font-size: 11px;
-  color: var(--txt-muted);
+  font-size: 10.5px;
+  color: var(--text-muted);
 }
 
 .matrix-table-wrap {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  border: 1px solid var(--hairline-base);
-  background: var(--bg-deck);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  border-radius: 3px;
 }
 .matrix-spec-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 11.5px;
   text-align: left;
 }
 .matrix-spec-table th,
 .matrix-spec-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--hairline-dim);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 .matrix-spec-table thead th {
-  background: var(--bg-subtle);
-  color: var(--phosphor-amber);
-  font-weight: 700;
-  border-bottom: 1px solid var(--hairline-bright);
+  background: var(--bg-elevated);
+  color: var(--text-heading);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 .matrix-spec-table tbody th {
-  color: var(--txt-muted);
-  font-weight: 700;
-  width: 220px;
+  color: var(--text-muted);
+  font-weight: 500;
+  width: 180px;
 }
 .matrix-spec-table tbody td {
-  color: var(--txt-primary);
+  color: var(--text-primary);
 }
 .matrix-spec-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.015);
 }
 
 /* ==========================================================================
-   DECK 05: WORKSHOP LAB
-   ========================================================================== */
-.workshop-stage-view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 12px;
-}
-.workshop-media-frame {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  border: 1px solid var(--hairline-base);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-}
-.workshop-media-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.workshop-hud-overlay {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 8px;
-}
-.hud-tag {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid var(--hairline-bright);
-  color: var(--txt-secondary);
-  font-size: 10px;
-  padding: 3px 8px;
-}
-.hud-tag.status {
-  color: var(--phosphor-green);
-  border-color: var(--phosphor-green);
-}
-
-.workshop-manifesto {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  background: var(--bg-deck);
-  border: 1px solid var(--hairline-base);
-  padding: 14px;
-}
-.manifesto-col h3 {
-  font-size: 11.5px;
-  color: var(--phosphor-amber);
-  margin-bottom: 6px;
-}
-.manifesto-col p {
-  font-size: 11.5px;
-  color: var(--txt-secondary);
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* ==========================================================================
-   BOTTOM TELEMETRY STATUS STRIP
+   BOTTOM STATUS FOOTER
    ========================================================================== */
 .console-telemetry-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 34px;
-  padding: 0 20px;
-  background: var(--bg-deck);
-  border-top: 1px solid var(--hairline-base);
-  font-size: 11px;
-  color: var(--txt-muted);
+  height: 32px;
+  padding: 0 18px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   flex-shrink: 0;
 }
 .footer-status-left {
@@ -946,548 +1153,728 @@ html, body {
   gap: 8px;
 }
 .dot-live {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: var(--phosphor-green);
+  background: var(--accent-olive);
 }
 .footer-links-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 .foot-link {
-  color: var(--txt-secondary);
+  color: var(--text-secondary);
   text-decoration: none;
 }
 .foot-link:hover {
-  color: var(--phosphor-cyan);
+  color: var(--text-heading);
 }
 
 
 /* Inlined generator.css */
 /* ==========================================================================
-   P3CTeX LaTeX Generator Stylesheet (Retro Engineering Terminal)
+   P3CTeX LaTeX Generator Studio Stylesheet
+   Restful Academic Dark Slate Aesthetic (Low-Strain, High Ergonomics)
    ========================================================================== */
 
-.generator-app {
+.studio-split-deck {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
-  margin-top: 20px;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+  padding: 16px 18px;
 }
 
-@media (min-width: 1024px) {
-  .generator-app {
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: start;
-  }
-}
-
-/* Preset Toolbar */
-.preset-bar {
-  background: var(--chassis-card);
-  border: 1px solid var(--line-mid);
-  border-left: 4px solid var(--led-amber);
-  padding: 16px 20px;
-  margin-bottom: 24px;
-  border-radius: 2px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-}
-
-.preset-header {
+/* ==========================================================================
+   LEFT PANE: FORM CONFIGURATOR
+   ========================================================================== */
+.studio-form-pane {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 750;
-  color: var(--led-amber);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.preset-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.preset-btn {
-  background: var(--chassis-panel);
-  border: 1px solid var(--line-mid);
-  color: var(--text-main);
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
-  font-weight: 650;
-  padding: 8px 14px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.preset-btn:hover {
-  background: var(--chassis-raised);
-  border-color: var(--crt-teal-bright);
-  color: #ffffff;
-}
-
-.preset-btn.active {
-  background: var(--btn-rust);
-  color: #ffffff;
-  border-color: var(--btn-rust-active);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-}
-
-/* Config Groups */
-.config-group {
-  background: var(--chassis-panel);
-  border: 1px solid var(--line-dark);
-  border-radius: 2px;
-  margin-bottom: 18px;
-  overflow: hidden;
-}
-
-.config-group-header {
-  background: #18202b;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dark);
-  font-family: var(--font-mono);
-  font-weight: 750;
-  font-size: 0.8rem;
-  color: var(--crt-teal-bright);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.config-group-body {
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  overflow-y: auto;
   padding: 16px;
 }
 
-.form-row {
-  margin-bottom: 14px;
+.generator-panel {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+.generator-panel.active {
+  display: flex;
 }
 
-.form-row:last-child {
-  margin-bottom: 0;
+.panel-intro h2 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: 3px;
 }
-
-.form-row label {
-  display: block;
+.panel-intro p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.panel-intro code {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 650;
-  color: var(--text-dim);
-  margin-bottom: 6px;
-  letter-spacing: 0.02em;
-}
-
-.form-row input[type="text"],
-.form-row select {
-  width: 100%;
-  background: var(--chassis-recessed);
-  border: 1px solid var(--line-mid);
-  color: var(--text-bright);
-  padding: 9px 12px;
+  color: var(--accent-ochre);
+  background: var(--accent-ochre-dim);
+  padding: 1px 4px;
   border-radius: 2px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+}
+.section-label {
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
 }
 
-.form-row input[type="text"]:focus,
-.form-row select:focus {
-  outline: none;
-  border-color: var(--crt-teal-bright);
-  box-shadow: 0 0 0 2px rgba(107, 158, 158, 0.25);
-}
-
-/* Checkbox and Toggle lists */
-.toggle-list {
+.pill-selector {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.pill-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.1s ease;
+}
+.pill-btn strong {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-heading);
+}
+.pill-btn span {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.pill-btn:hover {
+  border-color: var(--border-base);
+}
+.pill-btn.active {
+  background: var(--bg-elevated);
+  border-color: var(--accent-ochre-border);
+}
+.pill-btn.active strong {
+  color: var(--accent-ochre);
+}
+.pill-btn.active span {
+  color: var(--text-secondary);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
 
-.toggle-item {
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.input-field label {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+.input-field input[type="text"],
+.input-field select,
+.input-field textarea {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-heading);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 6px 8px;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.12s ease;
+}
+.input-field input[type="text"]:focus,
+.input-field select:focus,
+.input-field textarea:focus {
+  border-color: var(--border-focus);
+}
+.input-field textarea {
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.checkbox-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.check-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
   cursor: pointer;
-  font-size: 0.88rem;
-  color: var(--text-main);
 }
-
-.toggle-item input[type="checkbox"] {
-  accent-color: var(--btn-rust);
-  width: 17px;
-  height: 17px;
+.check-item input[type="checkbox"] {
+  accent-color: var(--accent-ochre);
   cursor: pointer;
 }
 
-.toggle-item strong {
-  color: var(--text-bright);
-}
-
-/* Preview Card */
-.generator-preview {
-  position: sticky;
-  top: 24px;
-}
-
-.preview-card {
-  background: var(--chassis-recessed);
-  border: 1px solid var(--line-mid);
-  border-radius: 2px;
+/* ==========================================================================
+   RIGHT PANE: LIVE OUTPUT CODE VIEWER
+   ========================================================================== */
+.studio-output-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-.preview-header {
+.output-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #18202b;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line-dark);
+  height: 36px;
+  padding: 0 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
 }
-
-.preview-title {
+.output-meta {
   display: flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 750;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
+  font-size: 11px;
 }
-
-.preview-dot {
-  width: 8px;
-  height: 8px;
+.output-dot {
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: var(--led-green);
-  box-shadow: 0 0 6px var(--led-green);
+  background: var(--accent-olive);
+}
+.output-meta strong {
+  color: var(--text-heading);
+}
+.output-mode-badge {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  padding: 1px 4px;
+  border-radius: 2px;
 }
 
-.preview-actions {
+.output-action-group {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
 }
-
-.btn-tool {
-  background: var(--chassis-panel);
-  border: 1px solid var(--line-mid);
-  color: var(--text-main);
+.action-btn-sm {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 6px 12px;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
   border-radius: 2px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  border: 1px solid var(--border-base);
+  transition: all 0.1s ease;
+}
+.action-btn-sm.ghost {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+.action-btn-sm.ghost:hover {
+  background: var(--border-focus);
+  color: #fff;
+}
+.action-btn-sm.cyan {
+  background: var(--bg-elevated);
+  border-color: rgba(86, 142, 194, 0.4);
+  color: var(--accent-steel);
+}
+.action-btn-sm.cyan:hover {
+  background: var(--accent-steel-dim);
+  border-color: var(--accent-steel);
 }
 
-.btn-tool:hover {
-  background: var(--chassis-raised);
-  color: #ffffff;
+.output-code-canvas {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+  background: var(--bg-code);
 }
-
-.btn-tool.primary {
-  background: var(--btn-rust);
-  border-color: var(--btn-rust-active);
-  color: #ffffff;
-}
-
-.btn-tool.primary:hover {
-  background: var(--btn-rust-hover);
-}
-
-.preview-code {
+.canvas-pre {
   margin: 0;
-  padding: 18px;
-  max-height: 640px;
-  overflow-y: auto;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 12px;
   line-height: 1.55;
-  color: var(--text-main);
-  background: var(--chassis-recessed);
+  color: #9cdcfe;
+  white-space: pre;
 }
 
-.preview-code code {
-  background: transparent;
-  color: inherit;
-  padding: 0;
-  border-radius: 0;
+.output-footer-strip {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 </style>
 </head>
-<body class="generator">
-  <a class="skip-link" href="#main">Skip to content</a>
+<body class="console-workstation">
+  <a class="skip-link" href="#studio-stage">Skip to generator studio</a>
 
-  <!-- Header with Hardware Telemetry Masthead & CRT Demopack Screen Mount -->
-  <header class="site-header">
-    <!-- Top Telemetry Status Bar -->
-    <div class="telemetry-ticker-bar" aria-label="Hardware telemetry diagnostics">
-      <div class="telemetry-left">
-        <span class="led-indicator"><span class="led-dot green"></span> SYS: ONLINE</span>
-        <span class="led-indicator"><span class="led-dot amber"></span> GENERATOR: READY</span>
-        <span>KERNEL: <strong>P3CTeX.cls v1.1</strong></span>
-        <span>ARCH: <strong>pdflatex (MiKTeX / TeX Live)</strong></span>
+  <div class="console-viewport">
+
+    <!-- Top Masthead Header -->
+    <header class="console-masthead">
+      <div class="masthead-brand">
+        <a href="index.html" class="brand-badge" aria-label="P3CTeX Home">
+          <span class="badge-icon">⌸</span>
+          <span class="badge-title">P3CTeX</span>
+          <span class="badge-ver">STUDIO</span>
+        </a>
+        <span class="brand-tagline">Multi-Asset LaTeX Generator</span>
       </div>
-      <div class="telemetry-right">
-        <span>LOC: <strong>UOC BARCELONA</strong></span>
-        <span>DIST: <strong>GPL v3.0</strong></span>
-        <span class="led-indicator"><span class="led-dot rust"></span> BY ScVr!a</span>
+
+      <div class="masthead-telemetry">
+        <span class="telemetry-item status"><span class="led-pulse green"></span> STUDIO READY</span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item">6 GENERATOR TOOLS LOADED</span>
+        <span class="telemetry-sep">/</span>
+        <span class="telemetry-item">OUTPUT: <strong>READY TO PASTE OR COMPILE</strong></span>
       </div>
-    </div>
 
-    <a class="brand" href="index.html" aria-label="P3CTeX — Ultimate UOC Template Generator">
-      <img src="assets/images/brand-banner.jpg" alt="P3CTeX Authentic CRT Demopack Banner: Procrastinar es la unica esperanza. Ultimate UOC Template Generator by ScVr!a" width="1024" height="338" fetchpriority="high">
-    </a>
-    <nav class="site-nav" aria-label="Main navigation">
-      <a href="index.html">[F1 // HOME]</a>
-      <a href="tutorials.html">[F2 // TUTORIALS]</a>
-      <a href="showcases.html">[F3 // SHOWCASES]</a>
-      <a href="generator.html" aria-current="page">[F4 // GENERATOR]</a>
-      <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="nav-action" target="_blank" rel="noopener">[F5 // DOWNLOAD_ZIP]</a>
-      <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">[F6 // GITHUB]</a>
-    </nav>
-  </header>
-
-  <!-- Main Hardware Terminal Container -->
-  <main id="main" class="container">
-    <header class="page-intro">
-      <p class="eyebrow">Interactive LaTeX Studio</p>
-      <h1>Generate your assessment skeleton.</h1>
-      <p class="lede">
-        Configure your subject metadata, select your official delivery profile, and activate modular tools. Copy the generated LaTeX preamble or download a standalone <code>.tex</code> document ready to compile.
-      </p>
+      <div class="masthead-actions">
+        <a href="index.html" class="action-btn ghost">← WORKSTATION HOME</a>
+        <button type="button" class="action-btn rust" id="btn-copy-main">📋 COPY CODE</button>
+        <button type="button" class="action-btn cyan" id="btn-download-main">⬇ DOWNLOAD FILE</button>
+      </div>
     </header>
 
-    <!-- Preset Toolbar: Deliverable Profiles Only -->
-    <div class="preset-bar">
-      <div class="preset-header">
-        <span>CURATED COURSEWORK PRESETS (DELIVERABLE PROFILES)</span>
-        <span>ONE-CLICK POPULATE</span>
+    <!-- Tool Selector Ribbon (6 Specialized Generator Tabs) -->
+    <nav class="console-selector-ribbon" aria-label="Generator Tool Selectors">
+      <div class="selector-track">
+        <button type="button" class="selector-key active" data-tool="tool-document">
+          <span class="key-index">01</span>
+          <span class="key-label">DOCUMENT STARTER</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-tables">
+          <span class="key-index">02</span>
+          <span class="key-label">DATA TABLES</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-gantt">
+          <span class="key-index">03</span>
+          <span class="key-label">GANTT TIMELINE</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-uml">
+          <span class="key-index">04</span>
+          <span class="key-label">UML &amp; ARCHITECTURE</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-code">
+          <span class="key-index">05</span>
+          <span class="key-label">CODE LISTINGS</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-compiler">
+          <span class="key-index">06</span>
+          <span class="key-label">COMPILERS &amp; AUTOMATA</span>
+        </button>
       </div>
-      <div class="preset-buttons">
-        <button type="button" class="preset-btn active" data-preset="pac">[PAC] Catalan Assessment</button>
-        <button type="button" class="preset-btn" data-preset="pec">[PEC] Spanish Assessment</button>
-        <button type="button" class="preset-btn" data-preset="pr">[PR] Laboratory Practicum</button>
-        <button type="button" class="preset-btn" data-preset="tfg">[TFG] Degree Thesis Memory</button>
-        <button type="button" class="preset-btn" data-preset="ca">[CA] English Assessment</button>
+      <div class="selector-meta">
+        <span class="mode-readout" id="active-tool-readout">TOOL: [01 // DOCUMENT STARTER]</span>
       </div>
-    </div>
+    </nav>
 
-    <!-- Generator Grid -->
-    <div class="generator-app">
-      <!-- Left Column: Controls -->
-      <div class="generator-controls">
-        <!-- 1. Profile & Language -->
-        <div class="config-group">
-          <div class="config-group-header">01 // Delivery Profile &amp; Language</div>
-          <div class="config-group-body">
-            <div class="form-row">
-              <label for="select-profile">Official Delivery Profile</label>
-              <select id="select-profile">
-                <option value="PAC">PAC — Continuous Assessment in Catalan (no cover, with TOC &amp; anti-plagiarism)</option>
-                <option value="PEC">PEC — Evaluación Continua en Español (no cover, with TOC &amp; anti-plagiarism)</option>
-                <option value="PR">PR — Laboratory / Practicum Report (Institutional cover, TOC, figures)</option>
-                <option value="TFG">TFG — Bachelor's Thesis Memory (Tribunal evaluation sheet, bilingual abstracts, CC license)</option>
-                <option value="CA">CA — Continuous Assessment in English (no cover, with TOC)</option>
-              </select>
+    <!-- Main Generator Stage (Split: Left Form / Right Output) -->
+    <main id="studio-stage" class="console-stage">
+      <div class="studio-split-deck">
+
+        <!-- ==============================================================
+             LEFT PANE: Interactive Tool Configurator Form
+             ============================================================== -->
+        <div class="studio-form-pane">
+
+          <!-- TOOL 01: DOCUMENT STARTER -->
+          <div id="tool-document" class="generator-panel active">
+            <div class="panel-intro">
+              <h2>Document Starter Boilerplate</h2>
+              <p>Configure a complete, ready-to-compile <code>.tex</code> document pre-configured for UOC guidelines.</p>
             </div>
-            <div class="form-row">
-              <label for="select-lang">Document Language</label>
-              <select id="select-lang">
-                <option value="cat">Catalan (cat)</option>
-                <option value="es">Spanish (es)</option>
-                <option value="en">English (en)</option>
-              </select>
+
+            <!-- Deliverable Selector -->
+            <div class="form-section">
+              <label class="section-label">01 // TARGET DELIVERABLE</label>
+              <div class="pill-selector" id="doc-deliverable-pills">
+                <button type="button" class="pill-btn active" data-profile="PAC">
+                  <strong>PAC</strong>
+                  <span>Continuous Assessment</span>
+                </button>
+                <button type="button" class="pill-btn" data-profile="PR">
+                  <strong>PR</strong>
+                  <span>Practicum &amp; Lab Report</span>
+                </button>
+                <button type="button" class="pill-btn" data-profile="TFG">
+                  <strong>TFG</strong>
+                  <span>Bachelor Thesis</span>
+                </button>
+              </div>
             </div>
+
+            <!-- Coursework Metadata -->
+            <div class="form-section">
+              <label class="section-label">02 // COURSEWORK &amp; STUDENT METADATA</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="doc-student">Student Name</label>
+                  <input type="text" id="doc-student" value="Estudiant UOC">
+                </div>
+                <div class="input-field">
+                  <label for="doc-degree">Degree / Academic Program</label>
+                  <input type="text" id="doc-degree" value="Grau en Enginyeria Informàtica">
+                </div>
+                <div class="input-field">
+                  <label for="doc-subject">Subject Full Name</label>
+                  <input type="text" id="doc-subject" value="Compiladors i Llenguatges">
+                </div>
+                <div class="input-field">
+                  <label for="doc-subjcode">Subject Code &amp; Acronym</label>
+                  <input type="text" id="doc-subjcode" value="75.580 (COMP)">
+                </div>
+                <div class="input-field">
+                  <label for="doc-title">Activity Title</label>
+                  <input type="text" id="doc-title" value="PAC 1: Anàlisi Lèxica i Sintàctica">
+                </div>
+                <div class="input-field">
+                  <label for="doc-lang">Document Language</label>
+                  <select id="doc-lang">
+                    <option value="cat" selected>Catalan (cat)</option>
+                    <option value="es">Spanish (es)</option>
+                    <option value="en">English (en)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Included Sample Elements -->
+            <div class="form-section">
+              <label class="section-label">03 // INCLUDE SAMPLE ELEMENTS IN SKELETON</label>
+              <div class="checkbox-row">
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-table" checked>
+                  <span>Sample Data Table</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-figure" checked>
+                  <span>Resilient Image Placeholder</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-code" checked>
+                  <span>Formatted Code Box</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-tombstone">
+                  <span>Compiler Diagram</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 02: DATA TABLES -->
+          <div id="tool-tables" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Data Table Snippet Generator</h2>
+              <p>Generate clean LaTeX tables without wrestling with ampersands (<code>&amp;</code>) or calculating column widths.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // TABLE OPTIONS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="tbl-caption">Table Caption</label>
+                  <input type="text" id="tbl-caption" value="Comparativa de Rendiment dels Algorismes">
+                </div>
+                <div class="input-field">
+                  <label for="tbl-label">Label Reference</label>
+                  <input type="text" id="tbl-label" value="tab:rendiment">
+                </div>
+                <div class="input-field">
+                  <label for="tbl-style">Visual Style</label>
+                  <select id="tbl-style">
+                    <option value="header" selected>Header Row with Alternating Zebra Shading</option>
+                    <option value="simple">Simple Borderless Clean Table</option>
+                    <option value="compact">Compact Scientific Grid</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="tbl-multipage">Table Length</label>
+                  <select id="tbl-multipage">
+                    <option value="single" selected>Single-page Table (\pxTable)</option>
+                    <option value="multi">Multi-page Long Table (\pxTBLlong*)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // TABLE HEADERS (COMMA-SEPARATED)</label>
+              <div class="input-field">
+                <input type="text" id="tbl-headers" value="Algorisme, Complexitat Temporal, Memòria Utilitzada, Estat">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">03 // TABLE ROWS (ONE ROW PER LINE, COMMA-SEPARATED)</label>
+              <div class="input-field">
+                <textarea id="tbl-rows" rows="4">QuickSort, O(n log n), 4.2 MB, PASS
+MergeSort, O(n log n), 8.5 MB, PASS
+BubbleSort, O(n^2), 1.1 MB, TIMEOUT
+RadixSort, O(nk), 12.0 MB, PASS</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 03: GANTT TIMELINE -->
+          <div id="tool-gantt" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Project Gantt &amp; Timeline Generator</h2>
+              <p>Generate schedule charts for Practicum (PR) project plans and Bachelor Thesis (TFG) milestones.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // PROJECT TIMELINE PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="gnt-title">Project Title</label>
+                  <input type="text" id="gnt-title" value="Cronograma de Treball (TFG)">
+                </div>
+                <div class="input-field">
+                  <label for="gnt-duration">Total Duration</label>
+                  <input type="text" id="gnt-duration" value="16 Setmanes (Semestre)">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // SCHEDULE TASKS &amp; MILESTONES (CSV)</label>
+              <div class="input-field">
+                <textarea id="gnt-tasks" rows="6">Fase 1: Anàlisi de Requeriments, Setmana 1 - 3, Finalitzat
+Fase 2: Disseny de l'Arquitectura, Setmana 4 - 6, Finalitzat
+Fase 3: Implementació del Nucli, Setmana 7 - 11, En curs
+Fase 4: Proves i Optimització, Setmana 12 - 14, Pendent
+Fase 5: Redacció de la Memòria, Setmana 14 - 16, Pendent</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 04: ARCHITECTURE & UML -->
+          <div id="tool-uml" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Architecture &amp; UML Diagram Generator</h2>
+              <p>Generate clean LaTeX structural diagrams without wrestling with raw TikZ coordinates.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // DIAGRAM TYPE</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="uml-type">Diagram Style</label>
+                  <select id="uml-type">
+                    <option value="layers" selected>Layered Architecture (Frontend / API / DB)</option>
+                    <option value="class">UML Class Diagram</option>
+                    <option value="component">Component Pipeline Diagram</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="uml-caption">Diagram Caption</label>
+                  <input type="text" id="uml-caption" value="Diagrama de l'Arquitectura en Capes">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // COMPONENTS / ENTITIES</label>
+              <div class="input-field">
+                <textarea id="uml-elements" rows="4">Capa de Presentació: Single-Page Application (HTML5 / Vanilla JS)
+Capa de Negoci: Microserveis REST API (Node.js / Express)
+Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 05: CODE LISTINGS -->
+          <div id="tool-code" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Formatted Code Listing Generator</h2>
+              <p>Generate syntax-highlighted code boxes with gutters, line numbers, and clean frames.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // CODE LISTING PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="code-lang">Programming Language</label>
+                  <select id="code-lang">
+                    <option value="Java" selected>Java</option>
+                    <option value="Python">Python</option>
+                    <option value="C">C / C++</option>
+                    <option value="SQL">SQL</option>
+                    <option value="Bash">Bash / Shell</option>
+                    <option value="YAML">YAML / JSON</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="code-caption">Listing Caption &amp; Filename</label>
+                  <input type="text" id="code-caption" value="LexerTokenAnalyzer.java">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // CODE SNIPPET</label>
+              <div class="input-field">
+                <textarea id="code-body" rows="6">public class LexerTokenAnalyzer {
+    public static void main(String[] args) {
+        String source = "int result = 42;";
+        TokenStream tokens = Lexer.scan(source);
+        System.out.println("Tokens scanned: " + tokens.size());
+    }
+}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 06: COMPILERS & AUTOMATA -->
+          <div id="tool-compiler" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Compilers &amp; Automata Diagram Generator</h2>
+              <p>Generate Tombstone compiler diagrams (T-diagrams) and DFA/NFA state transition tables.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // AUTOMATON OR COMPILER TOOL</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="cmp-type">Diagram Type</label>
+                  <select id="cmp-type">
+                    <option value="tombstone" selected>Tombstone Compiler Diagram (T-Diagram)</option>
+                    <option value="dfa">DFA State Transition Table</option>
+                    <option value="parse-tree">Grammar Parse Tree</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="cmp-caption">Caption</label>
+                  <input type="text" id="cmp-caption" value="Esquema de Compilació Tombstone">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="cmp-tombstone-inputs">
+              <label class="section-label">02 // TOMBSTONE T-DIAGRAM PARAMETERS</label>
+              <div class="form-grid-3">
+                <div class="input-field">
+                  <label for="cmp-source">Source Language (S)</label>
+                  <input type="text" id="cmp-source" value="CUP">
+                </div>
+                <div class="input-field">
+                  <label for="cmp-target">Target Language (T)</label>
+                  <input type="text" id="cmp-target" value="Java">
+                </div>
+                <div class="input-field">
+                  <label for="cmp-impl">Implementation Language (I)</label>
+                  <input type="text" id="cmp-impl" value="JVM Bytecode">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ==============================================================
+             RIGHT PANE: Live Output Code Viewer & Actions
+             ============================================================== -->
+        <div class="studio-output-pane">
+          <div class="output-header-bar">
+            <div class="output-meta">
+              <span class="output-dot"></span>
+              <strong id="output-filename">OUTPUT: minimal-pac.tex</strong>
+              <span class="output-mode-badge" id="output-mode-badge">FULL DOCUMENT</span>
+            </div>
+            <div class="output-action-group">
+              <button type="button" class="action-btn-sm ghost" id="btn-copy-pane">📋 COPY</button>
+              <button type="button" class="action-btn-sm cyan" id="btn-download-pane">⬇ DOWNLOAD</button>
+            </div>
+          </div>
+
+          <div class="output-code-canvas">
+            <pre class="canvas-pre"><code id="studio-output-target">% Output will render here...</code></pre>
+          </div>
+
+          <div class="output-footer-strip">
+            <span id="output-stats-line">ENCODING: UTF-8 &bull; ENGINE: pdflatex &bull; READY TO COMPILE</span>
           </div>
         </div>
 
-        <!-- 2. UOC Metadata -->
-        <div class="config-group">
-          <div class="config-group-header">02 // UOC Student &amp; Subject Metadata</div>
-          <div class="config-group-body">
-            <div class="form-row">
-              <label for="input-student">Student Full Name</label>
-              <input type="text" id="input-student" value="Estudiant UOC">
-            </div>
-            <div class="form-row">
-              <label for="input-grade">Degree / Engineering Program</label>
-              <input type="text" id="input-grade" value="Grau en Enginyeria Informàtica">
-            </div>
-            <div class="form-row">
-              <label for="input-subjFull">Subject Full Name</label>
-              <input type="text" id="input-subjFull" value="Compiladors i Llenguatges">
-            </div>
-            <div class="form-row">
-              <label for="input-subjShort">Subject Acronym / Short Name</label>
-              <input type="text" id="input-subjShort" value="COMP">
-            </div>
-            <div class="form-row">
-              <label for="input-subjCode">Subject Code</label>
-              <input type="text" id="input-subjCode" value="75.580">
-            </div>
-            <div class="form-row">
-              <label for="input-caShort">Activity Short ID (e.g. PAC1, PR1)</label>
-              <input type="text" id="input-caShort" value="PAC1">
-            </div>
-            <div class="form-row">
-              <label for="input-caFull">Activity Full Name</label>
-              <input type="text" id="input-caFull" value="PAC 1: Anàlisi Lèxica i Sintàctica">
-            </div>
-          </div>
-        </div>
+      </div>
+    </main>
 
-        <!-- 3. Module Arsenal (Real Public Names) -->
-        <div class="config-group">
-          <div class="config-group-header">03 // Modular Package Arsenal (Tools &amp; Modules)</div>
-          <div class="config-group-body">
-            <div class="toggle-list">
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-default" checked>
-                <span><strong>Core Student Arsenal</strong> (<code>default</code>: Painless Tables, Zero-Crash Figures, IDE Code Boxes, UML)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-CMP">
-                <span><strong>Compilers &amp; Automata Tools</strong> (<code>CMP</code>: Tombstone diagrams, DFA/NFA state tables, $A^*$ search, ML)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-GNT">
-                <span><strong>Project Timeline &amp; Planning</strong> (<code>GNT</code>: Gantt charts for milestone schedules)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="mod-TFG">
-                <span><strong>Degree Thesis Memory Structure</strong> (<code>TFG</code> / <code>MEM</code>: Tribunal sheet, bilingual abstracts, CC license)</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Class Output Controls -->
-        <div class="config-group">
-          <div class="config-group-header">04 // Document Output Controls</div>
-          <div class="config-group-body">
-            <div class="toggle-list">
-              <label class="toggle-item">
-                <input type="checkbox" id="tog-cover">
-                <span><strong>cover</strong> (Force institutional university cover page)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="tog-toc" checked>
-                <span><strong>toc</strong> (Generate table of contents)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="tog-plagi">
-                <span><strong>no-plagi</strong> (Official authorship &amp; anti-plagiarism declaration)</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. Insertable Complex Blobs -->
-        <div class="config-group">
-          <div class="config-group-header">05 // Insert Complex Blobs</div>
-          <div class="config-group-body">
-            <div class="toggle-list">
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-table" checked>
-                <span><strong>pxTable Data Table</strong> (Comma-separated declarative syntax with auto-wrapping)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-longtable">
-                <span><strong>pxTBLlong* Multipage Table</strong> (Auto-repeating header across page breaks)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-codebox" checked>
-                <span><strong>pxCode Syntax Box</strong> (Dark IDE framed code listing with line numbers)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-figure" checked>
-                <span><strong>pxIMG Resilient Figure</strong> (Zero-crash fallback placeholder if image missing)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-cmp">
-                <span><strong>pxCMP Compiler &amp; Automaton</strong> (Tombstone T-diagram &amp; DFA transition table)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-graph">
-                <span><strong>pxGraph A* Search Graph</strong> (Heuristic search graph with $h(n)$ and $g(n)$ costs)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-ml">
-                <span><strong>pxCMP Machine Learning</strong> (Confusion matrix with $F_1$ metrics &amp; MLP neural net)</span>
-              </label>
-              <label class="toggle-item">
-                <input type="checkbox" id="blob-foreach">
-                <span><strong>pxIMGList Batch Loop</strong> (Sequential multi-image listing)</span>
-              </label>
-            </div>
-          </div>
-        </div>
+    <!-- Bottom Telemetry Status Strip -->
+    <footer class="console-telemetry-footer">
+      <div class="footer-status-left">
+        <span class="dot-live"></span>
+        <span class="status-txt">P3CTeX STUDIO ACTIVE</span>
+        <span class="sep">&bull;</span>
+        <span class="license-txt">GNU General Public License v3.0</span>
+        <span class="sep">&bull;</span>
+        <span class="author-txt">By ScVr!a // UOC Computer Engineering</span>
       </div>
 
-      <!-- Right Column: Sticky Live Preview -->
-      <div class="generator-preview">
-        <div class="preview-card">
-          <div class="preview-header">
-            <div class="preview-title">
-              <span class="preview-dot"></span>
-              <span>LIVE LATEX PREVIEW</span>
-            </div>
-            <div class="preview-actions">
-              <button type="button" class="btn-tool" id="btn-copy-latex">COPY PREAMBLE</button>
-              <button type="button" class="btn-tool primary" id="btn-download-tex">DOWNLOAD .TEX</button>
-            </div>
-          </div>
-          <pre class="preview-code"><code id="latex-preview-code">% Generating LaTeX code...</code></pre>
-        </div>
+      <div class="footer-links-right">
+        <a href="index.html" class="foot-link">Home Workstation</a>
+        <a href="tutorials.html" class="foot-link">Tutorials</a>
+        <a href="showcases.html" class="foot-link">Macro Showcases</a>
+        <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="foot-link">Offline Tool (.html)</a>
+        <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="foot-link">GitHub</a>
       </div>
-    </div>
-  </main>
+    </footer>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <h4>P3CTeX · The Ultimate UOC LaTeX Suite</h4>
-        <p>Created by ScVr!a. Designed for Computer Engineering students seeking peak LaTeX ergonomics under strict deadlines.</p>
-        <p>Licensed under GNU General Public License v3.0.</p>
-      </div>
-      <div class="footer-links">
-        <h5>Documentation</h5>
-        <ul>
-          <li><a href="tutorials.html#bootstrap">Installation &amp; Setup</a></li>
-          <li><a href="tutorials.html#preamble">Preamble Anatomy</a></li>
-          <li><a href="tutorials.html#shared-preambles">Shared Preambles</a></li>
-          <li><a href="tutorials.html#pac">PAC Workflow</a></li>
-          <li><a href="tutorials.html#pr">PR &amp; TFG</a></li>
-          <li><a href="tutorials.html#triage">Survival Triage</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h5>Tools &amp; Downloads</h5>
-        <ul>
-          <li><a href="generator.html">Web LaTeX Generator</a></li>
-          <li><a href="standalone-generator.html" download="p3ctex-standalone-generator.html">Offline Generator (.html)</a></li>
-          <li><a href="https://github.com/DidacLL/P3CTeX/releases/latest" target="_blank" rel="noopener">Download Release ZIP</a></li>
-          <li><a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener">GitHub Repository</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <span>© 2026 ScVr!a · "Procrastinar és l'única esperança"</span>
-      <span>P3CTeX Documentation &amp; Generator Studio</span>
-    </div>
-  </footer>
+  </div>
 <script>
 /* Inlined site.js */
 /* ==========================================================================
@@ -1511,11 +1898,11 @@ function setupDeckSwitcher() {
   const readout = document.getElementById('active-mode-readout');
 
   const modeLabels = {
-    'deck-templates': 'SECTION: [01 // STARTER TEMPLATES]',
-    'deck-macros': 'SECTION: [02 // PACKAGES & MACROS]',
-    'deck-runbook': 'SECTION: [03 // INSTALLATION & SETUP]',
-    'deck-specs': 'SECTION: [04 // DELIVERABLE GUIDE]',
-    'deck-workshop': 'SECTION: [05 // ABOUT P3CTeX]'
+    'deck-overview': 'SECTION: [01 // OVERVIEW]',
+    'deck-templates': 'SECTION: [02 // STARTER TEMPLATES]',
+    'deck-macros': 'SECTION: [03 // PACKAGES & MACROS]',
+    'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]',
+    'deck-specs': 'SECTION: [05 // DELIVERABLE GUIDE]'
   };
 
   function activateDeck(targetDeckId) {
@@ -1543,6 +1930,14 @@ function setupDeckSwitcher() {
   keys.forEach(key => {
     key.addEventListener('click', () => {
       const targetDeckId = key.getAttribute('data-deck');
+      activateDeck(targetDeckId);
+      window.location.hash = targetDeckId.replace('deck-', '');
+    });
+  });
+
+  document.querySelectorAll('[data-jump-deck]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetDeckId = btn.getAttribute('data-jump-deck');
       activateDeck(targetDeckId);
       window.location.hash = targetDeckId.replace('deck-', '');
     });
@@ -1599,7 +1994,7 @@ function setupProfileRocker() {
 \\begin{document}
 % Profile PAC: Portada desactivada; sumari i declaració de no plagi automàtics.
 
-\\sectionuoc{Exercici 1}
+\\section{Exercici 1}
 \\subsection{Apartat A}
 Resolució del primer apartat del document...
 
@@ -1612,10 +2007,10 @@ Resolució del primer apartat del document...
     },
     pr: {
       filename: 'minimal-pr.tex',
-      title: 'PR (Practicum & Lab Report)',
-      desc: 'Comprehensive report profile for lab projects and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, list of figures, and formal academic integrity declaration for 20–50 page projects.',
+      title: 'PR (Project & Practicum Report)',
+      desc: 'Report profile for lab deliverables and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, and figure list for 20–50 page project reports.',
       cover: 'Institutional Cover with UOC Logo',
-      toc: 'Full TOC, List of Figures & Tables',
+      toc: 'Full TOC and Figure Index',
       font: 'Arev Sans 11pt (Lab Report Standard)',
       code: `% Minimal P3CTeX PR Practicum Report Skeleton
 \\documentclass[PR,default]{P3CTeX}
@@ -1637,48 +2032,93 @@ Resolució del primer apartat del document...
 \\begin{document}
 % Profile PR: Portada institucional i sumari generats automàticament.
 
-\\sectionuoc{1. Introducció i Abast}
+\\section{1. Introducció i Abast}
 Descripció dels requeriments i l'arquitectura desenvolupada...
 
-\\sectionuoc{2. Arquitectura de l'Aplicació}
+\\section{2. Arquitectura de l'Aplicació}
 \\pxIMG[0.85\\linewidth]{img/diagrama_classes}{Diagrama de classes del domini}[fig:class]
 
-\\sectionuoc{3. Resultats i Mètriques}
+\\section{3. Resultats i Mètriques}
 \\pxTable[style=header]{Mòdul, Cobertura, Estat}{Autenticació, 94%, PASS}{Processament, 88%, PASS}
 \\end{document}`
     },
-    tfg: {
-      filename: 'minimal-tfg.tex',
-      title: 'TFG (Bachelor Thesis Memory)',
-      desc: 'Academic monograph profile for Bachelor’s Thesis (TFG). Generates official evaluation tribunal sheets, bilingual Catalan/English abstracts, Creative Commons copyright block, chapter formatting, and appendices.',
-      cover: 'Tribunal Evaluation Sheet + CC License',
-      toc: 'Academic Memory Chapter TOC',
-      font: 'Arev Sans 11pt (Academic Memory)',
-      code: `% Minimal P3CTeX TFG Bachelor Thesis Memory Skeleton
-\\documentclass[TFG,MEM,default]{P3CTeX}
+    mem: {
+      filename: 'minimal-mem.tex',
+      title: 'MEM (Multi-Chapter Memory / Report)',
+      desc: 'Generic memory support module for reports, practicums, or theses requiring numbered chapters. Adds \\chapter, appendix management with \\pxMEMannex, List of Figures (LOF), List of Tables (LOT), and source snippet reuse without changing the base article layout.',
+      cover: 'Institutional Cover & LOF/LOT Indexes',
+      toc: 'Chapter & Section TOC',
+      font: 'Arev Sans 11pt',
+      code: `% Minimal P3CTeX Multi-Chapter Memory (MEM) Skeleton
+\\documentclass[MEM,PR,default]{P3CTeX}
 
-% Declarative UOC Student & Thesis Metadata
 \\PECTeXconfig{
   data = {
-    student        = {Estudiant UOC},
-    grade          = {Grau en Enginyeria Informàtica},
-    subj-fullname  = {Treball de Final de Grau},
-    subj-shortname = {TFG},
-    subj-code      = {75.999},
-    ca-fullname    = {Memòria de TFG: Disseny d'un Sistema Distribuït},
+    student        = {Nom i Cognoms},
+    grade          = {El Teu Grau o Màster},
+    subj-fullname  = {Nom de l'Assignatura o Projecte},
+    subj-code      = {00.000},
+    ca-fullname    = {Memòria Tècnica del Projecte},
     ca-shortname   = {MEM},
     date           = {\\today}
   }
 }
 
 \\begin{document}
-% Profile TFG: Fitxa d'avaluació, llicència CC i resums multilingües.
+\\chapter{Introducció i Context}
+\\section{Objectius del Projecte}
+Descripció dels requeriments tècnics...
+
+\\chapter{Arquitectura del Sistema}
+\\section{Mòduls Principals}
+\\pxTable[style=header]{Mòdul, Descripció, Estat}{Nucli, Processament, PASS}
+
+% Annex amb numeració A, B, C...
+\\pxMEMannex{Manual d'Instal·lació}{
+Instruccions per desplegar el sistema en entorns locals...
+}
+\\end{document}`
+    },
+    tfg: {
+      filename: 'minimal-tfg.tex',
+      title: 'TFG (Final Degree Project Front Matter)',
+      desc: 'UOC TFG-specific front matter module. Adds the official project work card (\\pxTFGworkcard), multilingual abstracts (\\pxTFGabstract{CAT/ES/EN}{...}), tutor and PRA metadata, and Creative Commons license page (\\pxTFGlicencepage). Combine with MEM if chapters are needed.',
+      cover: 'TFG Work Card & CC License Page',
+      toc: 'Preliminary Content & TOC',
+      font: 'Arev Sans 11pt',
+      code: `% Minimal P3CTeX TFG Project Skeleton
+\\documentclass[TFG,MEM,default]{P3CTeX}
+
+\\PECTeXconfig{
+  data = {
+    student        = {Nom i Cognoms},
+    grade          = {Grau en Enginyeria Informàtica},
+    subj-fullname  = {Treball Final de Grau},
+    subj-code      = {75.599},
+    ca-fullname    = {Títol del Treball Final de Grau},
+    ca-shortname   = {TFG},
+    date           = {\\today}
+  }
+}
+
+% Metadades específiques de TFG:
+\\pxTFGsetup{
+  tutor   = {Nom del Tutor/a},
+  PRA     = {Nom del Professor/a Responsable},
+  area    = {Àrea de Coneixement},
+  credits = {12}
+}
+
+% Resum bilingüe:
+\\pxTFGabstract{CAT}{Resum en català del projecte de final de grau...}
+\\pxTFGabstract{EN}{Abstract in English describing the project scope...}
+
+\\begin{document}
+% La portada, fitxa del TFG, resums i índexs es generen automàticament.
 
 \\chapter{Introducció}
-Context del projecte de final de grau...
-
-\\chapter{Disseny del Sistema}
-Detalls d'implementació i esquemes d'enginyeria...
+\\section{Motivació}
+Descripció de la motivació del projecte...
 \\end{document}`
     }
   };
@@ -1716,15 +2156,15 @@ function setupChannelRocker() {
 
   const channelData = {
     pxtab: {
-      title: 'pxTAB • Data Tables Without the LaTeX Pain',
-      desc: 'Standard LaTeX tables are painful: counting column widths, escaping ampersands, and calculating hlines at 2:00 AM. pxTAB replaces all that with simple comma-separated rows. It handles alternating row shading (zebra striping) and multipage tables automatically.',
+      title: 'Tables (pxTAB)',
+      desc: 'Creates LaTeX tables from comma-separated rows. Includes automatic alternating row shading (zebra striping) and multi-page page breaks using longtable and booktabs without manual column width calculations.',
       features: [
-        '<strong>Simple syntax:</strong> Comma-separated values, zero ampersand wrestling',
-        '<strong>Auto zebra shading:</strong> Alternating row colors for easy reading',
-        '<strong>Multipage support:</strong> Automatically splits long tables across pages',
-        '<strong>Zero compilation crashes:</strong> Built on robust longtable and booktabs'
+        '<strong>Syntax:</strong> Comma-separated row values',
+        '<strong>Row striping:</strong> Alternating row background shading',
+        '<strong>Multipage:</strong> Long table pagination with \\pxTBLlong*',
+        '<strong>Backend:</strong> Built on longtable and booktabs'
       ],
-      code: `% Create a clean table with comma-separated values:
+      code: `% Create a table from comma-separated values:
 \\pxTable[style=header]
   {Mètrica, Valor Mesurat, Estat}
   {Temps d'execució, 0.42 s, PASS}
@@ -1733,29 +2173,29 @@ function setupChannelRocker() {
       url: 'showcases.html#pxtab'
     },
     pxsrc: {
-      title: 'pxSRC • Resilient Figures & Image Fallbacks',
-      desc: 'Including images in LaTeX often breaks builds when a collaborator deletes a file or a path is slightly off. \\pxIMG automatically fits images to text width and includes a failsafe: if an image is missing from disk, it displays a clear placeholder diagram instead of halting compilation right before your deadline.',
+      title: 'Figures & Graphics (pxSRC)',
+      desc: 'Scales graphics proportionally to text width using \\pxIMG. If an image file path is missing from disk, it displays a calibrated placeholder box instead of halting pdflatex compilation.',
       features: [
-        '<strong>Failsafe placeholder:</strong> Never crashes pdflatex if an image file is missing',
-        '<strong>Auto proportioning:</strong> Automatically scales figures to text width',
-        '<strong>Unified labels:</strong> Binds caption, label, and file path in one command',
-        '<strong>Format support:</strong> Works with PNG, JPG, and vector PDF diagrams'
+        '<strong>Missing image fallback:</strong> Vector placeholder if file not found',
+        '<strong>Proportional scaling:</strong> Default width set to text width fraction',
+        '<strong>Unified binding:</strong> Binds caption, label, and file path in one macro',
+        '<strong>File formats:</strong> PNG, JPG, and PDF vector graphics'
       ],
-      code: `% Include an image that will never break the compilation:
+      code: `% Include an image with automatic missing-file fallback:
 \\pxIMG[0.85\\linewidth]{img/arquitectura}
   {Diagrama de l'arquitectura proposada}[fig:arq]`,
       url: 'showcases.html#pxsrc'
     },
     pxlst: {
-      title: 'pxLST • Formatted Code Listings',
-      desc: 'Include syntax-highlighted code with line numbers, clear borders, and dedicated captioning. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML without requiring external Python pygments or shell escape privileges.',
+      title: 'Code Listings (pxLST)',
+      desc: 'Formats source code listings with gutters, line numbers, and language syntax coloring. Pre-configured for Java, Python, C, SQL, Bash, R, and YAML using pure LaTeX (no external Python or pygments dependencies).',
       features: [
-        '<strong>Zero external tools:</strong> 100% pure LaTeX, no Python or pygments needed',
-        '<strong>7 languages pre-configured:</strong> Java, Python, C, SQL, Bash, R, YAML',
-        '<strong>Line numbers & gutter:</strong> Clear, professional code presentation',
-        '<strong>Easy copy-paste:</strong> Optimized typography with JetBrains and Consolas'
+        '<strong>Dependencies:</strong> Pure LaTeX, zero external tools',
+        '<strong>Languages:</strong> Java, Python, C, SQL, Bash, R, YAML',
+        '<strong>Line numbers:</strong> Automatic gutter with line counts',
+        '<strong>Typography:</strong> Monospace fonts with character spacing'
       ],
-      code: `% Syntax-highlighted code block with line numbering:
+      code: `% Formatted code listing with line numbers:
 \\begin{pxCode}[language=Java,caption=Lexer.java]
 public class Lexer {
   public static void main(String[] args) {
@@ -1766,13 +2206,13 @@ public class Lexer {
       url: 'showcases.html#pxlst'
     },
     pxcmp: {
-      title: 'pxCMP • Compilers & Automata Tools',
-      desc: 'Dedicated macros specifically designed for Computer Engineering courses like Compilers, Automata, and Theory of Computation. Easily draw multi-stage Tombstone compiler diagrams, state machine transition tables, and syntactic parse trees without manual TikZ coding.',
+      title: 'Compilers & Automata (pxCMP)',
+      desc: 'Macros for Computer Science coursework (Compilers, Automata, and Theory of Computation). Generates Tombstone compiler diagrams (\\pxTombstoneCompile), DFA/NFA state transition tables (\\pxTransitionTable), and parse trees.',
       features: [
-        '<strong>Tombstone T-diagrams:</strong> \\pxTombstoneCompile for compiler pipelines',
-        '<strong>Transition tables:</strong> \\pxTransitionTable for DFA and NFA state machines',
-        '<strong>Parse trees:</strong> Syntactic derivation trees for grammars',
-        '<strong>Target courses:</strong> Compiladors, Teoria de la Computació'
+        '<strong>Tombstone diagrams:</strong> Compiler pipeline T-diagrams',
+        '<strong>Transition tables:</strong> State machine tables for DFAs and NFAs',
+        '<strong>Parse trees:</strong> Syntactic derivation tree representation',
+        '<strong>Course alignment:</strong> Compiladors, Teoria de la Computació'
       ],
       code: `% Draw a compiler Tombstone diagram:
 \\pxTombstoneCompile{CUP}{Parser}{Java}
@@ -1841,422 +2281,362 @@ function setupCopyButtons() {
 
 /* Inlined generator.js */
 /* ==========================================================================
-   P3CTeX Generator Engine
-   Reactive LaTeX Preamble & Assessment Boilerplate Synthesis
-   Factually compliant with P3CTeX.cls and official UOC styles
-   "Procrastinar és l'única esperança" · By ScVr!a
+   P3CTeX LaTeX Generator Studio — Client Controller
+   Multi-Asset Reactive LaTeX Generator (Document, Tables, Gantt, UML, Code, Compilers)
    ========================================================================== */
 
-(function () {
-  'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  let activeTool = 'tool-document';
+  let activeProfile = 'PAC';
 
-  // Deliverable Coursework Presets matching official P3CTeX conventions
-  const PRESETS = {
-    pac: {
-      profile: 'PAC',
-      lang: 'cat',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Compiladors i Llenguatges',
-        subjShort: 'COMP',
-        subjCode: '75.580',
-        caShort: 'PAC1',
-        caFull: 'PAC 1: Anàlisi Lèxica i Sintàctica'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
-    },
-    pec: {
-      profile: 'PEC',
-      lang: 'es',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grado en Ingeniería Informática',
-        subjFull: 'Sistemas Operativos Avanzados',
-        subjShort: 'SO',
-        subjCode: '75.560',
-        caShort: 'PEC1',
-        caFull: 'PEC 1: Gestión de Procesos y Memoria Virtual'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
-    },
-    pr: {
-      profile: 'PR',
-      lang: 'cat',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: true, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Enginyeria del Software',
-        subjShort: 'ES',
-        subjCode: '75.564',
-        caShort: 'PR1',
-        caFull: 'Pràctica 1: Disseny i Implementació del Sistema'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: true }
-    },
-    tfg: {
-      profile: 'TFG',
-      lang: 'cat',
-      modules: { default: true, CMP: false, GNT: true, TFG: true },
-      toggles: { cover: true, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Grau en Enginyeria Informàtica',
-        subjFull: 'Treball Final de Grau',
-        subjShort: 'TFG',
-        subjCode: '75.599',
-        caShort: 'MEM',
-        caFull: 'Memòria del Treball Final de Grau'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: true, foreach: false }
-    },
-    ca: {
-      profile: 'CA',
-      lang: 'en',
-      modules: { default: true, CMP: false, GNT: false, TFG: false },
-      toggles: { cover: false, toc: true, plagi: false },
-      meta: {
-        student: 'Estudiant UOC',
-        grade: 'Bachelor in Computer Science',
-        subjFull: 'Distributed Systems Architecture',
-        subjShort: 'DSA',
-        subjCode: '75.590',
-        caShort: 'CA1',
-        caFull: 'Continuous Assessment 1: Consensus Protocols'
-      },
-      blobs: { table: true, codebox: true, figure: true, cmp: false, graph: false, ml: false, longtable: false, foreach: false }
-    }
+  // UI Elements
+  const toolKeys = document.querySelectorAll('.selector-key[data-tool]');
+  const panels = document.querySelectorAll('.generator-panel');
+  const activeToolReadout = document.getElementById('active-tool-readout');
+  const outputTarget = document.getElementById('studio-output-target');
+  const outputFilename = document.getElementById('output-filename');
+  const outputModeBadge = document.getElementById('output-mode-badge');
+  const btnCopyMain = document.getElementById('btn-copy-main');
+  const btnCopyPane = document.getElementById('btn-copy-pane');
+  const btnDownloadMain = document.getElementById('btn-download-main');
+  const btnDownloadPane = document.getElementById('btn-download-pane');
+
+  const toolLabels = {
+    'tool-document': 'TOOL: [01 // DOCUMENT STARTER]',
+    'tool-tables': 'TOOL: [02 // DATA TABLES]',
+    'tool-gantt': 'TOOL: [03 // GANTT TIMELINE]',
+    'tool-uml': 'TOOL: [04 // UML & ARCHITECTURE]',
+    'tool-code': 'TOOL: [05 // CODE LISTINGS]',
+    'tool-compiler': 'TOOL: [06 // COMPILERS & AUTOMATA]'
   };
 
-  // State
-  let state = JSON.parse(JSON.stringify(PRESETS.pac));
-
-  function init() {
-    bindPresetButtons();
-    bindFormInputs();
-    bindActions();
-    renderForm();
-    generateLatexCode();
-  }
-
-  function bindPresetButtons() {
-    const buttons = document.querySelectorAll('[data-preset]');
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.getAttribute('data-preset');
-        if (PRESETS[key]) {
-          state = JSON.parse(JSON.stringify(PRESETS[key]));
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          renderForm();
-          generateLatexCode();
-        }
-      });
+  // 1. Tool Tab Switching
+  toolKeys.forEach(k => {
+    k.addEventListener('click', () => {
+      const targetTool = k.getAttribute('data-tool');
+      activateTool(targetTool);
     });
+  });
+
+  function activateTool(toolId) {
+    activeTool = toolId;
+    panels.forEach(p => {
+      if (p.id === toolId) p.classList.add('active');
+      else p.classList.remove('active');
+    });
+
+    toolKeys.forEach(k => {
+      if (k.getAttribute('data-tool') === toolId) k.classList.add('active');
+      else k.classList.remove('active');
+    });
+
+    if (activeToolReadout && toolLabels[toolId]) {
+      activeToolReadout.textContent = toolLabels[toolId];
+    }
+    renderActiveTool();
   }
 
-  function bindFormInputs() {
-    // Text inputs
-    const textFields = ['student', 'grade', 'subjFull', 'subjShort', 'subjCode', 'caShort', 'caFull'];
-    textFields.forEach(field => {
-      const el = document.getElementById('input-' + field);
-      if (el) {
-        el.addEventListener('input', () => {
-          state.meta[field] = el.value;
-          generateLatexCode();
-        });
+  // 2. Document Profile Switcher (PAC / PR / TFG)
+  const profilePills = document.querySelectorAll('#doc-deliverable-pills .pill-btn');
+  profilePills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      profilePills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeProfile = pill.getAttribute('data-profile');
+
+      // Auto-adjust metadata fields based on profile
+      const titleInput = document.getElementById('doc-title');
+      if (activeProfile === 'PAC') {
+        titleInput.value = 'PAC 1: Anàlisi Lèxica i Sintàctica';
+      } else if (activeProfile === 'PR') {
+        titleInput.value = 'Memòria de Projecte de Laboratori (PR1)';
+      } else if (activeProfile === 'TFG') {
+        titleInput.value = "Memòria de Treball Final de Grau: Disseny d'un Sistema Distribuït";
+      }
+      renderActiveTool();
+    });
+  });
+
+  // 3. Form Input Change Listeners
+  const allInputs = document.querySelectorAll('.studio-form-pane input, .studio-form-pane select, .studio-form-pane textarea');
+  allInputs.forEach(input => {
+    input.addEventListener('input', renderActiveTool);
+    input.addEventListener('change', renderActiveTool);
+  });
+
+  // 4. Render Active Tool Code Generator
+  function renderActiveTool() {
+    if (activeTool === 'tool-document') {
+      renderDocumentStarter();
+    } else if (activeTool === 'tool-tables') {
+      renderTableSnippet();
+    } else if (activeTool === 'tool-gantt') {
+      renderGanttSnippet();
+    } else if (activeTool === 'tool-uml') {
+      renderUmlSnippet();
+    } else if (activeTool === 'tool-code') {
+      renderCodeSnippet();
+    } else if (activeTool === 'tool-compiler') {
+      renderCompilerSnippet();
+    }
+  }
+
+  // Generator 1: Document Starter
+  function renderDocumentStarter() {
+    const student = document.getElementById('doc-student').value.trim() || 'Estudiant UOC';
+    const degree = document.getElementById('doc-degree').value.trim() || 'Grau en Enginyeria Informàtica';
+    const subject = document.getElementById('doc-subject').value.trim() || 'Compiladors i Llenguatges';
+    const subjCodeRaw = document.getElementById('doc-subjcode').value.trim() || '75.580 (COMP)';
+    const title = document.getElementById('doc-title').value.trim() || 'PAC 1: Treball Pràctic';
+    const lang = document.getElementById('doc-lang').value;
+
+    const incTable = document.getElementById('doc-inc-table').checked;
+    const incFigure = document.getElementById('doc-inc-figure').checked;
+    const incCode = document.getElementById('doc-inc-code').checked;
+    const incTombstone = document.getElementById('doc-inc-tombstone').checked;
+
+    let classOpt = activeProfile === 'TFG' ? 'TFG,MEM,default' : `${activeProfile},default`;
+    let filename = `minimal-${activeProfile.toLowerCase()}.tex`;
+
+    outputFilename.textContent = `OUTPUT: ${filename}`;
+    outputModeBadge.textContent = 'FULL DOCUMENT';
+
+    let code = `% ==============================================================================
+% P3CTeX Document Starter (${activeProfile})
+% Configured for UOC Academic Coursework & Reports
+% Compile with: pdflatex ${filename}
+% ==============================================================================
+\\documentclass[${classOpt}]{P3CTeX}
+
+\\PECTeXconfig{
+  data = {
+    student        = {${student}},
+    grade          = {${degree}},
+    subj-fullname  = {${subject}},
+    subj-shortname = {${subjCodeRaw.includes('(') ? subjCodeRaw.split('(')[1].replace(')', '').trim() : 'SUBJ'}},
+    subj-code      = {${subjCodeRaw.includes('(') ? subjCodeRaw.split('(')[0].trim() : subjCodeRaw}},
+    ca-fullname    = {${title}},
+    ca-shortname   = {${activeProfile}1},
+    date           = {\\today}
+  }
+}
+
+\\begin{document}
+`;
+
+    if (activeProfile === 'PAC') {
+      code += `% PAC Profile: Portada desactivada; sumari i declaració de no plagi automàtics.\n\n`;
+      code += `\\section{1. Resolució d'Exercicis}\n`;
+      code += `Descripció dels procediments i anàlisi de requeriments...\n\n`;
+    } else if (activeProfile === 'PR') {
+      code += `% PR Profile: Portada formal i sumari generats automàticament.\n\n`;
+      code += `\\section{1. Introducció i Abast del Projecte}\n`;
+      code += `Aquest document recull la memòria tècnica del projecte desenvolupat...\n\n`;
+    } else {
+      code += `% TFG Profile: Fitxa d'avaluació de tribunal i estructura per capítols.\n\n`;
+      code += `\\chapter{Introducció}\n`;
+      code += `Descripció del context i objectius del Treball Final de Grau...\n\n`;
+    }
+
+    if (incTable) {
+      code += `% Taula declarativa per comes (paquet pxTAB):\n`;
+      code += `\\pxTable[style=header]\n  {Mètrica, Valor Mesurat, Estat}\n  {Temps d'execució, 0.42 s, PASS}\n  {Memòria consumida, 18.5 MB, PASS}\n\n`;
+    }
+
+    if (incFigure) {
+      code += `% Figura amb placeholder resilient (paquet pxSRC):\n`;
+      code += `\\pxIMG[0.85\\linewidth]{img/arquitectura}{Esquema de l'arquitectura proposada}[fig:arq]\n\n`;
+    }
+
+    if (incCode) {
+      code += `% Bloc de codi amb ressaltat de sintaxi i números de línia (paquet pxLST):\n`;
+      code += `\\begin{pxCode}[language=Java,caption=LexerAnalyzer.java]\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("Lexer ready.");\n    }\n}\n\\end{pxCode}\n\n`;
+    }
+
+    if (incTombstone) {
+      code += `% Diagrama Tombstone de compilació (paquet pxCMP):\n`;
+      code += `\\pxTombstoneCompile{CUP}{Parser}{Java}\n\n`;
+    }
+
+    code += `\\end{document}\n`;
+    outputTarget.textContent = code;
+  }
+
+  // Generator 2: Data Tables
+  function renderTableSnippet() {
+    const caption = document.getElementById('tbl-caption').value.trim() || 'Taula de Dades';
+    const label = document.getElementById('tbl-label').value.trim() || 'tab:dades';
+    const style = document.getElementById('tbl-style').value;
+    const isMulti = document.getElementById('tbl-multipage').value === 'multi';
+    const headers = document.getElementById('tbl-headers').value.trim();
+    const rows = document.getElementById('tbl-rows').value.trim().split('\n').filter(r => r.trim());
+
+    outputFilename.textContent = `OUTPUT: table-snippet.tex`;
+    outputModeBadge.textContent = 'TABLE SNIPPET';
+
+    let macroName = isMulti ? '\\pxTBLlong*' : '\\pxTable';
+    let code = `% ==============================================================================\n`;
+    code += `% Taula LaTeX generada amb P3CTeX (pxTAB)\n`;
+    code += `% Inseriu aquest bloc al vostre document .tex\n`;
+    code += `% ==============================================================================\n`;
+    code += `${macroName}[style=${style}]\n`;
+    code += `  {${headers}}`;
+
+    rows.forEach(row => {
+      code += `\n  {${row.trim()}}`;
+    });
+
+    outputTarget.textContent = code;
+  }
+
+  // Generator 3: Gantt Timelines
+  function renderGanttSnippet() {
+    const title = document.getElementById('gnt-title').value.trim() || 'Cronograma de Treball';
+    const duration = document.getElementById('gnt-duration').value.trim();
+    const tasks = document.getElementById('gnt-tasks').value.trim().split('\n').filter(t => t.trim());
+
+    outputFilename.textContent = `OUTPUT: gantt-timeline.tex`;
+    outputModeBadge.textContent = 'TIMELINE SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Cronograma de Treball / Diagrama Gantt per a PR i TFG\n`;
+    code += `% Requereix el paquet GNT o pgfgantt\n`;
+    code += `% ==============================================================================\n`;
+    code += `\\begin{table}[htbp]\n\\centering\n`;
+    code += `\\caption{${title} (${duration})}\n\\label{tab:gantt}\n`;
+    code += `\\pxTable[style=header]\n`;
+    code += `  {Tasca / Fase del Projecte, Interval Temporal, Estat Actual}`;
+
+    tasks.forEach(task => {
+      code += `\n  {${task.trim()}}`;
+    });
+
+    code += `\n\\end{table}\n`;
+    outputTarget.textContent = code;
+  }
+
+  // Generator 4: Architecture & UML
+  function renderUmlSnippet() {
+    const type = document.getElementById('uml-type').value;
+    const caption = document.getElementById('uml-caption').value.trim() || 'Diagrama';
+    const elements = document.getElementById('uml-elements').value.trim().split('\n').filter(e => e.trim());
+
+    outputFilename.textContent = `OUTPUT: architecture-diagram.tex`;
+    outputModeBadge.textContent = 'DIAGRAM SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Diagrama d'Arquitectura / UML per a memòries d'enginyeria\n`;
+    code += `% ==============================================================================\n`;
+    code += `\\begin{figure}[htbp]\n\\centering\n`;
+    code += `\\pxTable[style=compact]\n  {Capa del Sistema, Descripció dels Components}`;
+
+    elements.forEach(el => {
+      const parts = el.split(':');
+      if (parts.length === 2) {
+        code += `\n  {${parts[0].trim()}, ${parts[1].trim()}}`;
+      } else {
+        code += `\n  {Component, ${el.trim()}}`;
       }
     });
 
-    // Profile select
-    const profileEl = document.getElementById('select-profile');
-    if (profileEl) {
-      profileEl.addEventListener('change', () => {
-        state.profile = profileEl.value;
-        if (state.profile === 'PR' || state.profile === 'TFG') {
-          state.toggles.cover = true;
-        } else {
-          state.toggles.cover = false;
-        }
-        renderForm();
-        generateLatexCode();
-      });
-    }
-
-    // Language select
-    const langEl = document.getElementById('select-lang');
-    if (langEl) {
-      langEl.addEventListener('change', () => {
-        state.lang = langEl.value;
-        generateLatexCode();
-      });
-    }
-
-    // Module checkboxes
-    ['default', 'CMP', 'GNT', 'TFG'].forEach(mod => {
-      const el = document.getElementById('mod-' + mod);
-      if (el) {
-        el.addEventListener('change', () => {
-          state.modules[mod] = el.checked;
-          generateLatexCode();
-        });
-      }
-    });
-
-    // Toggle checkboxes
-    ['cover', 'toc', 'plagi'].forEach(tog => {
-      const el = document.getElementById('tog-' + tog);
-      if (el) {
-        el.addEventListener('change', () => {
-          state.toggles[tog] = el.checked;
-          generateLatexCode();
-        });
-      }
-    });
-
-    // Blobs checkboxes
-    ['table', 'codebox', 'figure', 'cmp', 'graph', 'ml', 'longtable', 'foreach'].forEach(blob => {
-      const el = document.getElementById('blob-' + blob);
-      if (el) {
-        el.addEventListener('change', () => {
-          state.blobs[blob] = el.checked;
-          // Auto-enable CMP module if a CMP-dependent blob is selected
-          if ((blob === 'cmp' || blob === 'graph' || blob === 'ml') && el.checked) {
-            state.modules.CMP = true;
-            const cmpCheck = document.getElementById('mod-CMP');
-            if (cmpCheck) cmpCheck.checked = true;
-          }
-          generateLatexCode();
-        });
-      }
-    });
+    code += `\n\\caption{${caption}}\n\\label{fig:arquitectura}\n\\end{figure}\n`;
+    outputTarget.textContent = code;
   }
 
-  function bindActions() {
-    const copyBtn = document.getElementById('btn-copy-latex');
-    if (copyBtn) {
-      copyBtn.addEventListener('click', () => {
-        const code = document.getElementById('latex-preview-code').textContent;
-        navigator.clipboard.writeText(code).then(() => {
-          const original = copyBtn.textContent;
-          copyBtn.textContent = 'COPIAT!';
-          setTimeout(() => { copyBtn.textContent = original; }, 2000);
-        });
-      });
-    }
+  // Generator 5: Code Listings
+  function renderCodeSnippet() {
+    const lang = document.getElementById('code-lang').value;
+    const caption = document.getElementById('code-caption').value.trim() || 'CodiFont';
+    const body = document.getElementById('code-body').value;
 
-    const downloadBtn = document.getElementById('btn-download-tex');
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', () => {
-        const code = document.getElementById('latex-preview-code').textContent;
-        const filename = (state.meta.caShort || 'assessment') + '.tex';
-        const blob = new Blob([code], { type: 'text/x-tex;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-    }
+    outputFilename.textContent = `OUTPUT: code-listing.tex`;
+    outputModeBadge.textContent = 'CODE SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Bloc de Codi Formatat amb P3CTeX (pxLST)\n`;
+    code += `% ==============================================================================\n`;
+    code += `\\begin{pxCode}[language=${lang},caption={${caption}}]\n`;
+    code += body;
+    code += `\n\\end{pxCode}\n`;
+
+    outputTarget.textContent = code;
   }
 
-  function renderForm() {
-    // Populate text inputs
-    for (const key in state.meta) {
-      const el = document.getElementById('input-' + key);
-      if (el) el.value = state.meta[key];
+  // Generator 6: Compilers & Automata
+  function renderCompilerSnippet() {
+    const type = document.getElementById('cmp-type').value;
+    const caption = document.getElementById('cmp-caption').value.trim() || 'Esquema de Compilació';
+
+    outputFilename.textContent = `OUTPUT: compiler-diagram.tex`;
+    outputModeBadge.textContent = 'COMPILER SNIPPET';
+
+    let code = `% ==============================================================================\n`;
+    code += `% Eines per a Compiladors i Teoria de la Computació (P3CTeX pxCMP)\n`;
+    code += `% ==============================================================================\n`;
+
+    if (type === 'tombstone') {
+      const src = document.getElementById('cmp-source').value.trim() || 'CUP';
+      const tgt = document.getElementById('cmp-target').value.trim() || 'Java';
+      const impl = document.getElementById('cmp-impl').value.trim() || 'JVM';
+      code += `% Diagrama Tombstone en T per a pipelines de compilació:\n`;
+      code += `\\pxTombstoneCompile{${src}}{${tgt}}{${impl}}\n`;
+    } else if (type === 'dfa') {
+      code += `% Taula de transicions per a autòmats finits deterministes (DFA):\n`;
+      code += `\\pxTransitionTable{\n  state, 0, 1;\n  q0, q1, q0;\n  q1, q0, q1\n}\n`;
+    } else {
+      code += `% Arbre de derivació sintàctica:\n`;
+      code += `\\pxParseTree{E -> E + T | T}\n`;
     }
 
-    const profileEl = document.getElementById('select-profile');
-    if (profileEl) profileEl.value = state.profile;
-
-    const langEl = document.getElementById('select-lang');
-    if (langEl) langEl.value = state.lang;
-
-    for (const mod in state.modules) {
-      const el = document.getElementById('mod-' + mod);
-      if (el) el.checked = state.modules[mod];
-    }
-
-    for (const tog in state.toggles) {
-      const el = document.getElementById('tog-' + tog);
-      if (el) el.checked = state.toggles[tog];
-    }
-
-    for (const blob in state.blobs) {
-      const el = document.getElementById('blob-' + blob);
-      if (el) el.checked = state.blobs[blob];
-    }
+    outputTarget.textContent = code;
   }
 
-  function generateLatexCode() {
-    // Build options list for \documentclass[...]{P3CTeX}
-    const opts = [];
-    opts.push(state.profile);
-    if (state.lang) opts.push(state.lang);
-    if (state.modules.default) opts.push('default');
-    if (state.modules.CMP) opts.push('CMP');
-    if (state.modules.GNT) opts.push('GNT');
-    if (state.modules.TFG && state.profile !== 'TFG') opts.push('TFG');
-
-    if (state.toggles.cover) opts.push('cover');
-    if (!state.toggles.toc) opts.push('no-toc');
-    if (state.toggles.plagi) opts.push('no-plagi');
-
-    const optString = opts.length > 0 ? '[' + opts.join(',') + ']' : '';
-
-    let out = '% !TeX encoding = UTF-8\n';
-    out += '%% ==========================================================================\n';
-    out += '%% P3CTeX Assessment Document · Universitat Oberta de Catalunya (UOC)\n';
-    out += '%% Generated with P3CTeX Web Generator Tool\n';
-    out += '%% "Procrastinar és l\'única esperança" · By ScVr!a\n';
-    out += '%% ==========================================================================\n\n';
-
-    out += '\\documentclass' + optString + '{P3CTeX}\n\n';
-
-    out += '%% Metadades acadèmiques oficials de la UOC\n';
-    out += '\\PECTeXconfig{\n';
-    out += '  data = {\n';
-    out += '    student        = {' + (state.meta.student || 'Estudiant UOC') + '},\n';
-    out += '    grade          = {' + (state.meta.grade || 'Enginyeria Informàtica') + '},\n';
-    out += '    subj-fullname  = {' + (state.meta.subjFull || 'Nom Assignatura') + '},\n';
-    out += '    subj-shortname = {' + (state.meta.subjShort || 'SIGLES') + '},\n';
-    out += '    subj-code      = {' + (state.meta.subjCode || '00.000') + '},\n';
-    out += '    ca-fullname    = {' + (state.meta.caFull || 'PAC1: Activitat') + '},\n';
-    out += '    ca-shortname   = {' + (state.meta.caShort || 'PAC1') + '},\n';
-    out += '    date           = {\\today}\n';
-    out += '  }\n';
-    out += '}\n\n';
-
-    out += '\\begin{document}\n\n';
-    out += '\\sectionuoc{Exercici 1}\n';
-    out += '\\subsection{Pregunta A}\n';
-    out += 'La resposta al primer apartat de l\'activitat ' + (state.meta.caShort || 'PAC1') + ' es redacta aquí.\n\n';
-
-    // Insertable Blobs
-    if (state.blobs.table) {
-      out += '%% BLOB: Taula de dades mitjançant pxTAB (sintaxi declarativa per comes)\n';
-      out += '\\pxTable[style=header]{\n';
-      out += '  Mètrica, Valor Mesurat, Llindar, Estat\n';
-      out += '}{\n';
-      out += '  Latència de xarxa, 14.2 ms, < 50 ms, PASS\n';
-      out += '}{\n';
-      out += '  Taxa de transferència, 850 Mbps, > 500 Mbps, PASS\n';
-      out += '}{\n';
-      out += '  Pèrdua de paquets, 0.01 %, < 0.1 %, PASS\n';
-      out += '}\n\n';
-    }
-
-    if (state.blobs.longtable) {
-      out += '%% BLOB: Taula multipàgina pxTBLlong* per a llistats extensos de dades\n';
-      out += '\\begin{pxTBLlong*}[header-repeat=true]{cols={0.25\\linewidth, 0.45\\linewidth, 0.3\\linewidth}}\n';
-      out += '  Codi / ID, Descripció del Mòdul, Estat de Verificació;\n';
-      out += '  MOD-01, Gestió de Memòria i Paginació Virtual, COMPLETAT;\n';
-      out += '  MOD-02, Planificador de Processos Round-Robin, COMPLETAT;\n';
-      out += '  MOD-03, Sistema de Fitxers Basat en Inodes, EN REVISIÓ;\n';
-      out += '  MOD-04, Controlador de Dispositius I/O en Bloc, PENDENT\n';
-      out += '\\end{pxTBLlong*}\n\n';
-    }
-
-    if (state.blobs.codebox) {
-      out += '%% BLOB: Llistat de codi amb entorn pxCode i ressaltat de sintaxi (pxLST)\n';
-      out += '\\begin{pxCode}[language=pxJava]{Algorisme de Cerca}\n';
-      out += 'public class Solution {\n';
-      out += '    public static int binarySearch(int[] arr, int target) {\n';
-      out += '        int left = 0, right = arr.length - 1;\n';
-      out += '        while (left <= right) {\n';
-      out += '            int mid = left + (right - left) / 2;\n';
-      out += '            if (arr[mid] == target) return mid;\n';
-      out += '            if (arr[mid] < target) left = mid + 1;\n';
-      out += '            else right = mid - 1;\n';
-      out += '        }\n';
-      out += '        return -1;\n';
-      out += '    }\n';
-      out += '}\n';
-      out += '\\end{pxCode}\n\n';
-    }
-
-    if (state.blobs.figure) {
-      out += '%% BLOB: Inclusió segura de figura amb fallback automàtic (pxSRC)\n';
-      out += '\\pxIMG[0.75\\linewidth]{img/arquitectura}{Diagrama d\'arquitectura del sistema}[fig:arquitectura]\n\n';
-    }
-
-    if (state.blobs.cmp) {
-      out += '%% BLOB: Diagrames de Compiladors i Autòmats (pxCMP)\n';
-      out += '\\subsection{Diagrama de Tombstone i Autòmat Finit}\n';
-      out += '\\pxTombstoneCompile[title={Compilador Java cap a Bytecode JVM}]{Programa}{Java}{JVM}{x86}\n\n';
-      out += '\\pxTransitionTable[title={Taula de transició de l\'autòmat}]{a, b}{\n';
-      out += '  q_0 / initial   / q_1, q_2 / I;\n';
-      out += '  q_1 / normal    / q_3, q_2 / I;\n';
-      out += '  q_2 / accepting / q_1, q_3 / II;\n';
-      out += '  q_3 / accepting / q_3, q_3 / II\n';
-      out += '}\n\n';
-      out += '\\pxAutomatonTrace[title={Traça de reconeixement de la paraula \\texttt{aba}}]{\n';
-      out += '  q_0 / a / q_1; q_1 / b / q_2; q_2 / a / q_1\n';
-      out += '}[Reconegut]\n\n';
-    }
-
-    if (state.blobs.graph) {
-      out += '%% BLOB: Graf de Cerca Heurística A* (pxCMP)\n';
-      out += '\\pxGraph[title={Graf de cerca heurística $A^*$} travessant estats]{\n';
-      out += '  A / A / 0,0 / start / $h=20$;\n';
-      out += '  B / B / 2.2,1.1 / path / {$g=4, f=16$};\n';
-      out += '  C / C / 2.2,-1.1 / visited / $h=15$;\n';
-      out += '  D / D / 4.4,1.1 / open / $h=10$;\n';
-      out += '  G / G / 4.4,-1.1 / goal / $h=0$\n';
-      out += '}{\n';
-      out += '  A => B / 4; A -> C / 5; B -> D / 6; B => G / 8; C -> G / 12\n';
-      out += '}\n\n';
-    }
-
-    if (state.blobs.ml) {
-      out += '%% BLOB: Intel·ligència Artificial: Matriu de Confusió i Xarxa Neuronal (pxCMP)\n';
-      out += '\\pxConfusionMatrix[title={Avaluació del Classificador}]\n';
-      out += '  {Positiu, Negatiu}\n';
-      out += '  {45 (TP), 5 (FP); 3 (FN), 47 (TN)}\n';
-      out += '  [Precisió = 0.90 \\quad|\\quad Sensibilitat = 0.9375 \\quad|\\quad $F_1 = 0.9184$]\n\n';
-      out += '\\pxNeuralNet[title={Perceptró Multicapa (MLP)}]{\n';
-      out += '  Entrada / x_0, x_1, x_2 / input;\n';
-      out += '  Capa Oculta / h_0, h_1, h_2 / ReLU;\n';
-      out += '  Sortida / Y / Softmax\n';
-      out += '}[x_0 -> h_0 / 1; x_1 -> h_1 / 1; h_0 -> Y / 0.5]\n\n';
-    }
-
-    if (state.blobs.foreach) {
-      out += '%% BLOB: Inclusió automàtica de llista d\'imatges (pxIMGList de pxSRC)\n';
-      out += '\\pxIMGList[0.7\\linewidth]{img/benchmark_pas_}{\n';
-      out += '  Pas 1: Captura de dades inicials,\n';
-      out += '  Pas 2: Filtratge i processament,\n';
-      out += '  Pas 3: Resultats de l\'avaluació\n';
-      out += '}\n\n';
-    }
-
-    out += '\\end{document}\n';
-
-    const codeEl = document.getElementById('latex-preview-code');
-    if (codeEl) {
-      codeEl.textContent = out;
-    }
+  // 5. Copy Actions
+  function copyOutput(btn) {
+    const text = outputTarget.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '<span>COPIED!</span>';
+      setTimeout(() => {
+        btn.innerHTML = original;
+      }, 1800);
+    }).catch(err => console.error('Copy failed:', err));
   }
 
-  // Expose generateLatexCode globally for testing / offline usage
-  window.generateLatexCode = generateLatexCode;
+  btnCopyMain.addEventListener('click', () => copyOutput(btnCopyMain));
+  btnCopyPane.addEventListener('click', () => copyOutput(btnCopyPane));
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  // 6. Download Actions
+  function downloadOutput() {
+    const text = outputTarget.textContent;
+    let filename = outputFilename.textContent.replace('OUTPUT: ', '').trim() || 'p3ctex-export.tex';
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  btnDownloadMain.addEventListener('click', downloadOutput);
+  btnDownloadPane.addEventListener('click', downloadOutput);
+
+  // Initial render & URL hash support
+  const hash = window.location.hash.replace('#', '');
+  if (hash) {
+    const target = 'tool-' + hash;
+    if (document.getElementById(target)) {
+      activateTool(target);
+    } else {
+      renderActiveTool();
+    }
   } else {
-    init();
+    renderActiveTool();
   }
-})();
+});
 
 </script>
 </body>
