@@ -20,8 +20,8 @@ function setupDeckSwitcher() {
 
   const modeLabels = {
     'deck-overview': 'SECTION: [01 // OVERVIEW]',
-    'deck-templates': 'SECTION: [02 // STARTER TEMPLATES]',
-    'deck-macros': 'SECTION: [03 // PACKAGES & MACROS]',
+    'deck-templates': 'SECTION: [02 // TUTORIALS & TEMPLATES]',
+    'deck-macros': 'SECTION: [03 // PACKAGE DOCUMENTATION]',
     'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]'
   };
 
@@ -315,8 +315,8 @@ function setupChannelRocker() {
         '<strong>Line numbers:</strong> Automatic gutter with line counts',
         '<strong>Typography:</strong> Monospace fonts with character spacing'
       ],
-      code: `% Formatted code listing with line numbers:
-\\begin{pxCode}[language=Java,caption=Lexer.java]
+      code: `% Formatted code listing with title bar:
+\\begin{pxCode}[language=Java]{Lexer.java}
 public class Lexer {
   public static void main(String[] args) {
     System.out.println("Lexer ready for compilation");
@@ -327,15 +327,15 @@ public class Lexer {
     },
     pxcmp: {
       title: 'Compilers & Automata (pxCMP)',
-      desc: 'Macros for Computer Science coursework (Compilers, Automata, and Theory of Computation). Generates Tombstone compiler diagrams (\\pxTombstoneCompile), DFA/NFA state transition tables (\\pxTransitionTable), and parse trees.',
+      desc: 'Macros for Computer Science coursework (Compilers, Automata, and Theory of Computation). Generates Tombstone compiler diagrams (\\pxTombstoneCompile), DFA/NFA state transition tables (\\pxTransitionTable), and BNF grammar blocks (\\pxBNF).',
       features: [
         '<strong>Tombstone diagrams:</strong> Compiler pipeline T-diagrams',
         '<strong>Transition tables:</strong> State machine tables for DFAs and NFAs',
-        '<strong>Parse trees:</strong> Syntactic derivation tree representation',
+        '<strong>Formal grammar:</strong> Context-free grammar BNF production blocks',
         '<strong>Course alignment:</strong> Compiladors, Teoria de la Computació'
       ],
       code: `% Draw a compiler Tombstone diagram:
-\\pxTombstoneCompile{CUP}{Parser}{Java}
+\\pxTombstoneCompile[title=Compilador Mini-C]{Mini-C}{C}{JVM}{Java}
 
 % Draw a state machine transition table:
 \\pxTransitionTable{

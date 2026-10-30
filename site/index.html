@@ -39,7 +39,7 @@
       </div>
 
       <div class="masthead-actions">
-        <a href="generator.html" class="action-btn cyan">⚡ WEB GENERATOR</a>
+        <a href="generator.html" class="action-btn ghost">⚡ WEB GENERATOR</a>
         <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="action-btn rust" target="_blank" rel="noopener">⬇ DOWNLOAD ZIP</a>
         <a href="https://github.com/DidacLL/P3CTeX" class="action-btn ghost" target="_blank" rel="noopener">GITHUB</a>
       </div>
@@ -54,11 +54,11 @@
         </button>
         <button type="button" class="selector-key" data-deck="deck-templates">
           <span class="key-index">02</span>
-          <span class="key-label">STARTER TEMPLATES</span>
+          <span class="key-label">TUTORIALS &amp; TEMPLATES</span>
         </button>
         <button type="button" class="selector-key" data-deck="deck-macros">
           <span class="key-index">03</span>
-          <span class="key-label">PACKAGES &amp; MACROS</span>
+          <span class="key-label">PACKAGE DOCUMENTATION</span>
         </button>
         <button type="button" class="selector-key" data-deck="deck-runbook">
           <span class="key-index">04</span>
@@ -88,49 +88,49 @@
             </div>
 
             <h1 class="overview-hero-headline">
-              P3CTeX: LaTeX Suite for UOC Coursework &amp; Reports
+              P3CTeX: Documentation &amp; Authoring Tutorials
             </h1>
 
             <p class="overview-hero-lead">
-              P3CTeX is an open-source LaTeX document class and package suite for Universitat Oberta de Catalunya (UOC) coursework, practicum reports, and academic memories. It pre-configures official university layouts, student metadata, tables, figures, and code listings for offline compilation with standard <code>pdflatex</code>.
+              P3CTeX is an open-source LaTeX document class and package suite for Universitat Oberta de Catalunya (UOC) coursework, practicum reports, and degree projects. It pre-configures official university layouts, student metadata, tables, figures, and code listings for local compilation with standard <code>pdflatex</code>.
             </p>
 
             <div class="overview-pillars-grid">
               <div class="pillar-row">
                 <span class="pillar-icon">01</span>
                 <div class="pillar-content">
-                  <strong>Official UOC Layouts &amp; Compliance</strong>
-                  <span>Pre-configures margins, fonts, running headers, and the mandatory anti-plagiarism declaration according to university guidelines in Catalan (<code>cat</code>), Spanish (<code>es</code>), and English (<code>en</code>).</span>
+                  <strong>Official UOC Document Formats</strong>
+                  <span>Pre-configures margins, fonts, running headers, and the official anti-plagiarism declaration for UOC submissions in Catalan (<code>cat</code>), Spanish (<code>es</code>), and English (<code>en</code>).</span>
                 </div>
               </div>
 
               <div class="pillar-row">
                 <span class="pillar-icon">02</span>
                 <div class="pillar-content">
-                  <strong>Declarative Student Metadata</strong>
-                  <span>Set your student name, degree, subject, and activity in a single <code>\PECTeXconfig</code> block. Headers, footers, and front matter format automatically.</span>
+                  <strong>Coursework Tutorials &amp; Working Skeletons</strong>
+                  <span>Step-by-step authoring guides and ready-to-copy minimal skeletons for Continuous Assessments (PAC / PEC), Practicum Reports (PR), and Final Degree Projects (TFG / MEM).</span>
                 </div>
               </div>
 
               <div class="pillar-row">
                 <span class="pillar-icon">03</span>
                 <div class="pillar-content">
-                  <strong>Built-in Macros &amp; Web Generator</strong>
-                  <span>Includes dedicated macros for comma-separated tables (<code>pxTAB</code>), resilient figures (<code>pxSRC</code>), code listings (<code>pxLST</code>), and diagrams (<code>pxCMP</code>, <code>pxUML</code>, <code>pxGNT</code>), with a visual web generator to configure documents and snippets.</span>
+                  <strong>Comprehensive Package Documentation</strong>
+                  <span>Complete usage documentation and verified examples for all bundled macro packages: tables (<code>pxTAB</code>), resilient figures (<code>pxSRC</code>), code listings (<code>pxLST</code>), and diagrams (<code>pxCMP</code>, <code>pxGNT</code>, <code>pxUML</code>).</span>
                 </div>
               </div>
             </div>
 
             <div class="overview-cta-strip">
-              <a href="generator.html" class="cta-action-btn primary">
-                <span>⚡ OPEN WEB GENERATOR</span>
-              </a>
-              <button type="button" class="cta-action-btn secondary" data-jump-deck="deck-templates">
-                <span>📄 STARTER TEMPLATES</span>
+              <button type="button" class="cta-action-btn primary" data-jump-deck="deck-templates">
+                <span>📖 BROWSE TUTORIALS &amp; TEMPLATES</span>
               </button>
-              <a href="https://github.com/DidacLL/P3CTeX/releases/latest" class="cta-action-btn ghost" target="_blank" rel="noopener">
-                <span>⬇ DOWNLOAD ZIP</span>
-              </a>
+              <button type="button" class="cta-action-btn secondary" data-jump-deck="deck-runbook">
+                <span>⚙️ INSTALLATION GUIDE</span>
+              </button>
+              <button type="button" class="cta-action-btn ghost" data-jump-deck="deck-macros">
+                <span>📦 PACKAGE REFERENCE</span>
+              </button>
             </div>
           </div>
 
@@ -142,20 +142,20 @@
 
             <!-- Clear Action Modules Directing to Specific Tools -->
             <div class="overview-tools-directory">
-              <a href="generator.html" class="directory-card highlight">
-                <div class="dir-icon">⚡</div>
+              <button type="button" class="directory-card highlight" data-jump-deck="deck-templates">
+                <div class="dir-icon">📖</div>
                 <div class="dir-info">
-                  <strong>Interactive Generator</strong>
-                  <span>Configure your student metadata, tables, and code listings visually with live preview.</span>
+                  <strong>Authoring Tutorials &amp; Skeletons</strong>
+                  <span>Step-by-step guide to writing submissions with copyable skeletons for PAC, PR, and TFG.</span>
                 </div>
                 <span class="dir-arrow">&rarr;</span>
-              </a>
+              </button>
 
-              <button type="button" class="directory-card" data-jump-deck="deck-templates">
-                <div class="dir-icon">📄</div>
+              <button type="button" class="directory-card" data-jump-deck="deck-macros">
+                <div class="dir-icon">📦</div>
                 <div class="dir-info">
-                  <strong>Starter Skeletons</strong>
-                  <span>Browse minimal working templates for continuous assessment (PAC), practicum reports (PR), and memories.</span>
+                  <strong>Package Reference &amp; Macros</strong>
+                  <span>Detailed documentation for pxTAB tables, pxSRC safe figures, pxLST code, and pxCMP diagrams.</span>
                 </div>
                 <span class="dir-arrow">&rarr;</span>
               </button>
