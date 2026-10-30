@@ -81,6 +81,7 @@ function setupProfileRocker() {
   const rockerButtons = document.querySelectorAll('.rocker-btn[data-profile]');
   const codeTarget = document.querySelector('#code-minimal-pac');
   const readoutProfile = document.querySelector('#readout-profile-label');
+  const readoutDesc = document.querySelector('#readout-profile-desc');
   const readoutCover = document.querySelector('#readout-cover');
   const readoutToc = document.querySelector('#readout-toc');
   const readoutLang = document.querySelector('#readout-lang');
@@ -89,9 +90,10 @@ function setupProfileRocker() {
   const profileData = {
     pac: {
       label: 'PAC (Continuous Assessment)',
-      cover: 'Disabled (No cover)',
-      toc: 'Enabled (Automatic)',
-      lang: 'Catalan (cat)',
+      desc: 'Standard deliverable for continuous assessment (PAC / PEC / CA). Starts directly on page 1 with subject metadata and mandatory anti-plagiarism pledge—no blank cover page as required by UOC coursework rules.',
+      cover: 'Disabled (Starts on page 1)',
+      toc: 'Automatic with plagiarism pledge',
+      lang: 'Catalan (cat) / Spanish (es) / English (en)',
       code: `% Minimal P3CTeX PAC Continuous Assessment Skeleton
 \\documentclass[PAC,default]{P3CTeX}
 
@@ -125,6 +127,7 @@ Resolució del primer apartat del document...
     },
     pr: {
       label: 'PR (Practicum & Lab Report)',
+      desc: 'Comprehensive report profile for lab projects and practicums (PR). Generates an institutional cover page, table of contents, list of figures, and formal academic integrity declaration for 20–50 page projects.',
       cover: 'Enabled (Formal Cover)',
       toc: 'Enabled (Full TOC & LOF)',
       lang: 'Catalan / Spanish',
@@ -160,6 +163,7 @@ Descripció dels requeriments i l'arquitectura desenvolupada...
     },
     tfg: {
       label: 'TFG (Bachelor Thesis Memory)',
+      desc: 'Academic monograph profile for Bachelor’s Thesis (TFG). Generates official evaluation tribunal sheets, bilingual Catalan/English abstracts, Creative Commons copyright block, chapter formatting, and appendices.',
       cover: 'Enabled (Tribunal Sheet)',
       toc: 'Enabled (Memory Chapters)',
       lang: 'Bilingual (cat/en)',
@@ -202,6 +206,7 @@ Detalls d'implementació i esquemes d'enginyeria...
 
       const data = profileData[profile];
       if (readoutProfile) readoutProfile.textContent = data.label;
+      if (readoutDesc && data.desc) readoutDesc.textContent = data.desc;
       if (readoutCover) readoutCover.textContent = data.cover;
       if (readoutToc) readoutToc.textContent = data.toc;
       if (readoutLang) readoutLang.textContent = data.lang;
