@@ -136,6 +136,7 @@ html, body {
   color: var(--text-muted);
   border-left: 1px solid var(--border-subtle);
   padding-left: 10px;
+  white-space: nowrap;
 }
 
 .masthead-telemetry {
@@ -376,8 +377,11 @@ html, body {
 }
 .pillar-icon {
   color: var(--accent-ochre);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
   line-height: 1.4;
+  opacity: 0.85;
 }
 .pillar-content {
   display: flex;
@@ -1084,71 +1088,6 @@ html, body {
 .offline-download-btn:hover {
   background: var(--accent-olive);
   color: #fff;
-}
-
-/* ==========================================================================
-   DECK 05: DELIVERABLE GUIDE
-   ========================================================================== */
-.specs-stage-view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 10px;
-}
-.specs-stage-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 6px;
-}
-.specs-matrix-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-heading);
-  margin: 0;
-}
-.specs-matrix-sub {
-  font-size: 10.5px;
-  color: var(--text-muted);
-}
-
-.matrix-table-wrap {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  border-radius: 3px;
-}
-.matrix-spec-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11.5px;
-  text-align: left;
-}
-.matrix-spec-table th,
-.matrix-spec-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-.matrix-spec-table thead th {
-  background: var(--bg-elevated);
-  color: var(--text-heading);
-  font-weight: 600;
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-.matrix-spec-table tbody th {
-  color: var(--text-muted);
-  font-weight: 500;
-  width: 180px;
-}
-.matrix-spec-table tbody td {
-  color: var(--text-primary);
-}
-.matrix-spec-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.015);
 }
 
 /* ==========================================================================

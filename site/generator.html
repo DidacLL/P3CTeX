@@ -89,10 +89,10 @@
               <p>Configure a complete, ready-to-compile <code>.tex</code> document pre-configured for UOC guidelines.</p>
             </div>
 
-            <!-- Deliverable Selector -->
+            <!-- Document Profile Selector -->
             <div class="form-section">
-              <label class="section-label">01 // TARGET DELIVERABLE</label>
-              <div class="pill-selector" id="doc-deliverable-pills">
+              <label class="section-label">01 // DOCUMENT PROFILE</label>
+              <div class="pill-selector" id="doc-profile-pills">
                 <button type="button" class="pill-btn active" data-profile="PAC">
                   <strong>PAC</strong>
                   <span>Continuous Assessment</span>
@@ -170,8 +170,8 @@
           <!-- TOOL 02: DATA TABLES -->
           <div id="tool-tables" class="generator-panel">
             <div class="panel-intro">
-              <h2>Data Table Snippet Generator</h2>
-              <p>Generate clean LaTeX tables without wrestling with ampersands (<code>&amp;</code>) or calculating column widths.</p>
+              <h2>Data Table Snippet Generator (pxTAB)</h2>
+              <p>Generate clean LaTeX tables from comma-separated values with automatic styling, zero manual ampersands (<code>&amp;</code>) and zero column width calculations.</p>
             </div>
 
             <div class="form-section">
@@ -186,18 +186,13 @@
                   <input type="text" id="tbl-label" value="tab:rendiment">
                 </div>
                 <div class="input-field">
-                  <label for="tbl-style">Visual Style</label>
+                  <label for="tbl-style">Visual Style (\pxTable)</label>
                   <select id="tbl-style">
-                    <option value="header" selected>Header Row with Alternating Zebra Shading</option>
-                    <option value="simple">Simple Borderless Clean Table</option>
-                    <option value="compact">Compact Scientific Grid</option>
-                  </select>
-                </div>
-                <div class="input-field">
-                  <label for="tbl-multipage">Table Length</label>
-                  <select id="tbl-multipage">
-                    <option value="single" selected>Single-page Table (\pxTable)</option>
-                    <option value="multi">Multi-page Long Table (\pxTBLlong*)</option>
+                    <option value="header" selected>Header Row with Accent Background (header)</option>
+                    <option value="striped">Alternating Zebra Striped Rows (striped)</option>
+                    <option value="boxed">Boxed Frame Borders (boxed)</option>
+                    <option value="grid">Complete Grid Table (grid)</option>
+                    <option value="plain">Minimal Borderless Table (plain)</option>
                   </select>
                 </div>
               </div>
@@ -224,32 +219,36 @@ RadixSort, O(nk), 12.0 MB, PASS</textarea>
           <!-- TOOL 03: GANTT TIMELINE -->
           <div id="tool-gantt" class="generator-panel">
             <div class="panel-intro">
-              <h2>Project Gantt &amp; Timeline Generator</h2>
-              <p>Generate schedule charts for Practicum (PR) project plans and Bachelor Thesis (TFG) milestones.</p>
+              <h2>Daily Gantt Timeline Generator (pxGNT)</h2>
+              <p>Generate authentic daily Gantt schedule charts with <code>\pxGantt</code>, automatic day width scaling, and milestone clipping.</p>
             </div>
 
             <div class="form-section">
-              <label class="section-label">01 // PROJECT TIMELINE PARAMETERS</label>
-              <div class="form-grid-2">
+              <label class="section-label">01 // SCHEDULE PARAMETERS (DD/MM/YYYY)</label>
+              <div class="form-grid-3">
                 <div class="input-field">
-                  <label for="gnt-title">Project Title</label>
-                  <input type="text" id="gnt-title" value="Cronograma de Treball (TFG)">
+                  <label for="gnt-start">Project Start Date</label>
+                  <input type="text" id="gnt-start" value="01/03/2026">
                 </div>
                 <div class="input-field">
-                  <label for="gnt-duration">Total Duration</label>
-                  <input type="text" id="gnt-duration" value="16 Setmanes (Semestre)">
+                  <label for="gnt-end">Project End Date</label>
+                  <input type="text" id="gnt-end" value="30/06/2026">
+                </div>
+                <div class="input-field">
+                  <label for="gnt-block">Days Per Block</label>
+                  <input type="number" id="gnt-block" value="28">
                 </div>
               </div>
             </div>
 
             <div class="form-section">
-              <label class="section-label">02 // SCHEDULE TASKS &amp; MILESTONES (CSV)</label>
+              <label class="section-label">02 // SCHEDULE TASKS (LABEL, START DATE, END DATE)</label>
               <div class="input-field">
-                <textarea id="gnt-tasks" rows="6">Fase 1: Anàlisi de Requeriments, Setmana 1 - 3, Finalitzat
-Fase 2: Disseny de l'Arquitectura, Setmana 4 - 6, Finalitzat
-Fase 3: Implementació del Nucli, Setmana 7 - 11, En curs
-Fase 4: Proves i Optimització, Setmana 12 - 14, Pendent
-Fase 5: Redacció de la Memòria, Setmana 14 - 16, Pendent</textarea>
+                <textarea id="gnt-tasks" rows="5">Fase 1: Anàlisi de Requeriments, 01/03/2026, 25/03/2026
+Fase 2: Disseny de l'Arquitectura, 26/03/2026, 20/04/2026
+Fase 3: Implementació del Nucli, 21/04/2026, 31/05/2026
+Fase 4: Avaluació i Proves, 01/06/2026, 20/06/2026
+Fase 5: Redacció de la Memòria, 10/06/2026, 30/06/2026</textarea>
               </div>
             </div>
           </div>
@@ -257,34 +256,43 @@ Fase 5: Redacció de la Memòria, Setmana 14 - 16, Pendent</textarea>
           <!-- TOOL 04: ARCHITECTURE & UML -->
           <div id="tool-uml" class="generator-panel">
             <div class="panel-intro">
-              <h2>Architecture &amp; UML Diagram Generator</h2>
-              <p>Generate clean LaTeX structural diagrams without wrestling with raw TikZ coordinates.</p>
+              <h2>UML Class Diagram Generator (pxUML)</h2>
+              <p>Generate authentic UML class and object diagrams based on <code>pxUML</code>, <code>pgf-umlcd</code>, and TikZ with declarative attributes and operations.</p>
             </div>
 
             <div class="form-section">
-              <label class="section-label">01 // DIAGRAM TYPE</label>
+              <label class="section-label">01 // CLASS SPECIFICATION</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="uml-type">Diagram Style</label>
-                  <select id="uml-type">
-                    <option value="layers" selected>Layered Architecture (Frontend / API / DB)</option>
-                    <option value="class">UML Class Diagram</option>
-                    <option value="component">Component Pipeline Diagram</option>
-                  </select>
+                  <label for="uml-classname">Class Name</label>
+                  <input type="text" id="uml-classname" value="Usuari">
                 </div>
                 <div class="input-field">
-                  <label for="uml-caption">Diagram Caption</label>
-                  <input type="text" id="uml-caption" value="Diagrama de l'Arquitectura en Capes">
+                  <label for="uml-type">Class Type</label>
+                  <select id="uml-type">
+                    <option value="class" selected>Concrete Class [class]</option>
+                    <option value="interface">Interface [interface]</option>
+                    <option value="abstract">Abstract Class [abstract]</option>
+                  </select>
                 </div>
               </div>
             </div>
 
             <div class="form-section">
-              <label class="section-label">02 // COMPONENTS / ENTITIES</label>
+              <label class="section-label">02 // CLASS ATTRIBUTES (ONE PER LINE)</label>
               <div class="input-field">
-                <textarea id="uml-elements" rows="4">Capa de Presentació: Single-Page Application (HTML5 / Vanilla JS)
-Capa de Negoci: Microserveis REST API (Node.js / Express)
-Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
+                <textarea id="uml-attrs" rows="3">- id : String
+- email : String
+- actiu : boolean</textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">03 // CLASS OPERATIONS (ONE PER LINE)</label>
+              <div class="input-field">
+                <textarea id="uml-ops" rows="3">+ autenticar(pass: String) : boolean
++ getEmail() : String
++ desactivar() : void</textarea>
               </div>
             </div>
           </div>
@@ -292,33 +300,35 @@ Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
           <!-- TOOL 05: CODE LISTINGS -->
           <div id="tool-code" class="generator-panel">
             <div class="panel-intro">
-              <h2>Formatted Code Listing Generator</h2>
-              <p>Generate syntax-highlighted code boxes with gutters, line numbers, and clean frames.</p>
+              <h2>Code Listing Generator (pxLST)</h2>
+              <p>Generate syntax-highlighted code boxes with Darcula-style frames, line gutters, and native language presets.</p>
             </div>
 
             <div class="form-section">
               <label class="section-label">01 // CODE LISTING PARAMETERS</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="code-lang">Programming Language</label>
+                  <label for="code-lang">Programming Language Preset</label>
                   <select id="code-lang">
                     <option value="Java" selected>Java</option>
                     <option value="Python">Python</option>
                     <option value="C">C / C++</option>
                     <option value="SQL">SQL</option>
                     <option value="Bash">Bash / Shell</option>
-                    <option value="YAML">YAML / JSON</option>
+                    <option value="YAML">YAML</option>
+                    <option value="Prolog">Prolog</option>
+                    <option value="OWL">OWL / RDF</option>
                   </select>
                 </div>
                 <div class="input-field">
-                  <label for="code-caption">Listing Caption &amp; Filename</label>
+                  <label for="code-caption">Title / Filename Label</label>
                   <input type="text" id="code-caption" value="LexerTokenAnalyzer.java">
                 </div>
               </div>
             </div>
 
             <div class="form-section">
-              <label class="section-label">02 // CODE SNIPPET</label>
+              <label class="section-label">02 // CODE BODY</label>
               <div class="input-field">
                 <textarea id="code-body" rows="6">public class LexerTokenAnalyzer {
     public static void main(String[] args) {
@@ -334,42 +344,43 @@ Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
           <!-- TOOL 06: COMPILERS & AUTOMATA -->
           <div id="tool-compiler" class="generator-panel">
             <div class="panel-intro">
-              <h2>Compilers &amp; Automata Diagram Generator</h2>
-              <p>Generate Tombstone compiler diagrams (T-diagrams) and DFA/NFA state transition tables.</p>
+              <h2>Compilers, Automata &amp; Logic Generator (pxCMP)</h2>
+              <p>Generate authentic Tombstone compiler diagrams (T-diagrams), DFA/NFA transition tables, and formal BNF grammars with <code>pxCMP</code>.</p>
             </div>
 
             <div class="form-section">
-              <label class="section-label">01 // AUTOMATON OR COMPILER TOOL</label>
+              <label class="section-label">01 // DIAGRAM CATEGORY</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="cmp-type">Diagram Type</label>
+                  <label for="cmp-type">Diagram Kind</label>
                   <select id="cmp-type">
-                    <option value="tombstone" selected>Tombstone Compiler Diagram (T-Diagram)</option>
-                    <option value="dfa">DFA State Transition Table</option>
-                    <option value="parse-tree">Grammar Parse Tree</option>
+                    <option value="tombstone" selected>Tombstone Program Compilation (\pxTombstoneCompile)</option>
+                    <option value="tcompiler">Compiler Piece T-Block (\pxTCompiler)</option>
+                    <option value="dfa">DFA State Transition Table (\pxTransitionTable)</option>
+                    <option value="bnf">BNF Grammar Productions (\pxBNF)</option>
                   </select>
                 </div>
                 <div class="input-field">
-                  <label for="cmp-caption">Caption</label>
-                  <input type="text" id="cmp-caption" value="Esquema de Compilació Tombstone">
+                  <label for="cmp-prog">Program Name</label>
+                  <input type="text" id="cmp-prog" value="Programa">
                 </div>
               </div>
             </div>
 
             <div class="form-section" id="cmp-tombstone-inputs">
-              <label class="section-label">02 // TOMBSTONE T-DIAGRAM PARAMETERS</label>
+              <label class="section-label">02 // LANGUAGES &amp; EXECUTION PLATFORM</label>
               <div class="form-grid-3">
                 <div class="input-field">
                   <label for="cmp-source">Source Language (S)</label>
-                  <input type="text" id="cmp-source" value="CUP">
+                  <input type="text" id="cmp-source" value="Java">
                 </div>
                 <div class="input-field">
                   <label for="cmp-target">Target Language (T)</label>
-                  <input type="text" id="cmp-target" value="Java">
+                  <input type="text" id="cmp-target" value="Bytecode">
                 </div>
                 <div class="input-field">
-                  <label for="cmp-impl">Implementation Language (I)</label>
-                  <input type="text" id="cmp-impl" value="JVM Bytecode">
+                  <label for="cmp-impl">Host / Implementation Platform</label>
+                  <input type="text" id="cmp-impl" value="JVM">
                 </div>
               </div>
             </div>
@@ -413,13 +424,11 @@ Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
         <span class="sep">&bull;</span>
         <span class="license-txt">GNU General Public License v3.0</span>
         <span class="sep">&bull;</span>
-        <span class="author-txt">By ScVr!a // UOC Computer Engineering</span>
+        <span class="author-txt">By ScVr!a // Universitat Oberta de Catalunya</span>
       </div>
 
       <div class="footer-links-right">
         <a href="index.html" class="foot-link">Home Workstation</a>
-        <a href="tutorials.html" class="foot-link">Tutorials</a>
-        <a href="showcases.html" class="foot-link">Macro Showcases</a>
         <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="foot-link">Offline Tool (.html)</a>
         <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="foot-link">GitHub</a>
       </div>

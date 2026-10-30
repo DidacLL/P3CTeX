@@ -22,8 +22,7 @@ function setupDeckSwitcher() {
     'deck-overview': 'SECTION: [01 // OVERVIEW]',
     'deck-templates': 'SECTION: [02 // STARTER TEMPLATES]',
     'deck-macros': 'SECTION: [03 // PACKAGES & MACROS]',
-    'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]',
-    'deck-specs': 'SECTION: [05 // DELIVERABLE GUIDE]'
+    'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]'
   };
 
   function activateDeck(targetDeckId) {
@@ -75,7 +74,7 @@ function setupDeckSwitcher() {
 }
 
 /* --------------------------------------------------------------------------
-   2. Deliverable Profile Switcher (PAC / PR / TFG)
+   2. Document Profile Switcher (PAC / PR / MEM / TFG)
    -------------------------------------------------------------------------- */
 function setupProfileRocker() {
   const switches = document.querySelectorAll('.profile-switch[data-profile]');
@@ -91,7 +90,7 @@ function setupProfileRocker() {
     pac: {
       filename: 'minimal-pac.tex',
       title: 'PAC (Continuous Assessment)',
-      desc: 'Designed for standard semester deliverables (PAC / PEC / CA). As required by UOC grading criteria, it eliminates the blank cover page and starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism pledge.',
+      desc: 'Designed for semester continuous assessments (PAC / PEC / CA). As required by UOC grading criteria, it eliminates the blank cover page and starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism pledge.',
       cover: 'Bypassed (Starts on Page 1)',
       toc: 'Auto with anti-plagiarism pledge',
       font: 'Arev Sans 11pt (Clear and legible)',
@@ -129,7 +128,7 @@ Resolució del primer apartat del document...
     pr: {
       filename: 'minimal-pr.tex',
       title: 'PR (Project & Practicum Report)',
-      desc: 'Report profile for lab deliverables and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, and figure list for 20–50 page project reports.',
+      desc: 'Report profile for laboratory reports and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, and figure list for project reports.',
       cover: 'Institutional Cover with UOC Logo',
       toc: 'Full TOC and Figure Index',
       font: 'Arev Sans 11pt (Lab Report Standard)',
@@ -291,7 +290,7 @@ function setupChannelRocker() {
   {Temps d'execució, 0.42 s, PASS}
   {Memòria consumida, 18.5 MB, PASS}
   {Eficiència Algorísmica, O(n log n), PASS}`,
-      url: 'showcases.html#pxtab'
+      url: 'generator.html#tables'
     },
     pxsrc: {
       title: 'Figures & Graphics (pxSRC)',
@@ -305,7 +304,7 @@ function setupChannelRocker() {
       code: `% Include an image with automatic missing-file fallback:
 \\pxIMG[0.85\\linewidth]{img/arquitectura}
   {Diagrama de l'arquitectura proposada}[fig:arq]`,
-      url: 'showcases.html#pxsrc'
+      url: 'generator.html#uml'
     },
     pxlst: {
       title: 'Code Listings (pxLST)',
@@ -324,7 +323,7 @@ public class Lexer {
   }
 }
 \\end{pxCode}`,
-      url: 'showcases.html#pxlst'
+      url: 'generator.html#code'
     },
     pxcmp: {
       title: 'Compilers & Automata (pxCMP)',
@@ -344,7 +343,7 @@ public class Lexer {
   q0, q1, q0;
   q1, q0, q1
 }`,
-      url: 'showcases.html#pxcmp'
+      url: 'generator.html#compilers'
     }
   };
 

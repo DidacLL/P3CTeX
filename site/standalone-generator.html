@@ -148,6 +148,7 @@ html, body {
   color: var(--text-muted);
   border-left: 1px solid var(--border-subtle);
   padding-left: 10px;
+  white-space: nowrap;
 }
 
 .masthead-telemetry {
@@ -388,8 +389,11 @@ html, body {
 }
 .pillar-icon {
   color: var(--accent-ochre);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
   line-height: 1.4;
+  opacity: 0.85;
 }
 .pillar-content {
   display: flex;
@@ -1099,71 +1103,6 @@ html, body {
 }
 
 /* ==========================================================================
-   DECK 05: DELIVERABLE GUIDE
-   ========================================================================== */
-.specs-stage-view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 10px;
-}
-.specs-stage-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 6px;
-}
-.specs-matrix-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-heading);
-  margin: 0;
-}
-.specs-matrix-sub {
-  font-size: 10.5px;
-  color: var(--text-muted);
-}
-
-.matrix-table-wrap {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  border-radius: 3px;
-}
-.matrix-spec-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11.5px;
-  text-align: left;
-}
-.matrix-spec-table th,
-.matrix-spec-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-.matrix-spec-table thead th {
-  background: var(--bg-elevated);
-  color: var(--text-heading);
-  font-weight: 600;
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-.matrix-spec-table tbody th {
-  color: var(--text-muted);
-  font-weight: 500;
-  width: 180px;
-}
-.matrix-spec-table tbody td {
-  color: var(--text-primary);
-}
-.matrix-spec-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.015);
-}
-
-/* ==========================================================================
    BOTTOM STATUS FOOTER
    ========================================================================== */
 .console-telemetry-footer {
@@ -1570,10 +1509,10 @@ html, body {
               <p>Configure a complete, ready-to-compile <code>.tex</code> document pre-configured for UOC guidelines.</p>
             </div>
 
-            <!-- Deliverable Selector -->
+            <!-- Document Profile Selector -->
             <div class="form-section">
-              <label class="section-label">01 // TARGET DELIVERABLE</label>
-              <div class="pill-selector" id="doc-deliverable-pills">
+              <label class="section-label">01 // DOCUMENT PROFILE</label>
+              <div class="pill-selector" id="doc-profile-pills">
                 <button type="button" class="pill-btn active" data-profile="PAC">
                   <strong>PAC</strong>
                   <span>Continuous Assessment</span>
@@ -1651,8 +1590,8 @@ html, body {
           <!-- TOOL 02: DATA TABLES -->
           <div id="tool-tables" class="generator-panel">
             <div class="panel-intro">
-              <h2>Data Table Snippet Generator</h2>
-              <p>Generate clean LaTeX tables without wrestling with ampersands (<code>&amp;</code>) or calculating column widths.</p>
+              <h2>Data Table Snippet Generator (pxTAB)</h2>
+              <p>Generate clean LaTeX tables from comma-separated values with automatic styling, zero manual ampersands (<code>&amp;</code>) and zero column width calculations.</p>
             </div>
 
             <div class="form-section">
@@ -1667,18 +1606,13 @@ html, body {
                   <input type="text" id="tbl-label" value="tab:rendiment">
                 </div>
                 <div class="input-field">
-                  <label for="tbl-style">Visual Style</label>
+                  <label for="tbl-style">Visual Style (\pxTable)</label>
                   <select id="tbl-style">
-                    <option value="header" selected>Header Row with Alternating Zebra Shading</option>
-                    <option value="simple">Simple Borderless Clean Table</option>
-                    <option value="compact">Compact Scientific Grid</option>
-                  </select>
-                </div>
-                <div class="input-field">
-                  <label for="tbl-multipage">Table Length</label>
-                  <select id="tbl-multipage">
-                    <option value="single" selected>Single-page Table (\pxTable)</option>
-                    <option value="multi">Multi-page Long Table (\pxTBLlong*)</option>
+                    <option value="header" selected>Header Row with Accent Background (header)</option>
+                    <option value="striped">Alternating Zebra Striped Rows (striped)</option>
+                    <option value="boxed">Boxed Frame Borders (boxed)</option>
+                    <option value="grid">Complete Grid Table (grid)</option>
+                    <option value="plain">Minimal Borderless Table (plain)</option>
                   </select>
                 </div>
               </div>
@@ -1705,32 +1639,36 @@ RadixSort, O(nk), 12.0 MB, PASS</textarea>
           <!-- TOOL 03: GANTT TIMELINE -->
           <div id="tool-gantt" class="generator-panel">
             <div class="panel-intro">
-              <h2>Project Gantt &amp; Timeline Generator</h2>
-              <p>Generate schedule charts for Practicum (PR) project plans and Bachelor Thesis (TFG) milestones.</p>
+              <h2>Daily Gantt Timeline Generator (pxGNT)</h2>
+              <p>Generate authentic daily Gantt schedule charts with <code>\pxGantt</code>, automatic day width scaling, and milestone clipping.</p>
             </div>
 
             <div class="form-section">
-              <label class="section-label">01 // PROJECT TIMELINE PARAMETERS</label>
-              <div class="form-grid-2">
+              <label class="section-label">01 // SCHEDULE PARAMETERS (DD/MM/YYYY)</label>
+              <div class="form-grid-3">
                 <div class="input-field">
-                  <label for="gnt-title">Project Title</label>
-                  <input type="text" id="gnt-title" value="Cronograma de Treball (TFG)">
+                  <label for="gnt-start">Project Start Date</label>
+                  <input type="text" id="gnt-start" value="01/03/2026">
                 </div>
                 <div class="input-field">
-                  <label for="gnt-duration">Total Duration</label>
-                  <input type="text" id="gnt-duration" value="16 Setmanes (Semestre)">
+                  <label for="gnt-end">Project End Date</label>
+                  <input type="text" id="gnt-end" value="30/06/2026">
+                </div>
+                <div class="input-field">
+                  <label for="gnt-block">Days Per Block</label>
+                  <input type="number" id="gnt-block" value="28">
                 </div>
               </div>
             </div>
 
             <div class="form-section">
-              <label class="section-label">02 // SCHEDULE TASKS &amp; MILESTONES (CSV)</label>
+              <label class="section-label">02 // SCHEDULE TASKS (LABEL, START DATE, END DATE)</label>
               <div class="input-field">
-                <textarea id="gnt-tasks" rows="6">Fase 1: Anàlisi de Requeriments, Setmana 1 - 3, Finalitzat
-Fase 2: Disseny de l'Arquitectura, Setmana 4 - 6, Finalitzat
-Fase 3: Implementació del Nucli, Setmana 7 - 11, En curs
-Fase 4: Proves i Optimització, Setmana 12 - 14, Pendent
-Fase 5: Redacció de la Memòria, Setmana 14 - 16, Pendent</textarea>
+                <textarea id="gnt-tasks" rows="5">Fase 1: Anàlisi de Requeriments, 01/03/2026, 25/03/2026
+Fase 2: Disseny de l'Arquitectura, 26/03/2026, 20/04/2026
+Fase 3: Implementació del Nucli, 21/04/2026, 31/05/2026
+Fase 4: Avaluació i Proves, 01/06/2026, 20/06/2026
+Fase 5: Redacció de la Memòria, 10/06/2026, 30/06/2026</textarea>
               </div>
             </div>
           </div>
@@ -1738,34 +1676,43 @@ Fase 5: Redacció de la Memòria, Setmana 14 - 16, Pendent</textarea>
           <!-- TOOL 04: ARCHITECTURE & UML -->
           <div id="tool-uml" class="generator-panel">
             <div class="panel-intro">
-              <h2>Architecture &amp; UML Diagram Generator</h2>
-              <p>Generate clean LaTeX structural diagrams without wrestling with raw TikZ coordinates.</p>
+              <h2>UML Class Diagram Generator (pxUML)</h2>
+              <p>Generate authentic UML class and object diagrams based on <code>pxUML</code>, <code>pgf-umlcd</code>, and TikZ with declarative attributes and operations.</p>
             </div>
 
             <div class="form-section">
-              <label class="section-label">01 // DIAGRAM TYPE</label>
+              <label class="section-label">01 // CLASS SPECIFICATION</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="uml-type">Diagram Style</label>
-                  <select id="uml-type">
-                    <option value="layers" selected>Layered Architecture (Frontend / API / DB)</option>
-                    <option value="class">UML Class Diagram</option>
-                    <option value="component">Component Pipeline Diagram</option>
-                  </select>
+                  <label for="uml-classname">Class Name</label>
+                  <input type="text" id="uml-classname" value="Usuari">
                 </div>
                 <div class="input-field">
-                  <label for="uml-caption">Diagram Caption</label>
-                  <input type="text" id="uml-caption" value="Diagrama de l'Arquitectura en Capes">
+                  <label for="uml-type">Class Type</label>
+                  <select id="uml-type">
+                    <option value="class" selected>Concrete Class [class]</option>
+                    <option value="interface">Interface [interface]</option>
+                    <option value="abstract">Abstract Class [abstract]</option>
+                  </select>
                 </div>
               </div>
             </div>
 
             <div class="form-section">
-              <label class="section-label">02 // COMPONENTS / ENTITIES</label>
+              <label class="section-label">02 // CLASS ATTRIBUTES (ONE PER LINE)</label>
               <div class="input-field">
-                <textarea id="uml-elements" rows="4">Capa de Presentació: Single-Page Application (HTML5 / Vanilla JS)
-Capa de Negoci: Microserveis REST API (Node.js / Express)
-Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
+                <textarea id="uml-attrs" rows="3">- id : String
+- email : String
+- actiu : boolean</textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">03 // CLASS OPERATIONS (ONE PER LINE)</label>
+              <div class="input-field">
+                <textarea id="uml-ops" rows="3">+ autenticar(pass: String) : boolean
++ getEmail() : String
++ desactivar() : void</textarea>
               </div>
             </div>
           </div>
@@ -1773,33 +1720,35 @@ Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
           <!-- TOOL 05: CODE LISTINGS -->
           <div id="tool-code" class="generator-panel">
             <div class="panel-intro">
-              <h2>Formatted Code Listing Generator</h2>
-              <p>Generate syntax-highlighted code boxes with gutters, line numbers, and clean frames.</p>
+              <h2>Code Listing Generator (pxLST)</h2>
+              <p>Generate syntax-highlighted code boxes with Darcula-style frames, line gutters, and native language presets.</p>
             </div>
 
             <div class="form-section">
               <label class="section-label">01 // CODE LISTING PARAMETERS</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="code-lang">Programming Language</label>
+                  <label for="code-lang">Programming Language Preset</label>
                   <select id="code-lang">
                     <option value="Java" selected>Java</option>
                     <option value="Python">Python</option>
                     <option value="C">C / C++</option>
                     <option value="SQL">SQL</option>
                     <option value="Bash">Bash / Shell</option>
-                    <option value="YAML">YAML / JSON</option>
+                    <option value="YAML">YAML</option>
+                    <option value="Prolog">Prolog</option>
+                    <option value="OWL">OWL / RDF</option>
                   </select>
                 </div>
                 <div class="input-field">
-                  <label for="code-caption">Listing Caption &amp; Filename</label>
+                  <label for="code-caption">Title / Filename Label</label>
                   <input type="text" id="code-caption" value="LexerTokenAnalyzer.java">
                 </div>
               </div>
             </div>
 
             <div class="form-section">
-              <label class="section-label">02 // CODE SNIPPET</label>
+              <label class="section-label">02 // CODE BODY</label>
               <div class="input-field">
                 <textarea id="code-body" rows="6">public class LexerTokenAnalyzer {
     public static void main(String[] args) {
@@ -1815,42 +1764,43 @@ Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
           <!-- TOOL 06: COMPILERS & AUTOMATA -->
           <div id="tool-compiler" class="generator-panel">
             <div class="panel-intro">
-              <h2>Compilers &amp; Automata Diagram Generator</h2>
-              <p>Generate Tombstone compiler diagrams (T-diagrams) and DFA/NFA state transition tables.</p>
+              <h2>Compilers, Automata &amp; Logic Generator (pxCMP)</h2>
+              <p>Generate authentic Tombstone compiler diagrams (T-diagrams), DFA/NFA transition tables, and formal BNF grammars with <code>pxCMP</code>.</p>
             </div>
 
             <div class="form-section">
-              <label class="section-label">01 // AUTOMATON OR COMPILER TOOL</label>
+              <label class="section-label">01 // DIAGRAM CATEGORY</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="cmp-type">Diagram Type</label>
+                  <label for="cmp-type">Diagram Kind</label>
                   <select id="cmp-type">
-                    <option value="tombstone" selected>Tombstone Compiler Diagram (T-Diagram)</option>
-                    <option value="dfa">DFA State Transition Table</option>
-                    <option value="parse-tree">Grammar Parse Tree</option>
+                    <option value="tombstone" selected>Tombstone Program Compilation (\pxTombstoneCompile)</option>
+                    <option value="tcompiler">Compiler Piece T-Block (\pxTCompiler)</option>
+                    <option value="dfa">DFA State Transition Table (\pxTransitionTable)</option>
+                    <option value="bnf">BNF Grammar Productions (\pxBNF)</option>
                   </select>
                 </div>
                 <div class="input-field">
-                  <label for="cmp-caption">Caption</label>
-                  <input type="text" id="cmp-caption" value="Esquema de Compilació Tombstone">
+                  <label for="cmp-prog">Program Name</label>
+                  <input type="text" id="cmp-prog" value="Programa">
                 </div>
               </div>
             </div>
 
             <div class="form-section" id="cmp-tombstone-inputs">
-              <label class="section-label">02 // TOMBSTONE T-DIAGRAM PARAMETERS</label>
+              <label class="section-label">02 // LANGUAGES &amp; EXECUTION PLATFORM</label>
               <div class="form-grid-3">
                 <div class="input-field">
                   <label for="cmp-source">Source Language (S)</label>
-                  <input type="text" id="cmp-source" value="CUP">
+                  <input type="text" id="cmp-source" value="Java">
                 </div>
                 <div class="input-field">
                   <label for="cmp-target">Target Language (T)</label>
-                  <input type="text" id="cmp-target" value="Java">
+                  <input type="text" id="cmp-target" value="Bytecode">
                 </div>
                 <div class="input-field">
-                  <label for="cmp-impl">Implementation Language (I)</label>
-                  <input type="text" id="cmp-impl" value="JVM Bytecode">
+                  <label for="cmp-impl">Host / Implementation Platform</label>
+                  <input type="text" id="cmp-impl" value="JVM">
                 </div>
               </div>
             </div>
@@ -1894,13 +1844,11 @@ Capa de Dades: Base de Dades PostgreSQL + Memòria Cau Redis</textarea>
         <span class="sep">&bull;</span>
         <span class="license-txt">GNU General Public License v3.0</span>
         <span class="sep">&bull;</span>
-        <span class="author-txt">By ScVr!a // UOC Computer Engineering</span>
+        <span class="author-txt">By ScVr!a // Universitat Oberta de Catalunya</span>
       </div>
 
       <div class="footer-links-right">
         <a href="index.html" class="foot-link">Home Workstation</a>
-        <a href="tutorials.html" class="foot-link">Tutorials</a>
-        <a href="showcases.html" class="foot-link">Macro Showcases</a>
         <a href="standalone-generator.html" download="p3ctex-standalone-generator.html" class="foot-link">Offline Tool (.html)</a>
         <a href="https://github.com/DidacLL/P3CTeX" target="_blank" rel="noopener" class="foot-link">GitHub</a>
       </div>
@@ -1933,8 +1881,7 @@ function setupDeckSwitcher() {
     'deck-overview': 'SECTION: [01 // OVERVIEW]',
     'deck-templates': 'SECTION: [02 // STARTER TEMPLATES]',
     'deck-macros': 'SECTION: [03 // PACKAGES & MACROS]',
-    'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]',
-    'deck-specs': 'SECTION: [05 // DELIVERABLE GUIDE]'
+    'deck-runbook': 'SECTION: [04 // INSTALLATION & SETUP]'
   };
 
   function activateDeck(targetDeckId) {
@@ -1986,7 +1933,7 @@ function setupDeckSwitcher() {
 }
 
 /* --------------------------------------------------------------------------
-   2. Deliverable Profile Switcher (PAC / PR / TFG)
+   2. Document Profile Switcher (PAC / PR / MEM / TFG)
    -------------------------------------------------------------------------- */
 function setupProfileRocker() {
   const switches = document.querySelectorAll('.profile-switch[data-profile]');
@@ -2002,7 +1949,7 @@ function setupProfileRocker() {
     pac: {
       filename: 'minimal-pac.tex',
       title: 'PAC (Continuous Assessment)',
-      desc: 'Designed for standard semester deliverables (PAC / PEC / CA). As required by UOC grading criteria, it eliminates the blank cover page and starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism pledge.',
+      desc: 'Designed for semester continuous assessments (PAC / PEC / CA). As required by UOC grading criteria, it eliminates the blank cover page and starts directly on page 1 with subject metadata, table of contents, and the mandatory anti-plagiarism pledge.',
       cover: 'Bypassed (Starts on Page 1)',
       toc: 'Auto with anti-plagiarism pledge',
       font: 'Arev Sans 11pt (Clear and legible)',
@@ -2040,7 +1987,7 @@ Resolució del primer apartat del document...
     pr: {
       filename: 'minimal-pr.tex',
       title: 'PR (Project & Practicum Report)',
-      desc: 'Report profile for lab deliverables and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, and figure list for 20–50 page project reports.',
+      desc: 'Report profile for laboratory reports and practicums (PR). Generates an institutional cover page with the UOC logo, table of contents, and figure list for project reports.',
       cover: 'Institutional Cover with UOC Logo',
       toc: 'Full TOC and Figure Index',
       font: 'Arev Sans 11pt (Lab Report Standard)',
@@ -2202,7 +2149,7 @@ function setupChannelRocker() {
   {Temps d'execució, 0.42 s, PASS}
   {Memòria consumida, 18.5 MB, PASS}
   {Eficiència Algorísmica, O(n log n), PASS}`,
-      url: 'showcases.html#pxtab'
+      url: 'generator.html#tables'
     },
     pxsrc: {
       title: 'Figures & Graphics (pxSRC)',
@@ -2216,7 +2163,7 @@ function setupChannelRocker() {
       code: `% Include an image with automatic missing-file fallback:
 \\pxIMG[0.85\\linewidth]{img/arquitectura}
   {Diagrama de l'arquitectura proposada}[fig:arq]`,
-      url: 'showcases.html#pxsrc'
+      url: 'generator.html#uml'
     },
     pxlst: {
       title: 'Code Listings (pxLST)',
@@ -2235,7 +2182,7 @@ public class Lexer {
   }
 }
 \\end{pxCode}`,
-      url: 'showcases.html#pxlst'
+      url: 'generator.html#code'
     },
     pxcmp: {
       title: 'Compilers & Automata (pxCMP)',
@@ -2255,7 +2202,7 @@ public class Lexer {
   q0, q1, q0;
   q1, q0, q1
 }`,
-      url: 'showcases.html#pxcmp'
+      url: 'generator.html#compilers'
     }
   };
 
@@ -2369,7 +2316,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 2. Document Profile Switcher (PAC / PR / TFG)
-  const profilePills = document.querySelectorAll('#doc-deliverable-pills .pill-btn');
+  const profilePills = document.querySelectorAll('#doc-profile-pills .pill-btn');
   profilePills.forEach(pill => {
     pill.addEventListener('click', () => {
       profilePills.forEach(p => p.classList.remove('active'));
@@ -2428,6 +2375,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const incTombstone = document.getElementById('doc-inc-tombstone').checked;
 
     let classOpt = activeProfile === 'TFG' ? 'TFG,MEM,default' : `${activeProfile},default`;
+    if (incTombstone) {
+      classOpt = `CMP,${classOpt}`;
+    }
     let filename = `minimal-${activeProfile.toLowerCase()}.tex`;
 
     outputFilename.textContent = `OUTPUT: ${filename}`;
@@ -2465,29 +2415,29 @@ document.addEventListener('DOMContentLoaded', () => {
       code += `\\section{1. Introducció i Abast del Projecte}\n`;
       code += `Aquest document recull la memòria tècnica del projecte desenvolupat...\n\n`;
     } else {
-      code += `% TFG Profile: Fitxa d'avaluació de tribunal i estructura per capítols.\n\n`;
+      code += `% TFG Profile: Estructura de memòria amb capítols (pxMEM) i fitxa institucional (pxTFG).\n\n`;
       code += `\\chapter{Introducció}\n`;
       code += `Descripció del context i objectius del Treball Final de Grau...\n\n`;
     }
 
     if (incTable) {
-      code += `% Taula declarativa per comes (paquet pxTAB):\n`;
+      code += `% Taula declarativa per comes (paquet pxTAB inclòs a default):\n`;
       code += `\\pxTable[style=header]\n  {Mètrica, Valor Mesurat, Estat}\n  {Temps d'execució, 0.42 s, PASS}\n  {Memòria consumida, 18.5 MB, PASS}\n\n`;
     }
 
     if (incFigure) {
-      code += `% Figura amb placeholder resilient (paquet pxSRC):\n`;
+      code += `% Figura resilient amb fallback si el fitxer no existeix (paquet pxSRC):\n`;
       code += `\\pxIMG[0.85\\linewidth]{img/arquitectura}{Esquema de l'arquitectura proposada}[fig:arq]\n\n`;
     }
 
     if (incCode) {
-      code += `% Bloc de codi amb ressaltat de sintaxi i números de línia (paquet pxLST):\n`;
-      code += `\\begin{pxCode}[language=Java,caption=LexerAnalyzer.java]\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("Lexer ready.");\n    }\n}\n\\end{pxCode}\n\n`;
+      code += `% Bloc de codi amb ressaltat de sintaxi i marc Darcula (paquet pxLST):\n`;
+      code += `\\begin{pxCode}[language=Java]{LexerAnalyzer.java}\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("Compilable amb P3CTeX");\n    }\n}\n\\end{pxCode}\n\n`;
     }
 
     if (incTombstone) {
       code += `% Diagrama Tombstone de compilació (paquet pxCMP):\n`;
-      code += `\\pxTombstoneCompile{CUP}{Parser}{Java}\n\n`;
+      code += `\\pxTombstoneCompile[title={Compilació en Java}]{Programa}{Java}{JVM}{x86}\n\n`;
     }
 
     code += `\\end{document}\n`;
@@ -2499,95 +2449,100 @@ document.addEventListener('DOMContentLoaded', () => {
     const caption = document.getElementById('tbl-caption').value.trim() || 'Taula de Dades';
     const label = document.getElementById('tbl-label').value.trim() || 'tab:dades';
     const style = document.getElementById('tbl-style').value;
-    const isMulti = document.getElementById('tbl-multipage').value === 'multi';
     const headers = document.getElementById('tbl-headers').value.trim();
     const rows = document.getElementById('tbl-rows').value.trim().split('\n').filter(r => r.trim());
 
     outputFilename.textContent = `OUTPUT: table-snippet.tex`;
     outputModeBadge.textContent = 'TABLE SNIPPET';
 
-    let macroName = isMulti ? '\\pxTBLlong*' : '\\pxTable';
     let code = `% ==============================================================================\n`;
-    code += `% Taula LaTeX generada amb P3CTeX (pxTAB)\n`;
-    code += `% Inseriu aquest bloc al vostre document .tex\n`;
+    code += `% Taula declarativa generada amb P3CTeX (pxTAB)\n`;
+    code += `% Inclosa al paquet 'default' de P3CTeX (estils: plain, header, striped, boxed, grid)\n`;
     code += `% ==============================================================================\n`;
-    code += `${macroName}[style=${style}]\n`;
+    code += `\\begin{table}[htbp]\n\\centering\n`;
+    code += `\\caption{${caption}}\n\\label{${label}}\n`;
+    code += `\\pxTable[style=${style}]\n`;
     code += `  {${headers}}`;
 
     rows.forEach(row => {
       code += `\n  {${row.trim()}}`;
     });
 
+    code += `\n\\end{table}\n`;
     outputTarget.textContent = code;
   }
 
   // Generator 3: Gantt Timelines
   function renderGanttSnippet() {
-    const title = document.getElementById('gnt-title').value.trim() || 'Cronograma de Treball';
-    const duration = document.getElementById('gnt-duration').value.trim();
+    const start = document.getElementById('gnt-start') ? document.getElementById('gnt-start').value.trim() : '01/03/2026';
+    const end = document.getElementById('gnt-end') ? document.getElementById('gnt-end').value.trim() : '30/06/2026';
+    const block = document.getElementById('gnt-block') ? document.getElementById('gnt-block').value.trim() : '28';
     const tasks = document.getElementById('gnt-tasks').value.trim().split('\n').filter(t => t.trim());
 
     outputFilename.textContent = `OUTPUT: gantt-timeline.tex`;
     outputModeBadge.textContent = 'TIMELINE SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Cronograma de Treball / Diagrama Gantt per a PR i TFG\n`;
-    code += `% Requereix el paquet GNT o pgfgantt\n`;
+    code += `% Diagrama Gantt diari generat amb P3CTeX (pxGNT)\n`;
+    code += `% Requereix \\documentclass[GNT,...]{P3CTeX} o \\usepackage{pxGNT}\n`;
     code += `% ==============================================================================\n`;
-    code += `\\begin{table}[htbp]\n\\centering\n`;
-    code += `\\caption{${title} (${duration})}\n\\label{tab:gantt}\n`;
-    code += `\\pxTable[style=header]\n`;
-    code += `  {Tasca / Fase del Projecte, Interval Temporal, Estat Actual}`;
+    code += `\\pxGantt{start=${start},end=${end},days-per-block=${block}}\n`;
 
     tasks.forEach(task => {
-      code += `\n  {${task.trim()}}`;
+      const parts = task.split(',').map(p => p.trim());
+      if (parts.length >= 3) {
+        code += `\\pxGanttItem{${parts[0]}}{${parts[1]}}{${parts[2]}}\n`;
+      } else if (parts.length === 2) {
+        code += `\\pxGanttItem{${parts[0]}}{${parts[1]}}{${parts[1]}}\n`;
+      } else {
+        code += `\\pxGanttItem{${task}}{${start}}{${end}}\n`;
+      }
     });
 
-    code += `\n\\end{table}\n`;
+    code += `\\pxGanttEnd\n`;
     outputTarget.textContent = code;
   }
 
   // Generator 4: Architecture & UML
   function renderUmlSnippet() {
+    const classname = document.getElementById('uml-classname') ? document.getElementById('uml-classname').value.trim() : 'Usuari';
     const type = document.getElementById('uml-type').value;
-    const caption = document.getElementById('uml-caption').value.trim() || 'Diagrama';
-    const elements = document.getElementById('uml-elements').value.trim().split('\n').filter(e => e.trim());
+    const attrsRaw = document.getElementById('uml-attrs') ? document.getElementById('uml-attrs').value.trim().split('\n').filter(a => a.trim()) : ['- id : String', '- email : String'];
+    const opsRaw = document.getElementById('uml-ops') ? document.getElementById('uml-ops').value.trim().split('\n').filter(o => o.trim()) : ['+ autenticar() : boolean'];
 
-    outputFilename.textContent = `OUTPUT: architecture-diagram.tex`;
-    outputModeBadge.textContent = 'DIAGRAM SNIPPET';
+    outputFilename.textContent = `OUTPUT: uml-class-diagram.tex`;
+    outputModeBadge.textContent = 'UML SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Diagrama d'Arquitectura / UML per a memòries d'enginyeria\n`;
+    code += `% Diagrama de classes UML generat amb P3CTeX (pxUML)\n`;
+    code += `% Basat en pgf-umlcd i TikZ. Inclòs al paquet 'default' de P3CTeX\n`;
     code += `% ==============================================================================\n`;
-    code += `\\begin{figure}[htbp]\n\\centering\n`;
-    code += `\\pxTable[style=compact]\n  {Capa del Sistema, Descripció dels Components}`;
+    code += `\\begin{tikzpicture}\n`;
+    code += `\\pxUMLClass[${type}]{${classname}}{\n`;
+    code += attrsRaw.map(a => `  ${a}`).join(' \\\\\n');
+    code += `\n}{\n`;
+    code += opsRaw.map(o => `  ${o}`).join(' \\\\\n');
+    code += `\n}\n`;
+    code += `\\drawclass{${classname}}[0,0]\n`;
+    code += `\\end{tikzpicture}\n`;
 
-    elements.forEach(el => {
-      const parts = el.split(':');
-      if (parts.length === 2) {
-        code += `\n  {${parts[0].trim()}, ${parts[1].trim()}}`;
-      } else {
-        code += `\n  {Component, ${el.trim()}}`;
-      }
-    });
-
-    code += `\n\\caption{${caption}}\n\\label{fig:arquitectura}\n\\end{figure}\n`;
     outputTarget.textContent = code;
   }
 
   // Generator 5: Code Listings
   function renderCodeSnippet() {
     const lang = document.getElementById('code-lang').value;
-    const caption = document.getElementById('code-caption').value.trim() || 'CodiFont';
+    const caption = document.getElementById('code-caption').value.trim() || 'Lexer.java';
     const body = document.getElementById('code-body').value;
 
     outputFilename.textContent = `OUTPUT: code-listing.tex`;
     outputModeBadge.textContent = 'CODE SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Bloc de Codi Formatat amb P3CTeX (pxLST)\n`;
+    code += `% Bloc de codi font amb ressaltat de sintaxi i marc estil Darcula (pxLST)\n`;
+    code += `% Inclòs al paquet 'default' de P3CTeX\n`;
     code += `% ==============================================================================\n`;
-    code += `\\begin{pxCode}[language=${lang},caption={${caption}}]\n`;
+    code += `\\begin{pxCode}[language=${lang}]{${caption}}\n`;
     code += body;
     code += `\n\\end{pxCode}\n`;
 
@@ -2597,27 +2552,42 @@ document.addEventListener('DOMContentLoaded', () => {
   // Generator 6: Compilers & Automata
   function renderCompilerSnippet() {
     const type = document.getElementById('cmp-type').value;
-    const caption = document.getElementById('cmp-caption').value.trim() || 'Esquema de Compilació';
+    const prog = document.getElementById('cmp-prog') ? document.getElementById('cmp-prog').value.trim() : 'Programa';
+    const src = document.getElementById('cmp-source') ? document.getElementById('cmp-source').value.trim() : 'Java';
+    const tgt = document.getElementById('cmp-target') ? document.getElementById('cmp-target').value.trim() : 'Bytecode';
+    const impl = document.getElementById('cmp-impl') ? document.getElementById('cmp-impl').value.trim() : 'JVM';
+
+    const cmpInputs = document.getElementById('cmp-tombstone-inputs');
+    const progField = document.getElementById('cmp-prog') ? document.getElementById('cmp-prog').closest('.input-field') : null;
+    if (cmpInputs) {
+      cmpInputs.style.display = (type === 'tombstone' || type === 'tcompiler') ? 'block' : 'none';
+    }
+    if (progField) {
+      progField.style.display = (type === 'tombstone' || type === 'tcompiler') ? 'block' : 'none';
+    }
 
     outputFilename.textContent = `OUTPUT: compiler-diagram.tex`;
     outputModeBadge.textContent = 'COMPILER SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Eines per a Compiladors i Teoria de la Computació (P3CTeX pxCMP)\n`;
+    code += `% Diagrama per a Compiladors i Teoria de la Computació (P3CTeX pxCMP)\n`;
+    code += `% Requereix \\documentclass[CMP,...]{P3CTeX} o \\usepackage{pxCMP}\n`;
     code += `% ==============================================================================\n`;
 
     if (type === 'tombstone') {
-      const src = document.getElementById('cmp-source').value.trim() || 'CUP';
-      const tgt = document.getElementById('cmp-target').value.trim() || 'Java';
-      const impl = document.getElementById('cmp-impl').value.trim() || 'JVM';
-      code += `% Diagrama Tombstone en T per a pipelines de compilació:\n`;
-      code += `\\pxTombstoneCompile{${src}}{${tgt}}{${impl}}\n`;
+      code += `% Compilació completa d'un programa amb peça Tombstone en T:\n`;
+      code += `\\pxTombstoneCompile[title={Compilació de ${prog}}]{${prog}}{${src}}{${tgt}}{${impl}}\n`;
+    } else if (type === 'tcompiler') {
+      code += `% Peces Tombstone independents (Compilador, Programa, Màquina):\n`;
+      code += `\\pxTCompiler{${src}}{${tgt}}{${impl}}\n`;
+      code += `\\pxTProgram{${prog}}{${src}}\n`;
+      code += `\\pxTMachine{${impl}}\n`;
     } else if (type === 'dfa') {
-      code += `% Taula de transicions per a autòmats finits deterministes (DFA):\n`;
+      code += `% Taula de transicions per a autòmats finits (DFA/NFA):\n`;
       code += `\\pxTransitionTable{\n  state, 0, 1;\n  q0, q1, q0;\n  q1, q0, q1\n}\n`;
-    } else {
-      code += `% Arbre de derivació sintàctica:\n`;
-      code += `\\pxParseTree{E -> E + T | T}\n`;
+    } else if (type === 'bnf') {
+      code += `% Produccions gramaticals en format BNF formal:\n`;
+      code += `\\pxBNF{\n  <expressio> ::= <terme> ("+" <terme> | "-" <terme>)* ;\n  <terme>     ::= <factor> ("*" <factor> | "/" <factor>)* ;\n  <factor>    ::= <ident> | <num> | "(" <expressio> ")\n}\n`;
     }
 
     outputTarget.textContent = code;

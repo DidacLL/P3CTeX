@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 2. Document Profile Switcher (PAC / PR / TFG)
-  const profilePills = document.querySelectorAll('#doc-deliverable-pills .pill-btn');
+  const profilePills = document.querySelectorAll('#doc-profile-pills .pill-btn');
   profilePills.forEach(pill => {
     pill.addEventListener('click', () => {
       profilePills.forEach(p => p.classList.remove('active'));
@@ -114,6 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const incTombstone = document.getElementById('doc-inc-tombstone').checked;
 
     let classOpt = activeProfile === 'TFG' ? 'TFG,MEM,default' : `${activeProfile},default`;
+    if (incTombstone) {
+      classOpt = `CMP,${classOpt}`;
+    }
     let filename = `minimal-${activeProfile.toLowerCase()}.tex`;
 
     outputFilename.textContent = `OUTPUT: ${filename}`;
@@ -151,29 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
       code += `\\section{1. Introducció i Abast del Projecte}\n`;
       code += `Aquest document recull la memòria tècnica del projecte desenvolupat...\n\n`;
     } else {
-      code += `% TFG Profile: Fitxa d'avaluació de tribunal i estructura per capítols.\n\n`;
+      code += `% TFG Profile: Estructura de memòria amb capítols (pxMEM) i fitxa institucional (pxTFG).\n\n`;
       code += `\\chapter{Introducció}\n`;
       code += `Descripció del context i objectius del Treball Final de Grau...\n\n`;
     }
 
     if (incTable) {
-      code += `% Taula declarativa per comes (paquet pxTAB):\n`;
+      code += `% Taula declarativa per comes (paquet pxTAB inclòs a default):\n`;
       code += `\\pxTable[style=header]\n  {Mètrica, Valor Mesurat, Estat}\n  {Temps d'execució, 0.42 s, PASS}\n  {Memòria consumida, 18.5 MB, PASS}\n\n`;
     }
 
     if (incFigure) {
-      code += `% Figura amb placeholder resilient (paquet pxSRC):\n`;
+      code += `% Figura resilient amb fallback si el fitxer no existeix (paquet pxSRC):\n`;
       code += `\\pxIMG[0.85\\linewidth]{img/arquitectura}{Esquema de l'arquitectura proposada}[fig:arq]\n\n`;
     }
 
     if (incCode) {
-      code += `% Bloc de codi amb ressaltat de sintaxi i números de línia (paquet pxLST):\n`;
-      code += `\\begin{pxCode}[language=Java,caption=LexerAnalyzer.java]\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("Lexer ready.");\n    }\n}\n\\end{pxCode}\n\n`;
+      code += `% Bloc de codi amb ressaltat de sintaxi i marc Darcula (paquet pxLST):\n`;
+      code += `\\begin{pxCode}[language=Java]{LexerAnalyzer.java}\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("Compilable amb P3CTeX");\n    }\n}\n\\end{pxCode}\n\n`;
     }
 
     if (incTombstone) {
       code += `% Diagrama Tombstone de compilació (paquet pxCMP):\n`;
-      code += `\\pxTombstoneCompile{CUP}{Parser}{Java}\n\n`;
+      code += `\\pxTombstoneCompile[title={Compilació en Java}]{Programa}{Java}{JVM}{x86}\n\n`;
     }
 
     code += `\\end{document}\n`;
@@ -185,95 +188,100 @@ document.addEventListener('DOMContentLoaded', () => {
     const caption = document.getElementById('tbl-caption').value.trim() || 'Taula de Dades';
     const label = document.getElementById('tbl-label').value.trim() || 'tab:dades';
     const style = document.getElementById('tbl-style').value;
-    const isMulti = document.getElementById('tbl-multipage').value === 'multi';
     const headers = document.getElementById('tbl-headers').value.trim();
     const rows = document.getElementById('tbl-rows').value.trim().split('\n').filter(r => r.trim());
 
     outputFilename.textContent = `OUTPUT: table-snippet.tex`;
     outputModeBadge.textContent = 'TABLE SNIPPET';
 
-    let macroName = isMulti ? '\\pxTBLlong*' : '\\pxTable';
     let code = `% ==============================================================================\n`;
-    code += `% Taula LaTeX generada amb P3CTeX (pxTAB)\n`;
-    code += `% Inseriu aquest bloc al vostre document .tex\n`;
+    code += `% Taula declarativa generada amb P3CTeX (pxTAB)\n`;
+    code += `% Inclosa al paquet 'default' de P3CTeX (estils: plain, header, striped, boxed, grid)\n`;
     code += `% ==============================================================================\n`;
-    code += `${macroName}[style=${style}]\n`;
+    code += `\\begin{table}[htbp]\n\\centering\n`;
+    code += `\\caption{${caption}}\n\\label{${label}}\n`;
+    code += `\\pxTable[style=${style}]\n`;
     code += `  {${headers}}`;
 
     rows.forEach(row => {
       code += `\n  {${row.trim()}}`;
     });
 
+    code += `\n\\end{table}\n`;
     outputTarget.textContent = code;
   }
 
   // Generator 3: Gantt Timelines
   function renderGanttSnippet() {
-    const title = document.getElementById('gnt-title').value.trim() || 'Cronograma de Treball';
-    const duration = document.getElementById('gnt-duration').value.trim();
+    const start = document.getElementById('gnt-start') ? document.getElementById('gnt-start').value.trim() : '01/03/2026';
+    const end = document.getElementById('gnt-end') ? document.getElementById('gnt-end').value.trim() : '30/06/2026';
+    const block = document.getElementById('gnt-block') ? document.getElementById('gnt-block').value.trim() : '28';
     const tasks = document.getElementById('gnt-tasks').value.trim().split('\n').filter(t => t.trim());
 
     outputFilename.textContent = `OUTPUT: gantt-timeline.tex`;
     outputModeBadge.textContent = 'TIMELINE SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Cronograma de Treball / Diagrama Gantt per a PR i TFG\n`;
-    code += `% Requereix el paquet GNT o pgfgantt\n`;
+    code += `% Diagrama Gantt diari generat amb P3CTeX (pxGNT)\n`;
+    code += `% Requereix \\documentclass[GNT,...]{P3CTeX} o \\usepackage{pxGNT}\n`;
     code += `% ==============================================================================\n`;
-    code += `\\begin{table}[htbp]\n\\centering\n`;
-    code += `\\caption{${title} (${duration})}\n\\label{tab:gantt}\n`;
-    code += `\\pxTable[style=header]\n`;
-    code += `  {Tasca / Fase del Projecte, Interval Temporal, Estat Actual}`;
+    code += `\\pxGantt{start=${start},end=${end},days-per-block=${block}}\n`;
 
     tasks.forEach(task => {
-      code += `\n  {${task.trim()}}`;
+      const parts = task.split(',').map(p => p.trim());
+      if (parts.length >= 3) {
+        code += `\\pxGanttItem{${parts[0]}}{${parts[1]}}{${parts[2]}}\n`;
+      } else if (parts.length === 2) {
+        code += `\\pxGanttItem{${parts[0]}}{${parts[1]}}{${parts[1]}}\n`;
+      } else {
+        code += `\\pxGanttItem{${task}}{${start}}{${end}}\n`;
+      }
     });
 
-    code += `\n\\end{table}\n`;
+    code += `\\pxGanttEnd\n`;
     outputTarget.textContent = code;
   }
 
   // Generator 4: Architecture & UML
   function renderUmlSnippet() {
+    const classname = document.getElementById('uml-classname') ? document.getElementById('uml-classname').value.trim() : 'Usuari';
     const type = document.getElementById('uml-type').value;
-    const caption = document.getElementById('uml-caption').value.trim() || 'Diagrama';
-    const elements = document.getElementById('uml-elements').value.trim().split('\n').filter(e => e.trim());
+    const attrsRaw = document.getElementById('uml-attrs') ? document.getElementById('uml-attrs').value.trim().split('\n').filter(a => a.trim()) : ['- id : String', '- email : String'];
+    const opsRaw = document.getElementById('uml-ops') ? document.getElementById('uml-ops').value.trim().split('\n').filter(o => o.trim()) : ['+ autenticar() : boolean'];
 
-    outputFilename.textContent = `OUTPUT: architecture-diagram.tex`;
-    outputModeBadge.textContent = 'DIAGRAM SNIPPET';
+    outputFilename.textContent = `OUTPUT: uml-class-diagram.tex`;
+    outputModeBadge.textContent = 'UML SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Diagrama d'Arquitectura / UML per a memòries d'enginyeria\n`;
+    code += `% Diagrama de classes UML generat amb P3CTeX (pxUML)\n`;
+    code += `% Basat en pgf-umlcd i TikZ. Inclòs al paquet 'default' de P3CTeX\n`;
     code += `% ==============================================================================\n`;
-    code += `\\begin{figure}[htbp]\n\\centering\n`;
-    code += `\\pxTable[style=compact]\n  {Capa del Sistema, Descripció dels Components}`;
+    code += `\\begin{tikzpicture}\n`;
+    code += `\\pxUMLClass[${type}]{${classname}}{\n`;
+    code += attrsRaw.map(a => `  ${a}`).join(' \\\\\n');
+    code += `\n}{\n`;
+    code += opsRaw.map(o => `  ${o}`).join(' \\\\\n');
+    code += `\n}\n`;
+    code += `\\drawclass{${classname}}[0,0]\n`;
+    code += `\\end{tikzpicture}\n`;
 
-    elements.forEach(el => {
-      const parts = el.split(':');
-      if (parts.length === 2) {
-        code += `\n  {${parts[0].trim()}, ${parts[1].trim()}}`;
-      } else {
-        code += `\n  {Component, ${el.trim()}}`;
-      }
-    });
-
-    code += `\n\\caption{${caption}}\n\\label{fig:arquitectura}\n\\end{figure}\n`;
     outputTarget.textContent = code;
   }
 
   // Generator 5: Code Listings
   function renderCodeSnippet() {
     const lang = document.getElementById('code-lang').value;
-    const caption = document.getElementById('code-caption').value.trim() || 'CodiFont';
+    const caption = document.getElementById('code-caption').value.trim() || 'Lexer.java';
     const body = document.getElementById('code-body').value;
 
     outputFilename.textContent = `OUTPUT: code-listing.tex`;
     outputModeBadge.textContent = 'CODE SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Bloc de Codi Formatat amb P3CTeX (pxLST)\n`;
+    code += `% Bloc de codi font amb ressaltat de sintaxi i marc estil Darcula (pxLST)\n`;
+    code += `% Inclòs al paquet 'default' de P3CTeX\n`;
     code += `% ==============================================================================\n`;
-    code += `\\begin{pxCode}[language=${lang},caption={${caption}}]\n`;
+    code += `\\begin{pxCode}[language=${lang}]{${caption}}\n`;
     code += body;
     code += `\n\\end{pxCode}\n`;
 
@@ -283,27 +291,42 @@ document.addEventListener('DOMContentLoaded', () => {
   // Generator 6: Compilers & Automata
   function renderCompilerSnippet() {
     const type = document.getElementById('cmp-type').value;
-    const caption = document.getElementById('cmp-caption').value.trim() || 'Esquema de Compilació';
+    const prog = document.getElementById('cmp-prog') ? document.getElementById('cmp-prog').value.trim() : 'Programa';
+    const src = document.getElementById('cmp-source') ? document.getElementById('cmp-source').value.trim() : 'Java';
+    const tgt = document.getElementById('cmp-target') ? document.getElementById('cmp-target').value.trim() : 'Bytecode';
+    const impl = document.getElementById('cmp-impl') ? document.getElementById('cmp-impl').value.trim() : 'JVM';
+
+    const cmpInputs = document.getElementById('cmp-tombstone-inputs');
+    const progField = document.getElementById('cmp-prog') ? document.getElementById('cmp-prog').closest('.input-field') : null;
+    if (cmpInputs) {
+      cmpInputs.style.display = (type === 'tombstone' || type === 'tcompiler') ? 'block' : 'none';
+    }
+    if (progField) {
+      progField.style.display = (type === 'tombstone' || type === 'tcompiler') ? 'block' : 'none';
+    }
 
     outputFilename.textContent = `OUTPUT: compiler-diagram.tex`;
     outputModeBadge.textContent = 'COMPILER SNIPPET';
 
     let code = `% ==============================================================================\n`;
-    code += `% Eines per a Compiladors i Teoria de la Computació (P3CTeX pxCMP)\n`;
+    code += `% Diagrama per a Compiladors i Teoria de la Computació (P3CTeX pxCMP)\n`;
+    code += `% Requereix \\documentclass[CMP,...]{P3CTeX} o \\usepackage{pxCMP}\n`;
     code += `% ==============================================================================\n`;
 
     if (type === 'tombstone') {
-      const src = document.getElementById('cmp-source').value.trim() || 'CUP';
-      const tgt = document.getElementById('cmp-target').value.trim() || 'Java';
-      const impl = document.getElementById('cmp-impl').value.trim() || 'JVM';
-      code += `% Diagrama Tombstone en T per a pipelines de compilació:\n`;
-      code += `\\pxTombstoneCompile{${src}}{${tgt}}{${impl}}\n`;
+      code += `% Compilació completa d'un programa amb peça Tombstone en T:\n`;
+      code += `\\pxTombstoneCompile[title={Compilació de ${prog}}]{${prog}}{${src}}{${tgt}}{${impl}}\n`;
+    } else if (type === 'tcompiler') {
+      code += `% Peces Tombstone independents (Compilador, Programa, Màquina):\n`;
+      code += `\\pxTCompiler{${src}}{${tgt}}{${impl}}\n`;
+      code += `\\pxTProgram{${prog}}{${src}}\n`;
+      code += `\\pxTMachine{${impl}}\n`;
     } else if (type === 'dfa') {
-      code += `% Taula de transicions per a autòmats finits deterministes (DFA):\n`;
+      code += `% Taula de transicions per a autòmats finits (DFA/NFA):\n`;
       code += `\\pxTransitionTable{\n  state, 0, 1;\n  q0, q1, q0;\n  q1, q0, q1\n}\n`;
-    } else {
-      code += `% Arbre de derivació sintàctica:\n`;
-      code += `\\pxParseTree{E -> E + T | T}\n`;
+    } else if (type === 'bnf') {
+      code += `% Produccions gramaticals en format BNF formal:\n`;
+      code += `\\pxBNF{\n  <expressio> ::= <terme> ("+" <terme> | "-" <terme>)* ;\n  <terme>     ::= <factor> ("*" <factor> | "/" <factor>)* ;\n  <factor>    ::= <ident> | <num> | "(" <expressio> ")\n}\n`;
     }
 
     outputTarget.textContent = code;
