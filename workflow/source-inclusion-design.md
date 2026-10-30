@@ -42,3 +42,15 @@ Current student-tools work and pre-existing development edits must be committed 
 - Checkpoint bb93310: initial student tools and pre-existing local development edits. All 38 tests/templates passed before direct transfer; the four initial direct-checkout lookup failures passed after refreshing MiKTeX's filename database.
 - Current source integration passes PAC, PR, MEM, missing/duplicate-region diagnostics and the existing MEM regression. PAC's profile selects Catalan; combining PAC and EN currently triggers the pre-existing Babel option clash and needs a separate focused fix.
 - Complete multi-pass cross-reference/glossary checks, external-backend and manual-placement assertions, user manuals and final repository-wide gate before final sign-off.
+## Completed validation (2026-10-30)
+
+- Common gate: 43/43 passed (36 regression documents with three LaTeX passes each, plus seven template/example builds).
+- Source integration passed in PAC, PR and MEM. Final source logs contain no unresolved references, multiply defined labels or duplicate destination warnings.
+- Rendered glossary text verified: default used-only excludes unused entries; manual plus automatic printing produces each list once. External include=all includes used and unused terms and the acronym list.
+- External indexing passed through makeindex for both lists. The makeglossaries wrapper cannot run on this machine because Perl is absent; run-pxGLS-external-test.ps1 reproduces the direct indexing check.
+- Updated pxMEM manual compiled successfully. Source/glossary/annex API and ownership rules are documented in tex/doc/source-inclusion.md.
+- Existing pxSRC image facilities are reused. Legacy pxMEM APIs delegate to the shared source/annex implementations.
+- Annex pagebreak=false intentionally suppresses only the leading page break; final float flushing is retained and documented.
+- Generated source snippets are excluded from release selection. No release archive rebuilt; existing dist remains untouched.
+
+The previously observed EN,PAC Babel option clash remains a separate known issue. This validation does not claim every possible language-option combination works.

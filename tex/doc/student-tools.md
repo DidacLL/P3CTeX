@@ -96,6 +96,6 @@ Cards are breakable and accept ordinary `tcolorbox` options. Set shared card opt
 
 - Missing screenshots: use `\pxIMG`, not a second safe-image API. `\pxIMGList[.8\linewidth]{img/run}[Iteration: ]{First,Second}` loads `img/run1`, `img/run2`.
 - Partitions: `\pxTransitionTable` already has a partition field. `\pxAutomatonTrace` displays a supplied trace without running an automaton.
-- Annexes: use `\pxMEMannex` for report annex numbering and source reuse.
+- Annexes and source reuse share pxANN and pxSRC across PAC, PR and MEM; see [the source guide](source-inclusion.md). Legacy pxMEM entry points delegate to them.
 - Authorship: use the class's metadata, cover and translated declaration support. New tools do not generate institutional pledges.
 - Diagram customisation: `\pxDiagramSetup`, `\pxDiagramSavePreset`, `\pxDiagramUsePreset` and `pxDiagram` are descriptive aliases; all existing `pxCMP` commands and presets remain supported.

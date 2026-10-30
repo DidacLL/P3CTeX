@@ -80,10 +80,7 @@ complete \texttt{report} or \texttt{book} class.
 \end{verbatim}
 
 \subsection{\texttt{\textbackslash pxMEMannex\{title\}\{content\}}}
-Starts a titled annex chapter and typesets its content. On the first call it
-switches to appendix chapter numbering (A, B, \ldots); subsequent calls produce
-B, C, \ldots. After this switch, later \verb|\chapter| calls also use appendix
-numbering. Place annexes after the main chapters.
+Starts a scoped annex chapter through the shared \texttt{pxANN} tool. Annexes use A, B, \ldots; main chapter and float counters resume afterward. Use \verb|\pxAddAnnex| and \verb|\pxPrintAnnexes| for deferred placement.
 \begin{verbatim}
 \pxMEMannex{Technical evidence}{
   \pxMEMinclude{PR2}{evidence}
@@ -91,7 +88,7 @@ numbering. Place annexes after the main chapters.
 \end{verbatim}
 
 The regular \verb|\appendix| command also switches to lettered chapter
-numbers, but \verb|\pxMEMannex| normally handles that transition itself.
+numbers permanently; scoped \verb|\pxMEMannex| does not call it.
 
 \section{Selective content reuse}
 A PR/PAC/PEC/CA can mark potentially reusable material without importing
@@ -147,7 +144,7 @@ duration of that inclusion. For instance, \verb|\input{sections/data.tex}|
 or \verb|\includegraphics{img/chart.png}| may still resolve relative to PR1.
 The consumer supplies the path; \texttt{pxMEM} does not discover it.
 
-Extraction automatically creates a disposable \texttt{<jobname>.pxmem-N.tex}
+Extraction automatically creates a disposable \texttt{<jobname>.pxsrc-N.tex}
 file in the compilation working directory, inputs it, and leaves its lifecycle
 to the usual auxiliary-file cleanup. There is no manual export or regeneration
 step. Source selection uses the existing \texttt{fancyvrb} file-reading

@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage[print=auto]{pxGLS}
+\newglossaryentry{used}{name={Used entry},description={USED-DESCRIPTION}}
+\newglossaryentry{unused}{name={Unused entry},description={UNUSED-DESCRIPTION}}
+\newacronym{cpu}{CPU}{central processing unit}
+\begin{document}
+\gls{used}. \gls{cpu}.
+\pxPrintGlossary
+\ExplSyntaxOn
+\prop_if_in:NnF \g__pxgls_printed_prop {main}{\errmessage{Manual glossary not recorded}}
+\prop_if_in:NnT \g__pxgls_printed_prop {acronym}{\errmessage{Acronyms printed prematurely}}
+\ExplSyntaxOff
+\pxPrintGlossary
+% Automatic end hook prints the remaining acronym list exactly once.
+\end{document}

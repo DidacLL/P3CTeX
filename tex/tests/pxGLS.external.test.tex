@@ -1,0 +1,10 @@
+\documentclass{article}
+\usepackage[backend=external,print=auto,include=all]{pxGLS}
+\makeglossaries
+\newglossaryentry{used}{name={Used entry},description={USED-DESCRIPTION}}
+\newglossaryentry{unused}{name={Unused entry},description={UNUSED-DESCRIPTION}}
+\newacronym{cpu}{CPU}{central processing unit}
+\begin{document}
+\gls{used}. \gls{cpu}.
+\pxPrintGlossaries
+\end{document}

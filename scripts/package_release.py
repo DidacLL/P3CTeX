@@ -25,6 +25,8 @@ DOCUMENT_TYPES = IMAGE_TYPES | {".tex", ".pdf", ".md"}
 
 def included(path: Path) -> bool:
     """Allow only installed sources/resources, manuals and user examples."""
+    if re.search(r"\.px(?:src|mem)-.*\.tex$", path.name):
+        return False
     rel = path.relative_to(ROOT)
     parts = rel.parts
     if "tests" in parts or "test" in parts:

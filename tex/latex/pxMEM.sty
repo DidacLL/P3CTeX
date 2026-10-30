@@ -18,7 +18,7 @@
 \providecommand*\l@chapter{\@dottedtocline{0}{0em}{2.5em}}
 % \appendix
 % Switch subsequent chapter numbers to letters (A, B, ...), starting at A.
-% Normally \pxMEMannex performs this transition on the first annex.
+% Explicit legacy transition; scoped \pxMEMannex does not call it.
 \renewcommand\appendix{%
   \setcounter{chapter}{0}%
   \setcounter{section}{0}%
@@ -36,10 +36,10 @@
 %% Insert only the source lines bracketed by %<*region> and %</region>.
 %% Internally creates and inputs a disposable snippet; no manual exports.
 \NewDocumentCommand\pxMEMinclude{mm}{\__pxmem_include:nn {#1}{#2}}
-% The first annex switches chapter numbering to A, B, ...
+% Shared annex numbering leaves the main chapter sequence intact.
 %% \pxMEMannex{<title>}{<content>}
-%% Start a letter-numbered appendix chapter, switching to appendix numbering
-%% on its first use, then typeset the supplied content inside that chapter.
+%% Start a scoped letter-numbered annex chapter; restore main numbering
+%% after typesetting its content. Uses the shared pxANN implementation.
 \NewDocumentCommand\pxMEMannex{m +m}{\__pxmem_annex:nn {#1}{#2}}
 % MEM supplies generic indexes after the class TOC; it never loads TFG.
 \bool_new:N \g__pxmem_indexes_done_bool

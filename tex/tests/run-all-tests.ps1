@@ -1,7 +1,8 @@
 param(
     [switch]$CleanArtifacts,
     [switch]$IncludeTemplates,
-    [string]$JobPrefix = ""
+    [string]$JobPrefix = "",
+    [ValidateRange(1,5)][int]$Passes = 1
 )
 
 Set-StrictMode -Version Latest
@@ -42,6 +43,11 @@ $testFiles = @(
     "pxUML.test.tex",
     "pxSRC.test.tex",
     "pxSRC.settings.test.tex",
+    "pxSRC.input.test.tex",
+    "pxSRC.input-PR.test.tex",
+    "pxSRC.input-MEM.test.tex",
+    "pxSRC.input-errors.test.tex",
+    "pxGLS.test.tex",
     "pxPRP.test.tex",
     "pxGNT.test.tex",
     "pxGNT.standalone.test.tex",
@@ -84,7 +90,10 @@ try {
 
         Write-Host "---- Running $testFile ----" -ForegroundColor DarkGray
         $jobName = $JobPrefix + [System.IO.Path]::GetFileNameWithoutExtension($testFile)
-        & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+        for ($pass = 1; $pass -le $Passes; $pass++) {
+            & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+            if ($LASTEXITCODE -ne 0) { break }
+        }
         $exitCode = $LASTEXITCODE
         $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
 

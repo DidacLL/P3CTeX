@@ -124,7 +124,7 @@ acs-*.bib
 *.sls
 
 # uncomment this for glossaries-extra (will ignore makeindex's style files!)
-# *.ist
+# /tex/tests/*.ist
 
 # gnuplot
 *.gnuplot
@@ -320,3 +320,4 @@ TSWLatexianTemp*
 *.pxmem-*.tex
 /.agents
 *.pxsrc-*.tex
+/tex/tests/*.ist
