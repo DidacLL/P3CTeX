@@ -60,6 +60,7 @@ $testFiles = @(
     "pxSRC.external.test.tex",
     "pxGLS.test.tex",
     "pxGLS.automatic.test.tex",
+    "pxGLS.external.test.tex",
     "pxGLS.entries.test.tex",
     "pxPM.languages.test.tex",
     "pxPM.test.tex",
@@ -110,9 +111,24 @@ try {
 
         Write-Host "---- Running $testFile ----" -ForegroundColor DarkGray
         $jobName = $JobPrefix + [System.IO.Path]::GetFileNameWithoutExtension($testFile)
+        if ($testFile -eq "pxGLS.external.test.tex") {
+            # Never allow an earlier glossary build to mask a missing index.
+            Remove-Item -ErrorAction SilentlyContinue "$jobName.gls", "$jobName.acr"
+        }
         for ($pass = 1; $pass -le $Passes; $pass++) {
             & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
             if ($LASTEXITCODE -ne 0) { break }
+            if ($testFile -eq "pxGLS.external.test.tex" -and $pass -eq 1) {
+                & makeglossaries $jobName
+                if ($LASTEXITCODE -ne 0) { break }
+                if (-not (Test-Path "$jobName.gls") -or -not (Test-Path "$jobName.acr")) {
+                    Write-Host "[FAIL] External glossary output is missing" -ForegroundColor Red
+                    $global:LASTEXITCODE = 1
+                    break
+                }
+                & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+                if ($LASTEXITCODE -ne 0) { break }
+            }
         }
         $exitCode = $LASTEXITCODE
         $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
@@ -137,6 +153,11 @@ try {
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.pdf")
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.toc")
             Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.synctex.gz")
+            if ($testFile -eq "pxGLS.external.test.tex") {
+                foreach ($ext in @("glo", "gls", "glg", "ist", "acn", "acr", "alg")) {
+                    Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.$ext")
+                }
+            }
         }
     }
 
