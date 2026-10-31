@@ -1,0 +1,36 @@
+\documentclass[PAC,annexes,glossaries]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newglossaryentry{annexonly}{
+  name={Annex-only entry},description={Defined by the deferred annex}}
+\newcount\integrationannexes
+\pxAddAnnex[label=ann:integrated]{Deferred evidence}{
+  \global\advance\integrationannexes by 1
+  This annex cites \cite{integration-book} and uses \gls{annexonly}.
+}
+% Verify both hooks after they have finished.
+\ExplSyntaxOn
+\cs_new_protected:Npn \__integration_check:
+  {
+    \ifnum\integrationannexes=1\relax
+    \else \PackageError{integration}{Annex did not run exactly once}{} \fi
+    \ifglsused{annexonly}
+      {}
+      {\PackageError{integration}{Deferred annex term was not used}{}}
+    \prop_if_in:NnF \g__pxgls_printed_prop {main}
+      {\PackageError{integration}{Automatic glossary did not print}{}}
+    \int_compare:nNnF {\value{pxannex}} = {1}
+      {\PackageError{integration}{Annex counter is incorrect}{}}
+  }
+\AddToHook{enddocument}[integration-check]{\__integration_check:}
+\DeclareHookRule{enddocument}{integration-check}{after}{pxGLS}
+\ExplSyntaxOff
+\begin{document}
+The main body cites \cite{integration-book} and references
+annex \ref{ann:integrated}.
+\ifnum\integrationannexes=0\else
+  \PackageError{integration}{Deferred annex executed too soon}{}
+\fi
+\begin{thebibliography}{1}
+\bibitem{integration-book} A. Author, \textit{Integration example}, 2026.
+\end{thebibliography}
+\end{document}

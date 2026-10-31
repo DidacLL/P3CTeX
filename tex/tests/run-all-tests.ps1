@@ -66,6 +66,7 @@ $testFiles = @(
     "pxPM.test.tex",
     "pxSRC.preview.test.tex",
     "pxANN.automatic.test.tex",
+    "pxANN.bibliography-integration.test.tex",
     "pxPRP.test.tex",
     "pxPM.gantt.test.tex",
     "pxPM.gantt-standalone.test.tex",
