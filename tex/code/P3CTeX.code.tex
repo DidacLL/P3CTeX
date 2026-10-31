@@ -87,9 +87,14 @@
 	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
 		no-plagi	.initial:n 	=	false,
 		no-plagi	.default:n 	=	true,
-    glossary .code:n =
+    glossary .choice:,
+    glossary / true .code:n =
       {\bool_if:NTF \l__pxdoc_loading_bool
-        {\bool_set:Nn \l_pxdoc_useglossary_bool {#1}}
+        {\bool_set_true:N \l_pxdoc_useglossary_bool}
+        {\msg_error:nn {P3CTeX}{glossary-load-only}}},
+    glossary / false .code:n =
+      {\bool_if:NTF \l__pxdoc_loading_bool
+        {\bool_set_false:N \l_pxdoc_useglossary_bool}
         {\msg_error:nn {P3CTeX}{glossary-load-only}}},
     glossary .default:n = true,
 %	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,

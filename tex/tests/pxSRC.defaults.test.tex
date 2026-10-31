@@ -10,11 +10,11 @@
 \group_end:
 \ExplSyntaxOff
 \pxSRCsetup{input={title={First, with comma},language={Python}}}
-\pxSRCsetup{input={title={Updated, with comma},label-prefix=pr:}}
+\pxSRCsetup{input={title={Updated,~with~comma},label-prefix=pr:}}
 \ExplSyntaxOn
 \group_begin:
   \__pxsrc_input_defaults:n {native}
-  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated,~with~comma}
     {\PackageError{pxSRC-defaults}{Latest title was lost}{}}
   \tl_if_eq:NnF \l__pxsrc_input_language_tl {Python}
     {\PackageError{pxSRC-defaults}{Previous language was lost}{}}
@@ -23,7 +23,7 @@
   \keys_set:nn {pxSRC/input}{title={Override},region=part}
   \group_begin:
     \__pxsrc_input_defaults:n {native}
-    \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+    \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated,~with~comma}
       {\PackageError{pxSRC-defaults}{Nested input inherited title}{}}
     \tl_if_blank:VF \l__pxsrc_input_region_tl
       {\PackageError{pxSRC-defaults}{Nested input inherited region}{}}
@@ -34,10 +34,10 @@
 \ExplSyntaxOff
 % Repeat an override; it updates one typed variable rather than accumulating keys.
 \ExplSyntaxOn
-\int_step_inline:nn {32} {\pxSRCsetup{input={title={Updated, with comma}}}}
+\int_step_inline:nn {32} {\pxSRCsetup{input={title={Updated,~with~comma}}}}
 \group_begin:
   \__pxsrc_input_defaults:n {native}
-  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated,~with~comma}
     {\PackageError{pxSRC-defaults}{Repeated setup lost its value}{}}
 \group_end:
 \group_begin:
@@ -54,7 +54,7 @@
 \group_end:
 \group_begin:
   \__pxsrc_input_defaults:n {native}
-  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated,~with~comma}
     {\PackageError{pxSRC-defaults}{Scoped setup leaked}{}}
   \int_compare:nNnF {\l__pxsrc_input_first_int} = {1}
     {\PackageError{pxSRC-defaults}{Scoped integer default leaked}{}}
