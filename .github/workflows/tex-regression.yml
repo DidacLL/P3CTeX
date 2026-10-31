@@ -7,5 +7,13 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - run: echo "GitHub Actions admission check"
+      - uses: actions/checkout@v4
+      - name: Compile existing tests and templates
+        run: |
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/work" \
+            -w /work/tex/tests \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest bash /work/tex/tests/run-ci.sh
