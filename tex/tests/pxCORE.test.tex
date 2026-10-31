@@ -36,8 +36,11 @@ Debug should be ON:
 Debug should now be OFF:
 \pxCOREIfDebugTF{[DEBUG-ON-2]}{[DEBUG-OFF-2]}
 
-% Changing non-boolean keys should be a no-op at LaTeX2e level in this test.
-\pxCOREsetup{print-doc=true}
+\begingroup
+\pxCOREsetup{debug=true}
+\pxCOREIfDebugTF{}{\PackageError{core-test}{Local debug setting failed}{}}
+\endgroup
+\pxCOREIfDebugTF{\PackageError{core-test}{Debug setting leaked out of its group}{}}{}
 
 \end{document}
 

@@ -285,3 +285,5 @@ To start a new development sprint, copy the plan-file template from [`P3CTeX_dev
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 Source reuse, glossaries and annexes: [guide](tex/doc/source-inclusion.md).
+
+[Public API workflows](tex/doc/public-api.md): common entry points, automatic output and customisation contracts.

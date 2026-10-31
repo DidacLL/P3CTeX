@@ -55,3 +55,5 @@ the diagram tools. The earlier forwarding wrapper and pxCMP package are removed.
 Use diagrams, pxDiagramSetup, pxDiagramSavePreset, pxDiagramUsePreset and pxDiagram.
 Existing diagram-specific commands (automata, graphs, compiler diagrams, etc.) keep
 their meaningful names.
+
+The unused print-doc flag has been removed: it never rendered documentation. Unknown options now report errors instead of silently storing or ignoring them.

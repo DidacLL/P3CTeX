@@ -127,3 +127,11 @@ final height, link, literal-content and full-suite checks are underway.
 - Gantt now also works as a normal pxGantt environment, whose closing delimiter
   renders the chart. The command form remains useful for generated content.
 - Public comments, guides and tests cover these contracts. Final full gate pending.
+
+The audit additionally fixed relative nested pxInput paths: original-source
+lookup now supplies an explicit child path, without relying on MiKTeX's filename
+cache. Class-load cover/page/PDF keys are now consumed by the class and applied
+after metadata defaults; runtime changes use the same entry point immediately.
+The new public-api guide gives a single task-oriented starting point. The first
+full audit run passed 52/53; its remaining class-load appearance issue was fixed
+and passed targeted tests. A final integrated run follows.

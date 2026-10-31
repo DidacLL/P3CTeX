@@ -55,6 +55,13 @@
 \tl_set:Nn \l__pxdoc_unknown_tl { default }
 \bool_set_true:N \l__pxdoc_loading_bool
 %% One load-time forwarding path; module state belongs to pxCORE alone.
+%% Appearance keys work both in class options and runtime configuration.
+%% Delay load-time overrides until pxGDX has received the document metadata.
+\tl_new:N \l__pxdoc_graphics_tl
+\cs_new_protected:Npn \__pxdoc_graphics:n #1
+  {\bool_if:NTF \l__pxdoc_loading_bool
+     {\tl_put_right:Nn \l__pxdoc_graphics_tl {#1,}}
+     {\pxGDX_config:n {#1}}}
 \cs_new_protected:Npn \__pxdoc_tools:n #1
   {\bool_if:NTF \l__pxdoc_loading_bool
     {\tl_put_right:Nn \l__pxdoc_unknown_tl {,#1}}
@@ -62,6 +69,9 @@
       {Put~tool~keys~in~ \string\documentclass.}}}
 \keys_define:nn {P3CTeX}
 {
+    cover-config .code:n = {\__pxdoc_graphics:n {cover-config={#1}}},
+    page-config .code:n = {\__pxdoc_graphics:n {page-config={#1}}},
+    pdf-config .code:n = {\__pxdoc_graphics:n {pdf-config={#1}}},
     tools .code:n = {\__pxdoc_tools:n {#1}},
 	cover		.bool_set:N 	=\l_pxdoc_usecover_bool,
 		cover		.initial:n 	=	false,
@@ -122,9 +132,6 @@
 	debug 		.bool_set:N 		=		\l_pxcore_debug_bool,
 		debug 		.initial:n 		= 		false,
 		debug 		.default:n 		= 		true,
-	print-doc 	.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
-		print-doc	.initial:n 		= 		false,
-		print-doc	.default:n 		= 		true,
 	unknown 	.code:n 			= {
 		\tl_if_blank:nTF { #1 }
 			{ \exp_args:Nx \__pxdoc_tools:n { \l_keys_key_str } }
@@ -241,10 +248,6 @@
 		course-name	={\l__pxdata_course_tl}
 	}
 }
+\exp_args:NV \pxGDX_config:n \l__pxdoc_graphics_tl
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
-%% Runtime document appearance uses pxGDX directly, not the module loader.
-\keys_define:nn {P3CTeX}
-  {cover-config .code:n = {\pxGDX_config:n {cover-config={#1}}},
-   page-config .code:n = {\pxGDX_config:n {page-config={#1}}},
-   pdf-config .code:n = {\pxGDX_config:n {pdf-config={#1}}}}
 \endinput

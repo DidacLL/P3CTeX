@@ -10,7 +10,7 @@
 %%	File: pxSRC.code.tex
 %%	Version: v0.2 (02/2026)
 %%	Description:
-%%		Included sources manager: safe inclusion of figures with robust
+%%		Included sources manager: native/code/text input, previews, and figures with robust
 %%		placeholders when files are missing.
 %%
 %%	This file may be distributed and/or modified:
@@ -290,6 +290,7 @@
 \ior_new:N \l__pxsrc_input_ior
 \newwrite\pxSRCout
 \newcounter{pxsource}
+\tl_new:N \l__pxsrc_input_base_tl
 \tl_new:N \l__pxsrc_input_path_tl
 \tl_new:N \l__pxsrc_input_region_tl
 \tl_new:N \l__pxsrc_input_region_prefix_tl
@@ -355,6 +356,13 @@
       title={},caption={},label={},label-prefix={},language={},
       listing-options={},cite={},terms={}}
    \exp_args:NnV \keys_set:nn {pxSRC/input}\l__pxsrc_input_defaults_tl}
+%% Resolve nested source paths from the original source directory first. Pass an
+%% explicit path to TeX so newly created children need no filename-database refresh.
+\cs_new_protected:Npn \__pxsrc_find:nNTF #1#2#3#4
+  {\tl_if_blank:VTF \l__pxsrc_input_base_tl
+     {\file_get_full_name:nNTF {#1}#2{#3}{#4}}
+     {\exp_args:Ne \file_get_full_name:nNTF {\l__pxsrc_input_base_tl #1}#2
+       {#3}{\file_get_full_name:nNTF {#1}#2{#3}{#4}}}}
 \cs_new_protected:Npn \__pxsrc_input_error:n #1
   {\bool_set_false:N \l__pxsrc_input_valid_bool
    \msg_error:nnn {pxSRC}{input}{#1}}
@@ -453,6 +461,7 @@
          {\__pxsrc_input_extract:}
          {\tl_set_eq:NN \l__pxsrc_input_temp_tl \l__pxsrc_input_path_tl}
        \exp_args:NV \filename@parse \l__pxsrc_input_path_tl
+       \tl_set:Nx \l__pxsrc_input_base_tl {\filename@area}
        \providecommand\input@path{}
        \edef\input@path{{\filename@area}\input@path}
        \providecommand\Ginput@path{}
@@ -493,7 +502,7 @@
       {!\tl_if_blank_p:V \l__pxsrc_input_region_tl ||
        \int_compare_p:n {\l__pxsrc_input_first_int != 1} ||
        \int_compare_p:n {\l__pxsrc_input_last_int != 0}}
-    \file_get_full_name:nNTF {#2}\l__pxsrc_input_path_tl
+    \__pxsrc_find:nNTF {#2}\l__pxsrc_input_path_tl
       {
         \__pxsrc_input_select:
         \bool_if:NT \l__pxsrc_input_valid_bool
@@ -601,7 +610,7 @@
      {\__pxsrc_input_error:n {Previews~require~the~annexes~tool.}}
    \cs_if_exist:NF \lstinputlisting
      {\__pxsrc_input_error:n {Previews~require~the~sources~or~code~tool.}}
-   \file_get_full_name:nNTF {#2}\l__pxsrc_input_path_tl
+   \__pxsrc_find:nNTF {#2}\l__pxsrc_input_path_tl
      {\__pxsrc_input_select:
       \bool_if:NT \l__pxsrc_input_valid_bool
         {\int_gincr:N \g__pxsrc_preview_int

@@ -6,7 +6,7 @@ P3CTeX's existing tools remain the foundation. Choose features by what you need:
 \documentclass[EN,code,images,tables,diagrams,calculations,project-management]{P3CTeX}
 ```
 
-The readable keywords are aliases for module selection at class/package load time. Existing `LST`, `SRC`, `TAB`, `DIAG` and `default` options remain available. `CALC` and `PM` are also accepted. For a standard `article`, load individual packages or `\usepackage[code,calculations]{pxCORE}`. Runtime setup rejects module-loading options; use the selected tool\'s setup command for customisation.
+The readable keywords are aliases for module selection at class/package load time. Existing `LST`, `SRC`, `TAB`, `DIAG` and `default` options remain available. `CALC` and `PM` are also accepted. For a standard `article`, load individual packages or `\usepackage[code,calculations]{pxCORE}`. Runtime setup rejects module-loading options; use the selected tool's setup command for customisation.
 
 | Tool | Package | Existing entry points |
 | --- | --- | --- |

@@ -1,4 +1,4 @@
-\documentclass[PAC,EN,sources,annexes,glossaries]{P3CTeX}
+\documentclass[PAC,EN,sources,annexes,glossaries,pdf-config={pdf-title={PUBLIC-API-LOAD}}]{P3CTeX}
 \PECTeXconfig{cover=false,toc=false,no-plagi=false}
 \pxAcronym{api}{API}{application programming interface}
 \pxSource[as=text]{log}{fixtures/source/long.txt}
@@ -28,6 +28,7 @@
 \msg_redirect_name:nnn {pxGLS}{type}{warning}
 \keys_set:nn {pxCORE}{sourcez}
 \ExplSyntaxOff
+\PECTeXconfig{pdf-config={pdf-author={PUBLIC-API-RUNTIME}}}
 \begin{document}
 \GL{api}: \GL*{api}.
 \pxCOREsetup{sources=false}

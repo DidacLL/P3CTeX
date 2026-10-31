@@ -71,9 +71,6 @@
 	debug		.bool_set:N 	= \l_pxcore_debug_bool,
 		debug		.initial:n	= false,
 		debug		.default:n	= true,
-	print-doc	.bool_set:N 	= \l_pxcore_pxdoc_use_bool,
-		print-doc	.initial:n	= false,
-		print-doc	.default:n	= true,
 	PRP			.bool_set:N 	= \l_pxcore_prp_use_bool,
 		PRP			.initial:n	= false,
 		PRP			.default:n	= true,
@@ -168,6 +165,5 @@
 %% Runtime settings have a separate contract from package selection.
 \keys_define:nn {pxCORE/runtime}
   {debug .bool_set:N = \l_pxcore_debug_bool,
-   print-doc .bool_set:N = \l_pxcore_pxdoc_use_bool,
    unknown .code:n = {\msg_error:nnx {pxCORE}{load-only}{\l_keys_key_str}}}
 \endinput

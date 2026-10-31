@@ -1,8 +1,8 @@
-% Optional glossary placement; standard glossaries commands remain available.
+% Automatic glossary tools; standard glossaries commands remain available.
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3,xparse,l3keys2e}
 \IfPackageLoadedTF{glossaries}{}{\RequirePackage[acronym]{glossaries}}
-\ProvidesExplPackage{pxGLS}{2026/10/30}{0.1}{Explicit glossary placement}
+\ProvidesExplPackage{pxGLS}{2026/10/30}{0.1}{Automatic terminology lists and entry helpers}
 \file_input:n {pxGLS.code.tex}
 %% \pxGlossarySetup{<keys>}: customise automatic/manual printing, selected types, titles and style.
 \NewDocumentCommand\pxGlossarySetup{m}{\keys_set:nn {pxGLS}{#1}}
