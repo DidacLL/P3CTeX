@@ -1,7 +1,14 @@
 \documentclass{article}
 \usepackage{pxSRC}
 \begin{document}
-% Multiple setup calls merge by key; later values replace earlier ones.
+\ExplSyntaxOn
+% The requested input mode is used unless a user explicitly sets an 'as' default.
+\group_begin:
+  \__pxsrc_input_defaults:n {code}
+  \tl_if_eq:NnF \l__pxsrc_input_mode_tl {code}
+    {\PackageError{pxSRC-defaults}{Requested initial mode ignored}{}}
+\group_end:
+\ExplSyntaxOff
 \pxSRCsetup{input={title={First, with comma},language={Python}}}
 \pxSRCsetup{input={title={Updated, with comma},label-prefix=pr:}}
 \ExplSyntaxOn
@@ -13,21 +20,50 @@
     {\PackageError{pxSRC-defaults}{Previous language was lost}{}}
   \tl_if_eq:NnF \l__pxsrc_input_label_prefix_tl {pr:}
     {\PackageError{pxSRC-defaults}{Label prefix was lost}{}}
+  \keys_set:nn {pxSRC/input}{title={Override},region=part}
+  \group_begin:
+    \__pxsrc_input_defaults:n {native}
+    \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+      {\PackageError{pxSRC-defaults}{Nested input inherited title}{}}
+    \tl_if_blank:VF \l__pxsrc_input_region_tl
+      {\PackageError{pxSRC-defaults}{Nested input inherited region}{}}
+  \group_end:
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Override}
+    {\PackageError{pxSRC-defaults}{Nested input altered its parent}{}}
 \group_end:
-% Repeated assignments must not accumulate unbounded historical options.
+\ExplSyntaxOff
+% Repeat an override; it updates one typed variable rather than accumulating keys.
+\ExplSyntaxOn
 \int_step_inline:nn {32} {\pxSRCsetup{input={title={Updated, with comma}}}}
-\int_compare:nNnF {\prop_count:N \l__pxsrc_input_defaults_prop} = {3}
-  {\PackageError{pxSRC-defaults}{Default key storage grew on replacements}{}}
 \group_begin:
-  \pxSRCsetup{input={title={Local}}}
   \__pxsrc_input_defaults:n {native}
-  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Local}
-    {\PackageError{pxSRC-defaults}{Scoped setup was ignored}{}}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+    {\PackageError{pxSRC-defaults}{Repeated setup lost its value}{}}
+\group_end:
+\group_begin:
+  \pxSRCsetup{input={title={Local},first-line=3,terms={one,two}}}
+  \group_begin:
+    \__pxsrc_input_defaults:n {native}
+    \tl_if_eq:NnF \l__pxsrc_input_title_tl {Local}
+      {\PackageError{pxSRC-defaults}{Scoped setup ignored}{}}
+    \int_compare:nNnF {\l__pxsrc_input_first_int} = {3}
+      {\PackageError{pxSRC-defaults}{Typed integer default ignored}{}}
+    \int_compare:nNnF {\clist_count:N \l__pxsrc_input_terms_clist} = {2}
+      {\PackageError{pxSRC-defaults}{Typed list default ignored}{}}
+  \group_end:
 \group_end:
 \group_begin:
   \__pxsrc_input_defaults:n {native}
   \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
     {\PackageError{pxSRC-defaults}{Scoped setup leaked}{}}
+  \int_compare:nNnF {\l__pxsrc_input_first_int} = {1}
+    {\PackageError{pxSRC-defaults}{Scoped integer default leaked}{}}
+\group_end:
+\pxSRCsetup{input={as=text}}
+\group_begin:
+  \__pxsrc_input_defaults:n {code}
+  \tl_if_eq:NnF \l__pxsrc_input_mode_tl {text}
+    {\PackageError{pxSRC-defaults}{Explicit mode default ignored}{}}
 \group_end:
 \ExplSyntaxOff
 \end{document}
