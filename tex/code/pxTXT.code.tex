@@ -23,6 +23,10 @@
 \RequirePackage{color,l3keys2e,xparse}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesExplFile{pxTXT.code.tex}{2026/10/27}{v0.3}{P3CTeX language definitions}
+\newcommand{\pxDEFpmepic}{Èpica}
+\newcommand{\pxDEFpmand}{I}
+\newcommand{\pxDEFglossaryname}{Glossari}
+\newcommand{\pxDEFacronymname}{Acrònims}
 % Define supported languages
 
 %% Language string table.
@@ -119,6 +123,10 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 %% \_pxcore_set_language_catalan
 %% Restore all pxTXT public strings to their Catalan originals; called by the P3CTeX cat key.
 \newcommand{\_pxcore_set_language_catalan}{
+\renewcommand{\pxDEFpmepic}{Èpica}
+\renewcommand{\pxDEFpmand}{I}
+\renewcommand{\pxDEFglossaryname}{Glossari}
+\renewcommand{\pxDEFacronymname}{Acrònims}
 	\renewcommand{\pxDEFdiagtargetlanguage}{Llenguatge\\objecte\\i~plataforma}
 	\renewcommand{\pxDEFdiagsourcelanguage}{Llenguatge\\font}
 	\renewcommand{\pxDEFdiagerrormanagement}{Gesti\'o~d'errors}
@@ -204,6 +212,10 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 %% \_pxcore_set_language_spanish
 %% Replace all pxTXT public strings with their Spanish translations; called by the P3CTeX es key.
 \newcommand{\_pxcore_set_language_spanish}{
+\renewcommand{\pxDEFpmepic}{Épica}
+\renewcommand{\pxDEFpmand}{Y}
+\renewcommand{\pxDEFglossaryname}{Glosario}
+\renewcommand{\pxDEFacronymname}{Acrónimos}
 	\renewcommand{\pxDEFdiagtargetlanguage}{Lenguaje\\objeto~y\\plataforma}
 	\renewcommand{\pxDEFdiagsourcelanguage}{Lenguaje\\fuente}
 	\renewcommand{\pxDEFdiagerrormanagement}{Gestión~de~errores}
@@ -289,6 +301,10 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 %% \_pxcore_set_language_english
 %% Replace all pxTXT public strings with their English translations; called by the P3CTeX en key.
 \newcommand{\_pxcore_set_language_english}{
+\renewcommand{\pxDEFpmepic}{Epic}
+\renewcommand{\pxDEFpmand}{And}
+\renewcommand{\pxDEFglossaryname}{Glossary}
+\renewcommand{\pxDEFacronymname}{Acronyms}
 	\renewcommand{\pxDEFdiagtargetlanguage}{Target\\language~and\\platform}
 	\renewcommand{\pxDEFdiagsourcelanguage}{Source\\language}
 	\renewcommand{\pxDEFdiagerrormanagement}{Error~handling}

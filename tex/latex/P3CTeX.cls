@@ -43,6 +43,8 @@
 \LoadClass{article} % Base class
 \RequirePackage{amsmath} % Load before arev to keep integral definitions compatible.
 \RequirePackage{arev} % Fonts
+\NewHook{P3CTeX/before-toc}
+\NewHook{P3CTeX/after-toc}
 \file_input:n {P3CTeX.code.tex} % Input expl3 code
 %% =================================
 %% ===== PCKG PUBLIC LaTeX2e API ===
@@ -63,8 +65,10 @@
 %% Print the table of contents and clear the page afterwards.
 %% * - print the no-plagiarism declaration immediately before the TOC.
 \NewDocumentCommand{\PECTeXprintTOC}{s}{
+\UseHook{P3CTeX/before-toc}
 	\IfBooleanT{#1}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par\__pxDEV_HRule:}
 	\tableofcontents\clearpage
+\UseHook{P3CTeX/after-toc}
 }
 %% \pxGDXconfig{<pxGDX keys>}
 %% Direct access to the pxGDX dispatcher; use nested cover-config/page-config/pdf-config keys as needed.
@@ -139,7 +143,7 @@
 		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
 }
-% Glossary placement and optional automatic printing are owned by pxGLS.
+% Terminology, references and annex placement are supplied by pxEND.
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }

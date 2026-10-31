@@ -1,9 +1,64 @@
-\ProvidesExplFile{pxMEM.code.tex}{2026/10/30}{0.2}{Generic memory adapters}
-% Existing entry points now share source and annex engines with PAC/PR documents.
-\cs_new_protected:Npn \__pxmem_source:nn #1#2
-  {\__pxsrc_source:nnn {}{#1}{#2}}
+\ProvidesExplFile{pxMEM.code.tex}{2026/10/31}{0.3}{Memory structure and composition}
+%% Configuration is scoped. Colour stays a reference to the document palette.
+\tl_new:N \l__pxmem_chapter_style_tl
+\bool_new:N \l__pxmem_figures_bool
+\bool_new:N \l__pxmem_tables_bool
+\keys_define:nn {pxMEM}
+  {chapter-style .tl_set:N = \l__pxmem_chapter_style_tl,
+   chapter-style .initial:n = \normalfont\huge\bfseries\color{primaryColor},
+   figures .bool_set:N = \l__pxmem_figures_bool, figures .initial:n = true,
+   tables .bool_set:N = \l__pxmem_tables_bool, tables .initial:n = true}
+% Keep the article class and its existing page/cover layout.
+\cs_if_exist:NF \chapter
+{
+\newcounter{chapter}
+%% Article has no chapter mark. Without this, \@sect typesets its title twice.
+\providecommand\chaptermark[1]{}
+\@addtoreset{section}{chapter}
+\renewcommand\thesection{\thechapter.\arabic{section}}
+% \chapter{<title>}
+% Start a numbered, page-breaking chapter in a MEM document. MEM preserves
+% article as its base class and numbers sections within the current chapter.
+\cs_new_protected:Npn \__pxmem_chapter: {%
+  \clearpage\thispagestyle{plain}%
+  \@startsection{chapter}{0}{\z@}%
+    {-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}%
+    {\l__pxmem_chapter_style_tl}}
+%% Article's TOC reserves space for single-level numbers only. MEM adds a chapter
+%% level, so give each subordinate level room for its complete dotted number.
+%% These are standard LaTeX TOC formatters; advanced documents may redefine them.
+\providecommand*\l@chapter{\@dottedtocline{0}{0em}{2.5em}}
+\renewcommand*\l@section{\@dottedtocline{1}{2.5em}{3em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{5.5em}{4em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{9.5em}{5em}}
+% \appendix
+% Switch subsequent chapter numbers to letters (A, B, ...), starting at A.
+% Explicit legacy transition; scoped \pxMEMannex does not call it.
+\renewcommand\appendix{%
+  \setcounter{chapter}{0}%
+  \setcounter{section}{0}%
+  \renewcommand\thechapter{\Alph{chapter}}}
+
+
+}
+
+%% Bind an existing report-class heading, or use MEM's own article heading.
+\cs_if_exist:NTF \chapter
+  {\cs_new_protected:Npn \__pxmem_heading:n #1 {\chapter*{#1}}}
+  {\cs_new_protected:Npn \__pxmem_heading:n #1 {\__pxmem_chapter:*{#1}}}
+%% Register and include sources through the dependency's implementation interface.
+%% #1 options; #2 source id; #3 marker region (empty means the complete file).
 \cs_new_protected:Npn \__pxmem_include:nnn #1#2#3
-  {\__pxsrc_use_source:nn {region={#3},#1}{#2}}
-\cs_new_protected:Npn \__pxmem_annex:nn #1#2
-  {\pxAnnex{#1}{#2}}
+  {\pxSRC_use_source:nn {region={#3},#1}{#2}}
+%% #1 translated heading; #2 standard list-file extension (lof or lot).
+\cs_new_protected:Npn \__pxmem_print_list:nn #1#2
+  {\__pxmem_heading:n {#1}\phantomsection
+   \addcontentsline{toc}{chapter}{#1}\@starttoc{#2}\clearpage}
+\bool_new:N \g__pxmem_indexes_done_bool
+%% Print selected indexes once, after the contents. Native captions feed these lists.
+\cs_new_protected:Npn \__pxmem_indexes:
+  {\bool_if:NF \g__pxmem_indexes_done_bool
+    {\bool_gset_true:N \g__pxmem_indexes_done_bool
+     \bool_if:NT \l__pxmem_figures_bool {\__pxmem_print_list:nn {\listfigurename}{lof}}
+     \bool_if:NT \l__pxmem_tables_bool {\__pxmem_print_list:nn {\listtablename}{lot}}}}
 \endinput

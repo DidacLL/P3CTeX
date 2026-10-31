@@ -283,22 +283,6 @@
 %% =================================
 % Source selection and rendering, shared by pxSRC and legacy pxMEM entry points.
 
-\tl_new:N \l__pxsrc_default_input_mode_tl
-\tl_new:N \l__pxsrc_default_input_container_tl
-\tl_new:N \l__pxsrc_default_input_width_tl
-\tl_new:N \l__pxsrc_default_input_region_tl
-\tl_new:N \l__pxsrc_default_input_region_prefix_tl
-\tl_new:N \l__pxsrc_default_input_region_suffix_tl
-\tl_new:N \l__pxsrc_default_input_title_tl
-\tl_new:N \l__pxsrc_default_input_caption_tl
-\tl_new:N \l__pxsrc_default_input_label_tl
-\tl_new:N \l__pxsrc_default_input_label_prefix_tl
-\tl_new:N \l__pxsrc_default_input_language_tl
-\tl_new:N \l__pxsrc_default_input_options_tl
-\tl_new:N \l__pxsrc_default_input_cite_tl
-\int_new:N \l__pxsrc_default_input_first_int
-\int_new:N \l__pxsrc_default_input_last_int
-\clist_new:N \l__pxsrc_default_input_terms_clist
 \prop_new:N \g__pxsrc_sources_prop
 \prop_new:N \g__pxsrc_source_options_prop
 \int_new:N \g__pxsrc_piece_int
@@ -365,53 +349,24 @@
     cite .tl_set:N = \l__pxsrc_input_cite_tl,
     terms .clist_set:N = \l__pxsrc_input_terms_clist
   }
-% Source defaults are typed values. The setup key parses them once; each
-% inclusion copies them into its local working state before applying overrides.
-\keys_define:nn {pxSRC/input-default}
-  {
-    as .choices:nn = {native,code,text}{\tl_set_eq:NN \l__pxsrc_default_input_mode_tl \l_keys_choice_tl},
-    container .choices:nn = {none,minipage}{\tl_set_eq:NN \l__pxsrc_default_input_container_tl \l_keys_choice_tl},
-    width .tl_set:N = \l__pxsrc_default_input_width_tl,
-    region .tl_set:N = \l__pxsrc_default_input_region_tl,
-    region-prefix .tl_set:N = \l__pxsrc_default_input_region_prefix_tl,
-    region-suffix .tl_set:N = \l__pxsrc_default_input_region_suffix_tl,
-    first-line .int_set:N = \l__pxsrc_default_input_first_int,
-    last-line .int_set:N = \l__pxsrc_default_input_last_int,
-    title .tl_set:N = \l__pxsrc_default_input_title_tl,
-    caption .tl_set:N = \l__pxsrc_default_input_caption_tl,
-    label .tl_set:N = \l__pxsrc_default_input_label_tl,
-    label-prefix .tl_set:N = \l__pxsrc_default_input_label_prefix_tl,
-    language .tl_set:N = \l__pxsrc_default_input_language_tl,
-    listing-options .tl_set:N = \l__pxsrc_default_input_options_tl,
-    cite .tl_set:N = \l__pxsrc_default_input_cite_tl,
-    terms .clist_set:N = \l__pxsrc_default_input_terms_clist
-  }
-\keys_set:nn {pxSRC/input-default}
-  {container=none,width=\linewidth,region-prefix={\c_percent_str},
-   first-line=1,last-line=0}
+%% Store each configured default once, preserving macros until the source is used.
+%% The normal input family remains the only definition of option types/choices.
+\prop_new:N \l__pxsrc_input_defaults_prop
+\prop_set_from_keyval:Nn \l__pxsrc_input_defaults_prop
+  {container=none,width=\linewidth,region={},region-prefix=\c_percent_str,
+   region-suffix={},first-line=1,last-line=0,title={},caption={},label={},
+   label-prefix={},language={},listing-options={},cite={},terms={}}
+\cs_new_protected:Npn \__pxsrc_default:nn #1#2
+  {\prop_put:Nnn \l__pxsrc_input_defaults_prop {#1}{#2}}
+\cs_new_protected:Npn \__pxsrc_default_missing:n #1
+  {\msg_error:nnn {pxSRC}{input}{Source~default~'#1'~needs~a~value.}}
 \keys_define:nn {pxSRC}
-  {input .code:n = {\keys_set:nn {pxSRC/input-default}{#1}}}
-%% Explicit defaults do not inherit a parent's local selection in nested input.
+  {input .code:n = {\keyval_parse:NNn \__pxsrc_default_missing:n \__pxsrc_default:nn {#1}}}
+%% #1 requested mode (native/code). Local selection never becomes a nested input's default.
 \cs_new_protected:Npn \__pxsrc_input_defaults:n #1
   {\tl_set:Nn \l__pxsrc_input_mode_tl {#1}
-   \tl_if_blank:VF \l__pxsrc_default_input_mode_tl
-     {\tl_set_eq:NN \l__pxsrc_input_mode_tl \l__pxsrc_default_input_mode_tl}
-   \tl_set_eq:NN \l__pxsrc_input_container_tl \l__pxsrc_default_input_container_tl
-   \tl_set_eq:NN \l__pxsrc_input_width_tl \l__pxsrc_default_input_width_tl
-   \tl_set_eq:NN \l__pxsrc_input_region_tl \l__pxsrc_default_input_region_tl
-   \tl_set_eq:NN \l__pxsrc_input_region_prefix_tl \l__pxsrc_default_input_region_prefix_tl
-   \tl_set_eq:NN \l__pxsrc_input_region_suffix_tl \l__pxsrc_default_input_region_suffix_tl
-   \int_set:Nn \l__pxsrc_input_first_int {\l__pxsrc_default_input_first_int}
-   \int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_default_input_last_int}
-   \tl_set_eq:NN \l__pxsrc_input_title_tl \l__pxsrc_default_input_title_tl
-   \tl_set_eq:NN \l__pxsrc_input_caption_tl \l__pxsrc_default_input_caption_tl
-   \tl_set_eq:NN \l__pxsrc_input_label_tl \l__pxsrc_default_input_label_tl
-   \tl_set_eq:NN \l__pxsrc_input_label_prefix_tl \l__pxsrc_default_input_label_prefix_tl
-   \tl_set_eq:NN \l__pxsrc_input_language_tl \l__pxsrc_default_input_language_tl
-   \tl_set_eq:NN \l__pxsrc_input_options_tl \l__pxsrc_default_input_options_tl
-   \tl_set_eq:NN \l__pxsrc_input_cite_tl \l__pxsrc_default_input_cite_tl
-   \clist_set_eq:NN \l__pxsrc_input_terms_clist \l__pxsrc_default_input_terms_clist
-  }
+   \prop_map_inline:Nn \l__pxsrc_input_defaults_prop
+     {\keys_set:nn {pxSRC/input}{##1={##2}}}}
 %% Resolve nested source paths from the original source directory first. Pass an
 %% explicit path to TeX so newly created children need no filename-database refresh.
 \cs_new_protected:Npn \__pxsrc_find:nNTF #1#2#3#4
@@ -422,14 +377,17 @@
 \cs_new_protected:Npn \__pxsrc_input_error:n #1
   {\bool_set_false:N \l__pxsrc_input_valid_bool
    \msg_error:nnn {pxSRC}{input}{#1}}
-\cs_new_protected:Npn \__pxsrc_source:nnn #1#2#3
+%% Composition interface used by pxSRC's public API and document extensions.
+%% #1 source defaults; #2 identifier; #3 original file path. Does not read the file.
+\cs_new_protected:Npn \pxSRC_source:nnn #1#2#3
   {\prop_gput:Nnn \g__pxsrc_sources_prop {#2}{#3}
    \prop_gput:Nnn \g__pxsrc_source_options_prop {#2}{#1}}
-\cs_new_protected:Npn \__pxsrc_use_source:nn #1#2
+%% #1 per-use options; #2 registered source id. Registration defaults are applied first.
+\cs_new_protected:Npn \pxSRC_use_source:nn #1#2
   {\group_begin:
    \prop_get:NnNTF \g__pxsrc_sources_prop {#2}\l__pxsrc_input_path_tl
      {\prop_get:NnN \g__pxsrc_source_options_prop {#2}\l_tmpa_tl
-      \use:x {\exp_not:N \__pxsrc_input:nn
+      \use:x {\exp_not:N \pxSRC_input:nn
         {\exp_not:V \l_tmpa_tl,\exp_not:n {#1}}
         {\exp_not:V \l__pxsrc_input_path_tl}}}
      {\msg_error:nnn {pxSRC}{input}{Unknown~source~id~'#2'.}}
@@ -530,6 +488,9 @@
            {\peek_meaning:NTF [
              {\__pxsrc_prefixed_label_optional:w}
              {\__pxsrc_prefixed_label:n}}}
+       % amsmath restores this handler in floats and numbered displays.
+       % Bind it to this input's namespace too, with the same local lifetime.
+       \cs_if_exist:NT \ltx@label {\cs_set_eq:NN \ltx@label \label}
        \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}
   }
 % Literal text is useful for logs, CSV, configuration and other text resources.
@@ -552,7 +513,9 @@
    \clist_if_empty:NF \l__pxsrc_input_terms_clist
      {\cs_if_exist:NF \glsadd
        {\__pxsrc_input_error:n {Source~terms~require~the~glossaries~tool.}}}}
-\cs_new_protected:Npn \__pxsrc_input:nn #1#2
+%% #1 input options; #2 file path. Execute native TeX or render literal content locally.
+%% The source owns selection/namespace; the host owns headings, lists and references.
+\cs_new_protected:Npn \pxSRC_input:nn #1#2
   {
     \group_begin:
     \__pxsrc_input_defaults:n {native}
@@ -621,9 +584,6 @@
   {height .dim_set:N = \l__pxsrc_preview_height_dim,
    annex-title .tl_set:N = \l__pxsrc_preview_title_tl,
    annex-label .tl_set:N = \l__pxsrc_preview_label_tl}
-\providecommand\pxDEFpreviewname{Preview}
-\providecommand\pxDEFfullsource{Full~source~in}
-\providecommand\pxDEFpreviewempty{No~complete~source~line~fits.}
 \tcbset{pxsrc-preview/.style={
   colback=pxbg!95!,colframe=pxbg!70!,coltext=pxfg,
   colbacktitle=pxbg!60!,coltitle=pxfg,fonttitle=\small\bfseries,
@@ -671,8 +631,8 @@
    \bool_set_true:N \l__pxsrc_input_fragment_bool
    \tl_if_eq:NnT \l__pxsrc_input_mode_tl {native}
      {\__pxsrc_input_error:n {Previews~support~as=code~or~as=text.}}
-   \cs_if_exist:NF \pxAddAnnex
-     {\__pxsrc_input_error:n {Previews~require~the~annexes~tool.}}
+   \cs_if_exist:NF \pxEND_add_annex:nnn
+     {\__pxsrc_input_error:n {Previews~require~the~endmatter~tool.}}
    \cs_if_exist:NF \lstinputlisting
      {\__pxsrc_input_error:n {Previews~require~the~sources~or~code~tool.}}
    \__pxsrc_find:nNTF {#2}\l__pxsrc_input_path_tl
@@ -707,9 +667,9 @@
                  {\int_set:Nn \l__pxsrc_preview_high_int {\l__pxsrc_preview_mid_int-1}}
                  {\int_set_eq:NN \l__pxsrc_preview_low_int \l__pxsrc_preview_mid_int
                   \box_set_eq:NN \l__pxsrc_preview_best_box \l__pxsrc_preview_box}}
-            \use:x {\exp_not:N \pxAddAnnex[label={\l__pxsrc_preview_label_tl}]
+            \use:x {\exp_not:N \pxEND_add_annex:nnn {label={\l__pxsrc_preview_label_tl}}
               {\exp_not:V \l__pxsrc_preview_title_tl}
-              {\exp_not:N \pxInput[
+              {\exp_not:N \pxSRC_input:nn {
                 as={\exp_not:V \l__pxsrc_input_mode_tl},
                 language={\exp_not:V \l__pxsrc_input_language_tl},
                 title={\exp_not:V \l__pxsrc_input_title_tl},
@@ -718,7 +678,7 @@
                 label={\exp_not:V \l__pxsrc_input_label_tl},
                 cite={\exp_not:V \l__pxsrc_input_cite_tl},
                 terms={\exp_not:V \l__pxsrc_input_terms_clist},
-                region={},first-line=1,last-line=0,container=none]
+                region={},first-line=1,last-line=0,container=none}
                 {\exp_not:V \l__pxsrc_input_path_tl}}}
             \par\nointerlineskip\box_use_drop:N \l__pxsrc_preview_best_box\par}}
      }

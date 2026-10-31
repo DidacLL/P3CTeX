@@ -7,7 +7,7 @@
 %%  This file is part of the P3CTeX project.
 %%
 %%  Author: Scvria
-%%  File: pxDIAG.sty
+%%  File: pxDIA.sty
 %%  Version: v0.2 (10/2026)
 %%  Description:
 %%    P3CTeX Computation, Compilers & Logic Diagrams module.
@@ -45,7 +45,7 @@
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins,xparse}
 
-\ProvidesExplPackage{pxDIAG}{2026/10/27}{v0.2}
+\ProvidesExplPackage{pxDIA}{2026/10/27}{v0.2}
   {P3CTeX computation, compilers and logic diagrams module}
 
 % Fallback P3CTeX palette colors for standalone usage outside P3CTeX.cls
@@ -56,35 +56,21 @@
 \providecolor{lightColor}{cmyk}{0,0,0,0.3}
 \providecolor{lighterColor}{rgb}{1,1,1}
 
-\providecommand{\pxDEFdiagcompilation}{Compilation~time}
-\providecommand{\pxDEFdiagexecution}{Execution~time}
-\providecommand{\pxDEFdiagactual}{Actual~classes}
-\providecommand{\pxDEFdiagpred}{Predictions}
-\providecommand{\pxDEFdiaginput}{Input}
-\providecommand{\pxDEFdiagtoken}{Token}
-\providecommand{\pxDEFdiagvalue}{Value}
-\providecommand{\pxDEFdiaganalysisphases}{Analysis~stages}
-\providecommand{\pxDEFdiagsynthesisphases}{Synthesis~stages}
-\providecommand{\pxDEFdiaglexer}{Lexical\\analyzer}
-\providecommand{\pxDEFdiagtokenization}{Tokenization}
-\providecommand{\pxDEFdiagparser}{Syntax\\analyzer}
-\providecommand{\pxDEFdiaggrammarcheck}{Grammar\\rule\\checking}
-\providecommand{\pxDEFdiagsemantic}{Semantic\\analyzer}
-\providecommand{\pxDEFdiagcodegen}{Code\\generation}
-\providecommand{\pxDEFdiagoptimization}{Code\\optimization}
-\providecommand{\pxDEFdiagsourceprogram}{Source\\program}
-\providecommand{\pxDEFdiagintermediate}{Intermediate\\code}
-\providecommand{\pxDEFdiagobjectprogram}{Object\\program}
-\providecommand{\pxDEFdiagsymboltable}{Symbol~table}
-\providecommand{\pxDEFdiagerrormanagement}{Error~handling}
-\providecommand{\pxDEFdiagsourcelanguage}{Source\\language}
-\providecommand{\pxDEFdiagtargetlanguage}{Target\\language~and\\platform}
-\file_input:n {pxDIAG.code.tex}
+%% Use the shared string table, including standalone documents; do not duplicate captions.
+\cs_if_exist:NF \pxDEFtocname
+  {\file_input:n {pxTXT.code.tex}
+   \cs_if_exist:NTF \languagename
+     {\exp_args:Ne \str_case:nnF {\languagename}
+       {{catalan}{\_pxcore_set_language_catalan}
+        {spanish}{\_pxcore_set_language_spanish}}
+       {\_pxcore_set_language_english}}
+     {\_pxcore_set_language_english}}
+\file_input:n {pxDIA.code.tex}
 
 %% =======================================================
 %% P3CTeX BRANDED PRESETS
 %% =======================================================
-\pxDIAG_save_preset:nn { p3c-uoc }
+\pxDIA_save_preset:nn { p3c-uoc }
   {
     maincolor    = primaryColor,
     accentcolor  = secondaryColor,
@@ -98,7 +84,7 @@
     shadow       = true
   }
 
-\pxDIAG_save_preset:nn { p3c-blueprint }
+\pxDIA_save_preset:nn { p3c-blueprint }
   {
     maincolor    = primaryColor,
     accentcolor  = secondaryColor,
@@ -112,7 +98,7 @@
     shadow       = true
   }
 
-\pxDIAG_save_preset:nn { p3c-minimal }
+\pxDIA_save_preset:nn { p3c-minimal }
   {
     maincolor    = darkColor,
     accentcolor  = neutralColor,
@@ -126,7 +112,7 @@
     shadow       = false
   }
 
-\pxDIAG_save_preset:nn { p3c-exam }
+\pxDIA_save_preset:nn { p3c-exam }
   {
     maincolor    = darkColor,
     accentcolor  = lightColor,
@@ -140,7 +126,7 @@
     shadow       = true
   }
 
-\ProcessKeysOptions{ pxDIAG }
+\ProcessKeysOptions{ pxDIA }
 
 %% =======================================================
 %% PUBLIC LaTeX2e API
@@ -149,15 +135,15 @@
 %% --- Configuration & Presets ---
 %% \pxDiagramSetup{<key=value,...>}
 \NewDocumentCommand{\pxDiagramSetup}{m}
-  { \pxDIAG_set_options:n {#1} }
+  { \pxDIA_set_options:n {#1} }
 
 %% \pxDiagramSavePreset{<name>}{<keys>}
 \NewDocumentCommand{\pxDiagramSavePreset}{m m}
-  { \pxDIAG_save_preset:nn {#1} {#2} }
+  { \pxDIA_save_preset:nn {#1} {#2} }
 
 %% \pxDiagramUsePreset{<name>}
 \NewDocumentCommand{\pxDiagramUsePreset}{m}
-  { \pxDIAG_use_preset:n {#1} }
+  { \pxDIA_use_preset:n {#1} }
 
 %% --- Canvas Environment & Annotations ---
 %% \begin{pxDiagram}[<local-keys>] ... \end{pxDiagram}
@@ -166,9 +152,9 @@
   { \__pxdiag_diagram_render:nn {#1} {#2} }
   {}
 
-%% \pxDIAGNote[<tikz-node-opts>]{<x,y>}{<text>}
+%% \pxDiagramNote[<tikz-node-opts>]{<x,y>}{<text>}
 %% Place a text label or section note inside a pxDiagram canvas.
-\NewDocumentCommand{\pxDIAGNote}{ O{} m m }
+\NewDocumentCommand{\pxDiagramNote}{ O{} m m }
   { \__pxdiag_canvas_note:nnn {#1} {#2} {#3} }
 
 %% =======================================================

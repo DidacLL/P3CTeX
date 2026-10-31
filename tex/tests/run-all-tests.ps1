@@ -13,6 +13,8 @@ $latexDir = Resolve-Path (Join-Path $scriptDir "..\latex")
 $codeDir = Resolve-Path (Join-Path $scriptDir "..\code")
 $testsDir = Resolve-Path $scriptDir
 $repoRoot = Resolve-Path (Join-Path $scriptDir "..\..")
+$buildRoot = Join-Path $repoRoot ".build\tests"
+New-Item -ItemType Directory -Force -Path $buildRoot | Out-Null
 
 $testFiles = @(
     # pxTAB suite
@@ -25,13 +27,13 @@ $testFiles = @(
     "pxTAB.pxtbl.test.tex",
     "pxTAB.preset.test.tex",
 
-    # pxDIAG suite
-    "pxDIAG.probe.test.tex",
-    "pxDIAG.standalone.test.tex",
-    "pxDIAG.test.tex",
-    "pxDIAG.languages.test.tex",
-    "pxDIAG.uncaptioned-label.test.tex",
-    "pxDIAG.nonfloating-label.test.tex",
+    # pxDIA suite
+    "pxDIA.probe.test.tex",
+    "pxDIA.standalone.test.tex",
+    "pxDIA.test.tex",
+    "pxDIA.languages.test.tex",
+    "pxDIA.uncaptioned-label.test.tex",
+    "pxDIA.nonfloating-label.test.tex",
     "pxCORE.test.tex",
     "pxCORE.config-tokens.test.tex",
     "public-api.test.tex",
@@ -46,7 +48,7 @@ $testFiles = @(
     "pxLST.legacy.test.tex",
     "pxLST.quotes.test.tex",
     "pxCALC.test.tex",
-    "student-tools.test.tex",
+    "tools.integration.test.tex",
 
     # Additional modules
     "pxUML.test.tex",
@@ -86,7 +88,7 @@ $oldTexInputs = $env:TEXINPUTS
 $oldLocation = Get-Location
 try {
     # Keep default TeX search path by ending with ';'.
-    $env:TEXINPUTS = "$latexDir;$codeDir;$testsDir;"
+    $env:TEXINPUTS = "$buildRoot;$latexDir;$codeDir;$testsDir;"
 
     Write-Host "==========================================" -ForegroundColor Cyan
     Write-Host "       P3CTeX Quality Gate: All Tests     " -ForegroundColor Cyan
@@ -96,7 +98,7 @@ try {
     Write-Host ""
 
     $results = @()
-    Set-Location $testsDir
+    Set-Location $buildRoot
 
     foreach ($testFile in $testFiles) {
         $testPath = Join-Path $testsDir $testFile
@@ -117,7 +119,7 @@ try {
             Remove-Item -ErrorAction SilentlyContinue "$jobName.gls", "$jobName.acr"
         }
         for ($pass = 1; $pass -le $Passes; $pass++) {
-            & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+            & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
             if ($LASTEXITCODE -ne 0) { break }
             if ($testFile -eq "pxGLS.external.test.tex" -and $pass -eq 1) {
                 & makeglossaries $jobName
@@ -127,7 +129,7 @@ try {
                     $global:LASTEXITCODE = 1
                     break
                 }
-                & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+                & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
                 if ($LASTEXITCODE -ne 0) { break }
             }
         }
@@ -148,15 +150,15 @@ try {
 
         if ($CleanArtifacts) {
             $baseName = $jobName
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.aux")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.log")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.out")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.pdf")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.toc")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.synctex.gz")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.aux")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.log")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.out")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.pdf")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.toc")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.synctex.gz")
             if ($testFile -eq "pxGLS.external.test.tex") {
                 foreach ($ext in @("glo", "gls", "glg", "ist", "acn", "acr", "alg")) {
-                    Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.$ext")
+                    Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.$ext")
                 }
             }
         }
@@ -174,13 +176,25 @@ try {
             "examples\UOCTemplates\TFGTemplate\PR2\PR2.tex",
             "examples\UOCTemplates\TFGTemplate\MEM\MEM.tex"
         )
+        # Preserve the actual relative source layout, copying tracked inputs only.
+        $exampleBuild = Join-Path $buildRoot "example-inputs"
+        foreach ($rel in (git -C $repoRoot ls-files -- examples)) {
+            $source = Join-Path $repoRoot $rel
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) { continue }
+            $target = Join-Path $exampleBuild $rel
+            New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+            Copy-Item -LiteralPath $source -Destination $target -Force
+        }
         foreach ($tplRel in $templates) {
-            $tplPath = Join-Path $repoRoot $tplRel
+            $tplPath = Join-Path $exampleBuild $tplRel
             $tplDir = Split-Path -Parent $tplPath
             $tplFile = Split-Path -Leaf $tplPath
             Set-Location $tplDir
             $env:TEXINPUTS = "$latexDir;$codeDir;$tplDir;"
-            & pdflatex -halt-on-error -file-line-error -interaction=nonstopmode $tplFile
+            for ($pass = 1; $pass -le $Passes; $pass++) {
+                & pdflatex -halt-on-error -file-line-error -interaction=nonstopmode $tplFile
+                if ($LASTEXITCODE -ne 0) { break }
+            }
             $exitCode = $LASTEXITCODE
             $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
             $results += [PSCustomObject]@{

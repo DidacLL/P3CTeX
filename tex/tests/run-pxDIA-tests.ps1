@@ -9,11 +9,13 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $latexDir = Resolve-Path (Join-Path $scriptDir "..\latex")
 $codeDir = Resolve-Path (Join-Path $scriptDir "..\code")
 $testsDir = Resolve-Path $scriptDir
+$buildRoot = Join-Path (Resolve-Path (Join-Path $scriptDir "..\..")) ".build\diagrams"
+New-Item -ItemType Directory -Force -Path $buildRoot | Out-Null
 
 $testFiles = @(
-    "pxDIAG.probe.test.tex",
-    "pxDIAG.standalone.test.tex",
-    "pxDIAG.test.tex",
+    "pxDIA.probe.test.tex",
+    "pxDIA.standalone.test.tex",
+    "pxDIA.test.tex",
     "pxCORE.test.tex",
     "P3CTeX.test.tex"
 )
@@ -22,14 +24,14 @@ $oldTexInputs = $env:TEXINPUTS
 $oldLocation = Get-Location
 try {
     # Keep default TeX search path by ending with ';'.
-    $env:TEXINPUTS = "$latexDir;$codeDir;$testsDir;"
+    $env:TEXINPUTS = "$buildRoot;$latexDir;$codeDir;$testsDir;"
 
-    Write-Host "== pxDIAG quality gate =="
+    Write-Host "== pxDIA quality gate =="
     Write-Host "TEXINPUTS=$($env:TEXINPUTS)"
     Write-Host ""
 
     $results = @()
-    Set-Location $testsDir
+    Set-Location $buildRoot
 
     foreach ($testFile in $testFiles) {
         $testPath = Join-Path $testsDir $testFile
@@ -44,7 +46,7 @@ try {
         }
 
         Write-Host "---- Running $testFile ----"
-        & pdflatex --include-directory="$latexDir" --include-directory="$codeDir" -halt-on-error -file-line-error -interaction=nonstopmode $testFile
+        & pdflatex --include-directory="$latexDir" --include-directory="$codeDir" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
         $exitCode = $LASTEXITCODE
         $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
 
@@ -62,17 +64,17 @@ try {
 
         if ($CleanArtifacts) {
             $baseName = [System.IO.Path]::GetFileNameWithoutExtension($testFile)
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.aux")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.log")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.out")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.pdf")
-            Remove-Item -ErrorAction SilentlyContinue (Join-Path $testsDir "$baseName.synctex.gz")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.aux")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.log")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.out")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.pdf")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.synctex.gz")
         }
 
         Write-Host ""
     }
 
-    Write-Host "== pxDIAG quality gate summary =="
+    Write-Host "== pxDIA quality gate summary =="
     foreach ($result in $results) {
         Write-Host ("{0} | exit={1} | {2}" -f $result.TestFile, $result.ExitCode, $result.Status)
     }

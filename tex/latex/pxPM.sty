@@ -6,17 +6,26 @@
 \ProvidesExplPackage{pxPM}{2026/10/30}{0.1}{Project planning and analysis tools}
 \providecolor{primaryColor}{rgb}{0,0,.47}
 \providecolor{secondaryColor}{rgb}{.45,.93,1}
+%% Use the shared string table, including standalone documents; do not duplicate captions.
+\cs_if_exist:NF \pxDEFtocname
+  {\file_input:n {pxTXT.code.tex}
+   \cs_if_exist:NTF \languagename
+     {\exp_args:Ne \str_case:nnF {\languagename}
+       {{catalan}{\_pxcore_set_language_catalan}
+        {spanish}{\_pxcore_set_language_spanish}}
+       {\_pxcore_set_language_english}}
+     {\_pxcore_set_language_english}}
 \file_input:n {pxPM.code.tex}
 
 %% \pxGantt{start=dd/mm/yyyy,end=dd/mm/yyyy,days-per-block=28,...}
 %% Initialize a daily chart; chart drawing is deferred to \pxGanttEnd.
-\NewDocumentCommand\pxGantt{m}{\__pxpm_gantt_begin:n{#1}}
+\NewDocumentCommand\pxGantt{m}{\group_begin:\__pxpm_gantt_begin:n{#1}}
 %% \pxGanttItem{label}{dd/mm/yyyy}{dd/mm/yyyy}
 %% Add a task. Each task is clipped to the currently displayed date block.
 \NewDocumentCommand\pxGanttItem{mmm}{\__pxpm_gantt_item:nnn{#1}{#2}{#3}}
 %% \pxGanttEnd
 %% Draw consecutive portrait blocks (or chart-only rotated floats when requested).
-\NewDocumentCommand\pxGanttEnd{}{\__pxpm_gantt_render:}
+\NewDocumentCommand\pxGanttEnd{}{\__pxpm_gantt_render:\group_end:}
 %% \begin{pxGantt}{<chart keys>} ... \end{pxGantt}
 %% The same chart can be written as a normal LaTeX environment. Its closing
 %% delimiter renders collected items, so no separate \pxGanttEnd is needed.
@@ -26,46 +35,28 @@
 
 %% \pxPMsetup{<keys>}: override translated labels and shared box-options in the current group.
 \NewDocumentCommand\pxPMsetup{m}{\keys_set:nn {pxPM}{#1}}
-% Per-card options are ordinary tcolorbox options, applied after the defaults.
-%% pxUserStory[<tcolorbox options>]{<title>}: styled story; body contains freely editable fields.
-\NewDocumentEnvironment{pxUserStory}{O{} m}
-  {\__pxpm_begin:nnn {story}{#1}{#2}}{\end{tcolorbox}}
-%% pxScenario[<tcolorbox options>]{<title>}: styled scenario; body accepts Given/When/Then fields.
-\NewDocumentEnvironment{pxScenario}{O{} m}
-  {\__pxpm_begin:nnn {scenario}{#1}{#2}}{\end{tcolorbox}}
-%% \pxAsA{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxAsA{+m}{\__pxpm_field:nn {as-a}{#1}}
-%% \pxIWant{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxIWant{+m}{\__pxpm_field:nn {i-want}{#1}}
-%% \pxSoThat{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxSoThat{+m}{\__pxpm_field:nn {so-that}{#1}}
-%% \pxAcceptanceCriteria{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxAcceptanceCriteria{+m}{\__pxpm_field:nn {acceptance}{#1}}
-%% \pxGiven{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxGiven{+m}{\__pxpm_field:nn {given}{#1}}
-%% \pxWhen{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxWhen{+m}{\__pxpm_field:nn {when}{#1}}
-%% \pxThen{<text>}: print a translated field label followed by the supplied paragraph content.
-\NewDocumentCommand\pxThen{+m}{\__pxpm_field:nn {then}{#1}}
-% Optional settings are pxTAB options; lists and paragraphs work in all cells.
-%% \pxSWOT[<table options>]{<strengths>}{<weaknesses>}{<opportunities>}{<threats>}: translated analysis table.
+%% \pxUserStory[<options>]{<title>}{<role>}{<goal>}
+%% A story needs its title, actor and desired capability. Optional id, epic,
+%% purpose and criteria add detail; box-options customises the normal P3CTeX box.
+%% Criteria may be ordinary prose or \item entries; no list wrapper is required.
+\NewDocumentCommand\pxUserStory{O{} m +m +m}
+  {\__pxpm_story:nnnn {#1}{#2}{#3}{#4}}
+%% \pxScenario[<options>]{<title>}{<given>}{<when>}{<then>}
+%% Render the three parts of a scenario. Optional id and and add identification
+%% and a further precondition; box-options controls local appearance.
+\NewDocumentCommand\pxScenario{O{} m +m +m +m}
+  {\__pxpm_scenario:nnnnn {#1}{#2}{#3}{#4}{#5}}
+%% \pxUseCase[<options>]{<title>}{<flow>}
+%% Describe the interaction directly. Optional actors, preconditions,
+%% alternatives and postconditions add detail without mandatory empty arguments.
+%% Flow and optional fields accept paragraphs, lists and shared commands.
+\NewDocumentCommand\pxUseCase{O{} m +m}
+  {\__pxpm_usecase:nnn {#1}{#2}{#3}}
+%% \pxSWOT[<table options>]{<strengths>}{<weaknesses>}{<opportunities>}{<threats>}
+%% Render a translated analysis table; options use the existing pxTAB interface.
 \NewDocumentCommand\pxSWOT{O{} +m +m +m +m}
   {\__pxpm_swot:nnnnn {#1}{#2}{#3}{#4}{#5}}
+%% \pxDAFO has the same arguments, using the Catalan/Spanish analysis name.
 \NewCommandCopy\pxDAFO\pxSWOT
-%% pxUseCase[<box options>]{<title>}
-%% Describe a use case independently of user stories and Given/When/Then scenarios.
-%% #1 - local tcolorbox options; #2 - use-case title; body contains the fields below.
-\NewDocumentEnvironment{pxUseCase}{O{} m}
-  {\__pxpm_begin:nnn {use-case}{#1}{#2}}{\end{tcolorbox}}
-%% \pxActors{<text>}: participating actors; accepts shared preamble macros.
-\NewDocumentCommand\pxActors{+m}{\__pxpm_field:nn {actors}{#1}}
-%% \pxPreconditions{<text>}: conditions required before the use case begins.
-\NewDocumentCommand\pxPreconditions{+m}{\__pxpm_field:nn {preconditions}{#1}}
-%% \pxMainFlow{<content>}: main interaction sequence; may contain an enumerate list.
-\NewDocumentCommand\pxMainFlow{+m}{\__pxpm_field:nn {main-flow}{#1}}
-%% \pxAlternatives{<content>}: alternative and exception paths.
-\NewDocumentCommand\pxAlternatives{+m}{\__pxpm_field:nn {alternatives}{#1}}
-%% \pxPostconditions{<text>}: resulting state after successful completion.
-\NewDocumentCommand\pxPostconditions{+m}{\__pxpm_field:nn {postconditions}{#1}}
 \ProcessKeysOptions{pxPM}
 \endinput

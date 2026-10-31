@@ -1,81 +1,41 @@
-% Generic report chapters, annexes and source-region reuse for P3CTeX.
+%% P3CTeX memory/report structure. Source rendering belongs to pxSRC;
+%% terminology, references and annex placement belong to pxEND.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse,graphicx,pxSRC,pxANN,xcolor}
-\ProvidesExplPackage{pxMEM}{2026/10/22}{v0.2}{P3CTeX generic memory support}
-% Standalone article documents need a default; P3CTeX's palette takes precedence.
+\RequirePackage{expl3,xparse,pxSRC,pxEND,xcolor}
+\ProvidesExplPackage{pxMEM}{2026/10/31}{0.3}{Memory structure and source composition}
 \providecolor{primaryColor}{rgb}{0,0,.47}
-
-% Keep the article class and its existing page/cover layout.
-\newcounter{chapter}
-\@addtoreset{section}{chapter}
-\renewcommand\thesection{\thechapter.\arabic{section}}
-% \chapter{<title>}
-% Start a numbered, page-breaking chapter in a MEM document. MEM preserves
-% article as its base class and numbers sections within the current chapter.
-\newcommand\chapter{%
-  \clearpage\thispagestyle{plain}%
-  \@startsection{chapter}{0}{\z@}%
-    {-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}%
-    {\normalfont\huge\bfseries\color{primaryColor}}}
-\providecommand*\l@chapter{\@dottedtocline{0}{0em}{2.5em}}
-% \appendix
-% Switch subsequent chapter numbers to letters (A, B, ...), starting at A.
-% Explicit legacy transition; scoped \pxMEMannex does not call it.
-\renewcommand\appendix{%
-  \setcounter{chapter}{0}%
-  \setcounter{section}{0}%
-  \renewcommand\thechapter{\Alph{chapter}}}
-
 \file_input:n {pxMEM.code.tex}
-
-% Register the original source .tex, not a generated export.
-%% \pxMEMsource{<id>}{<path-to-tex>}
-%% Register a source document for later reuse without reading it yet.
-%% The consumer supplies the actual source path; source PRs remain unchanged.
-\NewDocumentCommand\pxMEMsource{mm}{\__pxmem_source:nn {#1}{#2}}
-% Extract on demand, then input the generated snippet as ordinary TeX.
-%% \pxMEMinclude[<pxSRC input keys>]{<id>}{<region>}
-%% Insert only the source lines bracketed by %<*region> and %</region>.
-%% Internally creates and inputs a disposable snippet; no manual exports.
-\NewDocumentCommand\pxMEMinclude{O{} mm}{\__pxmem_include:nnn {#1}{#2}{#3}}
-% Shared annex numbering leaves the main chapter sequence intact.
-%% \pxMEMannex{<title>}{<content>}
-%% Start a scoped letter-numbered annex chapter; restore main numbering
-%% after typesetting its content. Uses the shared pxANN implementation.
-\NewDocumentCommand\pxMEMannex{m +m}{\__pxmem_annex:nn {#1}{#2}}
-% Lists in a chapter-based memory are chapter-level contents, not article sections.
-\cs_new_protected:Npn \__pxmem_print_list:nn #1#2
-  {\chapter*{#1}
-   \cs_if_exist:NT \phantomsection {\phantomsection}
-   \addcontentsline{toc}{chapter}{#1}
-   \@starttoc{#2}
-   \clearpage}
-% MEM supplies generic indexes after the class TOC; it never loads TFG.
-\bool_new:N \g__pxmem_indexes_done_bool
-\@ifclassloaded{P3CTeX}{%
-  \AddToHook{begindocument/before}{%
-    \NewCommandCopy\__pxmem_saved_toc:\PECTeXprintTOC
-    \RenewDocumentCommand\PECTeXprintTOC{s}{%
-      \IfBooleanTF{#1}{\__pxmem_saved_toc:*}{\__pxmem_saved_toc:}%
-      \bool_gset_true:N \g__pxmem_indexes_done_bool
-      \__pxmem_print_list:nn {\listfigurename}{lof}
-      \__pxmem_print_list:nn {\listtablename}{lot}
-    }%
-  }%
-}{}
-
-% Backwards-compatible manual entry point for documents with automatic TOC
-% disabled. It reuses the class TOC command and never prints indexes twice.
-\NewDocumentCommand\pxMEMpreliminaries{+m}{%
-  #1%
-  \bool_if:NF \g__pxmem_indexes_done_bool{%
-    \clearpage
-    \cs_if_exist:NTF \PECTeXprintTOC
-      {\PECTeXprintTOC}
-      {\tableofcontents\clearpage
-       \__pxmem_print_list:nn {\listfigurename}{lof}
-       \__pxmem_print_list:nn {\listtablename}{lot}
-       \bool_gset_true:N \g__pxmem_indexes_done_bool}%
-  }%
-}
+%% \chapter[<contents title>]{<title>} / \chapter*{<title>}
+%% Standard chapter syntax; existing report/book chapter commands are preserved.
+\cs_if_exist:NF \chapter {\cs_new_eq:NN \chapter \__pxmem_chapter:}
+%% Terminology headings follow the same chapter/TOC hierarchy as the memory.
+\setglossarysection{chapter}
+%% \pxMEMsetup{<options>}
+%% #1 chapter-style, figures and tables; defaults use the P3CTeX palette and both lists.
+%% Example: \pxMEMsetup{tables=false,chapter-style=\Large\bfseries\color{primaryColor}}
+\NewDocumentCommand\pxMEMsetup{m}{\keys_set:nn {pxMEM}{#1}}
+%% \pxMEMsource[<input options>]{<id>}{<file>}
+%% Register any native, code or text source with its selection, labels and metadata.
+%% #1 pxSRC defaults for this source; #2 reusable id; #3 path to the original file.
+%% Example: \pxMEMsource[as=code,language=Java]{parser}{Parser.java}
+\NewDocumentCommand\pxMEMsource{O{} m m}{\pxSRC_source:nnn {#1}{#2}{#3}}
+%% \pxMEMinclude[<input options>]{<id>}{<region>}
+%% #1 per-use formatting, caption, label-prefix, cite and terms; #2 source id;
+%% #3 named marker region, or empty to include the complete registered source.
+%% Native content keeps captions, labels, citations and glossary uses as ordinary TeX.
+%% Example: \pxMEMinclude[label-prefix=pr1:]{PR1}{objectives}
+\NewDocumentCommand\pxMEMinclude{O{} m m}{\__pxmem_include:nnn {#1}{#2}{#3}}
+%% \pxMEMannex[<annex options>]{<title>}{<content>}
+%% #1 label/heading options; #2 title; #3 deferred native content.
+%% Queue at any point; the common end-matter facility places it automatically.
+\NewDocumentCommand\pxMEMannex{O{} m +m}{\pxEND_add_annex:nnn {#1}{#2}{#3}}
+%% \pxMEMpreliminaries{<content>}
+%% Manual placement when automatic contents are disabled. #1 preliminary content.
+%% The normal class contents command owns TOC formatting; indexes print only once.
+\NewDocumentCommand\pxMEMpreliminaries{+m}
+  {#1\bool_if:NF \g__pxmem_indexes_done_bool
+    {\clearpage\cs_if_exist:NTF \PECTeXprintTOC
+      {\PECTeXprintTOC}{\tableofcontents\clearpage}
+     \__pxmem_indexes:}}
+\AddToHook{P3CTeX/after-toc}[pxMEM]{\__pxmem_indexes:}
 \endinput

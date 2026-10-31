@@ -9,7 +9,7 @@
 \AddToHook{enddocument}[annex-test]{%
   \ifnum\annexexecutions=2\else\PackageError{annex-test}{Automatic annex count wrong}{}\fi
 }
-\DeclareHookRule{enddocument}{annex-test}{after}{pxGLS}
+\DeclareHookRule{enddocument}{annex-test}{after}{pxEND}
 \begin{document}
 MAIN-BODY-CONTENT. See annexes \ref{ann:first} and \ref{ann:second}. Also see \cref{ann:first} and \cref{ann:first,ann:second}.
 \pxAddAnnex[label=ann:second]{Body evidence}{

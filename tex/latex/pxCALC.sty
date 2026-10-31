@@ -20,9 +20,11 @@
 %% #1 - local steps, prec, symbol, unit and values overrides; #2 - formula/value id.
 %% Every call starts with steps=3 and prec=2; no package-wide display settings.
 \NewDocumentCommand\pxSolve{O{} m}{\__pxcalc_solve:nn {#1}{#2}}
-%% \pxCalcStore[<options>]{<id>}{<command>}
+%% \pxCalcStore[<options>]{<expression or id>}{<command>}
 %% Store an unrounded result without printing or changing registered variables.
-%% #1 - local value overrides; #2 - formula/value id; #3 - output command.
+%% #1 - local value overrides; #2 - expression or formula/value id; #3 - reusable numeric output command.
+%% Example: \pxCalcStore{[energy]/1000}{\energyKJ}, then \pxCalc{\energyKJ/3}.
+%% Saving is unrounded; \pxDefVar also saves a value, while \pxDefFormula stays live.
 \NewDocumentCommand\pxCalcStore{O{} m m}{\__pxcalc_store:nnN {#1}{#2}#3}
 %% \pxCalc[<options>]{<expression>}
 %% Evaluate and print an expression; formatting is local to this call.

@@ -36,26 +36,22 @@
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
-    sources .meta:n = {SRC=#1,LST=#1},
+    sources .meta:n = {SRC=#1,LST=#1,endmatter=#1},
     sources .default:n = true,
-    annexes .bool_set:N = \l_pxcore_ann_use_bool,
-    annexes .initial:n = false,
-    annexes .default:n = true,
-    ANN .meta:n = {annexes=#1},
-    ANN .default:n = true,
-    glossaries .bool_set:N = \l_pxcore_gls_use_bool,
-    glossaries .initial:n = false,
-    glossaries .default:n = true,
-    GLS .meta:n = {glossaries=#1},
-    GLS .default:n = true,
+    endmatter .bool_set:N = \l_pxcore_end_use_bool,
+    endmatter .initial:n = false,
+    endmatter .default:n = true,
+    END .meta:n = {endmatter=#1}, END .default:n = true,
+    annexes .meta:n = {endmatter=#1}, annexes .default:n = true,
+    glossaries .meta:n = {endmatter=#1}, glossaries .default:n = true,
     calculations .bool_set:N = \l_pxcore_calc_use_bool,
     calculations .initial:n = false,
     calculations .default:n = true,
     CALC .meta:n = {calculations=#1},
     CALC .default:n = true,
 
-    DIAG .meta:n = {diagrams=#1},
-    DIAG .default:n = true,
+    DIA .meta:n = {diagrams=#1},
+    DIA .default:n = true,
 
     code .meta:n = {LST=#1},
     code .default:n = true,
@@ -155,8 +151,8 @@
 \bool_if:NT \l_pxcore_diag_use_bool
 	{
 		\tl_if_blank:VTF \l_pxcore_diag_config_tl
-			{ \RequirePackage{pxDIAG} }
-			{ \RequirePackage[\l_pxcore_diag_config_tl]{pxDIAG} }
+			{ \RequirePackage{pxDIA} }
+			{ \RequirePackage[\l_pxcore_diag_config_tl]{pxDIA} }
 	}
 \bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
 \bool_if:NT \l_pxcore_tfg_use_bool
@@ -166,6 +162,5 @@
 
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
-\bool_if:NT \l_pxcore_ann_use_bool { \RequirePackage{pxANN} }
-\bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
+\bool_if:NT \l_pxcore_end_use_bool { \RequirePackage{pxEND} }
 \endinput

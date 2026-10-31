@@ -11,7 +11,7 @@
 \AddToHook{enddocument}[preview-test]{%
   \ifnum\unsafeexecutions=0\else\PackageError{preview-test}{Source executed during preview or annex}{}\fi
 }
-\DeclareHookRule{enddocument}{preview-test}{after}{pxANN}
+\DeclareHookRule{enddocument}{preview-test}{after}{pxEND}
 \begin{document}
 \CheckPreview{as=text,height=.33\textheight,title={Experiment log},annex-label=ann:log}{fixtures/source/long.txt}
 \CheckPreview{as=code,language=Python,height=.33\textheight,title={Python example}}{fixtures/source/long.py}

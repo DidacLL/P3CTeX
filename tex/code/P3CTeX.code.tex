@@ -233,7 +233,7 @@
 \ProcessKeysOptions{P3CTeX}
 \bool_set_false:N \l__pxdoc_loading_bool
 
-\bool_if:NT \l_pxdoc_useglossary_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}}
+\bool_if:NT \l_pxdoc_useglossary_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,endmatter}}
 \use:x {\exp_not:N \RequirePackage[english,spanish,es-noquoting,catalan,main=\l__pxdoc_language_tl]{babel}}
 \exp_args:NV \selectlanguage \l__pxdoc_language_tl
 \file_input:n {pxGDX.code.tex} %% Load Graphic module

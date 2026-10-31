@@ -6,18 +6,9 @@
 \pxDefFormula{energy}{\frac{1}{2}[m][v]^2}[symbol=E_k,unit=J]
 \pxSolve{energy}\par
 \pxSolve[values={v=30},steps=2]{energy}
-\begin{pxUserStory}{US-102: Reuse a calculation}
-\pxAsA{student}
-\pxIWant{to change input values without copying the formula}
-\pxSoThat{the displayed working stays consistent}
-\pxAcceptanceCriteria{\begin{itemize}\item Show the substituted values.
-\item Preserve the original defaults.\end{itemize}}
-\end{pxUserStory}
-\begin{pxScenario}[colback=green!4]{Override one value}
-\pxGiven{a speed of 25 metres per second}
-\pxWhen{I solve with a speed of 30}
-\pxThen{the displayed result is 540\,000 joules}
-\end{pxScenario}
+\pxUserStory[purpose={the displayed working stays consistent},criteria={\begin{itemize}\item Show the substituted values.
+\item Preserve the original defaults.\end{itemize}}]{US-102: Reuse a calculation}{student}{to change input values without copying the formula}
+\pxScenario[box-options={colback=green!4}]{Override one value}{a speed of 25 metres per second}{I solve with a speed of 30}{the displayed result is 540\,000 joules}
 \pxPMsetup{labels={strengths=Fortaleses,weaknesses=Debilitats}}
 \pxSWOT{\begin{itemize}\item Reusable formulas\item Local configuration\end{itemize}}
   {Explicit supported syntax}{Student lab reports}{Incorrect input data}

@@ -9,8 +9,19 @@
 \tl_new:N \l__pxtfg_licence_tl
 \tl_new:N \l__pxtfg_licence_text_tl
 \tl_new:N \l__pxtfg_licence_icon_tl
+\bool_new:N \l__pxtfg_auto_bool
+\bool_new:N \l__pxtfg_card_bool
+\bool_new:N \l__pxtfg_abstracts_bool
+\bool_new:N \l__pxtfg_licence_bool
 \keys_define:nn {pxTFG}
   {
+    print .choice:,
+    print / auto .code:n = \bool_set_true:N \l__pxtfg_auto_bool,
+    print / manual .code:n = \bool_set_false:N \l__pxtfg_auto_bool,
+    print .initial:n = auto,
+    workcard .bool_set:N = \l__pxtfg_card_bool, workcard .initial:n = true,
+    abstracts .bool_set:N = \l__pxtfg_abstracts_bool, abstracts .initial:n = true,
+    licence-page .bool_set:N = \l__pxtfg_licence_bool, licence-page .initial:n = true,
     tutor        .tl_set:N = \l__pxtfg_tutor_tl,
     pra          .tl_set:N = \l__pxtfg_pra_tl,
     area         .tl_set:N = \l__pxtfg_area_tl,
@@ -65,16 +76,14 @@
     \par\bigskip
   }
 
-% Printable metadata for the existing pxGDX cover auxiliary-text slot.
+%% Cover detail content uses the cover's own width/alignment, not negative offsets.
+%% Empty optional fields contribute no empty headings or fixed vertical gaps.
+\cs_new_protected:Npn \__pxtfg_cover_row:nN #1#2
+  {\tl_if_blank:VF #2 {\textbf{#1:}~\tl_use:N #2\par}}
 \cs_new_protected:Npn \__pxtfg_cover_details:
-  {
-    \hspace*{-10em}\textbf{\small\pxDEFtfgconsultant{}:}~\hspace{\fill}\par
-      \hspace{\fill}~\l__pxtfg_tutor_tl\par\bigskip
-    \hspace*{-10em}\textbf{\small\pxDEFtfgpra{}:}~\hspace{\fill}\par\hspace{\fill}~\l__pxtfg_pra_tl\par
-    \hspace*{-10em}\textbf{\small\pxDEFtfgarea{}:}~\par\bigskip
-      \hspace{\fill}~\l__pxtfg_area_tl\par
-  }
-
+  {\__pxtfg_cover_row:nN {\pxDEFtfgconsultant}\l__pxtfg_tutor_tl
+   \__pxtfg_cover_row:nN {\pxDEFtfgpra}\l__pxtfg_pra_tl
+   \__pxtfg_cover_row:nN {\pxDEFtfgarea}\l__pxtfg_area_tl}
 \cs_new_protected:Npn \__pxtfg_licence_page:
   {
     \tl_if_blank:VF \l__pxtfg_licence_tl
@@ -124,9 +133,10 @@
 % summaries follow on separate pages.
 \cs_new_protected:Npn \__pxtfg_frontmatter_render:
   {
-    \__pxtfg_licence_page:
-    \setcounter{page}{1}
-    \__pxtfg_card:
+    \bool_if:NT \l__pxtfg_licence_bool {\__pxtfg_licence_page:}
+    \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:}
+    \bool_if:NT \l__pxtfg_abstracts_bool
+    {
     \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
       {
         \par\medskip
@@ -137,6 +147,7 @@
       {\clearpage\__pxtfg_print_abstract:n {ES}}
     \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
       {\clearpage\__pxtfg_print_abstract:n {EN}}
+    }
   }
 
 % Automatic and legacy explicit calls must not duplicate preliminary material.

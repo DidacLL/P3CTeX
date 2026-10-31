@@ -1,5 +1,5 @@
 % !TeX encoding = UTF-8
-% pxDIAG structural & option-scoping probe test
+% pxDIA structural & option-scoping probe test
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -10,7 +10,7 @@
   \ifdefined#1\relax
     \typeout{PROBE-PASS: \string#1 is defined}%
   \else
-    \PackageError{pxDIAG-probe}{Missing public command \string#1}{}%
+    \PackageError{pxDIA-probe}{Missing public command \string#1}{}%
   \fi
 }
 \makeatother
@@ -21,7 +21,7 @@
 \AssertCommand{\pxDiagramSetup}
 \AssertCommand{\pxDiagramSavePreset}
 \AssertCommand{\pxDiagramUsePreset}
-\AssertCommand{\pxDIAGNote}
+\AssertCommand{\pxDiagramNote}
 \AssertCommand{\pxTCompiler}
 \AssertCommand{\pxTProgram}
 \AssertCommand{\pxTMachine}

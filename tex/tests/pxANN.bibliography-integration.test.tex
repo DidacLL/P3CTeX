@@ -22,7 +22,7 @@
       {\PackageError{integration}{Annex counter is incorrect}{}}
   }
 \AddToHook{enddocument}[integration-check]{\__integration_check:}
-\DeclareHookRule{enddocument}{integration-check}{after}{pxGLS}
+\DeclareHookRule{enddocument}{integration-check}{after}{pxEND}
 \ExplSyntaxOff
 \begin{document}
 The main body cites \cite{integration-book} and references

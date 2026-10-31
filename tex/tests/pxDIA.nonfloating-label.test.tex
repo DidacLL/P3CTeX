@@ -1,21 +1,21 @@
 \documentclass{article}
-\usepackage{pxDIAG}
+\usepackage{pxDIA}
 \begin{document}
 \section{Prior content}\label{sec:prior}
 \pxTCompiler[caption={Decorative, unnumbered}]{A}{B}{C}
 \ExplSyntaxOn
 \int_compare:nNnF {\value{figure}} = {0}
-  {\PackageError{pxDIAG-reference}{Unlabelled diagram changed counters}{}}
+  {\PackageError{pxDIA-reference}{Unlabelled diagram changed counters}{}}
 \ExplSyntaxOff
 \pxTCompiler[caption={Referenced, nonfloating},label={diag:nonfloat}]{A}{B}{C}
 \ExplSyntaxOn
 \int_compare:nNnF {\value{figure}} = {1}
-  {\PackageError{pxDIAG-reference}{Nonfloating label did not number figure}{}}
+  {\PackageError{pxDIA-reference}{Nonfloating label did not number figure}{}}
 \ExplSyntaxOff
 \pxTCompiler[float=htbp,caption={Referenced float},label={diag:float}]{A}{B}{C}
 \ExplSyntaxOn
 \int_compare:nNnF {\value{figure}} = {2}
-  {\PackageError{pxDIAG-reference}{Floating figure numbering changed}{}}
+  {\PackageError{pxDIA-reference}{Floating figure numbering changed}{}}
 \ExplSyntaxOff
 \ref{diag:nonfloat}, \ref{diag:float} and \ref{sec:prior}.
 \listoffigures

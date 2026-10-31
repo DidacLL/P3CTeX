@@ -2,11 +2,17 @@
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3,xparse}
 \ProvidesExplPackage{pxTFG}{2026/10/22}{v0.3}{P3CTeX UOC TFG semantics}
+%% TFG consumes P3CTeX's declared metadata, language and graphic interfaces.
+\IfClassLoadedTF{P3CTeX}{}
+  {\PackageError{pxTFG}{TFG requires the P3CTeX document class}
+    {Select TFG in documentclass options.}}
 \file_input:n {pxTFG.code.tex}
 
 %% \pxTFGsetup{<key=value,...>}
 %% Set TFG-only metadata: tutor, PRA, area, credits, keywords and licence. Shared information
 %% (student, degree, project title, activity, date) stays in P3CTeX data keys.
+%% Optional print=manual, workcard=false, abstracts=false or licence-page=false control placement/content.
+%% Example: \pxTFGsetup{tutor={A. Tutor},credits=12,licence-page=false}
 \NewDocumentCommand\pxTFGsetup{m}{\keys_set:nn {pxTFG} {#1}}
 %% \pxTFGabstract{CAT|ES|EN}{<text>}
 %% Store or replace one language-specific abstract for later printing.
@@ -32,21 +38,9 @@
 %% pxMEM is responsible for the complete memory structure and indexes.
 \NewDocumentCommand\pxTFGfrontmatter{}{\__pxtfg_frontmatter:}
 
-% P3CTeX owns the cover and TOC. TFG contributes its own front matter
-% before that TOC, without changing the class or depending on pxMEM.
-\@ifclassloaded{P3CTeX}{%
-  \AddToHook{begindocument/before}{%
-    \NewCommandCopy\__pxtfg_saved_toc:\PECTeXprintTOC
-    \RenewDocumentCommand\PECTeXprintTOC{s}{%
-      \pxTFGfrontmatter
-      \clearpage
-      \IfBooleanTF{#1}{\__pxtfg_saved_toc:*}{\__pxtfg_saved_toc:}%
-    }%
-  }%
-  % When no TOC is requested, print the TFG content after the class cover.
-  \AddToHook{begindocument/end}{%
-    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
-      {\pxTFGfrontmatter\clearpage}%
-  }%
-}{}
+%% The class owns ordering; this extension supplies only TFG preliminary content.
+\AddToHook{P3CTeX/before-toc}[pxTFG]{\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_frontmatter:\clearpage}}
+\AddToHook{begindocument/end}[pxTFG]
+  {\bool_if:NF \g__pxtfg_frontmatter_printed_bool
+    {\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_frontmatter:\clearpage}}}
 \endinput

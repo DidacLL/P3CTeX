@@ -321,3 +321,5 @@ TSWLatexianTemp*
 /.agents
 *.pxsrc-*.tex
 /tex/tests/*.ist
+
+/.build/
