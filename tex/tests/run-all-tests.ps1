@@ -33,6 +33,7 @@ $testFiles = @(
     "public-api.test.tex",
     "pxSRC.dependencies.test.tex",
     "pxSRC.nested.test.tex",
+    "pxSRC.labels.test.tex",
 
     # pxLST suite
     "pxLST.test.tex",
@@ -65,6 +66,7 @@ $testFiles = @(
     "pxTFG.MEM.test.tex",
     "pxTFG.no-toc.test.tex",
     "pxTFG.PR.test.tex",
+    "pxTFG.languages.test.tex",
     "pxGDX.test.tex",
     "pxORL.test.tex",
     "P3CTeX.test.tex"

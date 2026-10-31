@@ -13,12 +13,13 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 - **F05 — TFG portion fixed in checkpoint 4; diagram literals still pending**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
 - **F06 — investigate**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
 - **F07 — review**: annex/glossary/bibliography document-end interaction from a single user-facing workflow; do not rename/delete packages without tracing all callers.
-- **F08 — verify legacy behavior first**: pxCORE `PRPconfig/TABconfig/LSTconfig/ORLconfig/MEMconfig/TFGconfig` are accepted without forwarding. Determine which keys predate the baseline and which target packages accept package options before editing.
+- **F08 — fixed in checkpoint 5**: pxCORE `PRPconfig/TABconfig/LSTconfig/ORLconfig/MEMconfig/TFGconfig` are accepted without forwarding. Determine which keys predate the baseline and which target packages accept package options before editing.
 
 ## Newly catalogued smells / deferred questions
 
 - **S01 (DIAG)**: `label=` is silently ignored when `float=` is omitted. Determine whether a nonfloating diagram should have a reference counter or should reject `label`; avoid inventing numbering in this checkpoint.
 - **S02 (DIAG)**: floating diagram labels are currently emitted even without a caption, so they may inherit an unrelated `\@currentlabel`; review the contract.
+- **S05 (load-time)**: existing module config keys use `.tl_set_x:N` and can prematurely expand arbitrary user macros; TFGconfig now stores tokens unexpanded. Audit UML/SRC/DIAG/TAB/ORL key expansion separately before changing long-standing behavior.
 - **S04 (ANN)**: cleveref plural for the custom `pxannex` type currently reuses Babel's `\\appendixname` in both forms; defer a fully localized plural string to the pxTXT integration review rather than hardcoding incorrect suffixes.
 - **S03 (API)**: previous changes renamed legacy `miniCode`, `CodeBox`, `CodeBox*`, and `\pxCodeIn` entry points in pxLST. Check actual compatibility requirements before reintroducing aliases.
 
@@ -31,3 +32,5 @@ Checkpoint 2: native source label override now understands `\\label[type]{key}`,
 Checkpoint 3: register `pxannex` with cleveref only if loaded, using current `\\appendixname`; extend automatic-annex document with `\\cref`. No compilation claimed.
 
 Checkpoint 4: TFG public labels, cover data, licence, summary and abstract headings now resolve through pxTXT; TFG's exceptional cover geometry, page rules, front-matter sequence and metadata are untouched. Static substitution checked; compilation not claimed.
+
+Checkpoint 5: pxCORE now forwards TAB/ORL package options to their package key processors, and applies TFG metadata through the existing public pxTFGsetup after loading pxTFG. Removed nonfunctional PRPconfig, LSTconfig and MEMconfig keys (none has a package configuration entry point). Added source-label and TFG-language tests to the standard runner. No compile claimed.

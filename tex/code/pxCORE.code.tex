@@ -74,8 +74,6 @@
 	PRP			.bool_set:N 	= \l_pxcore_prp_use_bool,
 		PRP			.initial:n	= false,
 		PRP			.default:n	= true,
-	PRPconfig	.tl_set_x:N 	= \l_pxcore_prp_config_tl,
-		PRPconfig	.initial:n	= {},
 	diagrams			.bool_set:N	=	\l_pxcore_diag_use_bool,
 		diagrams			.initial:n	=	false,
 		diagrams			.default:n	=	true,
@@ -99,8 +97,6 @@
 	LST			.bool_set:N 	= \l_pxcore_lst_use_bool,
 		LST			.initial:n	= false,
 		LST			.default:n	= true,
-	LSTconfig	.tl_set_x:N 	= \l_pxcore_lst_config_tl,
-		LSTconfig	.initial:n	= {},
 	ORL			.bool_set:N = \l_pxcore_orl_use_bool,
 		ORL         .initial:n  = false,
 		ORL         .default:n  = true,
@@ -112,9 +108,7 @@
 	MEM			.bool_set:N	= \l_pxcore_mem_use_bool,
 		MEM			.initial:n	= false,
 		MEM			.default:n	= true,
-	MEMconfig	.tl_set_x:N 	= \l_pxcore_mem_config_tl,
-		MEMconfig	.initial:n	= {},
-	TFGconfig	.tl_set_x:N 	= \l_pxcore_tfg_config_tl,
+	TFGconfig	.tl_set:N 	= \l_pxcore_tfg_config_tl,
 		TFGconfig	.initial:n	= {},
 	default		.meta:n	=	{
 		PRP		=	true,
@@ -146,9 +140,15 @@
 	{ \RequirePackage{pxSRC} }
 	{ \RequirePackage[\l_pxcore_src_config_tl]{pxSRC} }
 }
-\bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
+\bool_if:NT \l_pxcore_tab_use_bool
+  {\tl_if_blank:VTF \l_pxcore_tab_config_tl
+    {\RequirePackage{pxTAB}}
+    {\RequirePackage[\l_pxcore_tab_config_tl]{pxTAB}}}
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
-\bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
+\bool_if:NT \l_pxcore_orl_use_bool
+  {\tl_if_blank:VTF \l_pxcore_orl_config_tl
+    {\RequirePackage{pxORL}}
+    {\RequirePackage[\l_pxcore_orl_config_tl]{pxORL}}}
 \bool_if:NT \l_pxcore_diag_use_bool
 	{
 		\tl_if_blank:VTF \l_pxcore_diag_config_tl
@@ -156,7 +156,10 @@
 			{ \RequirePackage[\l_pxcore_diag_config_tl]{pxDIAG} }
 	}
 \bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
-\bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
+\bool_if:NT \l_pxcore_tfg_use_bool
+  {\RequirePackage{pxTFG}
+   \tl_if_blank:VF \l_pxcore_tfg_config_tl
+     {\exp_args:NV \pxTFGsetup \l_pxcore_tfg_config_tl}}
 
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
