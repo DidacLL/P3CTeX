@@ -1,6 +1,6 @@
 # Source inclusion, glossaries and annexes
 
-Status: implemented and documented. Final integrated gate passed 50/50. After the mechanical pxSRC file consolidation, image, native-source and preview regressions passed again. All remaining changes are ready for the final Git checkpoint.
+Status: public API audit complete. Integrated validation passed 53/53 regression documents and templates; targeted output checks also passed. Implementation, documentation and validation are committed.
 
 Owner request (2026-10-30): pxSRC must load files and fragments as P3CTeX-styled code, native TeX, minipages and annex content. Glossaries, references and annexes must integrate consciously and be optional in PAC, PR and MEM documents. Work directly on the development branch and checkpoint in Git regularly.
 
@@ -135,3 +135,17 @@ after metadata defaults; runtime changes use the same entry point immediately.
 The new public-api guide gives a single task-oriented starting point. The first
 full audit run passed 52/53; its remaining class-load appearance issue was fixed
 and passed targeted tests. A final integrated run follows.
+
+## Public API audit validation complete
+
+Final integrated gate: 53/53 passed (tex/tests/api-final-gate.log). The targeted
+core/class/API checks also passed after removing the unused print-doc placeholder.
+PDF inspection confirmed class-load title PUBLIC-API-LOAD and runtime author
+PUBLIC-API-RUNTIME. Nested input output includes the complete child files, source
+captions numbered inner 2 / outer 1, and matching cross-references. Explicit missing
+dependency/type/option tests produce the intended diagnostics without executing
+source content or changing loader state. Updated core and PM manuals compile.
+
+The implementation commits for this audit are adb52ef and b287f6f. The remaining
+untracked dist/ directory predates this work and was not modified. No release or
+remote publication was performed.
