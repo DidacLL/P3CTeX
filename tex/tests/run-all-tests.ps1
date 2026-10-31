@@ -31,6 +31,7 @@ $testFiles = @(
     "pxDIAG.test.tex",
     "pxDIAG.languages.test.tex",
     "pxCORE.test.tex",
+    "pxCORE.config-tokens.test.tex",
     "public-api.test.tex",
     "pxSRC.dependencies.test.tex",
     "pxSRC.nested.test.tex",

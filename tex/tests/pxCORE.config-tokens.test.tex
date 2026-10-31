@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage[UML=false,PRP=false,SRC=false,TAB=false,LST=false]{pxCORE}
+\ExplSyntaxOn
+\cs_new:Npn \__pxcore_test_token: {deferred}
+% The load-time key parser must retain macro tokens rather than expanding them.
+\keys_set:nn {pxCORE}
+  {UMLconfig={theme=\__pxcore_test_token:},
+   SRCconfig={default-width=\__pxcore_test_token:},
+   TABconfig={style=\__pxcore_test_token:},
+   ORLconfig={title=\__pxcore_test_token:},
+   diagrams-config={maincolor=\__pxcore_test_token:}}
+\tl_if_in:VnF \l_pxcore_uml_config_tl {\__pxcore_test_token:}
+  {\PackageError{core-options}{UML config expanded prematurely}{}}
+\tl_if_in:VnF \l_pxcore_src_config_tl {\__pxcore_test_token:}
+  {\PackageError{core-options}{SRC config expanded prematurely}{}}
+\tl_if_in:VnF \l_pxcore_tab_config_tl {\__pxcore_test_token:}
+  {\PackageError{core-options}{TAB config expanded prematurely}{}}
+\tl_if_in:VnF \l_pxcore_orl_config_tl {\__pxcore_test_token:}
+  {\PackageError{core-options}{ORL config expanded prematurely}{}}
+\tl_if_in:VnF \l_pxcore_diag_config_tl {\__pxcore_test_token:}
+  {\PackageError{core-options}{DIAG config expanded prematurely}{}}
+\ExplSyntaxOff
+\begin{document}
+Stored package option tokens are unchanged.
+\end{document}

@@ -22,7 +22,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 
 - **S01 (DIAG)**: `label=` is silently ignored when `float=` is omitted. Determine whether a nonfloating diagram should have a reference counter or should reject `label`; avoid inventing numbering in this checkpoint.
 - **S02 (DIAG)**: floating diagram labels are currently emitted even without a caption, so they may inherit an unrelated `\@currentlabel`; review the contract.
-- **S05 (load-time)**: existing module config keys use `.tl_set_x:N` and can prematurely expand arbitrary user macros; TFGconfig now stores tokens unexpanded. Audit UML/SRC/DIAG/TAB/ORL key expansion separately before changing long-standing behavior.
+- **S05 (load-time)**: resolved in checkpoint 16 — all forwarded UML/SRC/DIAG/TAB/ORL config keys retain token arguments until package loading, as `TFGconfig` already does.
 - **S04 (ANN)**: resolved in checkpoint 15 — `cleveref` plural annex names use localized `pxTXT` strings; standalone uses Babel's existing appendix heading as fallback.
 - **S03 (API)**: resolved in checkpoint 14 — restored old `miniCode`, `CodeBox`, `CodeBox*`, and `\pxCodeIn` contracts without duplicating the three verbatim listing environments.
 
@@ -62,3 +62,5 @@ Checkpoint 13: `pxSRC/input` no longer appends every historical input setting in
 Checkpoint 14: restored pre-TFG listing entry points that had been renamed during migration. Environment names alias the existing verbatim-aware tcolorbox implementations (both begin/end CS pairs); `\pxCodeIn` keeps its original mandatory-argument parsing instead of aliasing the incompatible verbatim-argument `\pxCodeInline`. Added legacy-API test. An isolated TeX Live tcolorbox probe compiled both plain and starred aliases; full module test remains outstanding.
 
 Checkpoint 15: restored distinct singular/plural annex reference names for `cleveref` without changing the annex engine. P3CTeX uses CAT/ES/EN strings through pxTXT; standalone pxANN retains a Babel fallback. Expanded the existing annex test to reference a pair.
+
+Checkpoint 16: changed five pxCORE config-key setters from eager `.tl_set_x:N` to token-preserving `.tl_set:N`, without changing their names or forwarding branches. TeX Live confirmed that `\\RequirePackage[\\l_config_tl]` expands the stored option list when loading the target package; a late-defined macro receives its current value at that point. Added config-token regression. Also corrected stale pxLST and pxCORE manual comments that advertised nonexistent aliases or repeated their own key names. Repository compilation remains pending.

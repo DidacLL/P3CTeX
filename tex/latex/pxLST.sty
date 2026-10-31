@@ -747,10 +747,8 @@
 %%%      --  PUBLIC LaTeX2e API   --         %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package configuration (pxLST key family).
-%%   \pxLSTsetup{key=value,...} applies keys in current TeX group scope.
-%%   At document level, effects are global until overridden or group ends.
-%%   Preset names are registered via \pxLSTsavepreset{name}{option-string}
-%%   and applied via \pxLSTusepreset{name} or key preset=name.
+%%   \pxLSTsetup[<palette>]{<language>}[<style>] selects the palette and
+%%   language/style via \pxCodeSet. Local TeX groups still limit changes.
 %% \pxCodeSet[<palette>]{<language>}[<style>]
 %% Select a palette and set the global listings language/style.
 %% #1 - palette (default dark).  #2 - listings language.  #3 - listings style (default pxlst).

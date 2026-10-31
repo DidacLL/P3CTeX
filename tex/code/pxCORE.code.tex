@@ -30,7 +30,9 @@
 %% =================================
 %% pxCORE package keys.
 %% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
-%% PRP/UML/PM/DIAG/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/diagrams-config forward option strings to those packages.
+%% PRP/UML/PM/DIAG/SRC/TAB/LST/ORL select modules. UMLconfig, SRCconfig,
+%% diagrams-config, TABconfig and ORLconfig forward token-preserving package options.
+%% TFGconfig applies TFG metadata through pxTFGsetup.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \msg_new:nnn {pxCORE}{unknown}{Unknown~tool~or~option~'#1'.~Use~a~documented~pxCORE~key.}
 \msg_new:nnn {pxCORE}{load-only}{Option~'#1'~is~not~a~runtime~core~setting.~Select~tools~at~load~time;~use~their~setup~commands~to~customise~them.}
@@ -77,22 +79,22 @@
 	diagrams			.bool_set:N	=	\l_pxcore_diag_use_bool,
 		diagrams			.initial:n	=	false,
 		diagrams			.default:n	=	true,
-	diagrams-config	.tl_set_x:N 	= \l_pxcore_diag_config_tl,
+	diagrams-config	.tl_set:N 	= \l_pxcore_diag_config_tl,
 		diagrams-config	.initial:n	= {},
 	UML			.bool_set:N 	= \l_pxcore_uml_use_bool,
 		UML			.initial:n	= false,
 		UML			.default:n	= true,
-	UMLconfig	.tl_set_x:N 	= \l_pxcore_uml_config_tl,
+	UMLconfig	.tl_set:N 	= \l_pxcore_uml_config_tl,
 		UMLconfig	.initial:n	= {},
 	SRC			.bool_set:N 	= \l_pxcore_src_use_bool,
 		SRC			.initial:n	= false,
 		SRC			.default:n	= true,
-	SRCconfig	.tl_set_x:N 	= \l_pxcore_src_config_tl,
+	SRCconfig	.tl_set:N 	= \l_pxcore_src_config_tl,
 		SRCconfig	.initial:n	= {},
 	TAB			.bool_set:N 	= \l_pxcore_tab_use_bool,
 		TAB			.initial:n	= false,
 		TAB			.default:n	= true,
-	TABconfig	.tl_set_x:N 	= \l_pxcore_tab_config_tl,
+	TABconfig	.tl_set:N 	= \l_pxcore_tab_config_tl,
 		TABconfig	.initial:n	= {},
 	LST			.bool_set:N 	= \l_pxcore_lst_use_bool,
 		LST			.initial:n	= false,
@@ -100,7 +102,7 @@
 	ORL			.bool_set:N = \l_pxcore_orl_use_bool,
 		ORL         .initial:n  = false,
 		ORL         .default:n  = true,
-	ORLconfig	.tl_set_x:N 	= \l_pxcore_orl_config_tl,
+	ORLconfig	.tl_set:N 	= \l_pxcore_orl_config_tl,
 		ORLconfig	.initial:n	= {},
 	TFG			.bool_set:N	= \l_pxcore_tfg_use_bool,
 		TFG			.initial:n	= false,

@@ -47,11 +47,14 @@ document class (\texttt{P3CTeX.cls}) and configured via class options.
 \usepackage[code,images,tables,diagrams,calculations,project-management]{pxCORE}
 \end{verbatim}
 The keywords \texttt{code}, \texttt{images}, \texttt{tables} and
-\texttt{diagrams} select the existing LST, SRC, TAB and CMP tools.
-\texttt{diagrams-config} forwards diagram options, just like \texttt{diagrams-config}.
+\texttt{diagrams} select the LST, SRC, TAB and DIAG tools.
+Module options are forwarded at load time through \texttt{UMLconfig},
+\texttt{SRCconfig}, \texttt{TABconfig}, \texttt{ORLconfig} and
+\texttt{diagrams-config}. \texttt{TFGconfig} is applied through
+\verb|\pxTFGsetup| after loading the TFG profile.
 \texttt{calculations} (or \texttt{CALC}) loads \texttt{pxCALC};
 \texttt{project-management} (or \texttt{PM}) loads \texttt{pxPM}.
-The diagram entry point \texttt{pxDIAG} delegates to \texttt{pxDIAG}.
+The diagrams option loads \texttt{pxDIAG} directly.
 All selection keys accept \texttt{=false}; a bare keyword means true.
 See the student-tools guide for examples and customisation.
 
