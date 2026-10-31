@@ -11,7 +11,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 - **F03 — fixed in checkpoint 3**: `pxANN`, register annex reference type for cleveref; preserve standard `\ref` and language selection.
 - **F04 — explicit opt-in support added in checkpoint 8; automatic namespace policy not imposed**: `pxMEM` source inclusion and imported-reference scope (potential label collisions across PR documents); check intended label-prefix contract and native `\ref` semantics, not an automatic rewrite.
 - **F05 — fixed in checkpoints 4 and 6**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
-- **F06 — native unfiltered scan removed in checkpoint 9; default replay replaced in checkpoint 13; fancyvrb internals retained pending fidelity proof**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
+- **F06 — open: native unfiltered scan removed in checkpoint 9; checkpoint 13's property-based defaults are provisional and require simplification; fancyvrb internals retained pending fidelity proof**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
 - **F07 — review**: annex/glossary/bibliography document-end interaction from a single user-facing workflow; do not rename/delete packages without tracing all callers.
 - **F08 — fixed in checkpoint 5**: pxCORE previously accepted nonfunctional config keys. `TABconfig` and `ORLconfig` now reach their package processors; `TFGconfig` uses the existing `\pxTFGsetup` API; unsupported `PRPconfig`, `LSTconfig` and `MEMconfig` were removed.
 
@@ -19,6 +19,8 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 - **F10 — fixed in checkpoint 11**: MEM lists of figures and tables now use chapter-level headings and enter the chapter-level TOC.
 
 ## Newly catalogued smells / deferred questions
+
+- **S06 (pxSRC defaults, open)**: checkpoint 13 replaced a growing option history with `\prop` + `\keyval_parse` + `\prop_map` + reconstructed `\keys_set` calls. Although the list no longer grows, configuration is still parsed and reconstructed instead of using `l3keys` and typed defaults directly. This is unjustified indirection; rework around separate default/working state and scoped `\keys_set`, preserving per-input and nested-source semantics. The branch's full compilation has not verified checkpoint 13. Do not mark it resolved based solely on an isolated conceptual probe.
 
 - **S01 (DIAG)**: `label=` is silently ignored when `float=` is omitted. Determine whether a nonfloating diagram should have a reference counter or should reject `label`; avoid inventing numbering in this checkpoint.
 - **S02 (DIAG)**: fixed in checkpoint 17 — uncaptained floats with `label=` advance the normal figure counter before registering their reference; `caption=` still uses standard `\caption`.
@@ -57,7 +59,7 @@ Checkpoint 11: MEM's figures/tables lists use its own chapter-level headings, ar
 - TeX Live pdfLaTeX: article-based MEM chapter/list construction compiled in two passes; `.toc` contained chapter-level figures/tables entries.
 - These were **isolated reproductions**, not the complete P3CTeX repository builds. GitHub branch read-back verified commit paths and content; no GitHub Actions workflow runs were available for the branch. Full module test and multi-pass template compilation remain required before declaring the branch release-ready.
 
-Checkpoint 13: `pxSRC/input` no longer appends every historical input setting into a growing token list. Validated keys are stored once per key in a scoped property, retaining last-value precedence and earlier unrelated keys. Per-input defaults are still reset and restored independently for nested sources. Added `pxSRC.defaults.test.tex` to the runner. An isolated TeX Live expl3 probe verified comma-bearing values, replacements, key retention and grouping; no full P3CTeX compile is claimed.
+Checkpoint 13 (provisional, needs redesign): the stored-key property avoids accumulating historical option text, but it still reparses configuration and reconstructs keys during each inclusion. The regression file was added; **passing it in the full repository suite has not been established**. Do not treat this checkpoint as verified or architecture-clean.
 
 Checkpoint 14: restored pre-TFG listing entry points that had been renamed during migration. Environment names alias the existing verbatim-aware tcolorbox implementations (both begin/end CS pairs); `\pxCodeIn` keeps its original mandatory-argument parsing instead of aliasing the incompatible verbatim-argument `\pxCodeInline`. Added legacy-API test. An isolated TeX Live tcolorbox probe compiled both plain and starred aliases; full module test remains outstanding.
 
