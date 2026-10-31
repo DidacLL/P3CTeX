@@ -72,3 +72,5 @@ Checkpoint 17: corrected `pxDIAG` references when `float=` and `label=` are pres
 Checkpoint 18: replaced checkpoint 13's key-value property roundtrip with direct `l3keys` assignments to typed default variables and simple grouped copies into working input variables. Preserves the existing `\pxSRCsetup{input={...}}` and `\pxInput` API, default mode precedence, nested input isolation and grouping. Updated `pxSRC.defaults.test.tex` for typed int/clist defaults and repeated overrides. Whole-branch TeX compilation not yet run.
 
 Checkpoint 19: nonfloating `pxDIAG` labels now generate proper figure references instead of silently doing nothing; labelled captions show the number and enter the figure list. Unlabelled nonfloat presentation is unchanged; float behavior remains on the normal LaTeX caption path. Added focused counter/reference test. Full module compilation not claimed.
+
+Checkpoint 20: read-back revealed a typo in checkpoint 18 (`\\choices_set_eq:NN` in the copied container option); corrected to the valid `\\tl_set_eq:NN`. This regression was introduced by the refactor itself, not by the original source. Focused and full test execution remain required.

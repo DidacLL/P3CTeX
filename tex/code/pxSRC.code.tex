@@ -396,7 +396,7 @@
   {\tl_set:Nn \l__pxsrc_input_mode_tl {#1}
    \tl_if_blank:VF \l__pxsrc_default_input_mode_tl
      {\tl_set_eq:NN \l__pxsrc_input_mode_tl \l__pxsrc_default_input_mode_tl}
-   \choices_set_eq:NN \l__pxsrc_input_container_tl \l__pxsrc_default_input_container_tl
+   \tl_set_eq:NN \l__pxsrc_input_container_tl \l__pxsrc_default_input_container_tl
    \tl_set_eq:NN \l__pxsrc_input_width_tl \l__pxsrc_default_input_width_tl
    \tl_set_eq:NN \l__pxsrc_input_region_tl \l__pxsrc_default_input_region_tl
    \tl_set_eq:NN \l__pxsrc_input_region_prefix_tl \l__pxsrc_default_input_region_prefix_tl
