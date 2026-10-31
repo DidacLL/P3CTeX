@@ -11,7 +11,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 - **F03 — fixed in checkpoint 3**: `pxANN`, register annex reference type for cleveref; preserve standard `\ref` and language selection.
 - **F04 — explicit opt-in support added in checkpoint 8; automatic namespace policy not imposed**: `pxMEM` source inclusion and imported-reference scope (potential label collisions across PR documents); check intended label-prefix contract and native `\ref` semantics, not an automatic rewrite.
 - **F05 — fixed in checkpoints 4 and 6**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
-- **F06 — investigate**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
+- **F06 — native unfiltered scan removed in checkpoint 9; configuration replay and fancyvrb internals still under review**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
 - **F07 — review**: annex/glossary/bibliography document-end interaction from a single user-facing workflow; do not rename/delete packages without tracing all callers.
 - **F08 — fixed in checkpoint 5**: pxCORE `PRPconfig/TABconfig/LSTconfig/ORLconfig/MEMconfig/TFGconfig` are accepted without forwarding. Determine which keys predate the baseline and which target packages accept package options before editing.
 
@@ -40,3 +40,5 @@ Checkpoint 6: added pxTXT translations for DIAG terminology and timing labels, w
 Checkpoint 7: the legacy `glossary` class key is now explicitly load-time only (like tool selection); runtime attempts report an error without mutating the loaded state. User-level glossary output remains controlled by `\\pxGlossarySetup`. Added a public-API negative regression with redirected warning. Not yet compiled.
 
 Checkpoint 8: MEM inclusion accepts an optional pxSRC input-key list, allowing `label-prefix=PR1:` for reused source documents. Legacy two-argument calls and unmodified `\\ref` semantics are preserved. Updated manual, two-source collision fixture and test registration. No compilation claimed.
+
+Checkpoint 9: unfiltered `as=native` includes no longer read/scan the whole source file before ordinary native inclusion. Region/range native requests and all literal/code requests retain existing validation and line-bound handling. Existing native/nested/fragment tests exercise both branches; not compiled in this session.

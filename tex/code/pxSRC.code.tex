@@ -516,7 +516,11 @@
        \int_compare_p:n {\l__pxsrc_input_last_int != 0}}
     \__pxsrc_find:nNTF {#2}\l__pxsrc_input_path_tl
       {
-        \__pxsrc_input_select:
+        % Whole native files can be input directly. Literal/code modes still
+        % need final line bounds; native regions/ranges still need validation.
+        \tl_if_eq:NnTF \l__pxsrc_input_mode_tl {native}
+          {\bool_if:NT \l__pxsrc_input_fragment_bool {\__pxsrc_input_select:}}
+          {\__pxsrc_input_select:}
         \bool_if:NT \l__pxsrc_input_valid_bool
           {
             \tl_if_eq:NnT \l__pxsrc_input_container_tl {minipage}
