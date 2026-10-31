@@ -50,6 +50,8 @@ $testFiles = @(
     "pxSRC.external.test.tex",
     "pxGLS.test.tex",
     "pxGLS.automatic.test.tex",
+    "pxGLS.entries.test.tex",
+    "pxREQ.languages.test.tex",
     "pxANN.automatic.test.tex",
     "pxPRP.test.tex",
     "pxGNT.test.tex",

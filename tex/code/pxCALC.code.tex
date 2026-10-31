@@ -23,7 +23,7 @@
 \cs_generate_variant:Nn \regex_extract_once:nnNTF {nVNTF}
 \cs_generate_variant:Nn \tl_replace_all:Nnn {Nxx}
 \cs_generate_variant:Nn \prop_get:NnNTF {NVNTF}
-\keys_define:nn {pxCALC}
+\keys_define:nn {pxCALC/use}
   {
     prec .int_set:N = \l__pxcalc_precision_int,
     prec .initial:n = 2,
@@ -36,6 +36,9 @@
     symbol .tl_set:N = \l__pxcalc_symbol_tl,
     values .code:n = {\keyval_parse:NNn \__pxcalc_missing:n \__pxcalc_set:nn {#1}}
   }
+\keys_define:nn {pxCALC/formula}
+  {symbol .tl_set:N = \l__pxcalc_symbol_tl,
+   unit .tl_set:N = \l__pxcalc_unit_tl}
 \cs_new_protected:Npn \__pxcalc_missing:n #1
   {\msg_error:nnn {pxCALC}{unknown}{#1}}
 \prg_new_conditional:Npnn \__pxcalc_name:n #1 {T}
@@ -60,7 +63,7 @@
     \prop_put:Nnn \l__pxcalc_options_prop {#1}{#3}
     \group_begin:
       \tl_set:Nn \l__pxcalc_symbol_tl {#1}
-      \keys_set:nn {pxCALC}{#3}
+      \keys_set:nn {pxCALC/formula}{#3}
       \exp_args:NNNV \group_end: \tl_set:Nn \l__pxcalc_symbol_tl \l__pxcalc_symbol_tl
     \prop_put:NnV \l__pxcalc_symbols_prop {#1}\l__pxcalc_symbol_tl}}
 % Result is returned across one local group; recursive calls cannot clobber
@@ -102,10 +105,11 @@
     \exp_args:NNNV \group_end: \tl_set:Nn #2 \l__pxcalc_result_tl}
 \cs_new_protected:Npn \__pxcalc_prepare:nn #1#2
   {\seq_clear:N \l__pxcalc_stack_seq
+   \keys_set:nn {pxCALC/use}{prec=2,steps=3,unit={},symbol={}}
    \prop_get:NnNT \l__pxcalc_symbols_prop {#2}\l__pxcalc_symbol_tl {}
    \prop_get:NnNT \l__pxcalc_options_prop {#2}\l_tmpa_tl
-     {\exp_args:NnV \keys_set:nn {pxCALC}\l_tmpa_tl}
-   \keys_set:nn {pxCALC}{#1}
+     {\exp_args:NnV \keys_set:nn {pxCALC/formula}\l_tmpa_tl}
+   \keys_set:nn {pxCALC/use}{#1}
    \__pxcalc_resolve:nN {#2}\l__pxcalc_result_tl}
 \cs_new_protected:Npn \__pxcalc_print_result:
   {\tl_set:Nx \l_tmpa_tl {\fp_eval:n {round(\l__pxcalc_result_tl,\l__pxcalc_precision_int)}}

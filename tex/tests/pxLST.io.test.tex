@@ -8,17 +8,17 @@
 
 % Inline with default language (from setup).
 \pxLSTsetup[dark]{pxJava}
-Inline Java: \pxCodeIn{int n = 0;} and \pxCodeInline{return n + 1;}.
-Inline alias: \pxInlineCode{boolean ok = true;}.
+Inline Java: \pxCodeInline{int n = 0;} and \pxCodeInline{return n + 1;}.
+Inline alias: \pxCodeInline{boolean ok = true;}.
 
 % Inline with language override.
-Inline Bash: \pxCodeIn[pxBash]{echo "fi"}.
+Inline Bash: \pxCodeInline[pxBash]{echo "fi"}.
 Inline alias with language: \pxCodeInline[pxBash]{exit 0}.
 
 \bigskip
 
 % File input (fixtures live in tex/tests/; build is run from tex/tests/).
 \pxCodeFile[pxJava]{sample.java}[Sample Java Class]
-\pxLSTinput[pxYAML]{sample.yaml}[Sample YAML Config]
+\pxCodeFile[pxYAML]{sample.yaml}[Sample YAML Config]
 
 \end{document}

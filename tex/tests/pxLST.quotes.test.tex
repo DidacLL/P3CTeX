@@ -34,7 +34,7 @@ $ printf '%s\n' "$HOME" '100%'
 \pxCodeChunk[pxRangeProbe]{sample-range.txt}{2}{3}{Range assertion}
 \ifnum\rangelines=2\else
   \PackageError{pxLST-test}{Expected exactly two source lines}{}\fi
-\pxCodeIn[pxBash]{echo '$HOME'}
-\pxCodeIn[pxBash]|printf '%s' "$HOME" # comment|
+\pxCodeInline[pxBash]{echo '$HOME'}
+\pxCodeInline[pxBash]|printf '%s' "$HOME" # comment|
 \typeout{PXLST-PASS: 9 post-string keywords recognised}
 \end{document}

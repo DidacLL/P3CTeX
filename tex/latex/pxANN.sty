@@ -3,10 +3,14 @@
 \RequirePackage{expl3,xparse,l3keys2e}
 \ProvidesExplPackage{pxANN}{2026/10/30}{0.1}{Explicit and queued annexes}
 \file_input:n {pxANN.code.tex}
+%% \pxAnnexSetup{<keys>}: set scoped defaults (print, level, name, toc, pagebreak).
 \NewDocumentCommand\pxAnnexSetup{m}{\keys_set:nn {pxANN}{#1}}
+%% \pxAnnex[<keys>]{<title>}{<body>}: render now, restoring main counters afterward.
 \NewDocumentCommand\pxAnnex{O{} m +m}{\__pxann_print:nnn {#1}{#2}{#3}}
+%% \pxAddAnnex[<keys>]{<title>}{<body>}: queue unexpanded content for automatic end placement.
 \NewDocumentCommand\pxAddAnnex{O{} m +m}
   {\seq_gput_right:Nn \g__pxann_pending_seq {\pxAnnex[#1]{#2}{#3}}}
+%% \pxPrintAnnexes: optional placement override; drain pending content once, in registration order.
 \NewDocumentCommand\pxPrintAnnexes{}
   {\group_begin:
    \seq_set_eq:NN \l__pxann_print_seq \g__pxann_pending_seq

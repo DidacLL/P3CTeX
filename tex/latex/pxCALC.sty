@@ -1,27 +1,35 @@
-% P3CTeX calculation tools. Public API; implementation in pxCALC.code.tex.
+% Reusable calculations: definitions describe values/formulas; each use owns its display.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse,l3keys2e}
-\RequirePackage{amsmath}
-\RequirePackage{siunitx}
-\ProvidesExplPackage{pxCALC}{2026/10/30}{0.1}{Reusable worked calculations}
+\RequirePackage{expl3,xparse,amsmath,siunitx}
+\ProvidesExplPackage{pxCALC}{2026/10/31}{0.1}{Reusable worked calculations}
 \file_input:n {pxCALC.code.tex}
-% All definitions and settings respect the current TeX group.
-\NewDocumentCommand\pxCalcSetup{m}{\keys_set:nn {pxCALC}{#1}}
-\NewDocumentCommand\pxDefVar{m m O{#1}}
-  {\__pxcalc_var:nnn {#1}{#2}{#3}}
-\NewDocumentCommand\pxSetVar{m m}
-  {\__pxcalc_set:nn {#1}{#2}}
-% Template slots use [name]; options include symbol, unit, prec and steps.
-\NewDocumentCommand\pxDefFormula{m m O{}}
-  {\__pxcalc_formula:nnn {#1}{#2}{#3}}
-\NewDocumentCommand\pxSolve{O{} m}
-  {\__pxcalc_solve:nn {#1}{#2}}
-% Store an unrounded result in a caller-supplied command for later reuse.
-\NewDocumentCommand\pxCalcStore{O{} m m}
-  {\__pxcalc_store:nnN {#1}{#2}#3}
+%% \pxDefVar{<id>}{<expression>}[<symbol>]
+%% Define a numeric value in the current group, evaluated immediately.
+%% #1 - identifier; #2 - numeric expression; #3 - printed symbol, default #1.
+\NewDocumentCommand\pxDefVar{m m O{#1}}{\__pxcalc_var:nnn {#1}{#2}{#3}}
+%% \pxSetVar{<id>}{<expression>}
+%% Update an existing value in the current group.
+%% #1 - registered identifier; #2 - replacement numeric expression.
+\NewDocumentCommand\pxSetVar{m m}{\__pxcalc_set:nn {#1}{#2}}
+%% \pxDefFormula{<id>}{<formula>}[<properties>]
+%% Store a reusable formula; [name] slots refer to registered values/formulas.
+%% #1 - identifier; #2 - formula; #3 - symbol and unit properties only.
+\NewDocumentCommand\pxDefFormula{m m O{}}{\__pxcalc_formula:nnn {#1}{#2}{#3}}
+%% \pxSolve[<options>]{<id>}
+%% Render this use as result only (steps=1), symbolic (2), or substituted (3).
+%% #1 - local steps, prec, symbol, unit and values overrides; #2 - formula/value id.
+%% Every call starts with steps=3 and prec=2; no package-wide display settings.
+\NewDocumentCommand\pxSolve{O{} m}{\__pxcalc_solve:nn {#1}{#2}}
+%% \pxCalcStore[<options>]{<id>}{<command>}
+%% Store an unrounded result without printing or changing registered variables.
+%% #1 - local value overrides; #2 - formula/value id; #3 - output command.
+\NewDocumentCommand\pxCalcStore{O{} m m}{\__pxcalc_store:nnN {#1}{#2}#3}
+%% \pxCalc[<options>]{<expression>}
+%% Evaluate and print an expression; formatting is local to this call.
+%% #1 - prec (default 2), unit; #2 - expression, optionally using [name] slots.
 \NewDocumentCommand\pxCalc{O{} m}
-  {\group_begin: \keys_set:nn {pxCALC}{#1}
+  {\group_begin:
+   \keys_set:nn {pxCALC/use}{prec=2,steps=3,unit={},symbol={},#1}
    \__pxcalc_eval:nN {#2}\l__pxcalc_result_tl
-   \__pxcalc_print_result: \group_end:}
-\ProcessKeysOptions{pxCALC}
+   \__pxcalc_print_result:\group_end:}
 \endinput

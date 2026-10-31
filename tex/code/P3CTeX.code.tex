@@ -36,8 +36,8 @@
 {
 	P3CTeX main P3CTeX.cls expl3 code file
 }
-\bool_new:N \l_pxdoc_language_bool
-\bool_set_false:N \l_pxdoc_language_bool
+\tl_new:N \l__pxdoc_language_tl
+\tl_set:Nn \l__pxdoc_language_tl {catalan}
 \bool_new:N \l_pxdoc_useglossary_bool
 \bool_set_false:N \l_pxdoc_useglossary_bool
 %\bool_new:N \l_pxdoc_usebibliography_bool
@@ -50,16 +50,19 @@
 %% cover/toc/no-plagi/glossary/preamble control document features; data={...} delegates metadata to P3CTeX/data.
 %% Unrecognised options are stored in \l__pxdoc_unknown_tl and later forwarded to pxCORE.
 \bool_new:N \l__pxdoc_loading_bool
-\bool_new:N \l__pxdoc_tfg_bool
-\bool_new:N \l__pxdoc_mem_bool
-\bool_new:N \l__pxdoc_gnt_bool
-\bool_new:N \l__pxdoc_cmp_bool
-\bool_new:N \l__pxdoc_orl_bool
+
 \tl_new:N \l__pxdoc_unknown_tl
 \tl_set:Nn \l__pxdoc_unknown_tl { default }
 \bool_set_true:N \l__pxdoc_loading_bool
+%% One load-time forwarding path; module state belongs to pxCORE alone.
+\cs_new_protected:Npn \__pxdoc_tools:n #1
+  {\bool_if:NTF \l__pxdoc_loading_bool
+    {\tl_put_right:Nn \l__pxdoc_unknown_tl {,#1}}
+    {\ClassError{P3CTeX}{Tools must be selected at class loading}
+      {Put tool keys in \string\documentclass.}}}
 \keys_define:nn {P3CTeX}
 {
+    tools .code:n = {\__pxdoc_tools:n {#1}},
 	cover		.bool_set:N 	=\l_pxdoc_usecover_bool,
 		cover		.initial:n 	=	false,
 		cover		.default:n 	=	true,
@@ -86,49 +89,37 @@
 	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true},cat},
 	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
 	PR		.meta:n	={cover = {true} , toc ={ true }},
-	GNT .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_gnt_bool}
-			{\ClassError{P3CTeX}{GNT must be selected at class loading}{Put GNT in \string\documentclass}}
-	},
-	ORL .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_orl_bool}
-			{\ClassError{P3CTeX}{ORL must be selected at class loading}{Put ORL in \string\documentclass}}
-	},
-	CMP .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_cmp_bool}
-			{\ClassError{P3CTeX}{CMP must be selected at class loading}{Put CMP in \string\documentclass}}
-	},
-	TFG .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_tfg_bool}
-			{\ClassError{P3CTeX}{TFG must be selected at class loading}{Put TFG in \string\documentclass}}
-	},
-	MEM .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_mem_bool}
-			{\ClassError{P3CTeX}{MEM must be selected at class loading}{Put MEM in \string\documentclass}}
-	},
+	GNT .meta:n = {tools={GNT=#1}},
+	GNT .default:n = true,
+	ORL .meta:n = {tools={ORL=#1}},
+	ORL .default:n = true,
+	CMP .meta:n = {tools={CMP=#1}},
+	CMP .default:n = true,
+	TFG .meta:n = {tools={TFG=#1}},
+	TFG .default:n = true,
+	MEM .meta:n = {tools={MEM=#1}},
+	MEM .default:n = true,
 	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
 	fake	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={example}},
 	EN		.meta:n	={en},
 	ES		.meta:n	={es},
 	CAT		.meta:n	={cat},
 	cat	.code		={
-		\RequirePackage[catalan]{babel}
-		\bool_set_true:N \l_pxdoc_language_bool
+		\tl_set:Nn \l__pxdoc_language_tl {catalan}
+		\bool_if:NF \l__pxdoc_loading_bool {\selectlanguage{catalan}}
+		
 		\_pxcore_set_language_catalan
 	},
 	es	.code		={
-		\RequirePackage[spanish]{babel}
-		\bool_set_true:N \l_pxdoc_language_bool
+		\tl_set:Nn \l__pxdoc_language_tl {spanish}
+		\bool_if:NF \l__pxdoc_loading_bool {\selectlanguage{spanish}}
+		
 		\_pxcore_set_language_spanish
 	},
 	en	.code		={
-		\RequirePackage[english]{babel}
-		\bool_set_true:N \l_pxdoc_language_bool
+		\tl_set:Nn \l__pxdoc_language_tl {english}
+		\bool_if:NF \l__pxdoc_loading_bool {\selectlanguage{english}}
+		
 		\_pxcore_set_language_english
 	},
 	data 		.code:n	 			= 	{	\keys_set:nn { P3CTeX/data } {#1}	},
@@ -140,8 +131,8 @@
 		print-doc	.default:n 		= 		true,
 	unknown 	.code:n 			= {
 		\tl_if_blank:nTF { #1 }
-			{ \tl_put_right:Nx \l__pxdoc_unknown_tl { , \l_keys_key_str } }
-			{ \tl_put_right:Nx \l__pxdoc_unknown_tl { , \l_keys_key_str = { \exp_not:n { #1 } } } }
+			{ \exp_args:Nx \__pxdoc_tools:n { \l_keys_key_str } }
+			{ \exp_args:Nx \__pxdoc_tools:n { \l_keys_key_str = { \exp_not:n { #1 } } } }
 	}
 }
 %% =================================
@@ -227,13 +218,10 @@
 \file_input:n {pxTXT.code.tex}%% Load multilanguage text comands
 \ProcessKeysOptions{P3CTeX}
 \bool_set_false:N \l__pxdoc_loading_bool
-\bool_if:NT \l__pxdoc_tfg_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,TFG} }
-\bool_if:NT \l__pxdoc_mem_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM} }
-\bool_if:NT \l__pxdoc_gnt_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,GNT} }
-\bool_if:NT \l__pxdoc_cmp_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,CMP} }
-\bool_if:NT \l__pxdoc_orl_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,ORL} }
+
 \bool_if:NT \l_pxdoc_useglossary_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}}
-\bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
+\RequirePackage[english,spanish,catalan]{babel}
+\exp_args:NV \selectlanguage \l__pxdoc_language_tl
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
 \bool_if:NT \l_pxdoc_useglossary_bool {\pxGlossarySetup{print=auto}}

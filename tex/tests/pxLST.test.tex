@@ -9,13 +9,13 @@
 % --- T1: Smoke load + environment coverage ---
 \pxLSTsetup[dark]{pxJava}
 
-\begin{CODE}{Smoke-CODE}
+\begin{pxCode}{Smoke-CODE}
 public class A { int x = 1; } // àèìòù áéíóú ç ñ ¿ ¡ · º ª
-\end{CODE}
+\end{pxCode}
 
-\begin{Code}[numbers=none]{Smoke-Code}
+\begin{pxCode}[numbers=none]{Smoke-Code}
 int add(int a, int b) { return a + b; }
-\end{Code}
+\end{pxCode}
 
 \begin{pxCode}{Smoke-pxCode}
 public static void main(String[] args) {
@@ -28,25 +28,25 @@ public static void main(String[] args) {
 int answer = 42;
 \end{pxCode*}
 
-\begin{miniCode}[.6\linewidth]
+\begin{pxCodeMini}[.6\linewidth]
 #!/bin/bash
 echo "mini"
-\end{miniCode}
+\end{pxCodeMini}
 
-\begin{CodeBox}{bx-one}{Title}{note}{Caption panel text.}
+\begin{pxCodeBox}{bx-one}{Title}{note}{Caption panel text.}
 Funcio factorial(n: Integer): Integer
   Si n <= 0 Llavors
     Retornar 1
   Fi Si
 Fi Funcio
-\end{CodeBox}
+\end{pxCodeBox}
 
 \begin{pxCodeBox}{bx-px}{pxCodeBox Title}{pxnote}{pxCodeBox caption panel text.}
 int value = 100;
 \end{pxCodeBox}
 
 % Force multiple pages (breakable) for CodeBox* and pxCodeBreak.
-\begin{CodeBox*}{bx-break}{Long box}{note}{This must be breakable across pages.}
+\begin{pxCodeBreak}{bx-break}{Long box}{note}{This must be breakable across pages.}
 line 01
 line 02
 line 03
@@ -57,7 +57,7 @@ line 07
 line 08
 line 09
 line 10
-\end{CodeBox*}
+\end{pxCodeBreak}
 
 \begin{pxCodeBreak}{bx-break2}{Long box 2}{note2}{Breakable alias.}
 line A
@@ -74,9 +74,9 @@ String greeting = "pastel";
 \end{pxCode}
 
 {\pxLSTsetup[light]{pxYAML}%
- \begin{Code}{Scoped-light}
+ \begin{pxCode}{Scoped-light}
 key: "value"
-\end{Code}
+\end{pxCode}
 }
 
 \end{document}

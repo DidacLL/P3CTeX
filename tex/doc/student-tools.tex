@@ -35,7 +35,7 @@ dictate the keywords used to load tools.
 The override is local. The next call still uses the original values.
 \texttt{steps=1} prints the result; \texttt{steps=2} also prints the formula;
 \texttt{steps=3} also prints substituted values. Settings can be supplied
-with \verb|\pxCalcSetup|, with a formula, or for one call.
+for each call; formula definitions store only their symbol and unit.
 
 \verb|\pxCalcStore{Ek}{\energy}| saves the unrounded number for reuse.
 \verb|\pxSetVar{v}{30}| changes the value in the current TeX group.
@@ -55,7 +55,7 @@ $ printf '%s\n' "$HOME" '100%'
 /home/student
 100%
 \end{pxTerminal}
-\pxCodeIn[pxBash]|echo "$HOME" # literal code|
+\pxCodeInline[pxBash]|echo "$HOME" # literal code|
 \pxCodeChunk[pxJava]{Main.java}{12}{20}{Validation}
 \end{verbatim}
 Terminal options use listings keys, like \texttt{pxCode}. Palettes and

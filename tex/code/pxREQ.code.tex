@@ -1,11 +1,21 @@
 \ProvidesExplFile{pxREQ.code.tex}{2026/10/30}{0.1}{Requirements implementation}
 \providecolor{primaryColor}{rgb}{0,0,.47}
 \prop_new:N \l__pxreq_labels_prop
+\providecommand{\pxDEFreqacceptance}{Acceptance~criteria}
+\providecommand{\pxDEFreqasa}{As~a}
+\providecommand{\pxDEFreqgiven}{Given}
+\providecommand{\pxDEFreqiwant}{I~want}
+\providecommand{\pxDEFreqopportunities}{Opportunities}
+\providecommand{\pxDEFreqscenario}{Scenario}
+\providecommand{\pxDEFreqsothat}{So~that}
+\providecommand{\pxDEFreqstory}{User~story}
+\providecommand{\pxDEFreqstrengths}{Strengths}
+\providecommand{\pxDEFreqthen}{Then}
+\providecommand{\pxDEFreqthreats}{Threats}
+\providecommand{\pxDEFreqweaknesses}{Weaknesses}
+\providecommand{\pxDEFreqwhen}{When}
 \prop_set_from_keyval:Nn \l__pxreq_labels_prop
-  {story=User~story,scenario=Scenario,as-a=As~a,i-want=I~want,
-   so-that=So~that,acceptance=Acceptance~criteria,given=Given,when=When,
-   then=Then,strengths=Strengths,weaknesses=Weaknesses,
-   opportunities=Opportunities,threats=Threats}
+  {acceptance=\pxDEFreqacceptance,as-a=\pxDEFreqasa,given=\pxDEFreqgiven,i-want=\pxDEFreqiwant,opportunities=\pxDEFreqopportunities,scenario=\pxDEFreqscenario,so-that=\pxDEFreqsothat,story=\pxDEFreqstory,strengths=\pxDEFreqstrengths,then=\pxDEFreqthen,threats=\pxDEFreqthreats,weaknesses=\pxDEFreqweaknesses,when=\pxDEFreqwhen}
 \tl_new:N \l__pxreq_box_options_tl
 \keys_define:nn {pxREQ}
   {box-options .tl_set:N = \l__pxreq_box_options_tl,

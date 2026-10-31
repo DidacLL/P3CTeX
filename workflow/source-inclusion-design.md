@@ -67,3 +67,14 @@ The previously observed EN,PAC Babel option clash remains a separate known issue
 Queued annexes now print automatically at document end, before automatic glossaries. Explicit printing drains the queue and prevents duplication; print=manual opts out. Definitions may occur in the preamble or body. Five regression documents passed three runs each, including PAC/PR/MEM integration. Rendered automatic test confirms main body, annex A, annex B, then glossary containing a term used only in annex A.
 
 Next requested feature: space-limited source previews that queue the complete source automatically. Owner confirmed code and literal text first. Measure rendered complete-line prefixes, including wrapping and code-box decoration; preserve full source in the annex. Native TeX and images are outside this preview iteration.
+
+## Quality correction checkpoint
+
+Owner rejected duplicate class flags, package-wide calculation presentation,
+English-only requirements defaults, duplicated code names, shallow glossary
+registration and insufficient public API comments. Corrections now use one
+class forwarding path plus meta keys, per-use calculation settings, pxTXT labels,
+canonical code implementations and migrated callers, shared glossary registration
+helpers, and documented public contracts. Also found actual dimension text leaking
+from pxTAB column-spec classification: a token predicate was given a grouped item;
+replaced it with a token-list predicate. Full gate and source preview work continue.

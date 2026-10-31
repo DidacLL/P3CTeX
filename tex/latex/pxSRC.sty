@@ -43,9 +43,13 @@
 \file_input:n {pxSRC.input.code.tex}
 \ProcessKeysOptions{pxSRC}
 \providecommand\pxSourceName{Source}
+%% \pxSourceRef{<label>}: reference a label relative to the current source prefix.
 \NewDocumentCommand\pxSourceRef{m}{\exp_args:Ne \ref {\l__pxsrc_input_label_prefix_tl #1}}
+%% \pxSource[<input options>]{<id>}{<path>}: register any text/code/native source without reading it.
 \NewDocumentCommand\pxSource{O{} m m}{\__pxsrc_source:nnn {#1}{#2}{#3}}
+%% \pxInput[<input options>]{<path>}: render a whole file or fragment; options are local to this use.
 \NewDocumentCommand\pxInput{O{} m}{\__pxsrc_input:nn {#1}{#2}}
+%% \pxUseSource[<overrides>]{<id>}: include a registered source, overriding its stored options.
 \NewDocumentCommand\pxUseSource{O{} m}{\__pxsrc_use_source:nn {#1}{#2}}
 %%%%%%%%%%%%%%	LaTeX2e API %%
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%

@@ -68,5 +68,32 @@
           }{}
       }
   }
+%% Batch registration keeps the native glossaries entry model and error checks.
+\msg_new:nnn {pxGLS}{entry}{Entry~'#1'~needs~a~braced~field~list.}
+\msg_new:nnn {pxGLS}{acronym}{Acronym~'#1'~requires~short~and~long~fields.}
+\tl_new:N \l__pxgls_short_tl
+\tl_new:N \l__pxgls_long_tl
+\tl_new:N \l__pxgls_entry_options_tl
+\keys_define:nn {pxGLS/acronym}
+  {short .tl_set:N = \l__pxgls_short_tl,
+   long .tl_set:N = \l__pxgls_long_tl,
+   unknown .code:n = {\tl_put_right:Nx \l__pxgls_entry_options_tl
+     {\l_keys_key_str={\exp_not:n {#1}},}}}
+\cs_new_protected:Npn \__pxgls_missing_entry:n #1
+  {\msg_error:nnn {pxGLS}{entry}{#1}}
+\cs_new_protected:Npn \__pxgls_term:nn #1#2
+  {\newglossaryentry{#1}{#2}}
+\cs_new_protected:Npn \__pxgls_acronym:nn #1#2
+  {\group_begin:
+   \tl_clear:N \l__pxgls_short_tl
+   \tl_clear:N \l__pxgls_long_tl
+   \tl_clear:N \l__pxgls_entry_options_tl
+   \keys_set:nn {pxGLS/acronym}{#2}
+   \bool_lazy_or:nnTF {\tl_if_blank_p:V \l__pxgls_short_tl}
+     {\tl_if_blank_p:V \l__pxgls_long_tl}
+     {\msg_error:nnn {pxGLS}{acronym}{#1}}
+     {\use:x {\exp_not:N \newacronym[\exp_not:V \l__pxgls_entry_options_tl]
+       {\exp_not:n {#1}}{\exp_not:V \l__pxgls_short_tl}{\exp_not:V \l__pxgls_long_tl}}}
+   \group_end:}
 \endinput
 

@@ -89,7 +89,7 @@ El paquet incorpora tres paletes acuradament calibrades:
 
 \section{Entorns de codi}
 
-\subsection{\texttt{pxCode} i l'àlies \texttt{Code}}
+\subsection{\texttt{pxCode} i l'àlies \texttt{pxCode}}
 
 L'entorn principal per a blocs de codi amb t\'itol i n\'umeros de l\'inia:
 
@@ -99,14 +99,14 @@ L'entorn principal per a blocs de codi amb t\'itol i n\'umeros de l\'inia:
 \end{pxCode}
 \end{verbatim}
 
-L'àlies \texttt{Code} (i \texttt{CODE}) t\'e exactament el mateix contracte d'arguments i \'es 100\% compatible amb versions anteriors:
+L'àlies \texttt{pxCode} (i \texttt{pxCode}) t\'e exactament el mateix contracte d'arguments i \'es 100\% compatible amb versions anteriors:
 
 \begin{verbatim}
-\begin{Code}[numbers=none]{Funció suma}
+\begin{pxCode}[numbers=none]{Funció suma}
 int suma(int a, int b) {
     return a + b;
 }
-\end{Code}
+\end{pxCode}
 \end{verbatim}
 
 \subsection{\texttt{pxCode*}}
@@ -120,28 +120,28 @@ def processar(dades):
 \end{pxCode*}
 \end{verbatim}
 
-\subsection{\texttt{miniCode}}
+\subsection{\texttt{pxCodeMini}}
 
 Entorn compacte sense numeraci\'o de l\'inia, dissenyat per a petits fragments de consola o comandes:
 
 \begin{verbatim}
-\begin{miniCode}[.7\linewidth]
+\begin{pxCodeMini}[.7\linewidth]
 #!/bin/bash
 git status
 pytest -v
-\end{miniCode}
+\end{pxCodeMini}
 \end{verbatim}
 
 L'amplada per defecte \'es \texttt{.8\textbackslash linewidth}.
 
-\subsection{\texttt{CodeBox} i \texttt{CodeBox*} (\texttt{pxCodeBox} i \texttt{pxCodeBreak})}
+\subsection{\texttt{pxCodeBox} i \texttt{pxCodeBreak} (\texttt{pxCodeBox} i \texttt{pxCodeBreak})}
 
 Entorn avan\c{c}at amb panell lateral d'anotacions i peu de comentari:
 
 \begin{verbatim}
-\begin{CodeBox}[<opcions>]{<etiqueta-id>}{<titol>}{<codi-nota>}{<text explicatiu>}
+\begin{pxCodeBox}[<opcions>]{<etiqueta-id>}{<titol>}{<codi-nota>}{<text explicatiu>}
     ... codi font ...
-\end{CodeBox}
+\end{pxCodeBox}
 \end{verbatim}
 
 \begin{itemize}
@@ -151,7 +151,7 @@ Entorn avan\c{c}at amb panell lateral d'anotacions i peu de comentari:
   \item \texttt{<text explicatiu>}: comentari situat a la safata inferior de la caixa.
 \end{itemize}
 
-La variant amb asterisc \texttt{CodeBox*} (i el seu \`alies \texttt{pxCodeBreak}) \'es \emph{divisible} a trav\'es de salts de p\`agina, afegint indicadors autom\`atics de continuaci\'o.
+La variant amb asterisc \texttt{pxCodeBreak} (i el seu \`alies \texttt{pxCodeBreak}) \'es \emph{divisible} a trav\'es de salts de p\`agina, afegint indicadors autom\`atics de continuaci\'o.
 
 \section{Instruccions d'entrada i codi en l\'inia}
 
@@ -160,14 +160,14 @@ La variant amb asterisc \texttt{CodeBox*} (i el seu \`alies \texttt{pxCodeBreak}
 Per incrustar fragments de codi dins del flux de text:
 
 \begin{verbatim}
-\pxCodeIn[<llenguatge>]{<code>}[<estil>]
+\pxCodeInline[<llenguatge>]{<code>}[<estil>]
 \end{verbatim}
 
 Tamb\'e s\'on v\`alids els \`alies \texttt{\textbackslash pxCodeInline} i \texttt{\textbackslash pxInlineCode}:
 
 \begin{verbatim}
-El valor de retorn \pxCodeIn{int n = 0;} s'obté mitjançant \pxCodeIn{return n + 1;}.
-Comanda de terminal: \pxCodeIn[pxBash]{grep -rn "PATATA" .}.
+El valor de retorn \pxCodeInline{int n = 0;} s'obté mitjançant \pxCodeInline{return n + 1;}.
+Comanda de terminal: \pxCodeInline[pxBash]{grep -rn "PATATA" .}.
 \end{verbatim}
 
 \subsection{Inclusi\'o de fitxers externs: \texttt{\textbackslash pxCodeFile}}
@@ -182,7 +182,7 @@ L'\`alies \texttt{\textbackslash pxLSTinput} i la comanda \texttt{\textbackslash
 
 \begin{verbatim}
 \pxCodeFile[pxJava]{src/Main.java}[Classe Principal]
-\pxLSTinput[pxYAML]{config/app.yaml}[Configuració del sistema]
+\pxCodeFile[pxYAML]{config/app.yaml}[Configuració del sistema]
 \end{verbatim}
 
 \section{Llenguatges suportats}
@@ -219,7 +219,7 @@ Quotes are rendered upright; dollar signs are literal unless
 \texttt{mathescape=true} is explicitly requested. JLex and CUP quoted strings
 recognise backslash escapes. Inline code also accepts verbatim delimiters:
 \begin{verbatim}
-\pxCodeIn[pxBash]|printf '%s' "$HOME"|
+\pxCodeInline[pxBash]|printf '%s' "$HOME"|
 \pxCodeChunk[pxJava]{Main.java}{12}{20}{Validation}
 \begin{pxTerminal}{Shell session}
 $ echo "$HOME"

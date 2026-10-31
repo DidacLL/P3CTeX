@@ -32,7 +32,7 @@ $ printf '%s\n' "$HOME"
 /home/student
 \end{pxTerminal}
 
-\pxCodeIn[pxBash]|printf '%s' "$HOME"|
+\pxCodeInline[pxBash]|printf '%s' "$HOME"|
 \pxCodeChunk[pxJava]{src/Main.java}{12}{20}{Input validation}
 ```
 
@@ -46,7 +46,7 @@ $ printf '%s\n' "$HOME"
 \pxDefVar{m}{1200}[m]
 \pxDefVar{v}{25}[v]
 \pxDefFormula{Ek}{\frac{1}{2}[m][v]^2}
-  [symbol=E_k,unit=J,prec=2]
+  [symbol=E_k,unit=J]
 
 \pxSolve{Ek}                           % 375 000 J
 \pxSolve[values={m=800,v=40}]{Ek}       % 640 000 J
@@ -62,7 +62,7 @@ The supported single-source notation is arithmetic (`+`, `-`, `*`, `/`, parenthe
 
 `steps=3` prints symbol, formula, substituted formula and result; `steps=2` omits substitution; `steps=1` prints symbol and result. `prec` rounds the displayed result to that number of decimal places, without forcing trailing zeros. `\pxCalcStore[values={...}]{id}{\command}` stores the unrounded number; it respects the enclosing TeX group.
 
-Settings follow document/group defaults (`\pxCalcSetup`), formula defaults, then per-call overrides. Variables and formulas also respect TeX groups. `values={...}` only overrides existing variables and only for that call. Use `\pxSetVar` for a persistent change in the current group.
+Presentation options belong to each call. Formula definitions store symbol and unit; each solve starts with steps=3 and prec=2, then applies its own overrides. Variables and formulas also respect TeX groups. `values={...}` only overrides existing variables and only for that call. Use `\pxSetVar` for a persistent change in the current group.
 
 Units are formatted with `siunitx`, whose `\sisetup` remains available. **Units do not convert numerical values.** To display joules as kilojoules, define a formula that divides by 1000 and give that formula `unit=\kilo\joule`.
 

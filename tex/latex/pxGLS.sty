@@ -4,10 +4,14 @@
 \IfPackageLoadedTF{glossaries}{}{\RequirePackage[acronym]{glossaries}}
 \ProvidesExplPackage{pxGLS}{2026/10/30}{0.1}{Explicit glossary placement}
 \file_input:n {pxGLS.code.tex}
+%% \pxGlossarySetup{<keys>}: customise automatic/manual printing, selected types, titles and style.
 \NewDocumentCommand\pxGlossarySetup{m}{\keys_set:nn {pxGLS}{#1}}
+%% \pxGlossaryFile{<path>}: load shared entry definitions from a native TeX preamble file.
 \NewDocumentCommand\pxGlossaryFile{m}{\file_input:n {#1}}
+%% \pxPrintGlossary[<keys>]: optional placement for one type (type=main by default); print once.
 \NewDocumentCommand\pxPrintGlossary{O{}}
   {\group_begin:\keys_set:nn {pxGLS}{#1}\__pxgls_print:\group_end:}
+%% \pxPrintGlossaries[<keys>]: place enabled term/acronym lists now; automatic output skips them.
 \NewDocumentCommand\pxPrintGlossaries{O{}}
   {\group_begin:
    \keys_set:nn {pxGLS}{#1}
@@ -16,6 +20,26 @@
    \bool_if:NT \l__pxgls_acronyms_bool
      {\tl_set:Nn \l__pxgls_type_tl {acronym}\__pxgls_print:}
    \group_end:}
+%% \pxAcronym[<options>]{<id>}{<short>}{<long>}
+%% Register an acronym once in the document or shared preamble; use with \gls{id}.
+%% #1 - standard glossaries entry options; #2 - stable label;
+%% #3 - short form (may be a shared macro); #4 - expanded name (may be a macro).
+\NewDocumentCommand\pxAcronym{O{} m m m}{\newacronym[#1]{#2}{#3}{#4}}
+%% \pxTerm[<options>]{<id>}{<name>}{<definition>}
+%% Register a defined term; automatic lists include it when referenced with \gls.
+%% #1 - glossaries options; #2 - label; #3 - displayed name; #4 - definition.
+\NewDocumentCommand\pxTerm{O{} m m +m}
+  {\newglossaryentry{#2}{name={#3},description={#4},#1}}
+%% \pxTerms{<id={name=...,description=...},...>}
+%% Register a shared set of terms with standard glossaries fields.
+%% #1 - entry map; braces protect commas and macros in each definition.
+\NewDocumentCommand\pxTerms{+m}
+  {\keyval_parse:NNn \__pxgls_missing_entry:n \__pxgls_term:nn {#1}}
+%% \pxAcronyms{<id={short=...,long=...},...>}
+%% Register a shared acronym set; extra fields are passed to glossaries.
+%% #1 - entry map containing short and long fields for each label.
+\NewDocumentCommand\pxAcronyms{+m}
+  {\keyval_parse:NNn \__pxgls_missing_entry:n \__pxgls_acronym:nn {#1}}
 \ProcessKeysOptions{pxGLS}
 \bool_set_true:N \l__pxgls_backend_locked_bool
 \tl_if_eq:NnT \l__pxgls_backend_tl {noindex}{\makenoidxglossaries}

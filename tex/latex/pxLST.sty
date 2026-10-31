@@ -779,10 +779,10 @@
 	toptitle=-.1em,%
 	title=\small\hspace*{\fill}\textbf{\ttfamily \color{pxfg!75!} #2}%
 }
-%% \begin{miniCode}[<width>] ... \end{miniCode}
+%% \begin{pxCodeMini}[<width>] ... \end{pxCodeMini}
 %% Compact untitled listing box.
 %% #1 - box width, default .8\linewidth.
-\newtcblisting{miniCode}[1][.8\linewidth]{%
+\newtcblisting{pxCodeMini}[1][.8\linewidth]{%
 	width=#1,
 	listing~options={style=pxlst,numbers=none,xleftmargin=0.4em},
 	listing~only,%
@@ -821,60 +821,13 @@
 %% \begin{CodeBox}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox}
 %% Non-breakable listing with an external comment panel and cross-reference label cdbx:<label>.
 %% #1 - listings options.  #2 - label id.  #3 - title.  #4 - short note id.  #5 - note text.
-\newtcblisting{CodeBox}[5][]{%
-	listing~options={style=pxlst,#1},
-  enhanced,%
-  colback=pxbg!90!,
-  colframe=pxbg!60!,
-  coltext=pxfg,
-  listing~and~comment,%
-  comment=\raggedleft\parbox[b]{.1\linewidth}{%
-    \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
-  }\hspace*{.05\linewidth}\parbox[c]{.8\linewidth}{%
-    \centering #5%
-  },%
-  drop~lifted~shadow,%
-  arc=.25em,outer~arc=.25em,%
-  toptitle=-.1em,%
-  title~after~break=%
-    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}..continues~from~page~\pageref{cdbx:#2}}%
-    \textbf{\ttfamily\small\hspace*{\fill}#3},%
-  title=%
-    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}codebox:\color{gray!80!}#4}%
-    \textbf{\ttfamily\small\hspace*{\fill}#3\label{cdbx:#2}},%
-  comment~outside~listing,%
-  listing~above~comment%
-}
+
 %% -----------------------------------------------------------------------
 %% pxCodeBreak -- same as pxCodeBox but forces breakable across pages.
 %%   Arguments identical to pxCodeBox.
 %% \begin{CodeBox*}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox*}
 %% Breakable CodeBox variant; continuation titles refer back to cdbx:<label>.
-\newtcblisting{CodeBox*}[5][]{%
-	listing~options={style=pxlst,#1},
-  enhanced,%
-  breakable,%
-  listing~and~comment,%
-  comment=\raggedleft\parbox[b]{.1\linewidth}{%
-    \textit{\footnotesize\color{gray!70!}\ttfamily codebox:\textbf{{[}#2{]}}}%
-  }\hspace*{.05\linewidth}\parbox[c]{.8\linewidth}{%
-    \centering #5%
-  },%
-  drop~lifted~shadow,%
-  colback=pxbg!90!,
-  colframe=pxbg!60!,
-  coltext=pxfg,
-  arc=.25em,outer~arc=.25em,%
-  toptitle=-.1em,%
-  title~after~break=%
-    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}..continues~from~page~\pageref{cdbx:#2}}%
-    \textbf{\ttfamily\small\hspace*{\fill}#3},%
-  title=%
-    \scriptsize\texttt{\bfseries\color{gray!50!}\hspace*{-1em}codebox:\color{gray!80!}#4}%
-    \textbf{\ttfamily\small\hspace*{\fill}#3\label{cdbx:#2}},%
-  comment~outside~listing,%
-  listing~above~comment%
-}
+
 %% \pxCodeFile[<language>]{<file>}[<title>]
 %% Typeset an external file through the standard breakable pxLST file renderer.
 %% #1 - optional listings language.  #2 - source filename/path.  #3 - optional header title (defaults to #2).
@@ -882,10 +835,10 @@
   { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
 
 
-%% \pxCodeIn[<language>]{<code>}[<style>]
+%% \pxCodeInline[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
 %% #1 - optional listings language.  #2 - inline code.  #3 - listings style (default pxlst).
-\NewDocumentCommand{\pxCodeIn}{ O{} v O{pxlst}}
+\NewDocumentCommand{\pxCodeInline}{ O{} v O{pxlst}}
   {
     \group_begin:
       \tl_if_blank:nTF { #1 }
@@ -904,29 +857,9 @@
   \pxCodeSet[#1]{#2}[#3]%
 }
 
-%% Code / CODE -- verbatim-safe aliases for pxCode
-\newtcblisting{Code}[2][]{%
-	listing~options={style=pxlst,#1},
-	listing~only,%
-	arc=.25em,outer~arc=.25em,%
-	drop~lifted~shadow,%
-	colback=pxbg!90!,%
-	colframe=pxbg!60!,%
-	coltext=pxfg,%
-	toptitle=-.1em,%
-	title=\color{pxbg!35!pxfg}\small\hspace*{\fill}\textbf{\ttfamily #2}%
-}
-\newtcblisting{CODE}[2][]{%
-	listing~options={style=pxlst,#1},
-	listing~only,%
-	arc=.25em,outer~arc=.25em,%
-	drop~lifted~shadow,%
-	colback=pxbg!90!,%
-	colframe=pxbg!60!,%
-	coltext=pxfg,%
-	toptitle=-.1em,%
-	title=\color{pxbg!35!pxfg}\small\hspace*{\fill}\textbf{\ttfamily #2}%
-}
+%% Titled listings use pxCode; there are no case-dependent aliases.
+
+
 
 %% pxCodeBox / pxCodeBreak -- namespaced aliases matching CodeBox / CodeBox*
 \newtcblisting{pxCodeBox}[5][]{%
@@ -979,10 +912,10 @@
   listing~above~comment%
 }
 
-%% Inline and file aliases
-\NewCommandCopy{\pxCodeInline}{\pxCodeIn}
-\NewCommandCopy{\pxInlineCode}{\pxCodeIn}
-\NewCommandCopy{\pxLSTinput}{\pxCodeFile}
+%% External files use pxCodeFile; inline snippets use pxCodeInline.
+
+
+
 %% Terminal transcripts are verbatim; write literal $, #, %, quotes and prompts.
 %% Options use the same listings key syntax as pxCode; title is mandatory.
 %% Override the pxlst-terminal tcolorbox style to customise the container.

@@ -1,0 +1,12 @@
+\documentclass[PAC,glossaries,requirements]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcommand\ProjectShort{P3C}
+\newcommand\ProjectLong{Project shared from the preamble}
+\pxAcronym{project}{\ProjectShort}{\ProjectLong}
+\pxTerm{entry}{Shared term}{A definition supplied by the shared preamble.}
+\pxTerms{batch={name={Batch term},description={BATCH-DEFINITION}}}
+\pxAcronyms{api={short={API},long={application programming interface}}}
+\begin{document}
+\gls{project}, \gls{entry}, \gls{batch}, \gls{api}.
+\pxSWOT{A}{B}{C}{D}
+\end{document}

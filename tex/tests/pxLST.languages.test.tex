@@ -7,119 +7,119 @@
 \section*{pxLST language definitions}
 
 \pxLSTsetup[dark]{pxJava}
-\begin{Code}{pxJava}
+\begin{pxCode}{pxJava}
 // Accents: àèìòù áéíóú ç ñ ¿ ¡ · º ª
 public class Hello { public static void main(String[] args) { System.out.println("ok"); } }
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[pastel]{pxProlog}
-\begin{Code}{pxProlog}
+\begin{pxCode}{pxProlog}
 parent(tom, bob).
 ancestor(X,Y) :- parent(X,Y).
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxOWL}
-\begin{Code}{pxOWL}
+\begin{pxCode}{pxOWL}
 Prefix: : <http://example.org/>
 Ontology: <http://example.org/onto>
 Class: :Person
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[light]{pxTAD}
-\begin{Code}{pxTAD}
+\begin{pxCode}{pxTAD}
 TAD Stack
 create(): Stack
 return true
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[light]{pxYAML}
-\begin{Code}{pxYAML}
+\begin{pxCode}{pxYAML}
 project:
   name: "P3CTeX"
   ok: true
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[pastel]{algoritme}
-\begin{Code}{algoritme}
+\begin{pxCode}{algoritme}
 Funcio suma(a: Integer, b: Integer): Integer
   Retornar a + b
 Fi Funcio
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxBash}
-\begin{Code}{pxBash}
+\begin{pxCode}{pxBash}
 #!/bin/bash
 echo "done"
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxPython}
-\begin{Code}{pxPython}
+\begin{pxCode}{pxPython}
 def f(x):
     return x + 1
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxC}
-\begin{Code}{pxC}
+\begin{pxCode}{pxC}
 #include <stdio.h>
 int main(void){ printf("ok\n"); return 0; }
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxSTM32C}
-\begin{Code}{pxSTM32C}
+\begin{pxCode}{pxSTM32C}
 #include "stm32f4xx_hal.h"
 HAL_Init();
 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxASM}
-\begin{Code}{pxASM}
+\begin{pxCode}{pxASM}
 .global main
 main:
     mov r0, #42
     bx lr
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxJLex}
-\begin{Code}{pxJLex}
+\begin{pxCode}{pxJLex}
 %%
 %class Lexer
 %%
 [0-9]+  { return new Symbol(sym.NUMBER, yytext()); }
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxCUP}
-\begin{Code}{pxCUP}
+\begin{pxCode}{pxCUP}
 terminal NUMBER, PLUS;
 non terminal expr;
 expr ::= expr PLUS expr | NUMBER ;
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxWorkflow}
-\begin{Code}{pxWorkflow}
+\begin{pxCode}{pxWorkflow}
 state INIT:
     transition on START -> PROCESS
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxJavaScript}
-\begin{Code}{pxJavaScript}
+\begin{pxCode}{pxJavaScript}
 function add(a,b){ return a + b; }
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxJS}
-\begin{Code}{pxJS}
+\begin{pxCode}{pxJS}
 const x = 1;
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[dark]{pxSQL}
-\begin{Code}{pxSQL}
+\begin{pxCode}{pxSQL}
 SELECT * FROM table WHERE id = 1;
-\end{Code}
+\end{pxCode}
 
 \pxLSTsetup[light]{pxR}
-\begin{Code}{pxR}
+\begin{pxCode}{pxR}
 # Model lineal i gràfic
 fit <- lm(mpg ~ wt + hp, data = mtcars)
 summary(fit)
-\end{Code}
+\end{pxCode}
 
 \end{document}
