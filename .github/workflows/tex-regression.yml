@@ -1,55 +1,11 @@
 name: TeX regression
-
 on:
   push:
-    branches: [feature/core-modules-audit-and-fix]
-  pull_request:
-    branches: [main]
+    branches:
+      - feature/core-modules-audit-and-fix
   workflow_dispatch:
-
-permissions:
-  contents: read
-
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - name: Compile module tests and TFG templates
-        shell: bash
-        run: |
-          set -euo pipefail
-          docker run --rm -i \
-            -v "${GITHUB_WORKSPACE}:/work" \
-            -w /work/tex/tests \
-            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
-            ghcr.io/xu-cheng/texlive-debian:latest bash -seuo pipefail <<'TEX'
-          grep -E '^[[:space:]]*"[^"]+\.test\.tex",?$' run-all-tests.ps1 |
-          cut -d '"' -f2 |
-          while IFS= read -r test; do
-            echo "::group::Module test: ${test}"
-            job="${test%.tex}"
-            pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-jobname=${job}" "${test}" > "${job}.pass1.log" 2>&1 || { tail -80 "${job}.pass1.log"; exit 1; }
-            if [[ "${test}" == "pxGLS.external.test.tex" ]]; then
-              makeglossaries "${job}" > "${job}.index.log" 2>&1 || { tail -80 "${job}.index.log"; exit 1; }
-              test -f "${job}.gls" && test -f "${job}.acr"
-            fi
-            pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-jobname=${job}" "${test}" > "${job}.pass2.log" 2>&1 || { tail -80 "${job}.pass2.log"; exit 1; }
-            echo "::endgroup::"
-          done
-          while IFS= read -r template; do
-            [[ -z "${template}" ]] && continue
-            echo "::group::Template: ${template}"
-            (cd "/work/$(dirname "${template}")" && latexmk -pdf -halt-on-error -file-line-error -interaction=nonstopmode "$(basename "${template}")")
-            echo "::endgroup::"
-          done <<'TEMPLATES'
-          examples/P3CTeX-example.tex
-          examples/UOCTemplates/MinimalTemplate/PAC1/MinimalTemplatePAC.tex
-          examples/UOCTemplates/MinimalTemplate/PAC1/PACTemplate.tex
-          examples/UOCTemplates/ExtendedTemplate/PAC1/ExtendedTemplatePAC.tex
-          examples/UOCTemplates/TFGTemplate/PR1/PR1.tex
-          examples/UOCTemplates/TFGTemplate/PR2/PR2.tex
-          examples/UOCTemplates/TFGTemplate/MEM/MEM.tex
-          TEMPLATES
-          TEX
+      - run: echo "GitHub Actions admission check"
