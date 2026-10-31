@@ -24,9 +24,19 @@
 \documentclass{article}
 
 % Load pxCORE with debug enabled, libraries disabled (unit-test style).
-\usepackage[debug,PRP=false,UML=false,SRC=false]{pxCORE}
+\usepackage[debug,PRP=false,UML=false,SRC=false,
+  PRPconfig={reserved-prp},LSTconfig={reserved-lst},MEMconfig={reserved-mem}]{pxCORE}
 
 \begin{document}
+\ExplSyntaxOn
+% Reserved options remain accepted but are not forwarded to absent interfaces.
+\tl_if_eq:NnF \l_pxcore_prp_config_tl {reserved-prp}
+  {\PackageError{core-test}{PRPconfig was discarded}{}}
+\tl_if_eq:NnF \l_pxcore_lst_config_tl {reserved-lst}
+  {\PackageError{core-test}{LSTconfig was discarded}{}}
+\tl_if_eq:NnF \l_pxcore_mem_config_tl {reserved-mem}
+  {\PackageError{core-test}{MEMconfig was discarded}{}}
+\ExplSyntaxOff
 
 Debug should be ON:
 \pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}
