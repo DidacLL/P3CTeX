@@ -21,7 +21,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 ## Newly catalogued smells / deferred questions
 
 - **S01 (DIAG)**: `label=` is silently ignored when `float=` is omitted. Determine whether a nonfloating diagram should have a reference counter or should reject `label`; avoid inventing numbering in this checkpoint.
-- **S02 (DIAG)**: floating diagram labels are currently emitted even without a caption, so they may inherit an unrelated `\@currentlabel`; review the contract.
+- **S02 (DIAG)**: fixed in checkpoint 17 — uncaptained floats with `label=` advance the normal figure counter before registering their reference; `caption=` still uses standard `\caption`.
 - **S05 (load-time)**: resolved in checkpoint 16 — all forwarded UML/SRC/DIAG/TAB/ORL config keys retain token arguments until package loading, as `TFGconfig` already does.
 - **S04 (ANN)**: resolved in checkpoint 15 — `cleveref` plural annex names use localized `pxTXT` strings; standalone uses Babel's existing appendix heading as fallback.
 - **S03 (API)**: resolved in checkpoint 14 — restored old `miniCode`, `CodeBox`, `CodeBox*`, and `\pxCodeIn` contracts without duplicating the three verbatim listing environments.
@@ -64,3 +64,5 @@ Checkpoint 14: restored pre-TFG listing entry points that had been renamed durin
 Checkpoint 15: restored distinct singular/plural annex reference names for `cleveref` without changing the annex engine. P3CTeX uses CAT/ES/EN strings through pxTXT; standalone pxANN retains a Babel fallback. Expanded the existing annex test to reference a pair.
 
 Checkpoint 16: changed five pxCORE config-key setters from eager `.tl_set_x:N` to token-preserving `.tl_set:N`, without changing their names or forwarding branches. TeX Live confirmed that `\\RequirePackage[\\l_config_tl]` expands the stored option list when loading the target package; a late-defined macro receives its current value at that point. Added config-token regression. Also corrected stale pxLST and pxCORE manual comments that advertised nonexistent aliases or repeated their own key names. Repository compilation remains pending.
+
+Checkpoint 17: corrected `pxDIAG` references when `float=` and `label=` are present without a caption; the figure counter now advances normally, so labels cannot inherit a previous section. Existing captioned floats are unchanged. Focused test added and isolated article-class figure-counter probe verified the behavior; complete module compile remains pending.

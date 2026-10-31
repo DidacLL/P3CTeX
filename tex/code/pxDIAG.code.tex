@@ -246,7 +246,10 @@
             \use:e { \exp_not:N \begin {figure}[\exp_not:V \l__pxdiag_float_tl] }
               \bool_if:NT \l__pxdiag_centering_bool { \centering }
               \leavevmode\__pxdiag_frame_and_scale:n {#1}
-              \tl_if_blank:VF \l__pxdiag_caption_tl
+              \tl_if_blank:VTF \l__pxdiag_caption_tl
+                { % With no caption, a label still needs its own figure counter.
+                  \tl_if_blank:VF \l__pxdiag_label_tl
+                    {\refstepcounter{figure}} }
                 { \caption{\l__pxdiag_caption_tl} }
               \tl_if_blank:VF \l__pxdiag_label_tl
                 { \label{\l__pxdiag_label_tl} }

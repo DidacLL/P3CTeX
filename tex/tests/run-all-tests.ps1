@@ -30,6 +30,7 @@ $testFiles = @(
     "pxDIAG.standalone.test.tex",
     "pxDIAG.test.tex",
     "pxDIAG.languages.test.tex",
+    "pxDIAG.uncaptioned-label.test.tex",
     "pxCORE.test.tex",
     "pxCORE.config-tokens.test.tex",
     "public-api.test.tex",

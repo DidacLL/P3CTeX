@@ -1,0 +1,11 @@
+\documentclass{article}
+\usepackage{pxDIAG}
+\begin{document}
+\section{Earlier section}\label{sec:earlier}
+\pxTCompiler[float=htbp,label={diag:uncaptioned}]{A}{B}{C}
+\ExplSyntaxOn
+\int_compare:nNnF {\value{figure}} = {1}
+  {\PackageError{diagram-label}{Uncaptioned float was not numbered}{}}
+\ExplSyntaxOff
+Refer to \ref{diag:uncaptioned} and \ref{sec:earlier}.
+\end{document}
