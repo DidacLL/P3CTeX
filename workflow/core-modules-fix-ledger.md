@@ -74,3 +74,5 @@ Checkpoint 18: replaced checkpoint 13's key-value property roundtrip with direct
 Checkpoint 19: nonfloating `pxDIAG` labels now generate proper figure references instead of silently doing nothing; labelled captions show the number and enter the figure list. Unlabelled nonfloat presentation is unchanged; float behavior remains on the normal LaTeX caption path. Added focused counter/reference test. Full module compilation not claimed.
 
 Checkpoint 20: read-back revealed a typo in checkpoint 18 (`\\choices_set_eq:NN` in the copied container option); corrected to the valid `\\tl_set_eq:NN`. This regression was introduced by the refactor itself, not by the original source. Focused and full test execution remain required.
+
+Checkpoint 21: localized 16 more built-in compiler-model and IR-hub labels in pxDIAG through pxTXT (analysis/synthesis, compiler stages, source/target languages, symbols and errors). Standalone pxDIAG retains English fallback labels; diagram geometry and public commands unchanged. Earlier translation covered only seven labels. Full branch compile pending.

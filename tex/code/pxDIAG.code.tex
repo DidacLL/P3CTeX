@@ -1023,12 +1023,12 @@
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=\l__pxdiag_linewidth_dim,
               minimum~width=2.5cm, minimum~height=0.85cm, align=center,
               drop~shadow={fill=\l__pxdiag_shadowcolor_tl, shadow~xshift=-2pt, shadow~yshift=-2pt}]
-              (fe-head) at (2.2, 2.3) {Fases~d'an\`alisi\\(\textit{Front-End})};
+              (fe-head) at (2.2, 2.3) {\pxDEFdiaganalysisphases\\(\textit{Front-End})};
 
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=\l__pxdiag_linewidth_dim,
               minimum~width=2.5cm, minimum~height=0.85cm, align=center,
               drop~shadow={fill=\l__pxdiag_shadowcolor_tl, shadow~xshift=-2pt, shadow~yshift=-2pt}]
-              (be-head) at (10.2, 2.3) {Fases~de~s\'intesi\\(\textit{Back-End})};
+              (be-head) at (10.2, 2.3) {\pxDEFdiagsynthesisphases\\(\textit{Back-End})};
 
             % Front-End outer container
             \draw[\l__pxdiag_darkcolor_tl, line~width=\l__pxdiag_linewidth_dim]
@@ -1043,58 +1043,58 @@
             % Lexer box
             \draw[\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_bgcolor_tl, line~width=\l__pxdiag_linewidth_dim]
               (1.05, -1.05) rectangle (2.85, 1.38);
-            \node[align=center] at (1.95, 0.82) {Analitzador\\l\`exic\\(\textit{Scanner})};
+            \node[align=center] at (1.95, 0.82) {\pxDEFdiaglexer\\(\textit{Scanner})};
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=0.6pt,
               minimum~width=1.45cm, minimum~height=0.78cm, align=center]
-              at (1.95, -0.45) {Divisi\'o~en\\testimonis};
+              at (1.95, -0.45) {\pxDEFdiagtokenization};
 
             % Parser box
             \draw[\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_bgcolor_tl, line~width=\l__pxdiag_linewidth_dim]
               (3.25, -1.05) rectangle (5.05, 1.38);
-            \node[align=center] at (4.15, 0.82) {Analitzador\\sint\`actic\\(\textit{Parser})};
+            \node[align=center] at (4.15, 0.82) {\pxDEFdiagparser\\(\textit{Parser})};
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=0.6pt,
               minimum~width=1.45cm, minimum~height=0.78cm, align=center]
-              at (4.15, -0.45) {Verificaci\'o\\regles\\gramaticals};
+              at (4.15, -0.45) {\pxDEFdiaggrammarcheck};
 
             % Semantic box
             \draw[\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_bgcolor_tl, line~width=\l__pxdiag_linewidth_dim]
               (5.45, -1.05) rectangle (7.25, 1.38);
-            \node[align=center] at (6.35, 0.95) {Analitzador\\sem\`antic};
+            \node[align=center] at (6.35, 0.95) {\pxDEFdiagsemantic};
 
             % Codegen box
             \draw[\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_bgcolor_tl, line~width=\l__pxdiag_linewidth_dim]
               (9.15, -1.05) rectangle (10.95, 1.38);
-            \node[align=center] at (10.05, 0.95) {Generaci\'o\\de~codi};
+            \node[align=center] at (10.05, 0.95) {\pxDEFdiagcodegen};
 
             % Optimizer box
             \draw[\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_bgcolor_tl, line~width=\l__pxdiag_linewidth_dim]
               (11.35, -1.05) rectangle (13.15, 1.38);
-            \node[align=center] at (12.25, 0.95) {Optimitzaci\'o\\de~codi};
+            \node[align=center] at (12.25, 0.95) {\pxDEFdiagoptimization};
 
             % Flow arrows
-            \node[align=center] at (0.05, 0.48) {Programa\\font};
+            \node[align=center] at (0.05, 0.48) {\pxDEFdiagsourceprogram};
             \draw[-{Stealth[length=1.8mm]}, line~width=0.65pt, \l__pxdiag_darkcolor_tl]
               (-0.45, 0.15) -- (0.85, 0.15);
             \draw[-{Stealth[length=1.8mm]}, line~width=0.65pt, \l__pxdiag_darkcolor_tl]
               (2.85, 0.15) -- (3.25, 0.15);
             \draw[-{Stealth[length=1.8mm]}, line~width=0.65pt, \l__pxdiag_darkcolor_tl]
               (5.05, 0.15) -- (5.45, 0.15);
-            \node[align=center] at (8.2, 0.48) {Codi\\intermedi};
+            \node[align=center] at (8.2, 0.48) {\pxDEFdiagintermediate};
             \draw[-{Stealth[length=1.8mm]}, line~width=0.65pt, \l__pxdiag_darkcolor_tl]
               (7.45, 0.15) -- (8.95, 0.15);
             \draw[-{Stealth[length=1.8mm]}, line~width=0.65pt, \l__pxdiag_darkcolor_tl]
               (10.95, 0.15) -- (11.35, 0.15);
-            \node[align=center] at (14.15, 0.48) {Programa\\objecte};
+            \node[align=center] at (14.15, 0.48) {\pxDEFdiagobjectprogram};
             \draw[-{Stealth[length=1.8mm]}, line~width=0.65pt, \l__pxdiag_darkcolor_tl]
               (13.35, 0.15) -- (14.65, 0.15);
 
             % Symbol table & Error handler at bottom
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=\l__pxdiag_linewidth_dim,
               minimum~width=2.2cm, minimum~height=0.45cm, align=center]
-              (symtab) at (6.8, -2.95) {Taula~de~s\'imbols};
+              (symtab) at (6.8, -2.95) {\pxDEFdiagsymboltable};
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=\l__pxdiag_linewidth_dim,
               minimum~width=2.2cm, minimum~height=0.45cm, align=center]
-              (errtab) at (6.8, -3.50) {Gesti\'o~d'errors};
+              (errtab) at (6.8, -3.50) {\pxDEFdiagerrormanagement};
 
             \draw[{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]}, line~width=0.55pt, \l__pxdiag_darkcolor_tl]
               (1.95, -1.25) -- (6.3, -2.72);
@@ -1176,16 +1176,16 @@
       \__pxdiag_wrap_output:n
         {
           \begin{tikzpicture}[scale=\l__pxdiag_scale_tl, every~node/.style={font=\l__pxdiag_font_tl\footnotesize}]
-            \node[align=center, font=\l__pxdiag_font_tl\footnotesize\bfseries] at (0, 1.3) {Llenguatge\\font};
+            \node[align=center, font=\l__pxdiag_font_tl\footnotesize\bfseries] at (0, 1.3) {\pxDEFdiagsourcelanguage};
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=\l__pxdiag_linewidth_dim,
               minimum~width=2.1cm, minimum~height=0.7cm, align=center,
               drop~shadow={fill=\l__pxdiag_shadowcolor_tl, shadow~xshift=-2pt, shadow~yshift=-2pt}]
-              at (2.25, 1.3) {Fases~d'an\`alisi};
+              at (2.25, 1.3) {\pxDEFdiaganalysisphases};
             \node[draw=\l__pxdiag_darkcolor_tl, fill=\l__pxdiag_piecefill_tl, line~width=\l__pxdiag_linewidth_dim,
               minimum~width=2.1cm, minimum~height=0.7cm, align=center,
               drop~shadow={fill=\l__pxdiag_shadowcolor_tl, shadow~xshift=-2pt, shadow~yshift=-2pt}]
-              at (5.75, 1.3) {Fases~de~s\'intesi};
-            \node[align=center, font=\l__pxdiag_font_tl\footnotesize\bfseries] at (8.0, 1.3) {Llenguatge\\objecte\\i~plataforma};
+              at (5.75, 1.3) {\pxDEFdiagsynthesisphases};
+            \node[align=center, font=\l__pxdiag_font_tl\footnotesize\bfseries] at (8.0, 1.3) {\pxDEFdiagtargetlanguage};
 
             \int_set:Nn \l_tmpa_int { \clist_count:N \l__pxdiag_tmpa_clist }
             \int_set:Nn \l_tmpb_int { \clist_count:N \l__pxdiag_tmpb_clist }
