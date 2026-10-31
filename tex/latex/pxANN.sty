@@ -18,6 +18,13 @@
    \seq_map_inline:Nn \l__pxann_print_seq {##1}
    \group_end:}
 \ProcessKeysOptions{pxANN}
+% Register a reference format only when cleveref is in use. The text follows
+% Babel's current appendix name, so P3CTeX's selected language remains in charge.
+\AddToHook{begindocument/before}{
+  \cs_if_exist:NT \crefname
+    {\crefname{pxannex}{\appendixname}{\appendixname}
+     \Crefname{pxannex}{\appendixname}{\appendixname}}
+}
 % Annex content must execute before automatic glossaries so its terms contribute.
 \AddToHook{enddocument}[pxANN]{
   \bool_if:NT \l__pxann_auto_bool {\pxPrintAnnexes}

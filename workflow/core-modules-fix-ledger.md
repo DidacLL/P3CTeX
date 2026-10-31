@@ -8,7 +8,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 
 - **F01 — fixed in checkpoint 1**: `pxDIAG.code.tex`, figure/float option passed through malformed `\exp_args:NnV \begin{figure}`; expand the actual placement token list instead. Extend diagram test with a floating caption and reference.
 - **F02 — fixed in checkpoint 2**: `pxSRC.code.tex`, temporary `\label` override parses only a mandatory argument; preserve standard/cleveref optional label type and isolate nested native inputs.
-- **F03 — pending**: `pxANN`, register annex reference type for cleveref; preserve standard `\ref` and language selection.
+- **F03 — fixed in checkpoint 3**: `pxANN`, register annex reference type for cleveref; preserve standard `\ref` and language selection.
 - **F04 — investigate before changing**: `pxMEM` source inclusion and imported-reference scope (potential label collisions across PR documents); check intended label-prefix contract and native `\ref` semantics, not an automatic rewrite.
 - **F05 — pending**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
 - **F06 — investigate**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
@@ -19,6 +19,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 
 - **S01 (DIAG)**: `label=` is silently ignored when `float=` is omitted. Determine whether a nonfloating diagram should have a reference counter or should reject `label`; avoid inventing numbering in this checkpoint.
 - **S02 (DIAG)**: floating diagram labels are currently emitted even without a caption, so they may inherit an unrelated `\@currentlabel`; review the contract.
+- **S04 (ANN)**: cleveref plural for the custom `pxannex` type currently reuses Babel's `\\appendixname` in both forms; defer a fully localized plural string to the pxTXT integration review rather than hardcoding incorrect suffixes.
 - **S03 (API)**: previous changes renamed legacy `miniCode`, `CodeBox`, `CodeBox*`, and `\pxCodeIn` entry points in pxLST. Check actual compatibility requirements before reintroducing aliases.
 
 ## Validation
@@ -26,3 +27,5 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 Checkpoint 1: code replacement and test registration inspected statically; multi-pass compilation is **not** claimed by this ledger. The existing reported test pass does not cover this new float test until rerun.
 
 Checkpoint 2: native source label override now understands `\\label[type]{key}`, resets the label dispatcher for nested no-prefix inputs, and retains the caller's prefix when the child returns. Added fixture and focused regression document. Compilation has not been run for this checkpoint.
+
+Checkpoint 3: register `pxannex` with cleveref only if loaded, using current `\\appendixname`; extend automatic-annex document with `\\cref`. No compilation claimed.
