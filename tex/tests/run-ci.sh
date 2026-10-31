@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CI uses the PowerShell test list as its single source of test names.
+# Use the PowerShell test list as the single source of test names.
 set -euo pipefail
 cd /work/tex/tests
 
@@ -12,18 +12,31 @@ if (( ${#tests[@]} == 0 )); then
   exit 1
 fi
 
+failures=()
 for test in "${tests[@]}"; do
   echo "=== Module test: ${test} ==="
   job="${test%.tex}"
-  pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-jobname=${job}" "${test}" > "${job}.pass1.log" 2>&1 ||
-    { tail -80 "${job}.pass1.log"; exit 1; }
-  if [[ "${test}" == "pxGLS.external.test.tex" ]]; then
-    makeglossaries "${job}" > "${job}.index.log" 2>&1 ||
-      { tail -80 "${job}.index.log"; exit 1; }
-    test -f "${job}.gls" && test -f "${job}.acr"
+  if ! pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-jobname=${job}" "${test}" > "${job}.pass1.log" 2>&1; then
+    tail -50 "${job}.pass1.log"
+    failures+=("${test} (first pass)")
+    continue
   fi
-  pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-jobname=${job}" "${test}" > "${job}.pass2.log" 2>&1 ||
-    { tail -80 "${job}.pass2.log"; exit 1; }
+  if [[ "${test}" == "pxGLS.external.test.tex" ]]; then
+    if ! makeglossaries "${job}" > "${job}.index.log" 2>&1; then
+      tail -50 "${job}.index.log"
+      failures+=("${test} (makeglossaries)")
+      continue
+    fi
+    if [[ ! -f "${job}.gls" || ! -f "${job}.acr" ]]; then
+      echo "Glossary or acronym index output was not generated."
+      failures+=("${test} (missing indexes)")
+      continue
+    fi
+  fi
+  if ! pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-jobname=${job}" "${test}" > "${job}.pass2.log" 2>&1; then
+    tail -50 "${job}.pass2.log"
+    failures+=("${test} (second pass)")
+  fi
 done
 
 for template in \
@@ -36,7 +49,13 @@ for template in \
   examples/UOCTemplates/TFGTemplate/MEM/MEM.tex
 do
   echo "=== Template: ${template} ==="
-  (cd "/work/$(dirname "${template}")" &&
-    latexmk -pdf -halt-on-error -file-line-error -interaction=nonstopmode "$(basename "${template}")")
+  if ! (cd "/work/$(dirname "${template}")" &&
+      latexmk -pdf -halt-on-error -file-line-error -interaction=nonstopmode "$(basename "${template}")"); then
+    failures+=("${template}")
+  fi
 done
-echo "TeX module tests and templates passed."
+if (( ${#failures[@]} )); then
+  printf 'FAILED: %s\n' "${failures[@]}"
+  exit 1
+fi
+echo "All ${#tests[@]} module tests and 7 templates passed."
