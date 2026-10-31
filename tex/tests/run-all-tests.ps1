@@ -25,10 +25,10 @@ $testFiles = @(
     "pxTAB.pxtbl.test.tex",
     "pxTAB.preset.test.tex",
 
-    # pxCMP suite
-    "pxCMP.probe.test.tex",
-    "pxCMP.standalone.test.tex",
-    "pxCMP.test.tex",
+    # pxDIAG suite
+    "pxDIAG.probe.test.tex",
+    "pxDIAG.standalone.test.tex",
+    "pxDIAG.test.tex",
     "pxCORE.test.tex",
 
     # pxLST suite

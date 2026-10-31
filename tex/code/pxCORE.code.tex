@@ -30,7 +30,7 @@
 %% =================================
 %% pxCORE package keys.
 %% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
-%% PRP/UML/PM/CMP/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/CMPconfig forward option strings to those packages.
+%% PRP/UML/PM/DIAG/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/diagrams-config forward option strings to those packages.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
@@ -51,11 +51,10 @@
     calculations .default:n = true,
     CALC .meta:n = {calculations=#1},
     CALC .default:n = true,
-    diagrams .meta:n = {CMP=#1},
-    diagrams .default:n = true,
-    DIAG .meta:n = {CMP=#1},
+
+    DIAG .meta:n = {diagrams=#1},
     DIAG .default:n = true,
-    diagrams-config .meta:n = {CMPconfig={#1}},
+
     code .meta:n = {LST=#1},
     code .default:n = true,
     images .meta:n = {SRC=#1},
@@ -78,11 +77,11 @@
 		PRP			.default:n	= true,
 	PRPconfig	.tl_set_x:N 	= \l_pxcore_prp_config_tl,
 		PRPconfig	.initial:n	= {},
-	CMP			.bool_set:N	=	\l_pxcore_cmp_use_bool,
-		CMP			.initial:n	=	false,
-		CMP			.default:n	=	true,
-	CMPconfig	.tl_set_x:N 	= \l_pxcore_cmp_config_tl,
-		CMPconfig	.initial:n	= {},
+	diagrams			.bool_set:N	=	\l_pxcore_diag_use_bool,
+		diagrams			.initial:n	=	false,
+		diagrams			.default:n	=	true,
+	diagrams-config	.tl_set_x:N 	= \l_pxcore_diag_config_tl,
+		diagrams-config	.initial:n	= {},
 	UML			.bool_set:N 	= \l_pxcore_uml_use_bool,
 		UML			.initial:n	= false,
 		UML			.default:n	= true,
@@ -151,20 +150,14 @@
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
-\bool_if:NT \l_pxcore_cmp_use_bool
+\bool_if:NT \l_pxcore_diag_use_bool
 	{
-		\tl_if_blank:VTF \l_pxcore_cmp_config_tl
+		\tl_if_blank:VTF \l_pxcore_diag_config_tl
 			{ \RequirePackage{pxDIAG} }
-			{ \RequirePackage[\l_pxcore_cmp_config_tl]{pxDIAG} }
+			{ \RequirePackage[\l_pxcore_diag_config_tl]{pxDIAG} }
 	}
 \bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
 \bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
-\bool_if:NT \l_pxcore_lst_use_bool {}
-
-
-
-
-
 
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }

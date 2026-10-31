@@ -1,16 +1,16 @@
 % !TeX encoding = UTF-8
-% pxCMP structural & option-scoping probe test
+% pxDIAG structural & option-scoping probe test
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[CMP,CMPconfig={preset=p3c-blueprint},PRP=false,UML=false,SRC=false,TAB=false,LST=false]{pxCORE}
+\usepackage[diagrams,diagrams-config={preset=p3c-blueprint},PRP=false,UML=false,SRC=false,TAB=false,LST=false]{pxCORE}
 
 \makeatletter
 \newcommand{\AssertCommand}[1]{%
   \ifdefined#1\relax
     \typeout{PROBE-PASS: \string#1 is defined}%
   \else
-    \PackageError{pxCMP-probe}{Missing public command \string#1}{}%
+    \PackageError{pxDIAG-probe}{Missing public command \string#1}{}%
   \fi
 }
 \makeatother
@@ -18,10 +18,10 @@
 \begin{document}
 
 % 1. Verify all public API entry points exist
-\AssertCommand{\pxCMPsetup}
-\AssertCommand{\pxCMPsavepreset}
-\AssertCommand{\pxCMPusepreset}
-\AssertCommand{\pxCMPNote}
+\AssertCommand{\pxDiagramSetup}
+\AssertCommand{\pxDiagramSavePreset}
+\AssertCommand{\pxDiagramUsePreset}
+\AssertCommand{\pxDIAGNote}
 \AssertCommand{\pxTCompiler}
 \AssertCommand{\pxTProgram}
 \AssertCommand{\pxTMachine}
@@ -62,8 +62,8 @@
 \AssertCommand{\pxFuzzyPlot}
 
 % 2. Verify custom preset registration and local scoping
-\pxCMPsavepreset{custom-probe}{framed=false, shadow=false, scale=0.85}
-\pxCMPusepreset{custom-probe}
+\pxDiagramSavePreset{custom-probe}{framed=false, shadow=false, scale=0.85}
+\pxDiagramUsePreset{custom-probe}
 \pxTCompiler[framed=true]{C}{OBJ}{C}
 % Subsequent call should still reflect custom-probe (framed=false)
 \pxTProgram[program-shape=rect]{main}{C}

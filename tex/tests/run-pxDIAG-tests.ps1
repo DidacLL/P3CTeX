@@ -11,9 +11,9 @@ $codeDir = Resolve-Path (Join-Path $scriptDir "..\code")
 $testsDir = Resolve-Path $scriptDir
 
 $testFiles = @(
-    "pxCMP.probe.test.tex",
-    "pxCMP.standalone.test.tex",
-    "pxCMP.test.tex",
+    "pxDIAG.probe.test.tex",
+    "pxDIAG.standalone.test.tex",
+    "pxDIAG.test.tex",
     "pxCORE.test.tex",
     "P3CTeX.test.tex"
 )
@@ -24,7 +24,7 @@ try {
     # Keep default TeX search path by ending with ';'.
     $env:TEXINPUTS = "$latexDir;$codeDir;$testsDir;"
 
-    Write-Host "== pxCMP quality gate =="
+    Write-Host "== pxDIAG quality gate =="
     Write-Host "TEXINPUTS=$($env:TEXINPUTS)"
     Write-Host ""
 
@@ -72,7 +72,7 @@ try {
         Write-Host ""
     }
 
-    Write-Host "== pxCMP quality gate summary =="
+    Write-Host "== pxDIAG quality gate summary =="
     foreach ($result in $results) {
         Write-Host ("{0} | exit={1} | {2}" -f $result.TestFile, $result.ExitCode, $result.Status)
     }

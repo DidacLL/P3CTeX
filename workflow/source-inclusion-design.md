@@ -1,10 +1,10 @@
 # Source inclusion, glossaries and annexes
 
-Status: shared source input, annex and glossary implementations are integrated. PAC/PR/MEM smoke tests, invalid-selection tests and legacy MEM tests pass. Final documentation, backend tests and full multi-pass gate are in progress.
+Status: implemented and documented. Final integrated gate passed 50/50. After the mechanical pxSRC file consolidation, image, native-source and preview regressions passed again. All remaining changes are ready for the final Git checkpoint.
 
 Owner request (2026-10-30): pxSRC must load files and fragments as P3CTeX-styled code, native TeX, minipages and annex content. Glossaries, references and annexes must integrate consciously and be optional in PAC, PR and MEM documents. Work directly on the development branch and checkpoint in Git regularly.
 
-## Existing foundation
+## Existing foundation (audit baseline)
 
 - pxSRC owns images, placeholders, image lists and source configuration.
 - pxLST owns syntax-highlighted inline, block and external-file code, including line slices.
@@ -13,7 +13,7 @@ Owner request (2026-10-30): pxSRC must load files and fragments as P3CTeX-styled
 - The class glossary key loads glossaries and uses the no-index backend. It currently prints both acronym and term lists automatically at document end with hard-coded Catalan titles. Explicit placement and independent enable/print controls are missing.
 - Bibliography keys in P3CTeX.code.tex are commented out. Native LaTeX citation commands remain available; do not pretend an integrated bibliography API already exists.
 
-## Design work to complete
+## Design scope
 
 1. Separate source selection (whole file, named region, line range) from rendering (native, code, minipage) and placement (here, queued annex). Keep file paths relative to the included source, and diagnose unknown IDs, absent files and absent/ambiguous regions.
 2. Reuse pxLST rendering and migrate/generalise the existing tagged extraction rather than introducing a competing implementation. Keep pxMEMsource/include as compatibility entry points.
@@ -90,3 +90,24 @@ The final PM layout is the standard pair pxPM.sty / pxPM.code.tex. Gantt is a
 section in that implementation, not another package or implementation file.
 The source-preview implementation is now present and passing focused builds;
 final height, link, literal-content and full-suite checks are underway.
+
+## Final quality validation (2026-10-31)
+
+- Integrated gate: 50/50 regression documents and templates passed after the
+  diagram migration, runtime graphics-routing fix and Babel shorthand fix.
+- pxSRC now uses one implementation file. The three focused image, source-input
+  and measured-preview tests passed again after that mechanical consolidation.
+- Per-use calculation steps and precision are asserted across consecutive calls.
+- Rendered previews obey the complete .33-textheight budget, retain complete
+  wrapped source lines, and link to the correct automatic annexes. Final source
+  lines are present only in the full annex, and literal TeX escape content never
+  executes. The styled page was inspected visually.
+- Runtime cover/page settings and PDF title/author were verified in PDF output.
+- PM labels were checked in Catalan, Spanish and English. The previously recorded
+  EN/PAC clash is fixed; Spanish quote shorthand no longer breaks graph arrows.
+- Shared glossary entry registration, automatic output, native source metadata,
+  references and automatic annex-before-glossary ordering passed their tests.
+- Manuals for PM, diagrams, core and code, plus the student guide, were rebuilt.
+- Migration is documented in tex/doc/api-corrections.md. Removed packages and
+  duplicate spellings are intentionally not retained as compatibility wrappers.
+- Existing dist/ is untouched. No release archive was rebuilt or published.

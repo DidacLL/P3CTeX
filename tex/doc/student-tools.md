@@ -6,14 +6,14 @@ P3CTeX's existing tools remain the foundation. Choose features by what you need:
 \documentclass[EN,code,images,tables,diagrams,calculations,project-management]{P3CTeX}
 ```
 
-The readable keywords are aliases for module selection at class/package load time. Existing `LST`, `SRC`, `TAB`, `CMP` and `default` options remain available. `CALC` and `PM` are also accepted. For a standard `article`, load individual packages or `\usepackage[code,calculations]{pxCORE}`. Changing module flags after loading does not load packages.
+The readable keywords are aliases for module selection at class/package load time. Existing `LST`, `SRC`, `TAB`, `DIAG` and `default` options remain available. `CALC` and `PM` are also accepted. For a standard `article`, load individual packages or `\usepackage[code,calculations]{pxCORE}`. Changing module flags after loading does not load packages.
 
 | Tool | Package | Existing entry points |
 | --- | --- | --- |
 | Code | `pxLST` | `pxCode`, `pxCodeInline`, `pxCodeFile`, `pxCodeBox` |
 | Images | `pxSRC` | `pxIMG`, `pxIMGpair`, `pxIMGList` |
 | Tables | `pxTAB` | `pxTable`, `pxTableFromList`, `pxTableMatrix` |
-| Diagrams | `pxDIAG` (uses the existing `pxCMP` engine) | `pxAutomaton`, `pxTransitionTable`, `pxGraph`, compiler/logic/memory/ML tools |
+| Diagrams | `pxDIAG` | `pxAutomaton`, `pxTransitionTable`, `pxGraph`, compiler/logic/memory/ML tools |
 | Calculations | `pxCALC` | `pxDefVar`, `pxDefFormula`, `pxSolve`, `pxCalcStore` |
 | Project management | `pxPM` | `pxUserStory`, `pxScenario`, `pxSWOT` |
 
@@ -98,4 +98,4 @@ Cards are breakable and accept ordinary `tcolorbox` options. Set shared card opt
 - Partitions: `\pxTransitionTable` already has a partition field. `\pxAutomatonTrace` displays a supplied trace without running an automaton.
 - Annexes and source reuse share pxANN and pxSRC across PAC, PR and MEM; see [the source guide](source-inclusion.md). Legacy pxMEM entry points delegate to them.
 - Authorship: use the class's metadata, cover and translated declaration support. New tools do not generate institutional pledges.
-- Diagram customisation: `\pxDiagramSetup`, `\pxDiagramSavePreset`, `\pxDiagramUsePreset` and `pxDiagram` are descriptive aliases; all existing `pxCMP` commands and presets remain supported.
+- Diagram customisation: `\pxDiagramSetup`, `\pxDiagramSavePreset`, `\pxDiagramUsePreset` and `pxDiagram` are descriptive aliases; all existing `pxDIAG` commands and presets remain supported.

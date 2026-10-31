@@ -49,3 +49,9 @@ follow the document language, and pxPMsetup can customise labels and box options
 The supplied PhotoFilm coursework archive informed this grouping through its
 shared story/scenario cards and sprint/release planning; its personal/project
 content was not copied into the package.
+
+Diagram naming is also implemented directly: pxDIAG.sty and pxDIAG.code.tex own
+the diagram tools. The earlier forwarding wrapper and pxCMP package are removed.
+Use diagrams, pxDiagramSetup, pxDiagramSavePreset, pxDiagramUsePreset and pxDiagram.
+Existing diagram-specific commands (automata, graphs, compiler diagrams, etc.) keep
+their meaningful names.

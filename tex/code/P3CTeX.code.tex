@@ -58,8 +58,8 @@
 \cs_new_protected:Npn \__pxdoc_tools:n #1
   {\bool_if:NTF \l__pxdoc_loading_bool
     {\tl_put_right:Nn \l__pxdoc_unknown_tl {,#1}}
-    {\ClassError{P3CTeX}{Tools must be selected at class loading}
-      {Put tool keys in \string\documentclass.}}}
+    {\ClassError{P3CTeX}{Tools~must~be~selected~at~class~loading}
+      {Put~tool~keys~in~ \string\documentclass.}}}
 \keys_define:nn {P3CTeX}
 {
     tools .code:n = {\__pxdoc_tools:n {#1}},
@@ -91,8 +91,6 @@
 	PR		.meta:n	={cover = {true} , toc ={ true }},
 	ORL .meta:n = {tools={ORL=#1}},
 	ORL .default:n = true,
-	CMP .meta:n = {tools={CMP=#1}},
-	CMP .default:n = true,
 	TFG .meta:n = {tools={TFG=#1}},
 	TFG .default:n = true,
 	MEM .meta:n = {tools={MEM=#1}},
@@ -218,7 +216,7 @@
 \bool_set_false:N \l__pxdoc_loading_bool
 
 \bool_if:NT \l_pxdoc_useglossary_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}}
-\use:x {\exp_not:N \RequirePackage[english,spanish,catalan,main=\l__pxdoc_language_tl]{babel}}
+\use:x {\exp_not:N \RequirePackage[english,spanish,es-noquoting,catalan,main=\l__pxdoc_language_tl]{babel}}
 \exp_args:NV \selectlanguage \l__pxdoc_language_tl
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
@@ -244,4 +242,9 @@
 	}
 }
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
+%% Runtime document appearance uses pxGDX directly, not the module loader.
+\keys_define:nn {P3CTeX}
+  {cover-config .code:n = {\pxGDX_config:n {cover-config={#1}}},
+   page-config .code:n = {\pxGDX_config:n {page-config={#1}}},
+   pdf-config .code:n = {\pxGDX_config:n {pdf-config={#1}}}}
 \endinput

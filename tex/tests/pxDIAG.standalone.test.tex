@@ -1,11 +1,11 @@
 % !TeX encoding = UTF-8
-% pxCMP standalone regression test (article class)
+% pxDIAG standalone regression test (article class)
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[margin=20mm]{geometry}
 \usepackage[catalan]{babel}
-\usepackage[preset=p3c-uoc]{pxCMP}
+\usepackage[preset=p3c-uoc]{pxDIAG}
 
 \begin{document}
 
@@ -27,22 +27,22 @@
 \pxTombstoneCompileCompiler[interpreter=P-IV]{Prolog}{P-IV}{Prolog}{Prolog}{P-IV}{Prolog}
 \pxTombstoneBootstrap{Pascal}{M4}{M5}
 
-\subsection{Composable Canvas Environment (\texttt{pxCMPDiagram})}
-\begin{pxCMPDiagram}[title={Exercici 2: Compilador de Prolog per a P-IV}]
-  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 3.0}{Tenim:}
+\subsection{Composable Canvas Environment (\texttt{pxDiagram})}
+\begin{pxDiagram}[title={Exercici 2: Compilador de Prolog per a P-IV}]
+  \pxDIAGNote[font=\sffamily\bfseries\footnotesize]{-2.8, 3.0}{Tenim:}
   \pxTInterpreter{Prolog}{P-IV}[0, 2.5]
   \pxTMachine{P-IV}[][2.2, 3.4]
 
-  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, 1.35}{Volem:}
+  \pxDIAGNote[font=\sffamily\bfseries\footnotesize]{-2.8, 1.35}{Volem:}
   \pxTCompiler{Prolog}{P-IV}{P-IV}[][0.5, 1.0]
 
-  \pxCMPNote[font=\sffamily\bfseries\footnotesize]{-2.8, -0.65}{Proc\'es:}
+  \pxDIAGNote[font=\sffamily\bfseries\footnotesize]{-2.8, -0.65}{Proc\'es:}
   \pxTCompiler{Prolog}{P-IV}{Prolog}[][0.5, -1.0]
   \pxTCompiler{Prolog}{P-IV}{Prolog}[][2.5, -1.7]
   \pxTInterpreter{Prolog}{P-IV}[2.5, -3.3]
   \pxTMachine{P-IV}[][2.5, -3.3]
   \pxTCompiler{Prolog}{P-IV}{P-IV}[][4.5, -1.0]
-\end{pxCMPDiagram}
+\end{pxDiagram}
 
 \section{Priority 2: Translator, Pipeline \& IR Hub Diagrams}
 \pxTranslatorBox{Programa\\font}{Traductor}{Programa\\objecte}[Errors]
