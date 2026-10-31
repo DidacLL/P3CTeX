@@ -34,6 +34,7 @@ $testFiles = @(
     "pxDIAG.nonfloating-label.test.tex",
     "pxCORE.test.tex",
     "pxCORE.config-tokens.test.tex",
+    "pxCORE.forwarding.test.tex",
     "public-api.test.tex",
     "pxSRC.dependencies.test.tex",
     "pxSRC.nested.test.tex",

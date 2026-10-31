@@ -1,0 +1,26 @@
+\documentclass[
+  PAC,EN,TFG,DIAG,ORL,SRC,TAB,
+  TABconfig={style=grid},
+  ORLconfig={columns=2,auto-columns=false},
+  diagrams-config={maincolor=red},
+  SRCconfig={default-width=.5\linewidth},
+  TFGconfig={tutor=Mentor}
+]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__pxtab_style_tl {grid}
+  {\PackageError{core-forwarding}{TABconfig did not reach pxTAB}{}}
+\int_compare:nNnF {\l__pxorl_columns_int} = {2}
+  {\PackageError{core-forwarding}{ORLconfig did not reach pxORL}{}}
+\bool_if:NT \l__pxorl_auto_columns_bool
+  {\PackageError{core-forwarding}{ORLconfig boolean was ignored}{}}
+\tl_if_eq:NnF \l__pxdiag_maincolor_tl {red}
+  {\PackageError{core-forwarding}{diagrams-config did not reach pxDIAG}{}}
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.5\linewidth}
+  {\PackageError{core-forwarding}{SRCconfig did not reach pxSRC}{}}
+\tl_if_eq:NnF \l__pxtfg_tutor_tl {Mentor}
+  {\PackageError{core-forwarding}{TFGconfig did not reach pxTFG}{}}
+\ExplSyntaxOff
+\begin{document}
+Loaded options reached all five target packages.
+\end{document}
