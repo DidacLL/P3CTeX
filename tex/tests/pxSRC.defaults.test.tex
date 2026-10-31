@@ -18,7 +18,7 @@
     {\PackageError{pxSRC-defaults}{Latest title was lost}{}}
   \tl_if_eq:NnF \l__pxsrc_input_language_tl {Python}
     {\PackageError{pxSRC-defaults}{Previous language was lost}{}}
-  \tl_if_eq:NnF \l__pxsrc_input_label_prefix_tl {pr:}
+  \str_if_eq:eeF {\l__pxsrc_input_label_prefix_tl} {pr:}
     {\PackageError{pxSRC-defaults}{Label prefix was lost}{}}
   \keys_set:nn {pxSRC/input}{title={Override},region=part}
   \group_begin:
