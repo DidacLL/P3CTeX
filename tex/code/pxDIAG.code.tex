@@ -243,7 +243,7 @@
             \medskip
           }
           {
-            \exp_args:NnV \begin{figure}[\l__pxdiag_float_tl]
+            \use:e { \exp_not:N \begin {figure}[\exp_not:V \l__pxdiag_float_tl] }
               \bool_if:NT \l__pxdiag_centering_bool { \centering }
               \leavevmode\__pxdiag_frame_and_scale:n {#1}
               \tl_if_blank:VF \l__pxdiag_caption_tl
