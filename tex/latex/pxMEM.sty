@@ -32,10 +32,10 @@
 %% The consumer supplies the actual source path; source PRs remain unchanged.
 \NewDocumentCommand\pxMEMsource{mm}{\__pxmem_source:nn {#1}{#2}}
 % Extract on demand, then input the generated snippet as ordinary TeX.
-%% \pxMEMinclude{<id>}{<region>}
+%% \pxMEMinclude[<pxSRC input keys>]{<id>}{<region>}
 %% Insert only the source lines bracketed by %<*region> and %</region>.
 %% Internally creates and inputs a disposable snippet; no manual exports.
-\NewDocumentCommand\pxMEMinclude{mm}{\__pxmem_include:nn {#1}{#2}}
+\NewDocumentCommand\pxMEMinclude{O{} mm}{\__pxmem_include:nnn {#1}{#2}{#3}}
 % Shared annex numbering leaves the main chapter sequence intact.
 %% \pxMEMannex{<title>}{<content>}
 %% Start a scoped letter-numbered annex chapter; restore main numbering

@@ -64,6 +64,7 @@ $testFiles = @(
     "pxPM.gantt.test.tex",
     "pxPM.gantt-standalone.test.tex",
     "pxMEM.test.tex",
+    "pxMEM.labels.test.tex",
     "pxTFG.MEM.test.tex",
     "pxTFG.no-toc.test.tex",
     "pxTFG.PR.test.tex",

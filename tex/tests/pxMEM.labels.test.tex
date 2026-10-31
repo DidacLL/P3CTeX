@@ -1,0 +1,10 @@
+\documentclass[MEM,PAC]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\pxMEMsource{PR1}{pxMEM.source-labels.tex}
+\pxMEMsource{PR2}{pxMEM.source-labels.tex}
+\begin{document}
+\chapter{Label namespaces}
+\pxMEMinclude[label-prefix=PR1:]{PR1}{selected}
+\pxMEMinclude[label-prefix=PR2:]{PR2}{selected}
+First: \ref{PR1:sec:shared}. Second: \ref{PR2:sec:shared}.
+\end{document}
