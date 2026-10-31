@@ -76,3 +76,5 @@ Checkpoint 19: nonfloating `pxDIAG` labels now generate proper figure references
 Checkpoint 20: read-back revealed a typo in checkpoint 18 (`\\choices_set_eq:NN` in the copied container option); corrected to the valid `\\tl_set_eq:NN`. This regression was introduced by the refactor itself, not by the original source. Focused and full test execution remain required.
 
 Checkpoint 21: localized 16 more built-in compiler-model and IR-hub labels in pxDIAG through pxTXT (analysis/synthesis, compiler stages, source/target languages, symbols and errors). Standalone pxDIAG retains English fallback labels; diagram geometry and public commands unchanged. Earlier translation covered only seven labels. Full branch compile pending.
+
+Checkpoint 22: removed the never-read global `\g__pxmem_annex_bool` from pxMEM; its adapter still delegates directly to pxANN, with no behavioral change. Corrected api-corrections.md to reflect the previously restored legacy listing names instead of falsely documenting their removal. Extended the existing diagram-language test to cover the newly localized compiler diagram and IR hub. No complete repository compilation claimed.

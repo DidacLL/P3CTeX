@@ -13,8 +13,14 @@
 \ExplSyntaxOn
 \str_if_eq:eeF {\pxDEFdiaginput} {Input}
  {\PackageError{diag-lang}{English labels missing}{}}
+\str_if_eq:eeF {\pxDEFdiaganalysisphases} {Analysis~stages}
+ {\PackageError{diag-lang}{Compiler stage label not translated}{}}
+\str_if_eq:eeF {\pxDEFdiagerrormanagement} {Error~handling}
+ {\PackageError{diag-lang}{Error handling label not translated}{}}
 \ExplSyntaxOff
 \begin{document}
 \pxConfusionMatrix{Positive,Negative}{3,2;5,5}
 \pxLexemeTable{if / KW_IF; name / IDENT}
+\pxCompilerModel
+\pxIRHub{C, Pascal}{IR}{x86}
 \end{document}

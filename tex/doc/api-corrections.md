@@ -2,15 +2,16 @@
 
 The development API now has one spelling for each code operation:
 
-- Inline: pxCodeInline (replaces pxCodeIn and pxInlineCode).
-- Block: pxCode (replaces Code and CODE).
-- Compact block: pxCodeMini (replaces miniCode).
-- Annotated blocks: pxCodeBox and pxCodeBreak (replace CodeBox and CodeBox*).
-- File: pxCodeFile (replaces pxLSTinput).
+- Inline: pxCodeInline (verbatim argument); the original pxCodeIn call remains available.
+- Block: pxCode and its visual pxCode* variant.
+- Compact block: pxCodeMini; the old miniCode environment remains available.
+- Annotated blocks: pxCodeBox and pxCodeBreak; the original CodeBox and CodeBox* environments remain available.
+- File: pxCodeFile.
 
-Maintained examples and tests have been migrated; redundant definitions were
-removed instead of perpetuating case-dependent aliases. pxCode* remains an
-explicit visual variant, not an alternative spelling of the same operation.
+The original listing environment names are aliases to the current verbatim-aware
+engines; they do not duplicate implementations. pxCodeIn retains its original
+mandatory-argument syntax, which is different from pxCodeInline's verbatim syntax.
+pxCode* remains an explicit visual variant.
 
 Calculation presentation is local to each call. Use pxSolve[steps=1|2|3,prec=...]
 and pxCalc[prec=...,unit=...]. Formula definitions accept symbol and unit only.

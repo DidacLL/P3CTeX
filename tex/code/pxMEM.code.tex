@@ -1,11 +1,9 @@
 \ProvidesExplFile{pxMEM.code.tex}{2026/10/30}{0.2}{Generic memory adapters}
 % Existing entry points now share source and annex engines with PAC/PR documents.
-\bool_new:N \g__pxmem_annex_bool
 \cs_new_protected:Npn \__pxmem_source:nn #1#2
   {\__pxsrc_source:nnn {}{#1}{#2}}
 \cs_new_protected:Npn \__pxmem_include:nnn #1#2#3
   {\__pxsrc_use_source:nn {region={#3},#1}{#2}}
 \cs_new_protected:Npn \__pxmem_annex:nn #1#2
-  {\bool_gset_true:N \g__pxmem_annex_bool
-   \pxAnnex{#1}{#2}}
+  {\pxAnnex{#1}{#2}}
 \endinput
