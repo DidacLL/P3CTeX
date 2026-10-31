@@ -48,6 +48,7 @@ $testFiles = @(
     "pxUML.test.tex",
     "pxSRC.test.tex",
     "pxSRC.settings.test.tex",
+    "pxSRC.defaults.test.tex",
     "pxSRC.input.test.tex",
     "pxSRC.input-PR.test.tex",
     "pxSRC.input-MEM.test.tex",

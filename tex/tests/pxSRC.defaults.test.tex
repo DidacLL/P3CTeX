@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{pxSRC}
+\begin{document}
+% Multiple setup calls merge by key; later values replace earlier ones.
+\pxSRCsetup{input={title={First, with comma},language={Python}}}
+\pxSRCsetup{input={title={Updated, with comma},label-prefix=pr:}}
+\ExplSyntaxOn
+\group_begin:
+  \__pxsrc_input_defaults:n {native}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+    {\PackageError{pxSRC-defaults}{Latest title was lost}{}}
+  \tl_if_eq:NnF \l__pxsrc_input_language_tl {Python}
+    {\PackageError{pxSRC-defaults}{Previous language was lost}{}}
+  \tl_if_eq:NnF \l__pxsrc_input_label_prefix_tl {pr:}
+    {\PackageError{pxSRC-defaults}{Label prefix was lost}{}}
+\group_end:
+% Repeated assignments must not accumulate unbounded historical options.
+\int_step_inline:nn {32} {\pxSRCsetup{input={title={Updated, with comma}}}}
+\int_compare:nNnF {\prop_count:N \l__pxsrc_input_defaults_prop} = {3}
+  {\PackageError{pxSRC-defaults}{Default key storage grew on replacements}{}}
+\group_begin:
+  \pxSRCsetup{input={title={Local}}}
+  \__pxsrc_input_defaults:n {native}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Local}
+    {\PackageError{pxSRC-defaults}{Scoped setup was ignored}{}}
+\group_end:
+\group_begin:
+  \__pxsrc_input_defaults:n {native}
+  \tl_if_eq:NnF \l__pxsrc_input_title_tl {Updated, with comma}
+    {\PackageError{pxSRC-defaults}{Scoped setup leaked}{}}
+\group_end:
+\ExplSyntaxOff
+\end{document}

@@ -283,7 +283,7 @@
 %% =================================
 % Source selection and rendering, shared by pxSRC and legacy pxMEM entry points.
 
-\tl_new:N \l__pxsrc_input_defaults_tl
+\prop_new:N \l__pxsrc_input_defaults_prop
 \prop_new:N \g__pxsrc_sources_prop
 \prop_new:N \g__pxsrc_source_options_prop
 \int_new:N \g__pxsrc_piece_int
@@ -350,10 +350,16 @@
     cite .tl_set:N = \l__pxsrc_input_cite_tl,
     terms .clist_set:N = \l__pxsrc_input_terms_clist
   }
+% Keep only the latest value for each default input key. Earlier settings
+% remain active for other keys, and a surrounding TeX group still scopes them.
+\cs_new_protected:Npn \__pxsrc_input_store_default:nn #1#2
+  {\prop_put:Nnn \l__pxsrc_input_defaults_prop {#1}{#2}}
 \keys_define:nn {pxSRC}
-  {input .code:n = {
-    \group_begin:\keys_set:nn {pxSRC/input}{#1}\group_end:
-    \tl_put_right:Nn \l__pxsrc_input_defaults_tl {,#1}}}
+  {input .code:n =
+    {\group_begin:
+       \keys_set:nn {pxSRC/input}{#1}
+     \group_end:
+     \keyval_parse:NNn \use_none:n \__pxsrc_input_store_default:nn {#1}}}
 %% Each inclusion starts with configured defaults, never its parent's working
 %% selection or metadata. This also keeps nested inputs independent.
 \cs_new_protected:Npn \__pxsrc_input_defaults:n #1
@@ -362,7 +368,8 @@
       region-prefix={\c_percent_str},region-suffix={},first-line=1,last-line=0,
       title={},caption={},label={},label-prefix={},language={},
       listing-options={},cite={},terms={}}
-   \exp_args:NnV \keys_set:nn {pxSRC/input}\l__pxsrc_input_defaults_tl}
+   \prop_map_inline:Nn \l__pxsrc_input_defaults_prop
+     {\keys_set:nn {pxSRC/input}{##1={##2}}}}
 %% Resolve nested source paths from the original source directory first. Pass an
 %% explicit path to TeX so newly created children need no filename-database refresh.
 \cs_new_protected:Npn \__pxsrc_find:nNTF #1#2#3#4
