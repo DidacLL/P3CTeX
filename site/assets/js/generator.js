@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (incCode) {
-      code += '% Bloc de codi font amb marc estètic Darcula i ressaltat de sintaxi:\n';
+      code += '% Bloc de codi font amb ressaltat de sintaxi:\n';
       code += '\\begin{pxCode}[language=Java]{LexerAnalyzer.java}\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("P3CTeX: 100% Offline pdflatex");\n    }\n}\n\\end{pxCode}\n\n';
     }
 
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
     outputModeBadge.textContent = 'CODE LISTING';
 
     let code = '% ==============================================================================\n';
-    code += '% Bloc de codi font P3CTeX (Estil Darcula, Ressaltat de Sintaxi)\n';
+    code += '% Bloc de codi font P3CTeX (Ressaltat de Sintaxi)\n';
     code += '% Inclòs a la suite principal de P3CTeX\n';
     code += '% ==============================================================================\n';
 

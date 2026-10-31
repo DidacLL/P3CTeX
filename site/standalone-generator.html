@@ -60,15 +60,34 @@
 }
 
 html, body {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background-color: var(--chassis-bg);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Custom Retro Chassis Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #06080c;
+  border-left: 1px solid var(--bezel-border);
+}
+::-webkit-scrollbar-thumb {
+  background: #1c2536;
+  border: 1px solid var(--bezel-subtle);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--phosphor-amber);
 }
 
 /* Accessibility */
@@ -99,12 +118,13 @@ html, body {
 .console-viewport {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   background-color: var(--chassis-bg);
-  border: 2px solid var(--bezel-border);
-  box-shadow: inset 0 0 0 1px var(--bezel-shadow);
-  overflow: hidden;
+  border-left: 1px solid var(--bezel-border);
+  border-right: 1px solid var(--bezel-border);
 }
 
 /* ==========================================================================
@@ -322,20 +342,17 @@ html, body {
   flex: 1;
   min-height: 0;
   position: relative;
-  overflow: hidden;
   background: var(--chassis-bg);
 }
 
 .console-deck {
   display: none;
-  height: 100%;
   width: 100%;
-  padding: 12px 16px;
-  overflow: hidden;
+  padding: 18px 24px 32px 24px;
+  box-sizing: border-box;
 }
 .console-deck.active {
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 /* Common Hardware Elements */
@@ -627,7 +644,13 @@ html, body {
   gap: 7px;
 }
 .cap-glyph {
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--phosphor-amber);
+  background: rgba(212, 154, 68, 0.12);
+  border: 1px solid rgba(212, 154, 68, 0.3);
+  padding: 1px 5px;
   flex-shrink: 0;
 }
 .cap-name {
@@ -667,9 +690,13 @@ html, body {
   color: var(--text-secondary);
 }
 .guar-icon {
-  color: var(--phosphor-green);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
   font-weight: 700;
-  font-size: 12px;
+  color: var(--phosphor-green);
+  background: rgba(56, 239, 125, 0.12);
+  border: 1px solid rgba(56, 239, 125, 0.3);
+  padding: 1px 4px;
 }
 .guar-text strong {
   color: var(--text-heading);
@@ -691,9 +718,9 @@ html, body {
 .tutorial-stage-view {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  gap: 8px;
+  gap: 14px;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 /* 7-Step Horizontal Hardware Selector */
@@ -758,10 +785,8 @@ html, body {
 .tutorial-split-view {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 10px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
+  gap: 16px;
+  min-height: 580px;
 }
 
 /* Left Column: Focused Code CRT Viewport */
@@ -2169,8 +2194,8 @@ html, body {
 
       <div class="masthead-actions">
         <a href="index.html" class="action-btn ghost">← WORKSTATION HOME</a>
-        <button type="button" class="action-btn rust" id="btn-copy-main">📋 COPY CODE</button>
-        <button type="button" class="action-btn cyan" id="btn-download-main">⬇ DOWNLOAD FILE</button>
+        <button type="button" class="action-btn rust" id="btn-copy-main">[COPY] COPY CODE</button>
+        <button type="button" class="action-btn cyan" id="btn-download-main">[DL] FILE</button>
       </div>
     </header>
 
@@ -2565,8 +2590,8 @@ Confirmació de processament correcte</textarea>
           <!-- TOOL 06: CODE LISTINGS -->
           <div id="tool-code" class="generator-panel">
             <div class="panel-intro">
-              <h2>Code Listing Generator (Darcula)</h2>
-              <p>Generate syntax-highlighted code boxes with Darcula-style frames, line gutters, external file imports, and line slicing.</p>
+              <h2>Code Listing Generator (Dark Syntax)</h2>
+              <p>Generate syntax-highlighted code boxes with dark syntax frames, line gutters, external file imports, and line slicing.</p>
             </div>
 
             <div class="form-section">
@@ -2824,8 +2849,8 @@ Fase 5: Redacció de la Memòria, 10/06/2026, 30/06/2026</textarea>
               <span class="output-mode-badge" id="output-mode-badge">FULL DOCUMENT</span>
             </div>
             <div class="output-action-group">
-              <button type="button" class="action-btn-sm ghost" id="btn-copy-pane">📋 COPY</button>
-              <button type="button" class="action-btn-sm cyan" id="btn-download-pane">⬇ DOWNLOAD</button>
+              <button type="button" class="action-btn-sm ghost" id="btn-copy-pane">[COPY]</button>
+              <button type="button" class="action-btn-sm cyan" id="btn-download-pane">[DL]</button>
             </div>
           </div>
 
@@ -2961,7 +2986,7 @@ const tutorialSteps = {
       { k: 'MEM', v: 'Multi-chapter technical memory. Enables \\chapter, appendices (\\pxMEMannex), and figure/table indexes.' },
       { k: 'TFG', v: 'Final Degree Project. Adds official UOC work card (\\pxTFGworkcard), praise/dedication, and bilingual abstracts.' }
     ],
-    tipTitle: '💡 PAC vs PR Grading Compliance',
+    tipTitle: '[NOTE] PAC vs PR Grading Compliance',
     tipText: 'UOC continuous assessment rubrics penalize blank cover pages because teachers grade hundreds of digital submissions. PAC puts your identity directly on page 1. For formal practicum deliverables, switch to [PR].'
   },
   2: {
@@ -3010,7 +3035,7 @@ const tutorialSteps = {
       { k: '\\PECTeXpage{...}', v: 'Header/footer layout: header-left, header-center, header-right, footer-left, footer-center, footer-right.' },
       { k: 'footer-center / footer-left', v: 'Available footer space for page counters (\\thepage / \\pageref{LastPage}) or notices.' }
     ],
-    tipTitle: '💡 Metadata vs Layout Literals',
+    tipTitle: '[NOTE] Metadata vs Layout Literals',
     tipText: 'Metadata keys represent who you are; cover and page literals represent how the document looks. You can override cover text without altering your student record.'
   },
   3: {
@@ -3048,7 +3073,7 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
       { k: '\\REF{label}', v: 'Renders a superscript gray page reference badge (e.g. Pàg[14]).' },
       { k: '\\EXPAND{content}', v: 'Scales wide formulas or tables to fit \\linewidth perfectly.' }
     ],
-    tipTitle: '💡 Built-in Table Row Helpers',
+    tipTitle: '[NOTE] Built-in Table Row Helpers',
     tipText: 'When using standard LaTeX tabulars, P3CTeX provides \\headRow and òddRow with \\adjH row height struts for rapid zebra striping.'
   },
   4: {
@@ -3079,7 +3104,7 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
       { k: '\\pxDEFpxcodename', v: 'Prefix label for pxLST source code listing frames.' },
       { k: '\\pxDEFpxcmdname', v: 'Prefix label for terminal command boxes.' }
     ],
-    tipTitle: '💡 Multilingual Previews',
+    tipTitle: '[NOTE] Multilingual Previews',
     tipText: 'Passing CAT, ES, or EN in \\documentclass sets all pxTXT strings automatically. Use \\renewcommand{\\pxDEF...} when a faculty professor requires specific terminology.'
   },
   5: {
@@ -3094,7 +3119,7 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
   {Parser LR(1), PASS, 0.45 s, 112/112}
   {Generació Codi, PASS, 0.88 s, 32/32}
 
-% 2. pxLST: JetBrains Darcula dark code listing with line numbers:
+% 2. Syntax-highlighted dark code listing with line numbers:
 \\begin{pxCode}[language=Java]{Parser.java}
 public class Parser {
     private final Lexer lexer;
@@ -3106,15 +3131,15 @@ public class Parser {
 
 % 3. pxSRC: Safe figure inclusion (draws vector placeholder if file missing):
 \\pxIMG[0.75\\linewidth]{img/dfa_transitions}{Autòmat de transició d'estats}[fig:dfa]`,
-    desc: 'pxTAB formats clean tables from comma-separated rows. pxLST highlights source code in a Darcula dark theme. pxSRC includes figures with vector placeholders if files are missing.',
+    desc: 'pxTAB formats clean tables from comma-separated rows. pxLST highlights source code in a high-contrast dark theme. pxSRC includes figures with vector placeholders if files are missing.',
     refLabel: '// CORE SUITE COMMANDS:',
     refTable: [
       { k: '\\pxTable[style=...]{head}{row1}{row2}', v: 'Comma-separated table. Styles: header, striped, boxed, grid.' },
       { k: '\\pxTBLlong*[opts]{head}{rows...}', v: 'Multi-page table repeating headers across page breaks.' },
-      { k: '\\begin{pxCode}[language=...]{Title}', v: 'Code block with Darcula syntax highlighting and line numbers.' },
+      { k: '\\begin{pxCode}[language=...]{Title}', v: 'Code block with high-contrast syntax highlighting and line numbers.' },
       { k: '\\pxIMG[width]{path}{caption}[label]', v: 'Resilient figure inclusion with automatic placeholder fallback.' }
     ],
-    tipTitle: '💡 Zero Missing File Halts',
+    tipTitle: '[NOTE] Zero Missing File Halts',
     tipText: 'pxSRC guarantees pdflatex never halts with a missing file error before deadlines. A clean placeholder marks missing figures until they are exported.'
   },
   6: {
@@ -3158,7 +3183,7 @@ public class Parser {
       { k: '\\drawsimpleclass{Name}[x,y]', v: 'Renders a compact class showing only attributes and inheritance.' },
       { k: '\\printAttributes{Name} / \\printOperations{Name}', v: 'Typesets class members as a formatted itemized specification list.' }
     ],
-    tipTitle: '💡 Single Source of Truth',
+    tipTitle: '[NOTE] Single Source of Truth',
     tipText: "Registering classes in pxUML means your UML diagram and your written report's method specification share identical signatures with zero copy-paste divergence."
   },
   7: {
@@ -3192,7 +3217,7 @@ Descripció detallada del mòdul semàntic...
       { k: '\\pxMEMinclude{id}{region}', v: 'Inputs lines tagged with %<*region> ... %</region> from registered source.' },
       { k: '\\pxBib[style]{bibfile}', v: 'Outputs bibliography on a new page and creates a TOC entry automatically.' }
     ],
-    tipTitle: '💡 Code Snippet Reuse Across Deliverables',
+    tipTitle: '[NOTE] Code Snippet Reuse Across Deliverables',
     tipText: 'When preparing your final memory, tag benchmark or test sections in PR1 with %<*tag> and pull them directly into MEM with \\pxMEMinclude without maintaining two copies.'
   }
 };
@@ -3318,7 +3343,7 @@ function setupChannelRocker() {
     const channelData = {
     pxtab: {
       id: 'pxTAB',
-      title: 'Tables & Multipage Data (pxTAB)',
+      title: 'Tables & Multipage Data',
       badge: 'booktabs + longtable',
       desc: 'Creates clean LaTeX tables from comma-separated rows without column math. Features automatic alternating row shading (zebra striping), multi-page longtable pagination, custom cell alignments, and variable-driven matrix rendering.',
       apiRows: [
@@ -3364,7 +3389,7 @@ function setupChannelRocker() {
     },
     pxsrc: {
       id: 'pxSRC',
-      title: 'Figures, Graphics & Automated Lists (pxSRC)',
+      title: 'Figures, Graphics & Automated Lists',
       badge: 'resilient vector fallback',
       desc: 'Safely scales graphics to text width fractions. If an image file path is missing from disk, it displays a calibrated vector placeholder box instead of halting pdflatex compilation before deadlines.',
       apiRows: [
@@ -3407,11 +3432,11 @@ function setupChannelRocker() {
     },
     pxlst: {
       id: 'pxLST',
-      title: 'Darcula Source Code Listings (pxLST)',
-      badge: 'Darcula + Pure LaTeX',
-      desc: 'JetBrains Darcula dark code blocks with line numbers, gutter styling, and syntax highlighting for 17+ languages using pure LaTeX (zero Python, pygments, or shell-escape dependencies).',
+      title: 'Syntax-Highlighted Code Blocks',
+      badge: 'listings + tcolorbox',
+      desc: 'High-contrast dark code blocks with line numbers, gutter styling, and syntax highlighting for 17+ languages using pure LaTeX (zero Python, pygments, or shell-escape dependencies).',
       apiRows: [
-        { cmd: '\\begin{pxCode}[language=...]{Header Title}', desc: 'Primary code listing container with Darcula dark theme, gutter, and line numbers.' },
+        { cmd: '\\begin{pxCode}[language=...]{Header Title}', desc: 'Primary code listing container with dark theme, gutter, and line numbers.' },
         { cmd: '\\pxCodeFile[lang]{path}[title]', desc: 'Directly includes external source file with syntax coloring and line gutter.' },
         { cmd: '\\pxCodeFileInput[lang]{path}{start}{end}', desc: 'Inlines specific line range from external source file without duplicating code.' },
         { cmd: '\\pxCodeIn[lang]{code}', desc: 'Typesets an inline monospace code token with language syntax color.' },
@@ -3424,7 +3449,7 @@ function setupChannelRocker() {
         '<strong>Line numbers:</strong> Low-strain muted gutter with automatic line numbers',
         '<strong>Line range slicing:</strong> Pull exact lines from project repositories'
       ],
-      code: `% 1. Darcula dark code listing with syntax highlighting and line numbers:
+      code: `% 1. High-contrast dark code listing with syntax highlighting and line numbers:
 \\begin{pxCode}[language=Java]{Lexer.java}
 package edu.uoc.compiler;
 
@@ -3456,7 +3481,7 @@ public class Lexer {
     },
     pxcmp: {
       id: 'pxCMP',
-      title: 'Compilers, Automata & AI Visualizers (pxCMP)',
+      title: 'Compilers, Automata & Visualizers',
       badge: 'Computer Science Diagrams',
       desc: 'Complete diagramming suite for Computer Science coursework: Compilers, Theory of Computation, and AI. Renders Tombstone compiler T-diagrams, DFA/NFA state transition tables, BNF production grammars, and neural/decision networks.',
       apiRows: [
@@ -3502,7 +3527,7 @@ public class Lexer {
     },
     pxgnt: {
       id: 'pxGNT',
-      title: 'Daily-Resolution Gantt Timelines (pxGNT)',
+      title: 'Daily-Resolution Gantt Timelines',
       badge: 'Daily Calendar Resolution',
       desc: 'Generates daily-resolution Gantt project planning charts using calendar dates (DD/MM/YYYY). Automatically partitions long multi-month timelines into consecutive page blocks for milestone tracking.',
       apiRows: [
@@ -3538,7 +3563,7 @@ public class Lexer {
     },
     pxuml: {
       id: 'pxUML',
-      title: 'UML Class & Architecture Modeling (pxUML)',
+      title: 'UML Class & Architecture Modeling',
       badge: 'Single Source of Truth',
       desc: 'Decouples UML class models from TikZ diagram placement. Classes are registered once into the pxPRP property registry with attributes and methods, then rendered as diagrams or printed directly as textual specification lists.',
       apiRows: [
@@ -3593,7 +3618,7 @@ public class Lexer {
     },
     pxmem: {
       id: 'pxMEM',
-      title: 'Multi-Chapter Reports, Annexes & Bibliography (pxMEM)',
+      title: 'Multi-Chapter Reports, Annexes & Slicing',
       badge: 'TFG & Multi-PR Reports',
       desc: 'Transforms P3CTeX into a multi-chapter report without changing base article geometry. Handles numbered chapters, lettered annexes, cross-PR section extraction (%<*tag> blocks), and automatic bibliography TOC placement.',
       apiRows: [
@@ -3638,7 +3663,7 @@ Descripció detallada del mòdul semàntic...
     },
     pxtfg: {
       id: 'pxTFG',
-      title: 'TFG Official Thesis & Degree Workcards (pxTFG)',
+      title: 'TFG Official Thesis & Degree Workcards',
       badge: 'Official UOC TFG Frontmatter',
       desc: 'Formats official university bachelor thesis (TFG / Treball de Final de Grau) deliverables. Generates the mandatory academic workcard (fitxa del treball), bilingual Catalan/English abstracts, license declaration page, and official frontmatter.',
       apiRows: [
@@ -3682,7 +3707,7 @@ Descripció detallada del mòdul semàntic...
     },
     pxgdx: {
       id: 'pxGDX',
-      title: 'Dynamic Sizing, Layout & Overrides (pxGDX / pxTXT)',
+      title: 'Dynamic Sizing, Layout & Overrides',
       badge: 'Layout Engines & Overrides',
       desc: 'Controls page geometry, dynamic content fitting, custom cover configurations, running headers/footers, automated lists, and language literal overrides from a single unified API.',
       apiRows: [
@@ -4131,7 +4156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (incCode) {
-      code += '% Bloc de codi font amb marc estètic Darcula i ressaltat de sintaxi:\n';
+      code += '% Bloc de codi font amb ressaltat de sintaxi:\n';
       code += '\\begin{pxCode}[language=Java]{LexerAnalyzer.java}\npublic class LexerAnalyzer {\n    public static void main(String[] args) {\n        System.out.println("P3CTeX: 100% Offline pdflatex");\n    }\n}\n\\end{pxCode}\n\n';
     }
 
@@ -4348,7 +4373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     outputModeBadge.textContent = 'CODE LISTING';
 
     let code = '% ==============================================================================\n';
-    code += '% Bloc de codi font P3CTeX (Estil Darcula, Ressaltat de Sintaxi)\n';
+    code += '% Bloc de codi font P3CTeX (Ressaltat de Sintaxi)\n';
     code += '% Inclòs a la suite principal de P3CTeX\n';
     code += '% ==============================================================================\n';
 

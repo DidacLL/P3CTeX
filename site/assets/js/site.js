@@ -97,7 +97,7 @@ const tutorialSteps = {
       { k: 'MEM', v: 'Multi-chapter technical memory. Enables \\chapter, appendices (\\pxMEMannex), and figure/table indexes.' },
       { k: 'TFG', v: 'Final Degree Project. Adds official UOC work card (\\pxTFGworkcard), praise/dedication, and bilingual abstracts.' }
     ],
-    tipTitle: '💡 PAC vs PR Grading Compliance',
+    tipTitle: '[NOTE] PAC vs PR Grading Compliance',
     tipText: 'UOC continuous assessment rubrics penalize blank cover pages because teachers grade hundreds of digital submissions. PAC puts your identity directly on page 1. For formal practicum deliverables, switch to [PR].'
   },
   2: {
@@ -146,7 +146,7 @@ const tutorialSteps = {
       { k: '\\PECTeXpage{...}', v: 'Header/footer layout: header-left, header-center, header-right, footer-left, footer-center, footer-right.' },
       { k: 'footer-center / footer-left', v: 'Available footer space for page counters (\\thepage / \\pageref{LastPage}) or notices.' }
     ],
-    tipTitle: '💡 Metadata vs Layout Literals',
+    tipTitle: '[NOTE] Metadata vs Layout Literals',
     tipText: 'Metadata keys represent who you are; cover and page literals represent how the document looks. You can override cover text without altering your student record.'
   },
   3: {
@@ -184,7 +184,7 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
       { k: '\\REF{label}', v: 'Renders a superscript gray page reference badge (e.g. Pàg[14]).' },
       { k: '\\EXPAND{content}', v: 'Scales wide formulas or tables to fit \\linewidth perfectly.' }
     ],
-    tipTitle: '💡 Built-in Table Row Helpers',
+    tipTitle: '[NOTE] Built-in Table Row Helpers',
     tipText: 'When using standard LaTeX tabulars, P3CTeX provides \\headRow and òddRow with \\adjH row height struts for rapid zebra striping.'
   },
   4: {
@@ -215,7 +215,7 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
       { k: '\\pxDEFpxcodename', v: 'Prefix label for pxLST source code listing frames.' },
       { k: '\\pxDEFpxcmdname', v: 'Prefix label for terminal command boxes.' }
     ],
-    tipTitle: '💡 Multilingual Previews',
+    tipTitle: '[NOTE] Multilingual Previews',
     tipText: 'Passing CAT, ES, or EN in \\documentclass sets all pxTXT strings automatically. Use \\renewcommand{\\pxDEF...} when a faculty professor requires specific terminology.'
   },
   5: {
@@ -230,7 +230,7 @@ Segons s'indica a la secció anterior\\REF{sec:intro}, la gramàtica és lliure 
   {Parser LR(1), PASS, 0.45 s, 112/112}
   {Generació Codi, PASS, 0.88 s, 32/32}
 
-% 2. pxLST: JetBrains Darcula dark code listing with line numbers:
+% 2. Syntax-highlighted dark code listing with line numbers:
 \\begin{pxCode}[language=Java]{Parser.java}
 public class Parser {
     private final Lexer lexer;
@@ -242,15 +242,15 @@ public class Parser {
 
 % 3. pxSRC: Safe figure inclusion (draws vector placeholder if file missing):
 \\pxIMG[0.75\\linewidth]{img/dfa_transitions}{Autòmat de transició d'estats}[fig:dfa]`,
-    desc: 'pxTAB formats clean tables from comma-separated rows. pxLST highlights source code in a Darcula dark theme. pxSRC includes figures with vector placeholders if files are missing.',
+    desc: 'pxTAB formats clean tables from comma-separated rows. pxLST highlights source code in a high-contrast dark theme. pxSRC includes figures with vector placeholders if files are missing.',
     refLabel: '// CORE SUITE COMMANDS:',
     refTable: [
       { k: '\\pxTable[style=...]{head}{row1}{row2}', v: 'Comma-separated table. Styles: header, striped, boxed, grid.' },
       { k: '\\pxTBLlong*[opts]{head}{rows...}', v: 'Multi-page table repeating headers across page breaks.' },
-      { k: '\\begin{pxCode}[language=...]{Title}', v: 'Code block with Darcula syntax highlighting and line numbers.' },
+      { k: '\\begin{pxCode}[language=...]{Title}', v: 'Code block with high-contrast syntax highlighting and line numbers.' },
       { k: '\\pxIMG[width]{path}{caption}[label]', v: 'Resilient figure inclusion with automatic placeholder fallback.' }
     ],
-    tipTitle: '💡 Zero Missing File Halts',
+    tipTitle: '[NOTE] Zero Missing File Halts',
     tipText: 'pxSRC guarantees pdflatex never halts with a missing file error before deadlines. A clean placeholder marks missing figures until they are exported.'
   },
   6: {
@@ -294,7 +294,7 @@ public class Parser {
       { k: '\\drawsimpleclass{Name}[x,y]', v: 'Renders a compact class showing only attributes and inheritance.' },
       { k: '\\printAttributes{Name} / \\printOperations{Name}', v: 'Typesets class members as a formatted itemized specification list.' }
     ],
-    tipTitle: '💡 Single Source of Truth',
+    tipTitle: '[NOTE] Single Source of Truth',
     tipText: "Registering classes in pxUML means your UML diagram and your written report's method specification share identical signatures with zero copy-paste divergence."
   },
   7: {
@@ -328,7 +328,7 @@ Descripció detallada del mòdul semàntic...
       { k: '\\pxMEMinclude{id}{region}', v: 'Inputs lines tagged with %<*region> ... %</region> from registered source.' },
       { k: '\\pxBib[style]{bibfile}', v: 'Outputs bibliography on a new page and creates a TOC entry automatically.' }
     ],
-    tipTitle: '💡 Code Snippet Reuse Across Deliverables',
+    tipTitle: '[NOTE] Code Snippet Reuse Across Deliverables',
     tipText: 'When preparing your final memory, tag benchmark or test sections in PR1 with %<*tag> and pull them directly into MEM with \\pxMEMinclude without maintaining two copies.'
   }
 };
@@ -454,7 +454,7 @@ function setupChannelRocker() {
     const channelData = {
     pxtab: {
       id: 'pxTAB',
-      title: 'Tables & Multipage Data (pxTAB)',
+      title: 'Tables & Multipage Data',
       badge: 'booktabs + longtable',
       desc: 'Creates clean LaTeX tables from comma-separated rows without column math. Features automatic alternating row shading (zebra striping), multi-page longtable pagination, custom cell alignments, and variable-driven matrix rendering.',
       apiRows: [
@@ -500,7 +500,7 @@ function setupChannelRocker() {
     },
     pxsrc: {
       id: 'pxSRC',
-      title: 'Figures, Graphics & Automated Lists (pxSRC)',
+      title: 'Figures, Graphics & Automated Lists',
       badge: 'resilient vector fallback',
       desc: 'Safely scales graphics to text width fractions. If an image file path is missing from disk, it displays a calibrated vector placeholder box instead of halting pdflatex compilation before deadlines.',
       apiRows: [
@@ -543,11 +543,11 @@ function setupChannelRocker() {
     },
     pxlst: {
       id: 'pxLST',
-      title: 'Darcula Source Code Listings (pxLST)',
-      badge: 'Darcula + Pure LaTeX',
-      desc: 'JetBrains Darcula dark code blocks with line numbers, gutter styling, and syntax highlighting for 17+ languages using pure LaTeX (zero Python, pygments, or shell-escape dependencies).',
+      title: 'Syntax-Highlighted Code Blocks',
+      badge: 'listings + tcolorbox',
+      desc: 'High-contrast dark code blocks with line numbers, gutter styling, and syntax highlighting for 17+ languages using pure LaTeX (zero Python, pygments, or shell-escape dependencies).',
       apiRows: [
-        { cmd: '\\begin{pxCode}[language=...]{Header Title}', desc: 'Primary code listing container with Darcula dark theme, gutter, and line numbers.' },
+        { cmd: '\\begin{pxCode}[language=...]{Header Title}', desc: 'Primary code listing container with dark theme, gutter, and line numbers.' },
         { cmd: '\\pxCodeFile[lang]{path}[title]', desc: 'Directly includes external source file with syntax coloring and line gutter.' },
         { cmd: '\\pxCodeFileInput[lang]{path}{start}{end}', desc: 'Inlines specific line range from external source file without duplicating code.' },
         { cmd: '\\pxCodeIn[lang]{code}', desc: 'Typesets an inline monospace code token with language syntax color.' },
@@ -560,7 +560,7 @@ function setupChannelRocker() {
         '<strong>Line numbers:</strong> Low-strain muted gutter with automatic line numbers',
         '<strong>Line range slicing:</strong> Pull exact lines from project repositories'
       ],
-      code: `% 1. Darcula dark code listing with syntax highlighting and line numbers:
+      code: `% 1. High-contrast dark code listing with syntax highlighting and line numbers:
 \\begin{pxCode}[language=Java]{Lexer.java}
 package edu.uoc.compiler;
 
@@ -592,7 +592,7 @@ public class Lexer {
     },
     pxcmp: {
       id: 'pxCMP',
-      title: 'Compilers, Automata & AI Visualizers (pxCMP)',
+      title: 'Compilers, Automata & Visualizers',
       badge: 'Computer Science Diagrams',
       desc: 'Complete diagramming suite for Computer Science coursework: Compilers, Theory of Computation, and AI. Renders Tombstone compiler T-diagrams, DFA/NFA state transition tables, BNF production grammars, and neural/decision networks.',
       apiRows: [
@@ -638,7 +638,7 @@ public class Lexer {
     },
     pxgnt: {
       id: 'pxGNT',
-      title: 'Daily-Resolution Gantt Timelines (pxGNT)',
+      title: 'Daily-Resolution Gantt Timelines',
       badge: 'Daily Calendar Resolution',
       desc: 'Generates daily-resolution Gantt project planning charts using calendar dates (DD/MM/YYYY). Automatically partitions long multi-month timelines into consecutive page blocks for milestone tracking.',
       apiRows: [
@@ -674,7 +674,7 @@ public class Lexer {
     },
     pxuml: {
       id: 'pxUML',
-      title: 'UML Class & Architecture Modeling (pxUML)',
+      title: 'UML Class & Architecture Modeling',
       badge: 'Single Source of Truth',
       desc: 'Decouples UML class models from TikZ diagram placement. Classes are registered once into the pxPRP property registry with attributes and methods, then rendered as diagrams or printed directly as textual specification lists.',
       apiRows: [
@@ -729,7 +729,7 @@ public class Lexer {
     },
     pxmem: {
       id: 'pxMEM',
-      title: 'Multi-Chapter Reports, Annexes & Bibliography (pxMEM)',
+      title: 'Multi-Chapter Reports, Annexes & Slicing',
       badge: 'TFG & Multi-PR Reports',
       desc: 'Transforms P3CTeX into a multi-chapter report without changing base article geometry. Handles numbered chapters, lettered annexes, cross-PR section extraction (%<*tag> blocks), and automatic bibliography TOC placement.',
       apiRows: [
@@ -774,7 +774,7 @@ Descripció detallada del mòdul semàntic...
     },
     pxtfg: {
       id: 'pxTFG',
-      title: 'TFG Official Thesis & Degree Workcards (pxTFG)',
+      title: 'TFG Official Thesis & Degree Workcards',
       badge: 'Official UOC TFG Frontmatter',
       desc: 'Formats official university bachelor thesis (TFG / Treball de Final de Grau) deliverables. Generates the mandatory academic workcard (fitxa del treball), bilingual Catalan/English abstracts, license declaration page, and official frontmatter.',
       apiRows: [
@@ -818,7 +818,7 @@ Descripció detallada del mòdul semàntic...
     },
     pxgdx: {
       id: 'pxGDX',
-      title: 'Dynamic Sizing, Layout & Overrides (pxGDX / pxTXT)',
+      title: 'Dynamic Sizing, Layout & Overrides',
       badge: 'Layout Engines & Overrides',
       desc: 'Controls page geometry, dynamic content fitting, custom cover configurations, running headers/footers, automated lists, and language literal overrides from a single unified API.',
       apiRows: [

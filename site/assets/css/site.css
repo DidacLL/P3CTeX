@@ -48,15 +48,34 @@
 }
 
 html, body {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background-color: var(--chassis-bg);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Custom Retro Chassis Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #06080c;
+  border-left: 1px solid var(--bezel-border);
+}
+::-webkit-scrollbar-thumb {
+  background: #1c2536;
+  border: 1px solid var(--bezel-subtle);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--phosphor-amber);
 }
 
 /* Accessibility */
@@ -87,12 +106,13 @@ html, body {
 .console-viewport {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   background-color: var(--chassis-bg);
-  border: 2px solid var(--bezel-border);
-  box-shadow: inset 0 0 0 1px var(--bezel-shadow);
-  overflow: hidden;
+  border-left: 1px solid var(--bezel-border);
+  border-right: 1px solid var(--bezel-border);
 }
 
 /* ==========================================================================
@@ -310,20 +330,17 @@ html, body {
   flex: 1;
   min-height: 0;
   position: relative;
-  overflow: hidden;
   background: var(--chassis-bg);
 }
 
 .console-deck {
   display: none;
-  height: 100%;
   width: 100%;
-  padding: 12px 16px;
-  overflow: hidden;
+  padding: 18px 24px 32px 24px;
+  box-sizing: border-box;
 }
 .console-deck.active {
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 /* Common Hardware Elements */
@@ -615,7 +632,13 @@ html, body {
   gap: 7px;
 }
 .cap-glyph {
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--phosphor-amber);
+  background: rgba(212, 154, 68, 0.12);
+  border: 1px solid rgba(212, 154, 68, 0.3);
+  padding: 1px 5px;
   flex-shrink: 0;
 }
 .cap-name {
@@ -655,9 +678,13 @@ html, body {
   color: var(--text-secondary);
 }
 .guar-icon {
-  color: var(--phosphor-green);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
   font-weight: 700;
-  font-size: 12px;
+  color: var(--phosphor-green);
+  background: rgba(56, 239, 125, 0.12);
+  border: 1px solid rgba(56, 239, 125, 0.3);
+  padding: 1px 4px;
 }
 .guar-text strong {
   color: var(--text-heading);
@@ -679,9 +706,9 @@ html, body {
 .tutorial-stage-view {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  gap: 8px;
+  gap: 14px;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 /* 7-Step Horizontal Hardware Selector */
@@ -746,10 +773,8 @@ html, body {
 .tutorial-split-view {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 10px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
+  gap: 16px;
+  min-height: 580px;
 }
 
 /* Left Column: Focused Code CRT Viewport */
