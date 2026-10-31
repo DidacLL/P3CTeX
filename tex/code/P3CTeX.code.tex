@@ -54,6 +54,9 @@
 \tl_new:N \l__pxdoc_unknown_tl
 \tl_set:Nn \l__pxdoc_unknown_tl { default }
 \bool_set_true:N \l__pxdoc_loading_bool
+\msg_new:nnn {P3CTeX}{glossary-load-only}
+  {The~glossary~class~key~is~load-time~only.~
+   Use~\string\pxGlossarySetup~to~change~printing~after~loading.}
 %% One load-time forwarding path; module state belongs to pxCORE alone.
 %% Appearance keys work both in class options and runtime configuration.
 %% Delay load-time overrides until pxGDX has received the document metadata.
@@ -84,7 +87,10 @@
 	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
 		no-plagi	.initial:n 	=	false,
 		no-plagi	.default:n 	=	true,
-    glossary .bool_set:N = \l_pxdoc_useglossary_bool,
+    glossary .code:n =
+      {\bool_if:NTF \l__pxdoc_loading_bool
+        {\bool_set:Nn \l_pxdoc_useglossary_bool {#1}}
+        {\msg_error:nn {P3CTeX}{glossary-load-only}}},
     glossary .default:n = true,
 %	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
 %		bibliography			.initial:n	= {},

@@ -29,6 +29,14 @@
 \keys_set:nn {pxCORE}{sourcez}
 \ExplSyntaxOff
 \PECTeXconfig{pdf-config={pdf-author={PUBLIC-API-RUNTIME}}}
+\ExplSyntaxOn
+\msg_redirect_name:nnn {P3CTeX}{glossary-load-only}{warning}
+\ExplSyntaxOff
+\PECTeXconfig{glossary=false}
+\ExplSyntaxOn
+\bool_if:NF \l_pxdoc_useglossary_bool
+  {\PackageError{public-api}{Runtime glossary option incorrectly changed load state}{}}
+\ExplSyntaxOff
 \begin{document}
 \GL{api}: \GL*{api}.
 \pxCOREsetup{sources=false}

@@ -36,3 +36,5 @@ Checkpoint 4: TFG public labels, cover data, licence, summary and abstract headi
 Checkpoint 5: pxCORE now forwards TAB/ORL package options to their package key processors, and applies TFG metadata through the existing public pxTFGsetup after loading pxTFG. Removed nonfunctional PRPconfig, LSTconfig and MEMconfig keys (none has a package configuration entry point). Added source-label and TFG-language tests to the standard runner. No compile claimed.
 
 Checkpoint 6: added pxTXT translations for DIAG terminology and timing labels, with standalone English defaults in pxDIAG.sty; replaced seven hardcoded user-visible strings in pxDIAG. Other diagram semantics and formatting unchanged. Not yet compiled.
+
+Checkpoint 7: the legacy `glossary` class key is now explicitly load-time only (like tool selection); runtime attempts report an error without mutating the loaded state. User-level glossary output remains controlled by `\\pxGlossarySetup`. Added a public-API negative regression with redirected warning. Not yet compiled.
