@@ -34,8 +34,6 @@
 %% diagrams-config, TABconfig and ORLconfig forward token-preserving package options.
 %% TFGconfig applies TFG metadata through pxTFGsetup.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
-\msg_new:nnn {pxCORE}{unknown}{Unknown~tool~or~option~'#1'.~Use~a~documented~pxCORE~key.}
-\msg_new:nnn {pxCORE}{load-only}{Option~'#1'~is~not~a~runtime~core~setting.~Select~tools~at~load~time;~use~their~setup~commands~to~customise~them.}
 \keys_define:nn { pxCORE }
 {
     sources .meta:n = {SRC=#1,LST=#1},
@@ -73,6 +71,9 @@
 	debug		.bool_set:N 	= \l_pxcore_debug_bool,
 		debug		.initial:n	= false,
 		debug		.default:n	= true,
+	print-doc	.bool_set:N 	= \l_pxcore_pxdoc_use_bool,
+		print-doc	.initial:n	= false,
+		print-doc	.default:n	= true,
 	PRP			.bool_set:N 	= \l_pxcore_prp_use_bool,
 		PRP			.initial:n	= false,
 		PRP			.default:n	= true,
@@ -84,12 +85,12 @@
 	UML			.bool_set:N 	= \l_pxcore_uml_use_bool,
 		UML			.initial:n	= false,
 		UML			.default:n	= true,
-	UMLconfig	.tl_set:N 	= \l_pxcore_uml_config_tl,
+	UMLconfig	.tl_set_x:N 	= \l_pxcore_uml_config_tl,
 		UMLconfig	.initial:n	= {},
 	SRC			.bool_set:N 	= \l_pxcore_src_use_bool,
 		SRC			.initial:n	= false,
 		SRC			.default:n	= true,
-	SRCconfig	.tl_set:N 	= \l_pxcore_src_config_tl,
+	SRCconfig	.tl_set_x:N 	= \l_pxcore_src_config_tl,
 		SRCconfig	.initial:n	= {},
 	TAB			.bool_set:N 	= \l_pxcore_tab_use_bool,
 		TAB			.initial:n	= false,
@@ -122,12 +123,12 @@
 	SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
-	unknown .code:n = {\msg_error:nnx {pxCORE}{unknown}{\l_keys_key_str}}
+	unknown		.code:n ={}
 }
-\ProcessKeysPackageOptions{ pxCORE }
+\ProcessKeysOptions{ pxCORE }
 %% =================================
 %% Module-selection flags are consumed here during package loading.
-%% Runtime setup does not accept module flags: it cannot load or unload packages.
+%% Changing them later with \pxCOREsetup changes state only; it does not re-run these \RequirePackage branches.
 %% ===== LOAD SELECTED MODULES =====
 %% =================================
 \bool_if:NT \l_pxcore_uml_use_bool
@@ -167,8 +168,4 @@
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
 \bool_if:NT \l_pxcore_ann_use_bool { \RequirePackage{pxANN} }
 \bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
-%% Runtime settings have a separate contract from package selection.
-\keys_define:nn {pxCORE/runtime}
-  {debug .bool_set:N = \l_pxcore_debug_bool,
-   unknown .code:n = {\msg_error:nnx {pxCORE}{load-only}{\l_keys_key_str}}}
 \endinput
