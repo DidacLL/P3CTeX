@@ -1,7 +1,9 @@
 % Generic report chapters, annexes and source-region reuse for P3CTeX.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse,graphicx,pxSRC,pxANN}
+\RequirePackage{expl3,xparse,graphicx,pxSRC,pxANN,xcolor}
 \ProvidesExplPackage{pxMEM}{2026/10/22}{v0.2}{P3CTeX generic memory support}
+% Standalone article documents need a default; P3CTeX's palette takes precedence.
+\providecolor{primaryColor}{rgb}{0,0,.47}
 
 % Keep the article class and its existing page/cover layout.
 \newcounter{chapter}

@@ -1,0 +1,13 @@
+\documentclass{article}
+\usepackage{pxMEM}
+\begin{document}
+\chapter{Standalone chapter}
+\section{Section inside chapter}
+\ExplSyntaxOn
+\int_compare:nNnF {\value{chapter}} = {1}
+  {\PackageError{mem-standalone}{Chapter numbering unavailable}{}}
+\int_compare:nNnF {\value{section}} = {1}
+  {\PackageError{mem-standalone}{Section numbering unavailable}{}}
+\ExplSyntaxOff
+Text under the standalone memory headings.
+\end{document}

@@ -30,8 +30,8 @@ loads its feature modules:
 \texttt{MEM} does not select \texttt{TFG}; neither option implies the other.
 \texttt{MEM} is a load-time profile. Do not attempt to activate it later through
 \verb|\PECTeXconfig{MEM}|. In non-P3CTeX classes, the module can be
-loaded with \verb|\usepackage{pxMEM}|; its coloured chapter heading assumes the
-\texttt{primaryColor} colour supplied by P3CTeX/pxGDX.
+loaded with \verb|\usepackage{pxMEM}|. It supplies a fallback chapter
+colour when P3CTeX/pxGDX has not defined \texttt{primaryColor}.
 
 P3CTeX continues to derive from \texttt{article}. Ordinary PR, PAC, PEC and CA
 documents retain their existing section and cover behaviour; \texttt{MEM}
