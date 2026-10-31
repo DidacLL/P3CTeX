@@ -283,6 +283,7 @@
 %% =================================
 % Source selection and rendering, shared by pxSRC and legacy pxMEM entry points.
 
+\tl_new:N \l__pxsrc_input_defaults_tl
 \prop_new:N \g__pxsrc_sources_prop
 \prop_new:N \g__pxsrc_source_options_prop
 \int_new:N \g__pxsrc_piece_int
@@ -297,6 +298,7 @@
 \tl_new:N \l__pxsrc_input_container_tl
 \tl_new:N \l__pxsrc_input_width_tl
 \tl_new:N \l__pxsrc_input_title_tl
+\tl_new:N \l__pxsrc_input_number_tl
 \tl_new:N \l__pxsrc_input_caption_tl
 \tl_new:N \l__pxsrc_input_label_tl
 \tl_new:N \l__pxsrc_input_label_prefix_tl
@@ -341,7 +343,18 @@
     terms .clist_set:N = \l__pxsrc_input_terms_clist
   }
 \keys_define:nn {pxSRC}
-  {input .code:n = {\keys_set:nn {pxSRC/input}{#1}}}
+  {input .code:n = {
+    \group_begin:\keys_set:nn {pxSRC/input}{#1}\group_end:
+    \tl_put_right:Nn \l__pxsrc_input_defaults_tl {,#1}}}
+%% Each inclusion starts with configured defaults, never its parent's working
+%% selection or metadata. This also keeps nested inputs independent.
+\cs_new_protected:Npn \__pxsrc_input_defaults:n #1
+  {\keys_set:nn {pxSRC/input}
+     {as=#1,container=none,width=\linewidth,region={},
+      region-prefix={\c_percent_str},region-suffix={},first-line=1,last-line=0,
+      title={},caption={},label={},label-prefix={},language={},
+      listing-options={},cite={},terms={}}
+   \exp_args:NnV \keys_set:nn {pxSRC/input}\l__pxsrc_input_defaults_tl}
 \cs_new_protected:Npn \__pxsrc_input_error:n #1
   {\bool_set_false:N \l__pxsrc_input_valid_bool
    \msg_error:nnn {pxSRC}{input}{#1}}
@@ -352,8 +365,9 @@
   {\group_begin:
    \prop_get:NnNTF \g__pxsrc_sources_prop {#2}\l__pxsrc_input_path_tl
      {\prop_get:NnN \g__pxsrc_source_options_prop {#2}\l_tmpa_tl
-      \exp_args:NnV \keys_set:nn {pxSRC/input}\l_tmpa_tl
-      \exp_args:NnV \__pxsrc_input:nn {#1}\l__pxsrc_input_path_tl}
+      \use:x {\exp_not:N \__pxsrc_input:nn
+        {\exp_not:V \l_tmpa_tl,\exp_not:n {#1}}
+        {\exp_not:V \l__pxsrc_input_path_tl}}}
      {\msg_error:nnn {pxSRC}{input}{Unknown~source~id~'#2'.}}
    \group_end:}
 % Validate markers before extraction: missing/duplicate/unclosed regions are errors.
@@ -459,11 +473,22 @@
          {\exp_not:V \l__pxsrc_input_path_tl}}}
       {\__pxsrc_input_render_code_native:}
   }
+%% Check optional-tool dependencies before native input, counters or output.
+%% Redirected errors must not turn a failed request into partial execution.
+\cs_new_protected:Npn \__pxsrc_input_dependencies:
+  {\tl_if_eq:NnT \l__pxsrc_input_mode_tl {code}
+     {\cs_if_exist:NF \pxLST_input_file:nnnn
+       {\__pxsrc_input_error:n {Code~input~requires~the~code~or~sources~tool.}}}
+   \clist_if_empty:NF \l__pxsrc_input_terms_clist
+     {\cs_if_exist:NF \glsadd
+       {\__pxsrc_input_error:n {Source~terms~require~the~glossaries~tool.}}}}
 \cs_new_protected:Npn \__pxsrc_input:nn #1#2
   {
     \group_begin:
+    \__pxsrc_input_defaults:n {native}
     \keys_set:nn {pxSRC/input}{#1}
     \bool_set_true:N \l__pxsrc_input_valid_bool
+    \__pxsrc_input_dependencies:
     \bool_set:Nn \l__pxsrc_input_fragment_bool
       {!\tl_if_blank_p:V \l__pxsrc_input_region_tl ||
        \int_compare_p:n {\l__pxsrc_input_first_int != 1} ||
@@ -479,10 +504,11 @@
               {!\tl_if_blank_p:V \l__pxsrc_input_caption_tl}
               {!\tl_if_blank_p:V \l__pxsrc_input_label_tl}
               {\refstepcounter{pxsource}
+               \tl_set:Nx \l__pxsrc_input_number_tl {\thepxsource}
                \tl_if_blank:VF \l__pxsrc_input_label_tl {\exp_args:NV \label \l__pxsrc_input_label_tl}}
             \__pxsrc_input_render:
             \tl_if_blank:VF \l__pxsrc_input_caption_tl
-              {\par\smallskip\noindent\textbf{\pxSourceName\space\thepxsource :}~
+              {\par\smallskip\noindent\textbf{\pxSourceName\space\l__pxsrc_input_number_tl :}~
                \l__pxsrc_input_caption_tl\par}
             \tl_if_blank:VF \l__pxsrc_input_cite_tl
               {\par\noindent\exp_args:NV \cite \l__pxsrc_input_cite_tl\par}
@@ -504,6 +530,7 @@
 %% =================================
 %% Space-limited previews of literal files. A preview never executes source TeX.
 
+\dim_new:N \l__pxsrc_preview_width_dim
 \dim_new:N \l__pxsrc_preview_height_dim
 \tl_new:N \l__pxsrc_preview_title_tl
 \tl_new:N \l__pxsrc_preview_label_tl
@@ -532,7 +559,8 @@
 %% Source bounds and styles are local; the accepted box is reused without re-reading.
 \cs_new_protected:Npn \__pxsrc_preview_measure:n #1
   {\vbox_set:Nn \l__pxsrc_preview_box
-    {\hsize=\linewidth
+    {\hsize=\l__pxsrc_preview_width_dim
+     \linewidth=\hsize
      \hypersetup{linkcolor=pxfg}
      \noindent\begin{minipage}{\linewidth}
      \begin{tcolorbox}[pxsrc-preview,title={\pxDEFpreviewname\space---\space\l__pxsrc_input_title_tl}]
@@ -561,9 +589,11 @@
    \tl_clear:N \l__pxsrc_preview_title_tl
    \tl_clear:N \l__pxsrc_preview_label_tl
    \keys_set_known:nnN {pxSRC/preview}{#1}\l__pxsrc_preview_options_tl
-   \keys_set:nn {pxSRC/input}{as=code}
+   \__pxsrc_input_defaults:n {code}
    \exp_args:NnV \keys_set:nn {pxSRC/input}\l__pxsrc_preview_options_tl
    \bool_set_true:N \l__pxsrc_input_valid_bool
+    \__pxsrc_input_dependencies:
+   \dim_set:Nn \l__pxsrc_preview_width_dim {\l__pxsrc_input_width_tl}
    \bool_set_true:N \l__pxsrc_input_fragment_bool
    \tl_if_eq:NnT \l__pxsrc_input_mode_tl {native}
      {\__pxsrc_input_error:n {Previews~support~as=code~or~as=text.}}
@@ -605,7 +635,15 @@
                   \box_set_eq:NN \l__pxsrc_preview_best_box \l__pxsrc_preview_box}}
             \use:x {\exp_not:N \pxAddAnnex[label={\l__pxsrc_preview_label_tl}]
               {\exp_not:V \l__pxsrc_preview_title_tl}
-              {\exp_not:N \pxInput[as=code,\exp_not:V \l__pxsrc_preview_options_tl,
+              {\exp_not:N \pxInput[
+                as={\exp_not:V \l__pxsrc_input_mode_tl},
+                language={\exp_not:V \l__pxsrc_input_language_tl},
+                title={\exp_not:V \l__pxsrc_input_title_tl},
+                listing-options={\exp_not:V \l__pxsrc_input_options_tl},
+                caption={\exp_not:V \l__pxsrc_input_caption_tl},
+                label={\exp_not:V \l__pxsrc_input_label_tl},
+                cite={\exp_not:V \l__pxsrc_input_cite_tl},
+                terms={\exp_not:V \l__pxsrc_input_terms_clist},
                 region={},first-line=1,last-line=0,container=none]
                 {\exp_not:V \l__pxsrc_input_path_tl}}}
             \par\nointerlineskip\box_use_drop:N \l__pxsrc_preview_best_box\par}}
@@ -614,4 +652,15 @@
    \group_end:}
 
 
+%% Registered previews reuse the same source definition as ordinary inclusion.
+%% Combine saved defaults and per-use overrides before the preview validates them.
+\cs_new_protected:Npn \__pxsrc_use_preview:nn #1#2
+  {\group_begin:
+   \prop_get:NnNTF \g__pxsrc_sources_prop {#2}\l__pxsrc_input_path_tl
+     {\prop_get:NnN \g__pxsrc_source_options_prop {#2}\l__pxsrc_preview_options_tl
+      \use:x {\exp_not:N \__pxsrc_preview:nn
+        {\exp_not:V \l__pxsrc_preview_options_tl,\exp_not:n {#1}}
+        {\exp_not:V \l__pxsrc_input_path_tl}}}
+     {\msg_error:nnn {pxSRC}{input}{Unknown~source~id~'#2'.}}
+   \group_end:}
 \endinput

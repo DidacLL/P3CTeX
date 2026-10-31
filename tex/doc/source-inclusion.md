@@ -123,3 +123,19 @@ unbreakable container for measurement. If the frame/link cannot fit, an error as
 for more space; if no complete line fits, the preview contains an explanatory note.
 The height is an explicit budget, not an estimate of the space left on the current
 page. Run LaTeX again to resolve annex numbers and final link measurements.
+
+Registered sources also support previews directly:
+
+    \pxSource[as=code,language=Python]{experiment}{experiment.py}
+    \pxUseSourcePreview[width=.8\linewidth,height=.33\textheight]{experiment}
+
+Registration supplies defaults, and per-use options override them. Preview width
+is measured at the requested size, including any extra wrapping. The deferred
+full-source annex captures the resolved rendering and metadata settings at the
+preview call, including scoped pxSRCsetup defaults. Referenced macros must still
+exist when the annex prints, as with any deferred TeX content.
+
+Missing optional tools are diagnosed before source execution or numbering.
+Nested source captions retain their own numbers even when the inner input creates
+another numbered source. GL and GL* acronym shorthand are available with both
+glossary and glossaries; an explicitly requested unknown glossary type is an error.

@@ -1,0 +1,13 @@
+\documentclass{article}
+\usepackage{pxSRC}
+\newcount\childinputs
+\ExplSyntaxOn
+\msg_redirect_name:nnn {pxSRC}{input}{warning}
+\ExplSyntaxOff
+\begin{document}
+\pxInput[as=code,caption={Should not be numbered}]{fixtures/source/data.csv}
+\pxInput[terms={missing},caption={Should not execute}]{fixtures/source/child.tex}
+\ifnum\childinputs=0\else\PackageError{dependency-test}{Native source executed despite missing glossary tool}{}\fi
+\ifnum\value{pxsource}=0\else\PackageError{dependency-test}{Failed input allocated a source number}{}\fi
+Dependencies were diagnosed before output.
+\end{document}

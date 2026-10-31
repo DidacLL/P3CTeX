@@ -90,7 +90,7 @@ Keys are typically set via package options:
 \usepackage[PRP,UML,SRC]{pxCORE}
 \end{verbatim}
 
-or adjusted later with \verb|\pxCOREsetup| (see below).
+Runtime debug settings use \verb|\pxCOREsetup| (see below).
 
 \section{User command reference}
 
@@ -102,7 +102,7 @@ or adjusted later with \verb|\pxCOREsetup| (see below).
 \pxCOREsetup{<key>=<value>,...}
 \end{verbatim}
 
-Updates the \texttt{pxCORE} key family after package loading. This is
+Updates runtime debug/diagnostic settings after package loading. This is
 useful to toggle flags such as \texttt{debug} programmatically or to
 adjust options in local scopes.
 
@@ -140,8 +140,18 @@ Example:
 \begin{document}
 \pxCOREsetup{debug=true}
 \pxCOREIfDebugTF{[DEBUG-ON]}{[DEBUG-OFF]}
+\section{Configuration diagnostics}
+Unknown tool keys produce an error instead of being ignored. Runtime
+\verb|\pxCOREsetup| accepts \texttt{debug} and \texttt{print-doc};
+it rejects module selection and load-time configuration. Select tools in the
+class/package options and customise loaded tools through their own setup commands.
 \end{document}
 \end{verbatim}
 
+\section{Configuration diagnostics}
+Unknown tool keys produce an error instead of being ignored. Runtime
+\verb|\pxCOREsetup| accepts \texttt{debug} and \texttt{print-doc};
+it rejects module selection and load-time configuration. Select tools in the
+class/package options and customise loaded tools through their own setup commands.
 \end{document}
 

@@ -111,3 +111,19 @@ final height, link, literal-content and full-suite checks are underway.
 - Migration is documented in tex/doc/api-corrections.md. Removed packages and
   duplicate spellings are intentionally not retained as compatibility wrappers.
 - Existing dist/ is untouched. No release archive was rebuilt or published.
+## Public API audit (2026-10-31)
+
+- Added pxUseSourcePreview for the existing source registry, with the same
+  registration/default/override precedence as ordinary inclusion.
+- Preview width now affects measurement; deferred source rendering captures
+  resolved local settings instead of rereading changed defaults at document end.
+- Native nesting starts each input with configured defaults, rather than the
+  parent's resolved line limits, region or metadata. The regression proves that
+  the final child line executes and that the outer/inner source numbers stay 1/2.
+- Missing source dependencies fail before execution or source numbering.
+- GL/GL* are owned by pxGLS, so both glossary-loading keys expose the same API.
+  Explicit unknown glossary types and unknown core options are diagnosed.
+- Runtime core setup cannot pretend to load/unload modules by only changing flags.
+- Gantt now also works as a normal pxGantt environment, whose closing delimiter
+  renders the chart. The command form remains useful for generated content.
+- Public comments, guides and tests cover these contracts. Final full gate pending.

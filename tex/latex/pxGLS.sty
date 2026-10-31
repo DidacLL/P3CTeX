@@ -10,7 +10,10 @@
 \NewDocumentCommand\pxGlossaryFile{m}{\file_input:n {#1}}
 %% \pxPrintGlossary[<keys>]: optional placement for one type (type=main by default); print once.
 \NewDocumentCommand\pxPrintGlossary{O{}}
-  {\group_begin:\keys_set:nn {pxGLS}{#1}\__pxgls_print:\group_end:}
+  {\group_begin:\keys_set:nn {pxGLS}{#1}
+   \exp_args:NV \ifglossaryexists \l__pxgls_type_tl
+     {\__pxgls_print:}{\msg_error:nnx {pxGLS}{type}{\l__pxgls_type_tl}}
+   \group_end:}
 %% \pxPrintGlossaries[<keys>]: place enabled term/acronym lists now; automatic output skips them.
 \NewDocumentCommand\pxPrintGlossaries{O{}}
   {\group_begin:
@@ -40,6 +43,9 @@
 %% #1 - entry map containing short and long fields for each label.
 \NewDocumentCommand\pxAcronyms{+m}
   {\keyval_parse:NNn \__pxgls_missing_entry:n \__pxgls_acronym:nn {#1}}
+%% \GL{<id>} / \GL*{<id>}: existing short/long acronym shorthand.
+%% Available whenever the glossary tool is loaded, through either class key.
+\NewDocumentCommand\GL{s m}{\IfBooleanTF{#1}{\acrlong{#2}}{\acrshort{#2}}}
 \ProcessKeysOptions{pxGLS}
 \bool_set_true:N \l__pxgls_backend_locked_bool
 \tl_if_eq:NnT \l__pxgls_backend_tl {noindex}{\makenoidxglossaries}

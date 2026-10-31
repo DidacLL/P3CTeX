@@ -1,0 +1,45 @@
+\documentclass[PAC,EN,sources,annexes,glossaries]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\pxAcronym{api}{API}{application programming interface}
+\pxSource[as=text]{log}{fixtures/source/long.txt}
+\newcount\checkedannexes
+\NewCommandCopy\OriginalInput\pxInput
+\RenewDocumentCommand\pxInput{O{} m}{%
+  \ExplSyntaxOn
+  \CheckAnnexOptions{#1}
+  \ExplSyntaxOff
+  \OriginalInput[#1]{#2}}
+\ExplSyntaxOn
+\NewDocumentCommand\CheckAnnexOptions{m}
+  {\group_begin:
+   \keys_set:nn {pxSRC/input}{#1}
+   \tl_if_eq:NnF \l__pxsrc_input_mode_tl {text}{\errmessage{Registered rendering mode lost}}
+   \tl_if_eq:NnF \l__pxsrc_input_caption_tl {LOCAL-CAPTION}{\errmessage{Local source defaults lost}}
+   \tl_if_eq:NnF \l__pxsrc_input_title_tl {REGISTERED-PREVIEW}{\errmessage{Preview override lost}}
+   \global\advance\checkedannexes by 1
+   \group_end:}
+\cs_new_eq:NN \__test_measure:n \__pxsrc_preview_measure:n
+\cs_set_protected:Npn \__pxsrc_preview_measure:n #1
+  {\__test_measure:n {#1}
+   \dim_compare:nNnT {\box_wd:N \l__pxsrc_preview_box}>{.65\linewidth+1sp}
+     {\errmessage{Preview ignored width}}}
+\msg_redirect_name:nnn {pxCORE}{unknown}{warning}
+\msg_redirect_name:nnn {pxCORE}{load-only}{warning}
+\msg_redirect_name:nnn {pxGLS}{type}{warning}
+\keys_set:nn {pxCORE}{sourcez}
+\ExplSyntaxOff
+\begin{document}
+\GL{api}: \GL*{api}.
+\pxCOREsetup{sources=false}
+\ExplSyntaxOn
+\bool_if:NF \l_pxcore_src_use_bool {\errmessage{Runtime setup mutated loader state}}
+\ExplSyntaxOff
+\pxPrintGlossary[type=missing]
+\begingroup
+\pxSRCsetup{input={caption={LOCAL-CAPTION}}}
+\pxUseSourcePreview[width=.65\linewidth,height=.33\textheight,title={REGISTERED-PREVIEW}]{log}
+\endgroup
+\AddToHook{enddocument}[api-test]{%
+  \ifnum\checkedannexes=1\else\PackageError{api-test}{Deferred annex not checked}{}\fi}
+\DeclareHookRule{enddocument}{api-test}{after}{pxANN}
+\end{document}

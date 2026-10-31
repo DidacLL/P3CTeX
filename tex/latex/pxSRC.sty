@@ -48,6 +48,10 @@
 %% #1 - height (default \textheight), annex-title/annex-label, and input options;
 %% #2 - code/text path. as=native is unsupported; heading/footer count toward height.
 \NewDocumentCommand\pxSourcePreview{O{} m}{\__pxsrc_preview:nn {#1}{#2}}
+%% \pxUseSourcePreview[<overrides>]{<id>}
+%% Preview a registered source and queue the full file; no path repetition.
+%% #1 - preview/input options overriding registration; #2 - registered source id.
+\NewDocumentCommand\pxUseSourcePreview{O{} m}{\__pxsrc_use_preview:nn {#1}{#2}}
 \providecommand\pxDEFsourcename{Source}
 \providecommand\pxSourceName{\pxDEFsourcename}
 %% \pxSourceRef{<label>}: reference a label relative to the current source prefix.
@@ -62,7 +66,7 @@
 %%BEGIN_FOLD%%%%%%%%%%%%%%%%%%
 %% Package configuration (pxSRC key family).
 %% \pxSRCsetup{<key=value,...>}
-%% Configure pxSRC defaults: default-width, pair-width, placeholder-color, float-spec, pair-gap and label-prefix.
+%% Configure image defaults and input={...} defaults for native/code/text sources.
 %% #1 - pxSRC key list.
 \NewDocumentCommand{\pxSRCsetup}{m}{
 	\keys_set:nn { pxSRC } { #1 }

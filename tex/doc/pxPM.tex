@@ -5,16 +5,18 @@
 \begin{document}
 \section*{pxPM: project management}
 \section{Daily Gantt charts}
-The \texttt{pxPM} planning tool provides a three-command interface to
+The closing environment delimiter renders the chart automatically. The existing
+command form, \verb|\pxGantt{...}| followed by \verb|\pxGanttEnd|, remains available for programmatic construction.
+The \texttt{pxPM} planning tool provides a scoped chart environment using
 \texttt{pgfgantt}; it does not change the document orientation.
 Select it when loading P3CTeX: \verb|\documentclass[project-management,PR,CAT]{P3CTeX}|.
 Outside the class, use \verb|\usepackage{pxPM}|.
 
 \begin{verbatim}
-\pxGantt{start=01/10/2026,end=31/01/2027,days-per-block=28}
+\begin{pxGantt}{start=01/10/2026,end=31/01/2027,days-per-block=28}
 \pxGanttItem{Investigation}{01/10/2026}{20/10/2026}
 \pxGanttItem{Implementation}{15/10/2026}{15/12/2026}
-\pxGanttEnd
+\end{pxGantt}
 \end{verbatim}
 
 Options: \texttt{start}, \texttt{end} (required dd/mm/yyyy),
@@ -30,11 +32,11 @@ bars crossing block boundaries are clipped. P3CTeX colours are reused;
 standalone users receive fallback colours.
 
 \section*{Example}
-\pxGantt{start=01/10/2026,end=25/11/2026,days-per-block=28}
+\begin{pxGantt}{start=01/10/2026,end=25/11/2026,days-per-block=28}
 \pxGanttItem{Investigació}{01/10/2026}{20/10/2026}
 \pxGanttItem{Disseny}{15/10/2026}{10/11/2026}
 \pxGanttItem{Implementació}{01/11/2026}{25/11/2026}
-\pxGanttEnd
+\end{pxGantt}
 \section{Project planning tools}
 Load \texttt{project-management} in the P3CTeX class, or load \texttt{pxPM}
 with a standard document class. The same tool provides SWOT/DAFO tables,

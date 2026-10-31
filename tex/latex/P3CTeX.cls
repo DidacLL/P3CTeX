@@ -127,14 +127,6 @@
 }
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
-	\__ifglossary:nn{
-		% pxGLS owns glossary initialisation.
-%% \GL*{<glossary label>}
-%% Glossary shorthand created only when glossary support is enabled.
-%% * - print the long acronym form; unstarred prints the short form.
-%% #1 - glossary/acronym label.
-		\NewDocumentCommand{\GL}{s m}{\IfBooleanTF{#1}{\acrlong{#2} }{\acrshort{#2} } }
-	}{}
 	\__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
 }
 \AfterBeginDocument{

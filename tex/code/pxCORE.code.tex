@@ -32,6 +32,8 @@
 %% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
 %% PRP/UML/PM/DIAG/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/diagrams-config forward option strings to those packages.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
+\msg_new:nnn {pxCORE}{unknown}{Unknown~tool~or~option~'#1'.~Use~a~documented~pxCORE~key.}
+\msg_new:nnn {pxCORE}{load-only}{Option~'#1'~is~not~a~runtime~core~setting.~Select~tools~at~load~time;~use~their~setup~commands~to~customise~them.}
 \keys_define:nn { pxCORE }
 {
     sources .meta:n = {SRC=#1,LST=#1},
@@ -127,12 +129,12 @@
 	SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
-	unknown		.code:n ={}
+	unknown .code:n = {\msg_error:nnx {pxCORE}{unknown}{\l_keys_key_str}}
 }
 \ProcessKeysOptions{ pxCORE }
 %% =================================
 %% Module-selection flags are consumed here during package loading.
-%% Changing them later with \pxCOREsetup changes state only; it does not re-run these \RequirePackage branches.
+%% Runtime setup does not accept module flags: it cannot load or unload packages.
 %% ===== LOAD SELECTED MODULES =====
 %% =================================
 \bool_if:NT \l_pxcore_uml_use_bool
@@ -163,4 +165,9 @@
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
 \bool_if:NT \l_pxcore_ann_use_bool { \RequirePackage{pxANN} }
 \bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
+%% Runtime settings have a separate contract from package selection.
+\keys_define:nn {pxCORE/runtime}
+  {debug .bool_set:N = \l_pxcore_debug_bool,
+   print-doc .bool_set:N = \l_pxcore_pxdoc_use_bool,
+   unknown .code:n = {\msg_error:nnx {pxCORE}{load-only}{\l_keys_key_str}}}
 \endinput

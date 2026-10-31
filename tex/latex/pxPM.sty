@@ -17,6 +17,11 @@
 %% \pxGanttEnd
 %% Draw consecutive portrait blocks (or chart-only rotated floats when requested).
 \NewDocumentCommand\pxGanttEnd{}{\__pxpm_gantt_render:}
+%% \begin{pxGantt}{<chart keys>} ... \end{pxGantt}
+%% The same chart can be written as a normal LaTeX environment. Its closing
+%% delimiter renders collected items, so no separate \pxGanttEnd is needed.
+%% The existing \pxGantt command supplies the opening delimiter.
+\NewDocumentCommand\endpxGantt{}{\pxGanttEnd}
 
 
 %% \pxPMsetup{<keys>}: override translated labels and shared box-options in the current group.

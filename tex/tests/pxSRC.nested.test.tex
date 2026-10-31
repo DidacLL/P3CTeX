@@ -1,0 +1,8 @@
+\documentclass[PAC,EN,sources]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcount\childinputs
+\begin{document}
+\pxInput[caption={OUTER-CAPTION},label=source:outer]{fixtures/source/nested.tex}
+\ifnum\childinputs=2\else\PackageError{nested-test}{Nested child was truncated}{}\fi
+Outer reference \ref{source:outer}; inner reference \ref{source:inner}.
+\end{document}

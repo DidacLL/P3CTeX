@@ -30,6 +30,9 @@ $testFiles = @(
     "pxDIAG.standalone.test.tex",
     "pxDIAG.test.tex",
     "pxCORE.test.tex",
+    "public-api.test.tex",
+    "pxSRC.dependencies.test.tex",
+    "pxSRC.nested.test.tex",
 
     # pxLST suite
     "pxLST.test.tex",
