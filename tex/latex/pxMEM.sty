@@ -41,6 +41,13 @@
 %% Start a scoped letter-numbered annex chapter; restore main numbering
 %% after typesetting its content. Uses the shared pxANN implementation.
 \NewDocumentCommand\pxMEMannex{m +m}{\__pxmem_annex:nn {#1}{#2}}
+% Lists in a chapter-based memory are chapter-level contents, not article sections.
+\cs_new_protected:Npn \__pxmem_print_list:nn #1#2
+  {\chapter*{#1}
+   \cs_if_exist:NT \phantomsection {\phantomsection}
+   \addcontentsline{toc}{chapter}{#1}
+   \@starttoc{#2}
+   \clearpage}
 % MEM supplies generic indexes after the class TOC; it never loads TFG.
 \bool_new:N \g__pxmem_indexes_done_bool
 \@ifclassloaded{P3CTeX}{%
@@ -49,8 +56,8 @@
     \RenewDocumentCommand\PECTeXprintTOC{s}{%
       \IfBooleanTF{#1}{\__pxmem_saved_toc:*}{\__pxmem_saved_toc:}%
       \bool_gset_true:N \g__pxmem_indexes_done_bool
-      \listoffigures\clearpage
-      \listoftables\clearpage
+      \__pxmem_print_list:nn {\listfigurename}{lof}
+      \__pxmem_print_list:nn {\listtablename}{lot}
     }%
   }%
 }{}
@@ -63,8 +70,9 @@
     \clearpage
     \cs_if_exist:NTF \PECTeXprintTOC
       {\PECTeXprintTOC}
-      {\tableofcontents\clearpage\listoffigures\clearpage
-       \listoftables\clearpage
+      {\tableofcontents\clearpage
+       \__pxmem_print_list:nn {\listfigurename}{lof}
+       \__pxmem_print_list:nn {\listtablename}{lot}
        \bool_gset_true:N \g__pxmem_indexes_done_bool}%
   }%
 }

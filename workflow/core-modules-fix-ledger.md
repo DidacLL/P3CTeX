@@ -44,3 +44,5 @@ Checkpoint 8: MEM inclusion accepts an optional pxSRC input-key list, allowing `
 Checkpoint 9: unfiltered `as=native` includes no longer read/scan the whole source file before ordinary native inclusion. Region/range native requests and all literal/code requests retain existing validation and line-bound handling. Existing native/nested/fragment tests exercise both branches; not compiled in this session.
 
 Checkpoint 10: corrected the float regression test fixture created in checkpoint 1: literal `\\n` escape sequences had produced a malformed test, with the new case inside a comment. This checkpoint replaces those escapes with actual lines. The float implementation itself was unchanged. Regression compile still required.
+
+Checkpoint 11: MEM's figures/tables lists use its own chapter-level headings, are registered in the chapter-level TOC, and still use standard `.lof`/`.lot` sources and Babel titles. This only affects MEM's preliminary list rendering and leaves TFG's exceptional formatting untouched. Multi-pass TOC verification remains pending.
