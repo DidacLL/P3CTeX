@@ -3,7 +3,7 @@
   TABconfig={style=grid},
   ORLconfig={columns=2,auto-columns=false},
   diagrams-config={maincolor=red},
-  SRCconfig={default-width=.5\linewidth},
+  SRCconfig={default-width=150pt},
   TFGconfig={tutor=Mentor}
 ]{P3CTeX}
 \PECTeXconfig{cover=false,toc=false,no-plagi=false}
@@ -16,7 +16,7 @@
   {\PackageError{core-forwarding}{ORLconfig boolean was ignored}{}}
 \tl_if_eq:NnF \l__pxdiag_maincolor_tl {red}
   {\PackageError{core-forwarding}{diagrams-config did not reach pxDIAG}{}}
-\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.5\linewidth}
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {150pt}
   {\PackageError{core-forwarding}{SRCconfig did not reach pxSRC}{}}
 \tl_if_eq:NnF \l__pxtfg_tutor_tl {Mentor}
   {\PackageError{core-forwarding}{TFGconfig did not reach pxTFG}{}}
