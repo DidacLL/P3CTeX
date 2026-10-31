@@ -78,3 +78,15 @@ canonical code implementations and migrated callers, shared glossary registratio
 helpers, and documented public contracts. Also found actual dimension text leaking
 from pxTAB column-spec classification: a token predicate was given a grouped item;
 replaced it with a token-list predicate. Full gate and source preview work continue.
+
+## PM ownership correction
+
+The owner rejected retaining a separate Gantt package. pxPM now owns the Gantt
+public commands and loads pxPM.gantt.code.tex internally. pxGNT and its redundant
+loading keys are removed; tests and manuals use project-management/pxPM.
+This supersedes the earlier standalone-engine compatibility note.
+
+The final PM layout is the standard pair pxPM.sty / pxPM.code.tex. Gantt is a
+section in that implementation, not another package or implementation file.
+The source-preview implementation is now present and passing focused builds;
+final height, link, literal-content and full-suite checks are underway.

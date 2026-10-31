@@ -1,9 +1,9 @@
 % P3CTeX optional GNT integration regression.
 % Compile from tex/tests with TEXINPUTS="../latex:../code:".
-\documentclass[PR,CAT,default,GNT]{P3CTeX}
+\documentclass[PR,CAT,default,project-management]{P3CTeX}
 \makeatletter
-\@ifpackageloaded{pxUML}{}{\PackageError{pxGNT-test}{default module not loaded}{}}
-\@ifpackageloaded{pxGNT}{}{\PackageError{pxGNT-test}{GNT module not loaded}{}}
+\@ifpackageloaded{pxUML}{}{\PackageError{pxPM-test}{default module not loaded}{}}
+\@ifpackageloaded{pxPM}{}{\PackageError{pxPM-test}{GNT module not loaded}{}}
 \makeatother
 \PECTeXconfig{cover=false,toc=false,data={student={Estudiant},grade={Enginyeria Informàtica},subj-fullname={Projecte Gantt},ca-fullname={Planificació},ca-shortname={PAC1}}}
 \begin{document}

@@ -43,5 +43,27 @@
 \ifnum\pdfstrcmp{\result}{nan}=0\else
   \PackageError{pxCALC-test}{Dependency cycle did not produce nan}{}\fi
 \endgroup
+\ExplSyntaxOn
+\cs_new_eq:NN \__test_calc_print: \__pxcalc_print_result:
+\int_new:N \g__test_calc_expected_steps_int
+\int_new:N \g__test_calc_expected_precision_int
+\cs_set_protected:Npn \__pxcalc_print_result:
+  {\int_compare:nNnF {\l__pxcalc_steps_int}={\g__test_calc_expected_steps_int}
+     {\errmessage{Calculation steps leaked between uses}}
+   \int_compare:nNnF {\l__pxcalc_precision_int}={\g__test_calc_expected_precision_int}
+     {\errmessage{Calculation precision leaked between uses}}
+   \__test_calc_print:}
+\int_gset:Nn \g__test_calc_expected_steps_int {1}
+\int_gset:Nn \g__test_calc_expected_precision_int {4}
+\ExplSyntaxOff
+\pxSolve[steps=1,prec=4]{Ek}\par
+\ExplSyntaxOn
+\int_gset:Nn \g__test_calc_expected_steps_int {3}
+\int_gset:Nn \g__test_calc_expected_precision_int {2}
+\ExplSyntaxOff
+\pxSolve{Ek}\par
+\ExplSyntaxOn
+\cs_set_eq:NN \__pxcalc_print_result: \__test_calc_print:
+\ExplSyntaxOff
 \typeout{PXCALC-PASS: values, overrides, scope, nested math and formula chaining}
 \end{document}

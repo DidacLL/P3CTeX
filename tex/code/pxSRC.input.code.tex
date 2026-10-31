@@ -149,7 +149,8 @@
            {\exp_not:V \l__pxsrc_input_options_tl,
             firstline=\int_use:N \l__pxsrc_input_first_int,
             lastline=\int_use:N \l__pxsrc_input_last_int,
-            firstnumber=\int_use:N \l__pxsrc_input_first_int}}}
+            firstnumber=\int_use:N \l__pxsrc_input_first_int,
+            escapeinside={},escapechar={},mathescape=false,texcl=false}}}
         {\__pxsrc_input_error:n {Code~input~requires~pxLST.~Load~the~code~tool~in~the~preamble.}}}
       {\bool_if:NTF \l__pxsrc_input_fragment_bool
          {\__pxsrc_input_extract:}
@@ -169,7 +170,7 @@
 \cs_new_protected:Npn \__pxsrc_input_render:
   {
     \tl_if_eq:NnTF \l__pxsrc_input_mode_tl {text}
-      {\use:x {\exp_not:N \VerbatimInput[
+      {\use:x {\exp_not:N \VerbatimInput[breaklines=true,breakanywhere=true,
          firstline=\int_use:N \l__pxsrc_input_first_int,
          lastline=\int_use:N \l__pxsrc_input_last_int]
          {\exp_not:V \l__pxsrc_input_path_tl}}}
@@ -198,7 +199,7 @@
                \tl_if_blank:VF \l__pxsrc_input_label_tl {\exp_args:NV \label \l__pxsrc_input_label_tl}}
             \__pxsrc_input_render:
             \tl_if_blank:VF \l__pxsrc_input_caption_tl
-              {\par\smallskip\noindent\textbf{\pxSourceName~\thepxsource :}~
+              {\par\smallskip\noindent\textbf{\pxSourceName\space\thepxsource :}~
                \l__pxsrc_input_caption_tl\par}
             \tl_if_blank:VF \l__pxsrc_input_cite_tl
               {\par\noindent\exp_args:NV \cite \l__pxsrc_input_cite_tl\par}

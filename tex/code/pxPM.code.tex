@@ -1,0 +1,305 @@
+\ProvidesExplFile{pxPM.code.tex}{2026/10/30}{0.1}{Project management implementation}
+\providecolor{primaryColor}{rgb}{0,0,.47}
+\prop_new:N \l__pxpm_labels_prop
+\providecommand{\pxDEFpmacceptance}{Acceptance~criteria}
+\providecommand{\pxDEFpmasa}{As~a}
+\providecommand{\pxDEFpmgiven}{Given}
+\providecommand{\pxDEFpmiwant}{I~want}
+\providecommand{\pxDEFpmopportunities}{Opportunities}
+\providecommand{\pxDEFpmscenario}{Scenario}
+\providecommand{\pxDEFpmsothat}{So~that}
+\providecommand{\pxDEFpmstory}{User~story}
+\providecommand{\pxDEFpmstrengths}{Strengths}
+\providecommand{\pxDEFpmthen}{Then}
+\providecommand{\pxDEFpmthreats}{Threats}
+\providecommand{\pxDEFpmweaknesses}{Weaknesses}
+\providecommand{\pxDEFpmwhen}{When}
+\prop_set_from_keyval:Nn \l__pxpm_labels_prop
+  {acceptance=\pxDEFpmacceptance,as-a=\pxDEFpmasa,given=\pxDEFpmgiven,i-want=\pxDEFpmiwant,opportunities=\pxDEFpmopportunities,scenario=\pxDEFpmscenario,so-that=\pxDEFpmsothat,story=\pxDEFpmstory,strengths=\pxDEFpmstrengths,then=\pxDEFpmthen,threats=\pxDEFpmthreats,weaknesses=\pxDEFpmweaknesses,when=\pxDEFpmwhen}
+\tl_new:N \l__pxpm_box_options_tl
+\keys_define:nn {pxPM}
+  {box-options .tl_set:N = \l__pxpm_box_options_tl,
+   labels .code:n = {\prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+     \prop_map_inline:Nn \l_tmpa_prop {\prop_put:Nnn \l__pxpm_labels_prop {##1}{##2}}}}
+\cs_new:Npn \__pxpm_label:n #1 {\prop_item:Nn \l__pxpm_labels_prop {#1}}
+\tcbset{pxpm/.style={enhanced,breakable,colback=primaryColor!3,
+  colframe=primaryColor,arc=1mm,fonttitle=\bfseries}}
+\cs_new_protected:Npn \__pxpm_begin:nnn #1#2#3
+  {\tcbset{pxpm}
+   \exp_args:NV \tcbset \l__pxpm_box_options_tl
+   \begin{tcolorbox}[title={\__pxpm_label:n {#1}:~#3},#2]}
+\cs_new_protected:Npn \__pxpm_field:nn #1#2
+  {\par\noindent\textbf{\__pxpm_label:n {#1}:}~#2\par}
+\cs_new_protected:Npn \__pxpm_swot:nnnnn #1#2#3#4#5
+  {\pxTable[style=grid,width=natural,
+    colspec={p{\dim_eval:n {.5\linewidth-2\tabcolsep-1.5\arrayrulewidth}}
+             p{\dim_eval:n {.5\linewidth-2\tabcolsep-1.5\arrayrulewidth}}},#1]
+    {{\textbf{\__pxpm_label:n {strengths}}},{\textbf{\__pxpm_label:n {weaknesses}}}}
+    {{#2},{#3}}
+    {{\textbf{\__pxpm_label:n {opportunities}}},{\textbf{\__pxpm_label:n {threats}}}}
+    {{#4},{#5}}}
+\providecommand{\pxDEFpmpostconditions}{Postconditions}
+\prop_put:Nnn \l__pxpm_labels_prop {postconditions}{\pxDEFpmpostconditions}
+\providecommand{\pxDEFpmmainflow}{Main~flow}
+\prop_put:Nnn \l__pxpm_labels_prop {main-flow}{\pxDEFpmmainflow}
+\providecommand{\pxDEFpmalternatives}{Alternatives}
+\prop_put:Nnn \l__pxpm_labels_prop {alternatives}{\pxDEFpmalternatives}
+\providecommand{\pxDEFpmactors}{Actors}
+\prop_put:Nnn \l__pxpm_labels_prop {actors}{\pxDEFpmactors}
+\providecommand{\pxDEFpmusecase}{Use~case}
+\prop_put:Nnn \l__pxpm_labels_prop {use-case}{\pxDEFpmusecase}
+\providecommand{\pxDEFpmpreconditions}{Preconditions}
+\prop_put:Nnn \l__pxpm_labels_prop {preconditions}{\pxDEFpmpreconditions}
+
+
+%% =================================
+%% ===== PROJECT SCHEDULES =========
+%% =================================
+
+\seq_new:N \g__pxpm_gantt_items_seq
+\seq_new:N \l__pxpm_gantt_date_seq
+\tl_new:N \l__pxpm_gantt_start_date_tl
+\tl_new:N \l__pxpm_gantt_end_date_tl
+\tl_new:N \l__pxpm_gantt_iso_tl
+\tl_new:N \l__pxpm_gantt_year_tl
+\tl_new:N \l__pxpm_gantt_month_tl
+\tl_new:N \l__pxpm_gantt_day_tl
+\tl_new:N \l__pxpm_gantt_window_start_date_tl
+\tl_new:N \l__pxpm_gantt_window_end_date_tl
+\tl_new:N \l__pxpm_gantt_bar_start_date_tl
+\tl_new:N \l__pxpm_gantt_bar_end_date_tl
+\int_new:N \l__pxpm_gantt_start_int
+\int_new:N \l__pxpm_gantt_end_int
+\int_new:N \l__pxpm_gantt_window_start_int
+\int_new:N \l__pxpm_gantt_window_end_int
+\int_new:N \l__pxpm_gantt_item_start_int
+\int_new:N \l__pxpm_gantt_item_end_int
+\int_new:N \l__pxpm_gantt_row_int
+\int_new:N \l__pxpm_gantt_days_int
+\int_new:N \l__pxpm_gantt_window_days_int
+\int_new:N \l__pxpm_gantt_window_count_int
+\int_new:N \l__pxpm_gantt_fit_days_int
+\dim_new:N \l__pxpm_gantt_label_dim
+\dim_new:N \l__pxpm_gantt_day_dim
+\dim_new:N \l__pxpm_gantt_requested_day_dim
+\dim_new:N \l__pxpm_gantt_label_max_dim
+\dim_new:N \l__pxpm_gantt_chart_width_dim
+\box_new:N \l__pxpm_gantt_label_box
+\bool_new:N \l__pxpm_gantt_fixed_label_width_bool
+\bool_new:N \l__pxpm_gantt_fixed_day_width_bool
+\bool_new:N \l__pxpm_gantt_rotate_bool
+\bool_new:N \l__pxpm_gantt_first_bool
+
+\keys_define:nn {pxPM}
+  {
+    start .tl_set:N = \l__pxpm_gantt_start_date_tl,
+    end .tl_set:N = \l__pxpm_gantt_end_date_tl,
+    days-per-block .int_set:N = \l__pxpm_gantt_days_int,
+    days-per-page .meta:n = { days-per-block = #1 },
+    day-width .code:n =
+      {
+        \dim_set:Nn \l__pxpm_gantt_requested_day_dim {#1}
+        \bool_set_true:N \l__pxpm_gantt_fixed_day_width_bool
+      },
+    label-width .code:n =
+      {
+        \dim_set:Nn \l__pxpm_gantt_label_dim {#1}
+        \bool_set_true:N \l__pxpm_gantt_fixed_label_width_bool
+      },
+    label-max-width .dim_set:N = \l__pxpm_gantt_label_max_dim,
+    rotate .bool_set:N = \l__pxpm_gantt_rotate_bool,
+  }
+
+% pgfcalendar supplies date arithmetic, including month/year boundaries.
+\cs_new_protected:Npn \__pxpm_gantt_parse_date:nN #1#2
+  {
+    \seq_set_split:Nnn \l__pxpm_gantt_date_seq {/} {#1}
+    \int_compare:nNnF {\seq_count:N \l__pxpm_gantt_date_seq} = {3}
+      {\PackageError{pxPM}{Expected a date in dd/mm/yyyy format}{Correct the date.}}
+    \tl_set:Nx \l__pxpm_gantt_iso_tl
+      {
+        \seq_item:Nn \l__pxpm_gantt_date_seq {3}
+        -\seq_item:Nn \l__pxpm_gantt_date_seq {2}
+        -\seq_item:Nn \l__pxpm_gantt_date_seq {1}
+      }
+    \exp_args:NV \pgfcalendardatetojulian \l__pxpm_gantt_iso_tl #2
+  }
+\cs_new_protected:Npn \__pxpm_gantt_format_date:nN #1#2
+  {
+    \pgfcalendarjuliantodate{#1}
+      {\l__pxpm_gantt_year_tl}{\l__pxpm_gantt_month_tl}{\l__pxpm_gantt_day_tl}
+    \tl_set:Nx #2
+      {\l__pxpm_gantt_day_tl/\l__pxpm_gantt_month_tl/\l__pxpm_gantt_year_tl}
+  }
+
+\cs_new_protected:Npn \__pxpm_gantt_begin:n #1
+  {
+    \seq_gclear:N \g__pxpm_gantt_items_seq
+    \tl_clear:N \l__pxpm_gantt_start_date_tl
+    \tl_clear:N \l__pxpm_gantt_end_date_tl
+    \bool_set_false:N \l__pxpm_gantt_fixed_label_width_bool
+    \bool_set_false:N \l__pxpm_gantt_fixed_day_width_bool
+    \bool_set_false:N \l__pxpm_gantt_rotate_bool
+    \int_set:Nn \l__pxpm_gantt_days_int {28}
+    \dim_zero:N \l__pxpm_gantt_label_dim
+    \dim_set:Nn \l__pxpm_gantt_label_max_dim {.24\linewidth}
+    \keys_set:nn {pxPM}{#1}
+    \tl_if_blank:VT \l__pxpm_gantt_start_date_tl
+      {\PackageError{pxPM}{Missing required start date}{Set start=dd/mm/yyyy.}}
+    \tl_if_blank:VT \l__pxpm_gantt_end_date_tl
+      {\PackageError{pxPM}{Missing required end date}{Set end=dd/mm/yyyy.}}
+    \int_compare:nNnF {\l__pxpm_gantt_days_int} > {0}
+      {\PackageError{pxPM}{days-per-block must be positive}{Use a positive integer.}}
+    \bool_if:NT \l__pxpm_gantt_fixed_day_width_bool
+      {
+        \dim_compare:nNnF {\l__pxpm_gantt_requested_day_dim} > {0pt}
+          {\PackageError{pxPM}{day-width must be positive}{Specify a positive dimension.}}
+      }
+    \exp_args:NV \__pxpm_gantt_parse_date:nN \l__pxpm_gantt_start_date_tl \l__pxpm_gantt_start_int
+    \exp_args:NV \__pxpm_gantt_parse_date:nN \l__pxpm_gantt_end_date_tl \l__pxpm_gantt_end_int
+    \int_compare:nNnT {\l__pxpm_gantt_start_int} > {\l__pxpm_gantt_end_int}
+      {\PackageError{pxPM}{Chart end date precedes its start}{Correct start and end.}}
+  }
+
+\cs_new_protected:Npn \__pxpm_gantt_item:nnn #1#2#3
+  {
+    \bool_if:NF \l__pxpm_gantt_fixed_label_width_bool
+      {
+        \hbox_set:Nn \l__pxpm_gantt_label_box {{\footnotesize #1}}
+        \dim_set:Nn \l__pxpm_gantt_label_dim
+          {
+            \dim_max:nn {\l__pxpm_gantt_label_dim}
+              {\dim_min:nn {\l__pxpm_gantt_label_max_dim}
+                {\box_wd:N \l__pxpm_gantt_label_box + \labelsep}}
+          }
+      }
+    \__pxpm_gantt_parse_date:nN {#2} \l__pxpm_gantt_item_start_int
+    \__pxpm_gantt_parse_date:nN {#3} \l__pxpm_gantt_item_end_int
+    \int_compare:nNnTF {\l__pxpm_gantt_item_start_int} > {\l__pxpm_gantt_item_end_int}
+      {\PackageError{pxPM}{Task end date precedes its start}{Correct the task dates.}}
+      {
+        \seq_gput_right:Nn \g__pxpm_gantt_items_seq
+          {\__pxpm_gantt_bar:nnn{#1}{#2}{#3}}
+      }
+  }
+
+\cs_new_protected:Npn \__pxpm_gantt_bar:nnn #1#2#3
+  {
+    \__pxpm_gantt_parse_date:nN {#2} \l__pxpm_gantt_item_start_int
+    \__pxpm_gantt_parse_date:nN {#3} \l__pxpm_gantt_item_end_int
+    \bool_if:nT
+      {
+        \int_compare_p:n {\l__pxpm_gantt_item_end_int >= \l__pxpm_gantt_window_start_int}
+        &&
+        \int_compare_p:n {\l__pxpm_gantt_item_start_int <= \l__pxpm_gantt_window_end_int}
+      }
+      {
+        \__pxpm_gantt_format_date:nN
+          {\int_max:nn {\l__pxpm_gantt_item_start_int}{\l__pxpm_gantt_window_start_int}}
+          \l__pxpm_gantt_bar_start_date_tl
+        \__pxpm_gantt_format_date:nN
+          {\int_min:nn {\l__pxpm_gantt_item_end_int}{\l__pxpm_gantt_window_end_int}}
+          \l__pxpm_gantt_bar_end_date_tl
+        \bool_if:NF \l__pxpm_gantt_first_bool {\ganttnewline}
+        \bool_set_false:N \l__pxpm_gantt_first_bool
+        \int_incr:N \l__pxpm_gantt_row_int
+        \int_if_odd:nTF {\l__pxpm_gantt_row_int}
+          {
+            \ganttbar[
+              bar/.append~style={fill=primaryColor!65!secondaryColor,draw=primaryColor}
+            ]{#1}{\tl_use:N \l__pxpm_gantt_bar_start_date_tl}
+                 {\tl_use:N \l__pxpm_gantt_bar_end_date_tl}
+          }
+          {
+            \ganttbar[
+              bar/.append~style={fill=secondaryColor!75,draw=primaryColor!70}
+            ]{#1}{\tl_use:N \l__pxpm_gantt_bar_start_date_tl}
+                 {\tl_use:N \l__pxpm_gantt_bar_end_date_tl}
+          }
+      }
+  }
+
+\cs_new_protected:Npn \__pxpm_gantt_chart:
+  {
+    \__pxpm_gantt_format_date:nN {\l__pxpm_gantt_window_start_int}
+      \l__pxpm_gantt_window_start_date_tl
+    \__pxpm_gantt_format_date:nN {\l__pxpm_gantt_window_end_int}
+      \l__pxpm_gantt_window_end_date_tl
+    \int_set:Nn \l__pxpm_gantt_window_days_int
+      {\l__pxpm_gantt_window_end_int-\l__pxpm_gantt_window_start_int+1}
+    \bool_if:NTF \l__pxpm_gantt_fixed_day_width_bool
+      {\dim_set_eq:NN \l__pxpm_gantt_day_dim \l__pxpm_gantt_requested_day_dim}
+      {\dim_set:Nn \l__pxpm_gantt_day_dim
+        {(\l__pxpm_gantt_chart_width_dim - \l__pxpm_gantt_label_dim - 2\labelsep)
+          / \l__pxpm_gantt_window_days_int}}
+    \par\noindent
+    {\small\bfseries\color{primaryColor}
+       \tl_use:N \l__pxpm_gantt_window_start_date_tl
+       ~--~\tl_use:N \l__pxpm_gantt_window_end_date_tl\par}
+    \smallskip
+    \noindent
+    \begin{ganttchart}[
+      time~slot~format=little-endian,
+      time~slot~unit=day,
+      x~unit=\l__pxpm_gantt_day_dim,
+      y~unit~chart=.9\baselineskip,
+      y~unit~title=.75\baselineskip,
+      hgrid={*1{draw=primaryColor!15}},
+      vgrid={*1{draw=primaryColor!18}},
+      canvas/.append~style={fill=secondaryColor!6},
+      title/.append~style={fill=primaryColor!9,draw=primaryColor!40},
+      title~label~font=\scriptsize\bfseries\color{primaryColor},
+      bar~label~font=\footnotesize\color{primaryColor},
+      bar~label~node/.append~style={text~width=\l__pxpm_gantt_label_dim,align=right,inner~sep=0pt},
+      bar~height=.57
+    ]{\tl_use:N \l__pxpm_gantt_window_start_date_tl}
+     {\tl_use:N \l__pxpm_gantt_window_end_date_tl}
+      \gantttitlecalendar{year,month=shortname,day}\ganttnewline
+      \bool_set_true:N \l__pxpm_gantt_first_bool
+      \int_zero:N \l__pxpm_gantt_row_int
+      \seq_map_inline:Nn \g__pxpm_gantt_items_seq {##1}
+    \end{ganttchart}
+    \par\bigskip
+  }
+
+\cs_new_protected:Npn \__pxpm_gantt_render:
+  {
+    \dim_set:Nn \l__pxpm_gantt_chart_width_dim
+      {\bool_if:NTF \l__pxpm_gantt_rotate_bool {\textheight} {\linewidth}}
+    \bool_if:NT \l__pxpm_gantt_fixed_day_width_bool
+      {
+        \int_set:Nn \l__pxpm_gantt_fit_days_int
+          {\fp_to_int:n
+            {floor(
+              \dim_to_fp:n {\l__pxpm_gantt_chart_width_dim - \l__pxpm_gantt_label_dim - 2\labelsep}
+              / \dim_to_fp:n {\l__pxpm_gantt_requested_day_dim})}}
+        \int_compare:nNnT {\l__pxpm_gantt_fit_days_int} < {1}
+          {\PackageError{pxPM}{day-width cannot fit alongside labels}
+             {Reduce day-width or label-width.}}
+        \int_set:Nn \l__pxpm_gantt_days_int
+          {\int_min:nn {\l__pxpm_gantt_days_int}{\int_max:nn {1}{\l__pxpm_gantt_fit_days_int}}}
+      }
+    \int_set:Nn \l__pxpm_gantt_window_count_int
+      {\int_div_truncate:nn
+        {\l__pxpm_gantt_end_int-\l__pxpm_gantt_start_int+\l__pxpm_gantt_days_int}
+        {\l__pxpm_gantt_days_int}}
+    \int_set:Nn \l__pxpm_gantt_days_int
+      {\int_div_truncate:nn
+        {\l__pxpm_gantt_end_int-\l__pxpm_gantt_start_int+\l__pxpm_gantt_window_count_int}
+        {\l__pxpm_gantt_window_count_int}}
+    \int_set_eq:NN \l__pxpm_gantt_window_start_int \l__pxpm_gantt_start_int
+    \int_while_do:nn
+      {\l__pxpm_gantt_window_start_int <= \l__pxpm_gantt_end_int}
+      {
+        \int_set:Nn \l__pxpm_gantt_window_end_int
+          {\int_min:nn
+            {\l__pxpm_gantt_window_start_int+\l__pxpm_gantt_days_int-1}
+            {\l__pxpm_gantt_end_int}}
+        \bool_if:NTF \l__pxpm_gantt_rotate_bool
+          {\begin{sidewaysfigure}[p]\centering\__pxpm_gantt_chart:\end{sidewaysfigure}}
+          {\__pxpm_gantt_chart:}
+        \int_set:Nn \l__pxpm_gantt_window_start_int
+          {\l__pxpm_gantt_window_end_int+1}
+      }
+  }
+\endinput

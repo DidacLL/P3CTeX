@@ -60,14 +60,14 @@
     \cs_set:Npn \theHtable {pxann.\arabic{pxannex}.\arabic{table}}
     \tl_if_eq:NnTF \l__pxann_level_tl {chapter}
       {\cs_if_exist:NTF \chapter
-        {\chapter*{\l__pxann_name_tl~\thepxannex :~#2}}
+        {\chapter*{\l__pxann_name_tl\space\thepxannex :~#2}}
         {\PackageError{pxANN}{Chapter~annexes~require~a~chapter-capable~document}{Use~level=section.}}}
-      {\section*{\l__pxann_name_tl~\thepxannex :~#2}}
+      {\section*{\l__pxann_name_tl\space\thepxannex :~#2}}
     \cs_if_exist:NT \phantomsection {\phantomsection}
     \protected@edef\@currentlabel{\thepxannex}
     \def\@currentlabelname{#2}
     \bool_if:NT \l__pxann_toc_bool
-      {\addcontentsline{toc}{\l__pxann_level_tl}{\l__pxann_name_tl~\thepxannex :~#2}}
+      {\addcontentsline{toc}{\l__pxann_level_tl}{\l__pxann_name_tl\space\thepxannex :~#2}}
     \tl_if_blank:VF \l__pxann_label_tl {\exp_args:NV \label \l__pxann_label_tl}
     #3
     % Flush pending floats before restoring their numbering context.

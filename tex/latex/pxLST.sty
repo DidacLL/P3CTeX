@@ -793,7 +793,7 @@
 	coltext=pxfg,
 }
 %% -----------------------------------------------------------------------
-%% pxCODE -- convenience environment with Darcula + pxJava defaults.
+%% pxCode* -- alternate visual treatment using the current listing settings.
 %%   Signature mirrors the legacy p3xLST environment:
 %%     [#1] = language (defaults to pxJava)
 %%      #2 = label shown in the title bar.
@@ -818,14 +818,14 @@
 %%   #3 = title text (title bar)
 %%   #4 = short note (comment panel identifier label)
 %%   #5 = caption text (comment panel body)
-%% \begin{CodeBox}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox}
+%% \begin{pxCodeBox}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{pxCodeBox}
 %% Non-breakable listing with an external comment panel and cross-reference label cdbx:<label>.
 %% #1 - listings options.  #2 - label id.  #3 - title.  #4 - short note id.  #5 - note text.
 
 %% -----------------------------------------------------------------------
 %% pxCodeBreak -- same as pxCodeBox but forces breakable across pages.
 %%   Arguments identical to pxCodeBox.
-%% \begin{CodeBox*}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox*}
+%% \begin{pxCodeBreak}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{pxCodeBreak}
 %% Breakable CodeBox variant; continuation titles refer back to cdbx:<label>.
 
 %% \pxCodeFile[<language>]{<file>}[<title>]
@@ -861,7 +861,7 @@
 
 
 
-%% pxCodeBox / pxCodeBreak -- namespaced aliases matching CodeBox / CodeBox*
+%% pxCodeBox / pxCodeBreak -- annotated listing environments
 \newtcblisting{pxCodeBox}[5][]{%
 	listing~options={style=pxlst,#1},
   enhanced,%

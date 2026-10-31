@@ -1,0 +1,66 @@
+% Project-management tools, reusing P3CTeX colours and table layout.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,l3keys2e}
+\RequirePackage{pxTAB,pgfgantt,rotating,tcolorbox}
+\tcbuselibrary{breakable,skins}
+\ProvidesExplPackage{pxPM}{2026/10/30}{0.1}{Project planning and analysis tools}
+\providecolor{primaryColor}{rgb}{0,0,.47}
+\providecolor{secondaryColor}{rgb}{.45,.93,1}
+\file_input:n {pxPM.code.tex}
+
+%% \pxGantt{start=dd/mm/yyyy,end=dd/mm/yyyy,days-per-block=28,...}
+%% Initialize a daily chart; chart drawing is deferred to \pxGanttEnd.
+\NewDocumentCommand\pxGantt{m}{\__pxpm_gantt_begin:n{#1}}
+%% \pxGanttItem{label}{dd/mm/yyyy}{dd/mm/yyyy}
+%% Add a task. Each task is clipped to the currently displayed date block.
+\NewDocumentCommand\pxGanttItem{mmm}{\__pxpm_gantt_item:nnn{#1}{#2}{#3}}
+%% \pxGanttEnd
+%% Draw consecutive portrait blocks (or chart-only rotated floats when requested).
+\NewDocumentCommand\pxGanttEnd{}{\__pxpm_gantt_render:}
+
+
+%% \pxPMsetup{<keys>}: override translated labels and shared box-options in the current group.
+\NewDocumentCommand\pxPMsetup{m}{\keys_set:nn {pxPM}{#1}}
+% Per-card options are ordinary tcolorbox options, applied after the defaults.
+%% pxUserStory[<tcolorbox options>]{<title>}: styled story; body contains freely editable fields.
+\NewDocumentEnvironment{pxUserStory}{O{} m}
+  {\__pxpm_begin:nnn {story}{#1}{#2}}{\end{tcolorbox}}
+%% pxScenario[<tcolorbox options>]{<title>}: styled scenario; body accepts Given/When/Then fields.
+\NewDocumentEnvironment{pxScenario}{O{} m}
+  {\__pxpm_begin:nnn {scenario}{#1}{#2}}{\end{tcolorbox}}
+%% \pxAsA{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxAsA{+m}{\__pxpm_field:nn {as-a}{#1}}
+%% \pxIWant{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxIWant{+m}{\__pxpm_field:nn {i-want}{#1}}
+%% \pxSoThat{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxSoThat{+m}{\__pxpm_field:nn {so-that}{#1}}
+%% \pxAcceptanceCriteria{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxAcceptanceCriteria{+m}{\__pxpm_field:nn {acceptance}{#1}}
+%% \pxGiven{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxGiven{+m}{\__pxpm_field:nn {given}{#1}}
+%% \pxWhen{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxWhen{+m}{\__pxpm_field:nn {when}{#1}}
+%% \pxThen{<text>}: print a translated field label followed by the supplied paragraph content.
+\NewDocumentCommand\pxThen{+m}{\__pxpm_field:nn {then}{#1}}
+% Optional settings are pxTAB options; lists and paragraphs work in all cells.
+%% \pxSWOT[<table options>]{<strengths>}{<weaknesses>}{<opportunities>}{<threats>}: translated analysis table.
+\NewDocumentCommand\pxSWOT{O{} +m +m +m +m}
+  {\__pxpm_swot:nnnnn {#1}{#2}{#3}{#4}{#5}}
+\NewCommandCopy\pxDAFO\pxSWOT
+%% pxUseCase[<box options>]{<title>}
+%% Describe a use case independently of user stories and Given/When/Then scenarios.
+%% #1 - local tcolorbox options; #2 - use-case title; body contains the fields below.
+\NewDocumentEnvironment{pxUseCase}{O{} m}
+  {\__pxpm_begin:nnn {use-case}{#1}{#2}}{\end{tcolorbox}}
+%% \pxActors{<text>}: participating actors; accepts shared preamble macros.
+\NewDocumentCommand\pxActors{+m}{\__pxpm_field:nn {actors}{#1}}
+%% \pxPreconditions{<text>}: conditions required before the use case begins.
+\NewDocumentCommand\pxPreconditions{+m}{\__pxpm_field:nn {preconditions}{#1}}
+%% \pxMainFlow{<content>}: main interaction sequence; may contain an enumerate list.
+\NewDocumentCommand\pxMainFlow{+m}{\__pxpm_field:nn {main-flow}{#1}}
+%% \pxAlternatives{<content>}: alternative and exception paths.
+\NewDocumentCommand\pxAlternatives{+m}{\__pxpm_field:nn {alternatives}{#1}}
+%% \pxPostconditions{<text>}: resulting state after successful completion.
+\NewDocumentCommand\pxPostconditions{+m}{\__pxpm_field:nn {postconditions}{#1}}
+\ProcessKeysOptions{pxPM}
+\endinput

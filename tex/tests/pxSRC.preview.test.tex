@@ -1,0 +1,18 @@
+\documentclass[PAC,EN,sources,annexes]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcount\unsafeexecutions
+\newsavebox\previewtest
+\newcommand\CheckPreview[2]{%
+  \setbox\previewtest=\vbox{\pxSourcePreview[#1]{#2}}%
+  \ifdim\dimexpr\ht\previewtest+\dp\previewtest\relax> .33\textheight
+    \PackageError{preview-test}{Styled preview exceeded its height budget}{}\fi
+  \noindent\usebox\previewtest\par
+}
+\AddToHook{enddocument}[preview-test]{%
+  \ifnum\unsafeexecutions=0\else\PackageError{preview-test}{Source executed during preview or annex}{}\fi
+}
+\DeclareHookRule{enddocument}{preview-test}{after}{pxANN}
+\begin{document}
+\CheckPreview{as=text,height=.33\textheight,title={Experiment log},annex-label=ann:log}{fixtures/source/long.txt}
+\CheckPreview{as=code,language=Python,height=.33\textheight,title={Python example}}{fixtures/source/long.py}
+\end{document}

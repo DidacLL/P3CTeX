@@ -102,3 +102,24 @@ still flush before restoring counters.
 
 Legacy \pxMEMsource, \pxMEMinclude and \pxMEMannex delegate to these shared tools.
 Explicit \appendix retains its permanent numbering transition.
+
+## Styled previews with automatic full-source annexes
+
+    \pxSourcePreview[as=code,language=Python,height=.33\textheight,
+      title={Experiment},annex-label=ann:experiment]{experiment.py}
+    \pxSourcePreview[as=text,height=\textheight,title={Execution log}]{run.txt}
+
+The preview uses the current P3CTeX listing palette, a translated preview heading,
+and a clickable full-source annex footer. Its measured height includes the entire
+frame and link. Complete source lines are selected, including their wrapped display
+lines; text is not cut mid-line or shrunk. The complete original file is queued and
+printed automatically. A region or range limits only the preview; the annex still
+contains the whole file. Native TeX and image previews are outside this iteration.
+
+height defaults to textheight. annex-title and annex-label are optional. title,
+language and listing-options follow source input conventions. Customise the outer
+container through tcbset{pxsrc-preview/.style={...}}. Custom styles must retain an
+unbreakable container for measurement. If the frame/link cannot fit, an error asks
+for more space; if no complete line fits, the preview contains an explanatory note.
+The height is an explicit budget, not an estimate of the space left on the current
+page. Run LaTeX again to resolve annex numbers and final link measurements.

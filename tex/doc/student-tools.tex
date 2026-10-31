@@ -2,7 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[margin=22mm]{geometry}
-\usepackage[code,calculations,diagrams,requirements]{pxCORE}
+\usepackage[code,calculations,diagrams,project-management]{pxCORE}
 \title{P3CTeX: reusable student tools}
 \author{P3CTeX}
 \date{Development guide, October 2026}
@@ -11,7 +11,7 @@
 \section{Choose the tools you need}
 \begin{verbatim}
 \documentclass[code,images,tables,diagrams,
-               calculations,requirements]{P3CTeX}
+               calculations,project-management]{P3CTeX}
 \end{verbatim}
 Existing module options remain supported. The diagram entry point
 \texttt{pxDIAG} uses the established \texttt{pxCMP} engine and presets.
@@ -78,7 +78,7 @@ Inline verbatim must be outside other commands' arguments.
   {Student laboratory reports}{Incorrect input data}
 
 Cards accept normal \texttt{tcolorbox} options; their labels are editable
-with \verb|\pxREQsetup{labels={as-a=Com a,i-want=Vull}}|.
+with \verb|\pxPMsetup{labels={as-a=Com a,i-want=Vull}}|.
 The SWOT grid reuses \texttt{pxTAB}; its optional argument accepts table
 options, including an explicit column specification.
 

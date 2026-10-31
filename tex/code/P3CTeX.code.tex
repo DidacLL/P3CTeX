@@ -89,8 +89,6 @@
 	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true},cat},
 	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
 	PR		.meta:n	={cover = {true} , toc ={ true }},
-	GNT .meta:n = {tools={GNT=#1}},
-	GNT .default:n = true,
 	ORL .meta:n = {tools={ORL=#1}},
 	ORL .default:n = true,
 	CMP .meta:n = {tools={CMP=#1}},
@@ -220,7 +218,7 @@
 \bool_set_false:N \l__pxdoc_loading_bool
 
 \bool_if:NT \l_pxdoc_useglossary_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}}
-\RequirePackage[english,spanish,catalan]{babel}
+\use:x {\exp_not:N \RequirePackage[english,spanish,catalan,main=\l__pxdoc_language_tl]{babel}}
 \exp_args:NV \selectlanguage \l__pxdoc_language_tl
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE

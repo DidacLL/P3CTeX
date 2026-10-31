@@ -134,7 +134,7 @@ pytest -v
 
 L'amplada per defecte \'es \texttt{.8\textbackslash linewidth}.
 
-\subsection{\texttt{pxCodeBox} i \texttt{pxCodeBreak} (\texttt{pxCodeBox} i \texttt{pxCodeBreak})}
+\subsection{\texttt{pxCodeBox} i \texttt{pxCodeBreak}}
 
 Entorn avan\c{c}at amb panell lateral d'anotacions i peu de comentari:
 
@@ -151,11 +151,11 @@ Entorn avan\c{c}at amb panell lateral d'anotacions i peu de comentari:
   \item \texttt{<text explicatiu>}: comentari situat a la safata inferior de la caixa.
 \end{itemize}
 
-La variant amb asterisc \texttt{pxCodeBreak} (i el seu \`alies \texttt{pxCodeBreak}) \'es \emph{divisible} a trav\'es de salts de p\`agina, afegint indicadors autom\`atics de continuaci\'o.
+La variant \texttt{pxCodeBreak} permet salts de p\`agina.
 
 \section{Instruccions d'entrada i codi en l\'inia}
 
-\subsection{Codi en l\'inia: \texttt{\textbackslash pxCodeIn}}
+\subsection{Codi en l\'inia: \texttt{\textbackslash pxCodeInline}}
 
 Per incrustar fragments de codi dins del flux de text:
 
@@ -163,7 +163,7 @@ Per incrustar fragments de codi dins del flux de text:
 \pxCodeInline[<llenguatge>]{<code>}[<estil>]
 \end{verbatim}
 
-Tamb\'e s\'on v\`alids els \`alies \texttt{\textbackslash pxCodeInline} i \texttt{\textbackslash pxInlineCode}:
+Exemples amb la mateixa comanda:
 
 \begin{verbatim}
 El valor de retorn \pxCodeInline{int n = 0;} s'obté mitjançant \pxCodeInline{return n + 1;}.
@@ -178,7 +178,7 @@ Permet incloure un fitxer de codi sencer en una caixa divisible:
 \pxCodeFile[<llenguatge>]{<fitxer>}[<titol>]
 \end{verbatim}
 
-L'\`alies \texttt{\textbackslash pxLSTinput} i la comanda \texttt{\textbackslash pxCodeFileInput} ofereixen la mateixa funcionalitat:
+Exemples:
 
 \begin{verbatim}
 \pxCodeFile[pxJava]{src/Main.java}[Classe Principal]

@@ -3,19 +3,19 @@
 P3CTeX's existing tools remain the foundation. Choose features by what you need:
 
 ```latex
-\documentclass[EN,code,images,tables,diagrams,calculations,requirements]{P3CTeX}
+\documentclass[EN,code,images,tables,diagrams,calculations,project-management]{P3CTeX}
 ```
 
-The readable keywords are aliases for module selection at class/package load time. Existing `LST`, `SRC`, `TAB`, `CMP` and `default` options remain available. `CALC` and `REQ` are also accepted. For a standard `article`, load individual packages or `\usepackage[code,calculations]{pxCORE}`. Changing module flags after loading does not load packages.
+The readable keywords are aliases for module selection at class/package load time. Existing `LST`, `SRC`, `TAB`, `CMP` and `default` options remain available. `CALC` and `PM` are also accepted. For a standard `article`, load individual packages or `\usepackage[code,calculations]{pxCORE}`. Changing module flags after loading does not load packages.
 
 | Tool | Package | Existing entry points |
 | --- | --- | --- |
-| Code | `pxLST` | `pxCode`, `pxCodeIn`, `pxCodeFile`, `CodeBox` |
+| Code | `pxLST` | `pxCode`, `pxCodeInline`, `pxCodeFile`, `pxCodeBox` |
 | Images | `pxSRC` | `pxIMG`, `pxIMGpair`, `pxIMGList` |
 | Tables | `pxTAB` | `pxTable`, `pxTableFromList`, `pxTableMatrix` |
 | Diagrams | `pxDIAG` (uses the existing `pxCMP` engine) | `pxAutomaton`, `pxTransitionTable`, `pxGraph`, compiler/logic/memory/ML tools |
 | Calculations | `pxCALC` | `pxDefVar`, `pxDefFormula`, `pxSolve`, `pxCalcStore` |
-| Requirements | `pxREQ` | `pxUserStory`, `pxScenario`, `pxSWOT` |
+| Project management | `pxPM` | `pxUserStory`, `pxScenario`, `pxSWOT` |
 
 ## Code without TeX escaping
 
@@ -88,7 +88,7 @@ Units are formatted with `siunitx`, whose `\sisetup` remains available. **Units 
 \pxSWOT{Strengths}{Weaknesses}{Opportunities}{Threats}
 ```
 
-Cards are breakable and accept ordinary `tcolorbox` options. Set shared card options with `\pxREQsetup{box-options={colframe=teal}}`, or extend the `pxreq` style. Labels are editable, for example `\pxREQsetup{labels={as-a=Com a,i-want=Vull,so-that=Per tal de}}`. All label keys are `story`, `scenario`, `as-a`, `i-want`, `so-that`, `acceptance`, `given`, `when`, `then`, `strengths`, `weaknesses`, `opportunities`, `threats`.
+Cards are breakable and accept ordinary `tcolorbox` options. Set shared card options with `\pxPMsetup{box-options={colframe=teal}}`, or extend the `pxpm` style. Labels are editable, for example `\pxPMsetup{labels={as-a=Com a,i-want=Vull,so-that=Per tal de}}`. All label keys are `story`, `scenario`, `as-a`, `i-want`, `so-that`, `acceptance`, `given`, `when`, `then`, `strengths`, `weaknesses`, `opportunities`, `threats`.
 
 `pxSWOT`/`pxDAFO` reuse `pxTable` with paragraph columns. Their optional argument takes existing `pxTAB` options; lists and paragraphs can be used in the four cells. Override `colspec` for custom column widths.
 

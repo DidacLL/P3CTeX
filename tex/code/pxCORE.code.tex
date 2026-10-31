@@ -30,7 +30,7 @@
 %% =================================
 %% pxCORE package keys.
 %% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
-%% PRP/UML/GNT/CMP/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/CMPconfig forward option strings to those packages.
+%% PRP/UML/PM/CMP/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/CMPconfig forward option strings to those packages.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
@@ -62,11 +62,11 @@
     images .default:n = true,
     tables .meta:n = {TAB=#1},
     tables .default:n = true,
-    requirements .bool_set:N = \l_pxcore_req_use_bool,
-    requirements .initial:n = false,
-    requirements .default:n = true,
-    REQ .meta:n = {requirements=#1},
-    REQ .default:n = true,
+    project-management .bool_set:N = \l_pxcore_pm_use_bool,
+    project-management .initial:n = false,
+    project-management .default:n = true,
+    PM .meta:n = {project-management=#1},
+    PM .default:n = true,
 	debug		.bool_set:N 	= \l_pxcore_debug_bool,
 		debug		.initial:n	= false,
 		debug		.default:n	= true,
@@ -78,11 +78,6 @@
 		PRP			.default:n	= true,
 	PRPconfig	.tl_set_x:N 	= \l_pxcore_prp_config_tl,
 		PRPconfig	.initial:n	= {},
-	GNTconfig	.tl_set_x:N 	= \l_pxcore_gnt_config_tl,
-		GNTconfig	.initial:n	= {},
-	GNT			.bool_set:N	=	\l_pxcore_gnt_use_bool,
-		GNT			.initial:n	=	false,
-		GNT			.default:n	=	true,
 	CMP			.bool_set:N	=	\l_pxcore_cmp_use_bool,
 		CMP			.initial:n	=	false,
 		CMP			.default:n	=	true,
@@ -156,7 +151,6 @@
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
-\bool_if:NT \l_pxcore_gnt_use_bool { \RequirePackage{pxGNT} }
 \bool_if:NT \l_pxcore_cmp_use_bool
 	{
 		\tl_if_blank:VTF \l_pxcore_cmp_config_tl
@@ -173,7 +167,7 @@
 
 
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
-\bool_if:NT \l_pxcore_req_use_bool { \RequirePackage{pxREQ} }
+\bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
 \bool_if:NT \l_pxcore_ann_use_bool { \RequirePackage{pxANN} }
 \bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
 \endinput

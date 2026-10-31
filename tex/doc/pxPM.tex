@@ -1,0 +1,67 @@
+% pxPM -- P3CTeX project management
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{pxPM}
+\begin{document}
+\section*{pxPM: project management}
+\section{Daily Gantt charts}
+The \texttt{pxPM} planning tool provides a three-command interface to
+\texttt{pgfgantt}; it does not change the document orientation.
+Select it when loading P3CTeX: \verb|\documentclass[project-management,PR,CAT]{P3CTeX}|.
+Outside the class, use \verb|\usepackage{pxPM}|.
+
+\begin{verbatim}
+\pxGantt{start=01/10/2026,end=31/01/2027,days-per-block=28}
+\pxGanttItem{Investigation}{01/10/2026}{20/10/2026}
+\pxGanttItem{Implementation}{15/10/2026}{15/12/2026}
+\pxGanttEnd
+\end{verbatim}
+
+Options: \texttt{start}, \texttt{end} (required dd/mm/yyyy),
+\texttt{days-per-block} (default 28), \texttt{days-per-page} (alias),
+\texttt{day-width} (optional TeX length), \texttt{label-width} (manual override),
+\texttt{label-max-width} (default \verb|.24\linewidth|),
+\texttt{rotate=true} (optional chart-only rotation).
+
+By default the label column is measured from actual task text and capped
+relative to the available line width. Remaining width is divided among
+calendar days. The date range is balanced into consecutive blocks, and
+bars crossing block boundaries are clipped. P3CTeX colours are reused;
+standalone users receive fallback colours.
+
+\section*{Example}
+\pxGantt{start=01/10/2026,end=25/11/2026,days-per-block=28}
+\pxGanttItem{Investigació}{01/10/2026}{20/10/2026}
+\pxGanttItem{Disseny}{15/10/2026}{10/11/2026}
+\pxGanttItem{Implementació}{01/11/2026}{25/11/2026}
+\pxGanttEnd
+\section{Project planning tools}
+Load \texttt{project-management} in the P3CTeX class, or load \texttt{pxPM}
+with a standard document class. The same tool provides SWOT/DAFO tables,
+user stories, scenarios, use-case descriptions and Gantt schedules.
+Labels follow P3CTeX's Catalan, Spanish and English language selection.
+\begin{verbatim}
+\pxSWOT{Strengths}{Weaknesses}{Opportunities}{Threats}
+\begin{pxUserStory}{Reserve equipment}
+  \pxAsA{a customer}
+  \pxIWant{to reserve equipment}
+  \pxSoThat{I can plan a shoot}
+  \pxAcceptanceCriteria{The reservation is confirmed.}
+\end{pxUserStory}
+\begin{pxScenario}{Successful reservation}
+  \pxGiven{available equipment}
+  \pxWhen{a customer confirms}
+  \pxThen{a reservation is created}
+\end{pxScenario}
+\begin{pxUseCase}{Reserve equipment}
+  \pxActors{Customer}
+  \pxPreconditions{Equipment is available.}
+  \pxMainFlow{Select equipment, then confirm.}
+  \pxAlternatives{Choose another date if unavailable.}
+  \pxPostconditions{A reservation exists.}
+\end{pxUseCase}
+\end{verbatim}
+Fields accept paragraphs and shared preamble commands. Card environments accept
+local tcolorbox options; \verb|\pxPMsetup{labels={...},box-options={...}}|
+customises defaults. Gantt commands below belong to the same package.
+\end{document}

@@ -1,0 +1,18 @@
+\documentclass[PAC,EN,project-management]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\begin{document}
+\pxSWOT{Team expertise}{Limited time}{New audience}{Schedule risk}
+\begin{pxUseCase}{Reserve equipment}
+\pxActors{Registered customer}
+\pxPreconditions{Equipment is available.}
+\pxMainFlow{\begin{enumerate}\item Select equipment.\item Confirm reservation.\end{enumerate}}
+\pxAlternatives{Unavailable equipment: offer another date.}
+\pxPostconditions{A reservation exists.}
+\end{pxUseCase}
+\begin{pxUserStory}{Reserve equipment}
+\pxAsA{registered customer}\pxIWant{to reserve equipment}\pxSoThat{I can plan a shoot}
+\end{pxUserStory}
+\pxGantt{start=01/11/2026,end=07/11/2026}
+\pxGanttItem{Planning}{01/11/2026}{03/11/2026}
+\pxGanttEnd
+\end{document}

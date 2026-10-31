@@ -4,13 +4,13 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'tex/doc/pxGNT.tex'
+      - 'tex/doc/pxPM.tex'
       - 'tex/doc/pxMEM.tex'
       - 'tex/doc/pxTFG.tex'
-      - 'tex/latex/pxGNT.sty'
+      - 'tex/latex/pxPM.sty'
       - 'tex/latex/pxMEM.sty'
       - 'tex/latex/pxTFG.sty'
-      - 'tex/code/pxGNT.code.tex'
+      - 'tex/code/pxPM.code.tex'
       - 'tex/code/pxMEM.code.tex'
       - 'tex/code/pxTFG.code.tex'
       - 'tex/latex/P3CTeX.cls'
@@ -63,7 +63,7 @@ jobs:
           targets = set()
 
           if event_name == "workflow_dispatch":
-              targets.update(("tex/doc/pxGNT.tex", "tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
+              targets.update(("tex/doc/pxPM.tex", "tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
           else:
               # PR builds compare the source branch with the merge base.
               base = event["pull_request"]["base"]["sha"]
@@ -100,7 +100,7 @@ jobs:
                       targets.update(("tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"))
 
           # Only the maintained manuals participate; legacy docs are deprecated.
-          maintained = {"tex/doc/pxGNT.tex", "tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"}
+          maintained = {"tex/doc/pxPM.tex", "tex/doc/pxMEM.tex", "tex/doc/pxTFG.tex"}
           selected = sorted(p for p in targets if p in maintained and pathlib.Path(p).is_file())
           print("Manuals to compile:", selected, flush=True)
           pathlib.Path(".documentation-targets").write_text(
@@ -124,9 +124,9 @@ jobs:
                 latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode "$source"
                 echo "::endgroup::"
               done < /work/.documentation-targets
-              if grep -qx "doc/pxGNT.tex" /work/.documentation-targets; then
+              if grep -qx "doc/pxPM.tex" /work/.documentation-targets; then
                 echo "::group::Gantt class integration"
-                latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode tests/pxGNT.test.tex
+                latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode tests/pxPM.gantt.test.tex
                 echo "::endgroup::"
               fi
             '
