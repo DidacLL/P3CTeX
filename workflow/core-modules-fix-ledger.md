@@ -24,7 +24,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 - **S02 (DIAG)**: floating diagram labels are currently emitted even without a caption, so they may inherit an unrelated `\@currentlabel`; review the contract.
 - **S05 (load-time)**: existing module config keys use `.tl_set_x:N` and can prematurely expand arbitrary user macros; TFGconfig now stores tokens unexpanded. Audit UML/SRC/DIAG/TAB/ORL key expansion separately before changing long-standing behavior.
 - **S04 (ANN)**: cleveref plural for the custom `pxannex` type currently reuses Babel's `\appendixname` in both forms; defer a fully localized plural string to the pxTXT integration review rather than hardcoding incorrect suffixes.
-- **S03 (API)**: previous changes renamed legacy `miniCode`, `CodeBox`, `CodeBox*`, and `\pxCodeIn` entry points in pxLST. Check actual compatibility requirements before reintroducing aliases.
+- **S03 (API)**: resolved in checkpoint 14 — restored old `miniCode`, `CodeBox`, `CodeBox*`, and `\pxCodeIn` contracts without duplicating the three verbatim listing environments.
 
 ## Validation
 
@@ -58,3 +58,5 @@ Checkpoint 11: MEM's figures/tables lists use its own chapter-level headings, ar
 - These were **isolated reproductions**, not the complete P3CTeX repository builds. GitHub branch read-back verified commit paths and content; no GitHub Actions workflow runs were available for the branch. Full module test and multi-pass template compilation remain required before declaring the branch release-ready.
 
 Checkpoint 13: `pxSRC/input` no longer appends every historical input setting into a growing token list. Validated keys are stored once per key in a scoped property, retaining last-value precedence and earlier unrelated keys. Per-input defaults are still reset and restored independently for nested sources. Added `pxSRC.defaults.test.tex` to the runner. An isolated TeX Live expl3 probe verified comma-bearing values, replacements, key retention and grouping; no full P3CTeX compile is claimed.
+
+Checkpoint 14: restored pre-TFG listing entry points that had been renamed during migration. Environment names alias the existing verbatim-aware tcolorbox implementations (both begin/end CS pairs); `\pxCodeIn` keeps its original mandatory-argument parsing instead of aliasing the incompatible verbatim-argument `\pxCodeInline`. Added legacy-API test. An isolated TeX Live tcolorbox probe compiled both plain and starred aliases; full module test remains outstanding.

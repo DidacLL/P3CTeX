@@ -934,4 +934,21 @@
         {\PackageError{pxLST}{Last~line~precedes~first~line}{Use~an~ascending~line~range.}}
         {\pxLST_input_file:nnnn {#1}{#2}{#5}{firstline=#3,lastline=#4,firstnumber=#3}}}
    \group_end:}
+%% Legacy P3CTeX names. Keep the existing verbatim-aware listing engines;
+%% a TeX environment alias needs both begin and end control sequences.
+\cs_new_eq:cc {miniCode} {pxCodeMini}
+\cs_new_eq:cc {endminiCode} {endpxCodeMini}
+\cs_new_eq:cc {CodeBox} {pxCodeBox}
+\cs_new_eq:cc {endCodeBox} {endpxCodeBox}
+\cs_new_eq:cc {CodeBox*} {pxCodeBreak}
+\cs_new_eq:cc {endCodeBox*} {endpxCodeBreak}
+%% The original pxCodeIn accepted a normal mandatory argument, unlike the
+%% verbatim 'v' argument of pxCodeInline; preserve that parsing contract.
+\NewDocumentCommand{\pxCodeIn}{O{} m O{pxlst}}
+  {\group_begin:
+   \tl_if_blank:nF {#1}
+     {\lstset{xleftmargin=2em,xrightmargin=2em,framesep=1em,
+       language={#1},style=#3}}
+   \__pxlst_code_render_inline:n {#2}
+   \group_end:}
 \endinput

@@ -40,6 +40,7 @@ $testFiles = @(
     "pxLST.test.tex",
     "pxLST.languages.test.tex",
     "pxLST.io.test.tex",
+    "pxLST.legacy.test.tex",
     "pxLST.quotes.test.tex",
     "pxCALC.test.tex",
     "student-tools.test.tex",
