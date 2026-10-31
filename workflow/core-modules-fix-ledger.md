@@ -10,7 +10,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 - **F02 — fixed in checkpoint 2**: `pxSRC.code.tex`, temporary `\label` override parses only a mandatory argument; preserve standard/cleveref optional label type and isolate nested native inputs.
 - **F03 — fixed in checkpoint 3**: `pxANN`, register annex reference type for cleveref; preserve standard `\ref` and language selection.
 - **F04 — investigate before changing**: `pxMEM` source inclusion and imported-reference scope (potential label collisions across PR documents); check intended label-prefix contract and native `\ref` semantics, not an automatic rewrite.
-- **F05 — TFG portion fixed in checkpoint 4; diagram literals still pending**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
+- **F05 — fixed in checkpoints 4 and 6**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
 - **F06 — investigate**: `pxSRC/input` configuration string accumulation/replay, scanner on simple native inputs, and dependency on private fancyvrb internals. Simplify only where semantics and existing tests can be preserved.
 - **F07 — review**: annex/glossary/bibliography document-end interaction from a single user-facing workflow; do not rename/delete packages without tracing all callers.
 - **F08 — fixed in checkpoint 5**: pxCORE `PRPconfig/TABconfig/LSTconfig/ORLconfig/MEMconfig/TFGconfig` are accepted without forwarding. Determine which keys predate the baseline and which target packages accept package options before editing.
@@ -34,3 +34,5 @@ Checkpoint 3: register `pxannex` with cleveref only if loaded, using current `\\
 Checkpoint 4: TFG public labels, cover data, licence, summary and abstract headings now resolve through pxTXT; TFG's exceptional cover geometry, page rules, front-matter sequence and metadata are untouched. Static substitution checked; compilation not claimed.
 
 Checkpoint 5: pxCORE now forwards TAB/ORL package options to their package key processors, and applies TFG metadata through the existing public pxTFGsetup after loading pxTFG. Removed nonfunctional PRPconfig, LSTconfig and MEMconfig keys (none has a package configuration entry point). Added source-label and TFG-language tests to the standard runner. No compile claimed.
+
+Checkpoint 6: added pxTXT translations for DIAG terminology and timing labels, with standalone English defaults in pxDIAG.sty; replaced seven hardcoded user-visible strings in pxDIAG. Other diagram semantics and formatting unchanged. Not yet compiled.

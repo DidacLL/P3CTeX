@@ -189,9 +189,9 @@
     id-out          .tl_set:N     = \l__pxdiag_step_id_out_tl,
     id-out          .initial:n    = {},
     left-span       .tl_set:N     = \l__pxdiag_top_left_note_tl,
-    left-span       .initial:n    = { Temps~de~compilaci\'o },
+    left-span       .initial:n    = { \pxDEFdiagcompilation },
     right-span      .tl_set:N     = \l__pxdiag_top_right_note_tl,
-    right-span      .initial:n    = { Temps~d'execuci\'o },
+    right-span      .initial:n    = { \pxDEFdiagexecution },
     program-shape   .tl_set:N     = \l__pxdiag_prog_shape_tl,
     program-shape   .initial:n    = { keyhole },
     prog-lang       .tl_set:N     = \l__pxdiag_prog_lang_tl,
@@ -201,9 +201,9 @@
     partition-header .tl_set:N    = \l__pxdiag_part_header_tl,
     partition-header .initial:n   = { \ensuremath{\Pi} },
     actual-label    .tl_set:N     = \l__pxdiag_actual_label_tl,
-    actual-label    .initial:n    = { Classes~Reals },
+    actual-label    .initial:n    = { \pxDEFdiagactual },
     pred-label      .tl_set:N     = \l__pxdiag_pred_label_tl,
-    pred-label      .initial:n    = { Prediccions },
+    pred-label      .initial:n    = { \pxDEFdiagpred },
     xlabel          .tl_set:N     = \l__pxdiag_xlabel_tl,
     xlabel          .initial:n    = { $x$ },
     ylabel          .tl_set:N     = \l__pxdiag_ylabel_tl,
@@ -1936,11 +1936,11 @@
           \begin{tabular}{p{4.2cm}|p{3.0cm}}
             \tl_if_blank:nF {#2}
               {
-                \multicolumn{2}{@{}l@{}}{\small\textbf{Entrada:}\enspace\texttt{#2}}\\[0.4em]
+                \multicolumn{2}{@{}l@{}}{\small\textbf{\pxDEFdiaginput{}:}\enspace\texttt{#2}}\\[0.4em]
               }
             \hline
             \rowcolor{\l__pxdiag_neutralcolor_tl!35}
-            \multicolumn{1}{c|}{\textbf{Testimoni}} & \multicolumn{1}{c}{\textbf{Valor}} \\
+            \multicolumn{1}{c|}{\textbf{\pxDEFdiagtoken}} & \multicolumn{1}{c}{\textbf{\pxDEFdiagvalue}} \\
             \hline
             \tl_use:N \l_tmpa_tl
           \end{tabular}
