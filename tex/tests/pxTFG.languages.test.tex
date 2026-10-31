@@ -1,0 +1,20 @@
+\documentclass[TFG,PR,EN]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFtfgtitle} {Title}
+  {\PackageError{tfg-language-test}{English title missing}{}}
+\ExplSyntaxOff
+\PECTeXconfig{es}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFtfgtitle} {Título}
+  {\PackageError{tfg-language-test}{Spanish title missing}{}}
+\ExplSyntaxOff
+\PECTeXconfig{cat}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFtfgtitle} {Títol}
+  {\PackageError{tfg-language-test}{Catalan title missing}{}}
+\ExplSyntaxOff
+\begin{document}
+\pxTFGsetup{tutor={Tutor},area={Àrea},credits={12}}
+\pxTFGworkcard
+\end{document}
