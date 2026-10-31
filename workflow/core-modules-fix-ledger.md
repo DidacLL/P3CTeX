@@ -7,7 +7,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 ## Implementation checkpoints
 
 - **F01 — fixed in checkpoint 1**: `pxDIAG.code.tex`, figure/float option passed through malformed `\exp_args:NnV \begin{figure}`; expand the actual placement token list instead. Extend diagram test with a floating caption and reference.
-- **F02 — pending**: `pxSRC.code.tex`, temporary `\label` override parses only a mandatory argument; preserve standard/cleveref optional label type and isolate nested native inputs.
+- **F02 — fixed in checkpoint 2**: `pxSRC.code.tex`, temporary `\label` override parses only a mandatory argument; preserve standard/cleveref optional label type and isolate nested native inputs.
 - **F03 — pending**: `pxANN`, register annex reference type for cleveref; preserve standard `\ref` and language selection.
 - **F04 — investigate before changing**: `pxMEM` source inclusion and imported-reference scope (potential label collisions across PR documents); check intended label-prefix contract and native `\ref` semantics, not an automatic rewrite.
 - **F05 — pending**: translate user-visible literal strings in newly introduced TFG/diagram features via existing `pxTXT`; legitimate TFG presentation overrides are not a bug.
@@ -24,3 +24,5 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 ## Validation
 
 Checkpoint 1: code replacement and test registration inspected statically; multi-pass compilation is **not** claimed by this ledger. The existing reported test pass does not cover this new float test until rerun.
+
+Checkpoint 2: native source label override now understands `\\label[type]{key}`, resets the label dispatcher for nested no-prefix inputs, and retains the caller's prefix when the child returns. Added fixture and focused regression document. Compilation has not been run for this checkpoint.

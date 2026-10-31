@@ -1,0 +1,10 @@
+\documentclass{article}
+\usepackage{pxSRC}
+\usepackage{cleveref}
+\begin{document}
+\section{Document}
+\pxInput[label-prefix=pr1:]{fixtures/source/labels-outer.tex}
+Namespaced optional label: \cref{pr1:outer}.
+Unprefixed nested label: \cref{nested}.
+Namespaced outer label after nested input: \cref{pr1:outer-after}.
+\end{document}

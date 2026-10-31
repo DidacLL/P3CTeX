@@ -305,6 +305,13 @@
 \tl_new:N \l__pxsrc_input_label_prefix_tl
 \cs_new_eq:NN \__pxsrc_document_label:n \label
 \AddToHook{begindocument/end}{\cs_gset_eq:NN \__pxsrc_document_label:n \label}
+\cs_new_protected:Npn \__pxsrc_prefixed_label:n #1
+  {\use:e {\exp_not:N \__pxsrc_document_label:n
+    {\l__pxsrc_input_label_prefix_tl \exp_not:n {#1}}}}
+\cs_new_protected:Npn \__pxsrc_prefixed_label_optional:w [#1]#2
+  {\use:e {\exp_not:N \__pxsrc_document_label:n
+    [\exp_not:n {#1}]
+    {\l__pxsrc_input_label_prefix_tl \exp_not:n {#2}}}}
 \tl_new:N \l__pxsrc_input_language_tl
 \tl_new:N \l__pxsrc_input_options_tl
 \tl_new:N \l__pxsrc_input_cite_tl
@@ -466,9 +473,14 @@
        \edef\input@path{{\filename@area}\input@path}
        \providecommand\Ginput@path{}
        \edef\Ginput@path{{\filename@area}\Ginput@path}
-       \tl_if_blank:VF \l__pxsrc_input_label_prefix_tl
-         {\cs_set_protected:Npn \label ##1
-           {\exp_args:Ne \__pxsrc_document_label:n {\l__pxsrc_input_label_prefix_tl ##1}}}
+       % Each native input must establish its own label context, even if a
+       % parent input set a prefix. Preserve cleveref's optional label type.
+       \tl_if_blank:VTF \l__pxsrc_input_label_prefix_tl
+         {\cs_set_eq:NN \label \__pxsrc_document_label:n}
+         {\cs_set_protected:Npn \label
+           {\peek_meaning:NTF [
+             {\__pxsrc_prefixed_label_optional:w}
+             {\__pxsrc_prefixed_label:n}}}
        \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}
   }
 % Literal text is useful for logs, CSV, configuration and other text resources.
