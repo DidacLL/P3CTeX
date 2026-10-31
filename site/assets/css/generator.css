@@ -3,6 +3,22 @@
    Restful Academic Dark Slate Aesthetic (Low-Strain, High Ergonomics)
    ========================================================================== */
 
+:root {
+  --bg-surface: var(--chassis-panel, #0d1118);
+  --bg-canvas: var(--chassis-recessed, #05070a);
+  --bg-elevated: var(--chassis-elevated, #131924);
+  --bg-code: var(--crt-bg, #040609);
+  --border-subtle: var(--bezel-border, #1a2230);
+  --border-base: var(--bezel-subtle, #243044);
+  --border-focus: var(--phosphor-cyan, #4ec9b0);
+  --accent-ochre: var(--phosphor-amber, #d49a44);
+  --accent-ochre-dim: var(--phosphor-amber-dim, rgba(212, 154, 68, 0.15));
+  --accent-ochre-border: rgba(212, 154, 68, 0.4);
+  --accent-olive: var(--phosphor-green, #38ef7d);
+  --accent-steel: var(--phosphor-steel, #568ec2);
+  --accent-steel-dim: rgba(86, 142, 194, 0.15);
+}
+
 .studio-split-deck {
   display: grid;
   grid-template-columns: 1fr 1.05fr;
@@ -72,14 +88,14 @@
 
 .pill-selector {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 6px;
 }
 .pill-btn {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: var(--bg-canvas);
+  background: #090d14;
   border: 1px solid var(--border-subtle);
   padding: 8px 10px;
   border-radius: 2px;
@@ -97,17 +113,19 @@
   color: var(--text-muted);
 }
 .pill-btn:hover {
+  background: #111722;
   border-color: var(--border-base);
 }
 .pill-btn.active {
-  background: var(--bg-elevated);
-  border-color: var(--accent-ochre-border);
+  background: #131b28;
+  border-color: var(--phosphor-cyan);
+  border-left: 3px solid var(--phosphor-cyan);
 }
 .pill-btn.active strong {
-  color: var(--accent-ochre);
+  color: var(--phosphor-cyan);
 }
 .pill-btn.active span {
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .form-grid-2 {

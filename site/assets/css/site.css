@@ -252,6 +252,12 @@ html, body {
 .selector-track {
   display: flex;
   gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+.selector-track::-webkit-scrollbar {
+  display: none;
 }
 .selector-key {
   display: inline-flex;
@@ -346,296 +352,325 @@ html, body {
 }
 
 /* ==========================================================================
-   DECK 01: OVERVIEW [ BAY-01 // SYSTEM SPECIFICATION BUS ]
+   DECK 01: WORKSTATION CONSOLE [ AUTHENTIC RETRO PIRATE / INDIE DECK ]
+   Clean, spacious, high-contrast, zero clutter, zero microscopic text
    ========================================================================== */
-.overview-stage-split {
-  display: grid;
-  grid-template-columns: 1.25fr 0.85fr;
-  gap: 12px;
-  height: 100%;
-  min-height: 0;
-}
-
-.overview-narrative-panel {
+.console-overview-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  background: var(--chassis-panel);
-  border: 1px solid var(--bezel-border);
-  padding: 12px;
-  gap: 10px;
-  overflow-y: auto;
+  gap: 12px;
+  max-width: 1500px;
+  margin: 0 auto;
+  width: 100%;
+  padding-bottom: 20px;
 }
 
-.bay-header-bar {
+/* Authentic Console Header Banner */
+.overview-banner-panel {
+  display: flex;
+  flex-direction: column;
+  background: #030508;
+  border: 1px solid var(--bezel-border);
+  border-top: 1px solid var(--bezel-subtle);
+  border-bottom: 2px solid #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+.overview-banner-img {
+  width: 100%;
+  height: 135px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid var(--bezel-border);
+}
+.overview-telemetry-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+  background: #080c14;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.overview-telemetry-bar .tele-tag strong {
+  color: var(--text-heading);
+}
+.overview-telemetry-bar .tele-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background-color: var(--phosphor-green);
+  box-shadow: 0 0 6px var(--phosphor-green);
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.overview-telemetry-bar .tele-divider {
+  color: var(--bezel-subtle);
+}
+
+/* Main Console Operational Grid (2 Balanced Columns) */
+.overview-grid-console {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.console-sector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sector-block {
+  background: var(--chassis-panel);
+  border: 1px solid var(--bezel-border);
+  border-top: 1px solid var(--bezel-subtle);
+  border-bottom: 2px solid #000;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.sector-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--phosphor-amber);
+  border-bottom: 1px solid var(--bezel-border);
+  padding-bottom: 4px;
+}
+
+.sector-title {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.sector-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+/* Submission Profiles Cards */
+.profiles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-card {
+  background: #080c14;
+  border: 1px solid var(--bezel-border);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.profile-card.profile-pac { border-left: 3px solid var(--phosphor-green); }
+.profile-card.profile-pr { border-left: 3px solid var(--phosphor-cyan); }
+.profile-card.profile-tfg { border-left: 3px solid var(--phosphor-amber); }
+
+.profile-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--bezel-border);
-  padding-bottom: 5px;
 }
-.bay-id-tag {
+.profile-pill {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--phosphor-amber);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
 }
-.bay-sub-tag {
+.profile-pill.pac { color: var(--phosphor-green); }
+.profile-pill.pr { color: var(--phosphor-cyan); }
+.profile-pill.tfg { color: var(--phosphor-amber); }
+
+.profile-subtitle {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10.5px;
   color: var(--text-muted);
 }
-
-.overview-hero-headline {
-  font-family: var(--font-mono);
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--text-heading);
-  letter-spacing: -0.01em;
+.profile-card-desc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
 }
-.overview-hero-lead {
+.profile-card-desc code {
+  color: #fff;
+  background: #040609;
+  padding: 1px 4px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+/* System Actuator Buttons */
+.actuator-buttons-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.primary-actuator-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #141b26;
+  border: 1px solid rgba(78, 201, 176, 0.4);
+  border-top: 1px solid rgba(78, 201, 176, 0.7);
+  border-bottom: 2px solid #000;
+  padding: 12px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+.primary-actuator-btn:hover {
+  background: #1c2738;
+  border-color: var(--phosphor-cyan);
+}
+.primary-actuator-btn .actuator-icon {
+  font-size: 22px;
+  color: var(--phosphor-cyan);
+  flex-shrink: 0;
+}
+.primary-actuator-btn .actuator-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.primary-actuator-btn strong {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+.primary-actuator-btn small {
+  font-size: 11.5px;
+  color: var(--phosphor-cyan);
+  opacity: 0.85;
+}
+
+.actuator-dual-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.sub-actuator-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0e131c;
+  border: 1px solid var(--bezel-border);
+  border-top: 1px solid var(--bezel-subtle);
+  border-bottom: 2px solid #000;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.08s ease;
+  color: var(--text-primary);
+}
+.sub-actuator-btn:hover {
+  background: #161e2c;
+  color: #fff;
+}
+.sub-actuator-btn .sub-idx {
+  font-size: 10.5px;
+  color: var(--phosphor-amber);
+  font-weight: 700;
+}
+.sub-actuator-btn .sub-txt {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* Built-in Capabilities Grid */
+.capabilities-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.cap-item {
+  background: #080c14;
+  border: 1px solid var(--bezel-border);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cap-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.cap-glyph {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.cap-name {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: 0.02em;
+}
+.cap-desc {
   font-size: 11.5px;
   line-height: 1.45;
   color: var(--text-secondary);
 }
-.overview-hero-lead code {
-  font-family: var(--font-mono);
-  color: var(--phosphor-cyan);
-  background: #080c12;
-  padding: 1px 4px;
-}
-
-/* Hardware Bus Panels (Wireframe Tables, Zero Cards!) */
-.hardware-bus-panel {
-  display: flex;
-  flex-direction: column;
-  background: #090c11;
-  border: 1px solid var(--bezel-border);
-}
-.bus-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #111620;
-  border-bottom: 1px solid var(--bezel-border);
-  padding: 4px 8px;
-}
-.bus-title {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
-}
-
-.hardware-spec-table {
-  display: flex;
-  flex-direction: column;
-  font-family: var(--font-mono);
-  font-size: 10px;
-}
-.spec-table-row {
-  display: grid;
-  grid-template-columns: 55px 190px 1fr;
-  gap: 8px;
-  padding: 5px 8px;
-  border-bottom: 1px solid #141a24;
-  align-items: center;
-}
-.spec-table-row:last-child {
-  border-bottom: none;
-}
-.spec-table-row.header {
-  background: #0d121a;
-  color: var(--text-muted);
-  font-size: 9px;
-  font-weight: 700;
-  border-bottom: 1px solid var(--bezel-border);
-}
-.col-spec-id {
-  font-weight: 700;
+.cap-desc code {
   color: var(--phosphor-amber);
-}
-.col-spec-trig {
-  color: #4ec9b0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.col-spec-rule {
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 10.5px;
-}
-
-/* Macro Channel Bus (Physical Modular Slots) */
-.hardware-channel-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--bezel-border);
-}
-.ch-module {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #0a0d14;
-  padding: 4px 8px;
-  font-size: 10px;
-}
-.ch-badge {
-  font-family: var(--font-mono);
-  font-size: 8.5px;
-  font-weight: 700;
-  color: var(--text-muted);
-  background: #141a24;
-  padding: 1px 4px;
-}
-.ch-module code {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--phosphor-cyan);
-}
-.ch-module span {
-  color: var(--text-secondary);
-  font-size: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Hardware Actuators Strip */
-.hardware-actuators-strip {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 6px;
-}
-.hw-actuator-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border: 1px solid var(--bezel-subtle);
-  border-top: 1px solid var(--bezel-highlight);
-  border-bottom: 2px solid var(--bezel-shadow);
-  background: #151b24;
-  color: var(--text-heading);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-  cursor: pointer;
-  transition: all 0.08s ease;
-}
-.hw-actuator-btn:hover {
-  background: #1e2634;
-}
-.hw-actuator-btn:active {
-  border-top: 2px solid #000;
-  border-bottom: 1px solid var(--bezel-highlight);
-  background: #090c11;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.9);
-}
-.hw-actuator-btn.primary {
-  border-color: rgba(212, 154, 68, 0.4);
-  color: var(--phosphor-amber);
-}
-.hw-actuator-btn.secondary {
-  color: var(--text-primary);
-}
-.hw-actuator-btn.ghost {
-  border-color: var(--bezel-border);
-  color: var(--text-secondary);
-}
-
-/* Right Bay: Inset CRT Visual + Hardware Telemetry HUD */
-.overview-visual-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  background: var(--chassis-panel);
-  border: 1px solid var(--bezel-border);
-  padding: 12px;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.visual-art-frame {
-  height: 190px;
-  overflow: hidden;
-  border: 2px solid var(--bezel-border);
   background: #030508;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.95);
-}
-.visual-art-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  padding: 1px 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
-.hardware-telemetry-hud {
-  display: flex;
-  flex-direction: column;
-  background: #080b0f;
-  border: 1px solid var(--bezel-border);
-  flex: 1;
-  min-height: 0;
-  justify-content: space-between;
-}
-.hud-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #10151f;
-  border-bottom: 1px solid var(--bezel-border);
-  padding: 4px 8px;
-}
-.hud-title {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--phosphor-amber);
-  letter-spacing: 0.08em;
-}
-.hud-readout-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background: #080b0f;
-  padding: 6px 8px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-}
-.hud-row {
-  display: flex;
-  justify-content: space-between;
+/* Guarantees Row */
+.guarantees-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  border-bottom: 1px solid #141922;
-  padding: 4px 0;
 }
-.hud-row:last-child {
-  border-bottom: none;
+.guar-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #080c14;
+  border: 1px solid var(--bezel-border);
+  padding: 7px 9px;
+  font-size: 11px;
+  color: var(--text-secondary);
 }
-.hud-lbl {
-  color: var(--text-muted);
-  font-size: 10px;
+.guar-icon {
+  color: var(--phosphor-green);
+  font-weight: 700;
+  font-size: 12px;
 }
-.hud-val {
+.guar-text strong {
   color: var(--text-heading);
-  font-weight: 600;
-  text-align: right;
+}
+
+/* Responsive adjustment */
+@media (max-width: 1080px) {
+  .overview-grid-console {
+    grid-template-columns: 1fr;
+  }
+  .capabilities-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ==========================================================================

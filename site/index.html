@@ -74,115 +74,217 @@
     <main id="console-stage" class="console-stage">
 
       <!-- ==================================================================
-           SECTION 01: OVERVIEW (PRODUCT DEFINITION & ARCHITECTURE)
+           SECTION 01: OVERVIEW (PRODUCT DEFINITION & CAPABILITIES)
            ================================================================== -->
       <section id="deck-overview" class="console-deck active" aria-label="Product Overview">
-        <div class="overview-stage-split">
+        <div class="console-overview-wrapper">
           
-          <!-- Left Column: Class Specifications & Capabilities -->
-          <div class="overview-narrative-panel">
-            <div class="bay-header-bar">
-              <span class="bay-id-tag">// P3CTeX SPECIFICATION &amp; ARCHITECTURE</span>
-              <span class="bay-sub-tag">OPEN SOURCE &bull; GNU GPLv3 &bull; LOCAL COMPILATION</span>
-            </div>
-
-            <h1 class="overview-hero-headline">
-              P3CTeX: LaTeX Suite for UOC Coursework &amp; Projects
-            </h1>
-
-            <p class="overview-hero-lead">
-              P3CTeX is an open-source LaTeX document class (<code>P3CTeX.cls</code>) and macro suite for Universitat Oberta de Catalunya (UOC). It sets up official university margins, geometry, Babel multilingual declarations, student metadata (<code>\PECTeXconfig</code>), and specialized engineering macros for 100% offline compilation using standard <code>pdflatex</code>.
-            </p>
-
-            <!-- Supported Submission Profiles Table (Wireframe Grid) -->
-            <div class="hardware-bus-panel">
-              <div class="bus-header">
-                <span class="rack-bolt">[+]</span>
-                <span class="bus-title">// SUPPORTED UOC DOCUMENT PROFILES</span>
-                <span class="rack-bolt">[+]</span>
-              </div>
-              <div class="hardware-spec-table">
-                <div class="spec-table-row header">
-                  <span class="col-spec-id">PROFILE</span>
-                  <span class="col-spec-trig">CLASS TRIGGER</span>
-                  <span class="col-spec-rule">UOC FORMAT &amp; COMPLIANCE RULES</span>
-                </div>
-                <div class="spec-table-row">
-                  <span class="col-spec-id">PAC</span>
-                  <code class="col-spec-trig">\documentclass[PAC]{P3CTeX}</code>
-                  <span class="col-spec-rule">Starts directly on page 1 &bull; No blank cover &bull; Auto anti-plagiarism declaration</span>
-                </div>
-                <div class="spec-table-row">
-                  <span class="col-spec-id">PR</span>
-                  <code class="col-spec-trig">\documentclass[PR]{P3CTeX}</code>
-                  <span class="col-spec-rule">Institutional title page with UOC logo &bull; Table of contents &amp; figure index</span>
-                </div>
-                <div class="spec-table-row">
-                  <span class="col-spec-id">MEM</span>
-                  <code class="col-spec-trig">\documentclass[MEM,PR]{P3CTeX}</code>
-                  <span class="col-spec-rule">Numbered chapters (\chapter) &bull; Lettered annexes (\pxMEMannex) &bull; LOF/LOT</span>
-                </div>
-                <div class="spec-table-row">
-                  <span class="col-spec-id">TFG</span>
-                  <code class="col-spec-trig">\documentclass[TFG,MEM]{P3CTeX}</code>
-                  <span class="col-spec-rule">Official UOC work card (\pxTFGworkcard) &bull; Bilingual abstract &bull; CC license</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Bundled Packages Grid -->
-            <div class="hardware-bus-panel">
-              <div class="bus-header">
-                <span class="rack-bolt">[+]</span>
-                <span class="bus-title">// BUNDLED MACRO PACKAGES (6 SPECIALIZED SUITES)</span>
-                <span class="rack-bolt">[+]</span>
-              </div>
-              <div class="hardware-channel-grid">
-                <div class="ch-module"><span class="ch-badge">01</span><code>pxTAB</code><span>Comma-separated tables with zebra striping</span></div>
-                <div class="ch-module"><span class="ch-badge">02</span><code>pxSRC</code><span>Resilient graphics with missing-file vector fallback</span></div>
-                <div class="ch-module"><span class="ch-badge">03</span><code>pxLST</code><span>Darcula code listing boxes with line numbers</span></div>
-                <div class="ch-module"><span class="ch-badge">04</span><code>pxCMP</code><span>Compilers &amp; automata diagrams (Tombstone, DFA, BNF)</span></div>
-                <div class="ch-module"><span class="ch-badge">05</span><code>pxGNT</code><span>Daily-resolution Gantt project planning schedules</span></div>
-                <div class="ch-module"><span class="ch-badge">06</span><code>pxUML</code><span>Object-oriented class diagrams with pgf-umlcd</span></div>
-              </div>
-            </div>
-
-            <!-- Bottom Hardware Action Keys -->
-            <div class="hardware-actuators-strip">
-              <button type="button" class="hw-actuator-btn primary" data-jump-deck="deck-templates">
-                <span>[ OPEN TUTORIAL ]</span>
-              </button>
-              <button type="button" class="hw-actuator-btn secondary" data-jump-deck="deck-macros">
-                <span>[ PACKAGE REFERENCE ]</span>
-              </button>
-              <button type="button" class="hw-actuator-btn ghost" data-jump-deck="deck-runbook">
-                <span>[ INSTALLATION GUIDE ]</span>
-              </button>
+          <!-- Authentic Console Header Banner -->
+          <div class="overview-banner-panel">
+            <img src="assets/images/brand-banner.jpg" alt="P3CTeX: Procrastinar és l'única esperança // ScVr!a" class="overview-banner-img">
+            <div class="overview-telemetry-bar">
+              <span class="tele-tag"><span class="tele-dot"></span> P3CTeX v1.1 // UOC ACADEMIC LATEX SUITE</span>
+              <span class="tele-divider">|</span>
+              <span class="tele-tag">ENGINE: <strong>pdflatex (100% Offline)</strong></span>
+              <span class="tele-divider">|</span>
+              <span class="tele-tag">TARGET: <strong>Universitat Oberta de Catalunya</strong></span>
+              <span class="tele-divider">|</span>
+              <span class="tele-tag">DEPS: <strong>Zero External Dependencies</strong></span>
+              <span class="tele-divider">|</span>
+              <span class="tele-tag">LICENSE: <strong>GNU GPLv3</strong></span>
             </div>
           </div>
 
-          <!-- Right Column: Visual CRT Screen & System Telemetry -->
-          <div class="overview-visual-panel">
-            <div class="visual-art-frame">
-              <img src="assets/images/brand-banner.jpg" alt="P3CTeX CRT terminal artwork: Procrastinar és l'única esperança" width="1024" height="338" fetchpriority="high">
+          <!-- Main Console Operational Deck (2 Balanced Columns) -->
+          <div class="overview-grid-console">
+
+            <!-- Left Console Sector: Mission, Profiles & Launch Actions -->
+            <div class="console-sector left-sector">
+              
+              <!-- Definition & Value Proposition -->
+              <div class="sector-block mission-block">
+                <div class="sector-tag">// SYSTEM SPECIFICATION</div>
+                <h1 class="sector-title">Official LaTeX Class &amp; Macro System for UOC</h1>
+                <p class="sector-desc">
+                  P3CTeX is an all-in-one LaTeX class designed specifically for Universitat Oberta de Catalunya degree students and engineers. It configures official margins, university typography, Catalan/Spanish/English multilingual rules, and crash-resilient engineering packages for 100% offline compilation.
+                </p>
+              </div>
+
+              <!-- Academic Submission Profiles (PAC vs PR vs TFG) -->
+              <div class="sector-block profiles-block">
+                <div class="sector-tag">// SUBMISSION PROFILES (SELECT ON DOCUMENT CLASS)</div>
+                <div class="profiles-list">
+                  <div class="profile-card profile-pac">
+                    <div class="profile-card-header">
+                      <span class="profile-pill pac">PAC PROFILE</span>
+                      <span class="profile-subtitle">Continuous Assessment</span>
+                    </div>
+                    <p class="profile-card-desc">
+                      Starts directly on page 1 with an academic header, student identification card, and mandatory anti-plagiarism pledge. Zero blank cover waste.
+                    </p>
+                  </div>
+
+                  <div class="profile-card profile-pr">
+                    <div class="profile-card-header">
+                      <span class="profile-pill pr">PR &amp; MEM PROFILE</span>
+                      <span class="profile-subtitle">Formal Reports &amp; Practicums</span>
+                    </div>
+                    <p class="profile-card-desc">
+                      Official UOC graphical cover page, table of contents, numbered chapters (<code>\chapter</code>), lettered annexes, and multi-file modular slicing.
+                    </p>
+                  </div>
+
+                  <div class="profile-card profile-tfg">
+                    <div class="profile-card-header">
+                      <span class="profile-pill tfg">TFG PROFILE</span>
+                      <span class="profile-subtitle">Bachelor's Thesis</span>
+                    </div>
+                    <p class="profile-card-desc">
+                      Official UOC thesis workcard, formal Catalan/Spanish/English bilingual abstracts, and institutional distribution license.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Direct Console Actuators (Launch Buttons) -->
+              <div class="sector-block actuators-block">
+                <div class="sector-tag">// SYSTEM ACTUATORS</div>
+                <div class="actuator-buttons-col">
+                  <a href="generator.html" class="primary-actuator-btn generator-btn">
+                    <span class="actuator-icon">⚡</span>
+                    <span class="actuator-body">
+                      <strong>LAUNCH VISUAL WEB GENERATOR &rarr;</strong>
+                      <small>Visually configure preambles, tables, UML, Gantt, and code</small>
+                    </span>
+                  </a>
+
+                  <div class="actuator-dual-row">
+                    <button type="button" class="sub-actuator-btn tutorial-btn" data-jump-deck="deck-templates">
+                      <span class="sub-idx">02</span>
+                      <span class="sub-txt">TUTORIAL GUIDE &rarr;</span>
+                    </button>
+                    <button type="button" class="sub-actuator-btn macro-btn" data-jump-deck="deck-macros">
+                      <span class="sub-idx">03</span>
+                      <span class="sub-txt">MACRO REFERENCE &rarr;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
-            <div class="hardware-telemetry-hud">
-              <div class="hud-header">
-                <span class="rack-bolt">[+]</span>
-                <span class="hud-title">// SYSTEM SPECIFICATIONS &amp; LOCAL ENGINE</span>
-                <span class="rack-bolt">[+]</span>
+            <!-- Right Console Sector: Built-in Capabilities & Superpowers -->
+            <div class="console-sector right-sector">
+              
+              <div class="sector-block capabilities-block">
+                <div class="sector-tag">// BUILT-IN CAPABILITIES &amp; RESILIENT ENGINES</div>
+                
+                <div class="capabilities-grid">
+                  
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">🛡️</span>
+                      <h3 class="cap-name">Resilient Graphics &amp; Fallbacks</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Never halts or crashes if an image file is missing 5 minutes before deadline. Renders an explicit visual placeholder box and keeps compiling.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">📊</span>
+                      <h3 class="cap-name">Zebra &amp; Multipage Tables</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Write clean tabular data from simple comma-separated rows. Automatic alternating zebra stripes and repeating headers across page breaks without manual column math.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">💻</span>
+                      <h3 class="cap-name">Darcula Code Listings</h3>
+                    </div>
+                    <p class="cap-desc">
+                      High-contrast syntax highlighting for 17+ languages (Java, Python, C++, SQL, Bash, YAML...) with line numbers and external source file slicing.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">⚙️</span>
+                      <h3 class="cap-name">Compilers, Automata &amp; BNF</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Academic Tombstone compilation T-diagrams, DFA/NFA state transition tables, and formal BNF grammar productions out of the box.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">📅</span>
+                      <h3 class="cap-name">Daily Gantt Timelines</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Calendar-driven project schedules with day-level resolution, automatic month block scaling, and milestone markers.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">📐</span>
+                      <h3 class="cap-name">UML Architecture</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Declarative class and object diagrams with single-source-of-truth generation: define a class once, print its visual diagram and its documentation table.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">🔁</span>
+                      <h3 class="cap-name">Automated Lists &amp; Loops</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Consecutively numbered image loops without writing repetitive figure environments, unified bibliography, and glossaries.
+                    </p>
+                  </div>
+
+                  <div class="cap-item">
+                    <div class="cap-header">
+                      <span class="cap-glyph">📏</span>
+                      <h3 class="cap-name">Dynamic Sizing &amp; Layout</h3>
+                    </div>
+                    <p class="cap-desc">
+                      Bounded auto-scaling with ceiling constraints (<code>\pxGrow*</code>), dynamic expand boxes, and granular cover/running-header customization.
+                    </p>
+                  </div>
+
+                </div>
               </div>
-              <div class="hud-readout-grid">
-                <div class="hud-row"><span class="hud-lbl">LOCAL ENGINE:</span><strong class="hud-val">pdflatex (Standard Compiler)</strong></div>
-                <div class="hud-row"><span class="hud-lbl">LATEX SUITES:</span><strong class="hud-val">MiKTeX (Windows) &bull; TeX Live (Linux/macOS)</strong></div>
-                <div class="hud-row"><span class="hud-lbl">ENVIRONMENT:</span><strong class="hud-val">100% Offline (Zero Cloud Dependencies)</strong></div>
-                <div class="hud-row"><span class="hud-lbl">TYPOGRAPHY:</span><strong class="hud-val">Arev Sans 11pt, Inconsolata</strong></div>
-                <div class="hud-row"><span class="hud-lbl">BABEL LANGS:</span><strong class="hud-val">Catalan (cat), Spanish (es), English (en)</strong></div>
-                <div class="hud-row"><span class="hud-lbl">AUTHOR/DEV:</span><strong class="hud-val">ScVr!a &bull; Universitat Oberta de Catalunya</strong></div>
-                <div class="hud-row"><span class="hud-lbl">LICENSE:</span><strong class="hud-val">GNU General Public License v3.0</strong></div>
+
+              <!-- System Guarantees Strip -->
+              <div class="sector-block guarantees-block">
+                <div class="sector-tag">// OPERATIONAL GUARANTEES</div>
+                <div class="guarantees-row">
+                  <div class="guar-item">
+                    <span class="guar-icon">✓</span>
+                    <span class="guar-text"><strong>100% Offline:</strong> No cloud, API, or Python required</span>
+                  </div>
+                  <div class="guar-item">
+                    <span class="guar-icon">✓</span>
+                    <span class="guar-text"><strong>pdflatex Native:</strong> TeX Live &amp; MiKTeX standard</span>
+                  </div>
+                  <div class="guar-item">
+                    <span class="guar-icon">✓</span>
+                    <span class="guar-text"><strong>Pure expl3:</strong> Safe modern macro architecture</span>
+                  </div>
+                </div>
               </div>
+
             </div>
+
           </div>
 
         </div>

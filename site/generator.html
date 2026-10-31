@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LaTeX Generator Studio · P3CTeX</title>
-  <meta name="description" content="Interactive multi-asset LaTeX studio for UOC coursework: generate document starters, data tables, Gantt charts, UML diagrams, code listings, and automata tables.">
+  <meta name="description" content="Interactive multi-asset LaTeX studio for UOC coursework: generate document starters, cover overrides, multipage tables, resilient figures, dynamic sizing, Gantt charts, UML, and code listings.">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/generator.css">
   <script src="assets/js/generator.js" defer></script>
@@ -22,15 +22,15 @@
           <span class="badge-title">P3CTeX</span>
           <span class="badge-ver">STUDIO</span>
         </a>
-        <span class="brand-tagline">Multi-Asset LaTeX Generator</span>
+        <span class="brand-tagline">Comprehensive LaTeX Generator</span>
       </div>
 
       <div class="masthead-telemetry">
         <span class="telemetry-item status"><span class="led-pulse green"></span> STUDIO READY</span>
         <span class="telemetry-sep">/</span>
-        <span class="telemetry-item">6 GENERATOR TOOLS LOADED</span>
+        <span class="telemetry-item">10 SPECIALIZED TOOLS LOADED</span>
         <span class="telemetry-sep">/</span>
-        <span class="telemetry-item">OUTPUT: <strong>READY TO PASTE OR COMPILE</strong></span>
+        <span class="telemetry-item">ENGINE: <strong>pdflatex (100% Offline)</strong></span>
       </div>
 
       <div class="masthead-actions">
@@ -40,32 +40,48 @@
       </div>
     </header>
 
-    <!-- Tool Selector Ribbon (6 Specialized Generator Tabs) -->
+    <!-- Tool Selector Ribbon (10 Specialized Generator Tabs) -->
     <nav class="console-selector-ribbon" aria-label="Generator Tool Selectors">
       <div class="selector-track">
         <button type="button" class="selector-key active" data-tool="tool-document">
           <span class="key-index">01</span>
           <span class="key-label">DOCUMENT STARTER</span>
         </button>
-        <button type="button" class="selector-key" data-tool="tool-tables">
+        <button type="button" class="selector-key" data-tool="tool-cover">
           <span class="key-index">02</span>
-          <span class="key-label">DATA TABLES</span>
+          <span class="key-label">COVER &amp; HEADERS</span>
         </button>
-        <button type="button" class="selector-key" data-tool="tool-gantt">
+        <button type="button" class="selector-key" data-tool="tool-tables">
           <span class="key-index">03</span>
-          <span class="key-label">GANTT TIMELINE</span>
+          <span class="key-label">DATA &amp; MULTIPAGE TABLES</span>
         </button>
-        <button type="button" class="selector-key" data-tool="tool-uml">
+        <button type="button" class="selector-key" data-tool="tool-figures">
           <span class="key-index">04</span>
-          <span class="key-label">UML &amp; ARCHITECTURE</span>
+          <span class="key-label">RESILIENT FIGURES &amp; LISTS</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-grow">
+          <span class="key-index">05</span>
+          <span class="key-label">DYNAMIC SIZING &amp; LAYOUT</span>
         </button>
         <button type="button" class="selector-key" data-tool="tool-code">
-          <span class="key-index">05</span>
+          <span class="key-index">06</span>
           <span class="key-label">CODE LISTINGS</span>
         </button>
+        <button type="button" class="selector-key" data-tool="tool-uml">
+          <span class="key-index">07</span>
+          <span class="key-label">UML ARCHITECTURE</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-gantt">
+          <span class="key-index">08</span>
+          <span class="key-label">GANTT TIMELINE</span>
+        </button>
         <button type="button" class="selector-key" data-tool="tool-compiler">
-          <span class="key-index">06</span>
+          <span class="key-index">09</span>
           <span class="key-label">COMPILERS &amp; AUTOMATA</span>
+        </button>
+        <button type="button" class="selector-key" data-tool="tool-annexes">
+          <span class="key-index">10</span>
+          <span class="key-label">ANNEXES &amp; SLICING</span>
         </button>
       </div>
       <div class="selector-meta">
@@ -86,12 +102,12 @@
           <div id="tool-document" class="generator-panel active">
             <div class="panel-intro">
               <h2>Document Starter (.tex)</h2>
-              <p>Configure a complete, ready-to-compile <code>.tex</code> document pre-configured for UOC guidelines.</p>
+              <p>Configure a complete, ready-to-compile LaTeX document pre-configured for official UOC coursework guidelines.</p>
             </div>
 
             <!-- Document Profile Selector -->
             <div class="form-section">
-              <label class="section-label">01 // DOCUMENT PROFILE</label>
+              <label class="section-label">01 // SUBMISSION PROFILE</label>
               <div class="pill-selector" id="doc-profile-pills">
                 <button type="button" class="pill-btn active" data-profile="PAC">
                   <strong>PAC</strong>
@@ -99,21 +115,25 @@
                 </button>
                 <button type="button" class="pill-btn" data-profile="PR">
                   <strong>PR</strong>
-                  <span>Practicum &amp; Lab Report</span>
+                  <span>Formal Report / Practicum</span>
+                </button>
+                <button type="button" class="pill-btn" data-profile="MEM">
+                  <strong>MEM</strong>
+                  <span>Multi-Chapter Report</span>
                 </button>
                 <button type="button" class="pill-btn" data-profile="TFG">
                   <strong>TFG</strong>
-                  <span>Bachelor Thesis</span>
+                  <span>Bachelor's Thesis</span>
                 </button>
               </div>
             </div>
 
             <!-- Coursework Metadata -->
             <div class="form-section">
-              <label class="section-label">02 // COURSEWORK &amp; STUDENT METADATA</label>
+              <label class="section-label">02 // ACADEMIC METADATA (\PECTeXconfig)</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="doc-student">Student Name</label>
+                  <label for="doc-student">Student Full Name</label>
                   <input type="text" id="doc-student" value="Estudiant UOC">
                 </div>
                 <div class="input-field">
@@ -149,44 +169,118 @@
               <div class="checkbox-row">
                 <label class="check-item">
                   <input type="checkbox" id="doc-inc-table" checked>
-                  <span>Sample Data Table</span>
+                  <span>Sample Data Table (\pxTable)</span>
                 </label>
                 <label class="check-item">
                   <input type="checkbox" id="doc-inc-figure" checked>
-                  <span>Resilient Image Placeholder</span>
+                  <span>Resilient Image (\pxImage)</span>
                 </label>
                 <label class="check-item">
                   <input type="checkbox" id="doc-inc-code" checked>
-                  <span>Formatted Code Box</span>
+                  <span>Formatted Code Box (pxCode)</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-grow">
+                  <span>Dynamic Bounded Scaling (\pxGrow*)</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" id="doc-inc-gantt">
+                  <span>Daily Gantt Timeline</span>
                 </label>
                 <label class="check-item">
                   <input type="checkbox" id="doc-inc-tombstone">
-                  <span>Compiler Diagram</span>
+                  <span>Compiler T-Diagram</span>
                 </label>
               </div>
             </div>
           </div>
 
-          <!-- TOOL 02: DATA TABLES -->
+          <!-- TOOL 02: COVER & HEADERS CUSTOMIZER -->
+          <div id="tool-cover" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Cover &amp; Running Headers Customizer</h2>
+              <p>Fine-tune cover presentation (<code>\PECTeXcover</code>), running headers &amp; footers (<code>\PECTeXpage</code>), and language string definitions (<code>\pxDEF*</code>).</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // COVER GRAPHICAL OVERRIDES (\PECTeXcover)</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="cov-title">Custom Cover Title</label>
+                  <input type="text" id="cov-title" value="Disseny i Implementació d'un Compilador Modular">
+                </div>
+                <div class="input-field">
+                  <label for="cov-subtitle">Cover Subtitle</label>
+                  <input type="text" id="cov-subtitle" value="Memòria Tècnica de Projecte d'Enginyeria">
+                </div>
+                <div class="input-field">
+                  <label for="cov-backtitle">Watermark Backtitle Literal</label>
+                  <input type="text" id="cov-backtitle" value="UNIVERSITAT OBERTA DE CATALUNYA">
+                </div>
+                <div class="input-field">
+                  <label for="cov-picture">Custom Cover Artwork Path</label>
+                  <input type="text" id="cov-picture" value="img/portada-art.png">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // RUNNING HEADERS &amp; FOOTERS (\PECTeXpage)</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="page-head-left">Header Left</label>
+                  <input type="text" id="page-head-left" value="\caShortname">
+                </div>
+                <div class="input-field">
+                  <label for="page-head-right">Header Right</label>
+                  <input type="text" id="page-head-right" value="\subjFullname">
+                </div>
+                <div class="input-field">
+                  <label for="page-foot-left">Footer Left</label>
+                  <input type="text" id="page-foot-left" value="\student">
+                </div>
+                <div class="input-field">
+                  <label for="page-foot-center">Footer Center (Page Numbering)</label>
+                  <input type="text" id="page-foot-center" value="\thepage\ / \pageref{LastPage}">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">03 // LANGUAGE STRING CUSTOMIZATION</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="str-toc">Table of Contents Title (\pxDEFtocname)</label>
+                  <input type="text" id="str-toc" value="Taula de Continguts">
+                </div>
+                <div class="input-field">
+                  <label for="str-fig">Figure Caption Prefix (\pxDEFpximgname)</label>
+                  <input type="text" id="str-fig" value="Figura">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 03: DATA & MULTIPAGE TABLES -->
           <div id="tool-tables" class="generator-panel">
             <div class="panel-intro">
-              <h2>Data Table Snippet Generator (pxTAB)</h2>
-              <p>Generate clean LaTeX tables from comma-separated values with automatic styling, zero manual ampersands (<code>&amp;</code>) and zero column width calculations.</p>
+              <h2>Data &amp; Multipage Tables Generator</h2>
+              <p>Generate clean LaTeX tables from comma-separated values with automatic styling, zero manual ampersands (<code>&amp;</code>), and optional multipage page breaks.</p>
             </div>
 
             <div class="form-section">
               <label class="section-label">01 // TABLE OPTIONS</label>
               <div class="form-grid-2">
                 <div class="input-field">
-                  <label for="tbl-caption">Table Caption</label>
-                  <input type="text" id="tbl-caption" value="Comparativa de Rendiment dels Algorismes">
+                  <label for="tbl-type">Table Engine Kind</label>
+                  <select id="tbl-type">
+                    <option value="standard" selected>Standard Table (\pxTable) — Single Page</option>
+                    <option value="multipage">Multipage Longtable (\pxTBLlong*) — Repeating Headers</option>
+                    <option value="list">Expl3 Recursive List Table (\pxTableFromList)</option>
+                  </select>
                 </div>
                 <div class="input-field">
-                  <label for="tbl-label">Label Reference</label>
-                  <input type="text" id="tbl-label" value="tab:rendiment">
-                </div>
-                <div class="input-field">
-                  <label for="tbl-style">Visual Style (\pxTable)</label>
+                  <label for="tbl-style">Visual Style</label>
                   <select id="tbl-style">
                     <option value="header" selected>Header Row with Accent Background (header)</option>
                     <option value="striped">Alternating Zebra Striped Rows (striped)</option>
@@ -194,6 +288,14 @@
                     <option value="grid">Complete Grid Table (grid)</option>
                     <option value="plain">Minimal Borderless Table (plain)</option>
                   </select>
+                </div>
+                <div class="input-field">
+                  <label for="tbl-caption">Table Caption</label>
+                  <input type="text" id="tbl-caption" value="Comparativa de Rendiment dels Algorismes">
+                </div>
+                <div class="input-field">
+                  <label for="tbl-label">Label Reference</label>
+                  <input type="text" id="tbl-label" value="tab:rendiment">
                 </div>
               </div>
             </div>
@@ -216,11 +318,233 @@ RadixSort, O(nk), 12.0 MB, PASS</textarea>
             </div>
           </div>
 
-          <!-- TOOL 03: GANTT TIMELINE -->
+          <!-- TOOL 04: RESILIENT FIGURES & IMAGE LISTS -->
+          <div id="tool-figures" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Resilient Figures &amp; Automated Image Lists</h2>
+              <p>Crash-proof figure insertion that never halts compilation on missing graphics, automated loop lists (<code>\pxIMGList</code>), and generative prompt placeholders.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // FIGURE INSERTION MODE</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="fig-mode">Mode Kind</label>
+                  <select id="fig-mode">
+                    <option value="single" selected>Single Resilient Figure (\pxImage)</option>
+                    <option value="list">Automated Consecutive Image List Loop (\pxIMGList)</option>
+                    <option value="prompt">Generative Image Prompt Placeholder</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="fig-scale">Scale / Width</label>
+                  <input type="text" id="fig-scale" value="0.85\linewidth">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="fig-single-fields">
+              <label class="section-label">02 // SINGLE FIGURE PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="fig-path">Graphic File Path</label>
+                  <input type="text" id="fig-path" value="img/arquitectura-sistema">
+                </div>
+                <div class="input-field">
+                  <label for="fig-label">Label Reference</label>
+                  <input type="text" id="fig-label" value="fig:arquitectura">
+                </div>
+                <div class="input-field" style="grid-column: span 2;">
+                  <label for="fig-caption">Caption</label>
+                  <input type="text" id="fig-caption" value="Diagrama de blocs de l'arquitectura del sistema">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="fig-prompt-fields" style="display: none;">
+              <label class="section-label">03 // AI GENERATIVE PROMPT INSTRUCTION</label>
+              <div class="input-field">
+                <textarea id="fig-prompt-text" rows="3">A clean retrofuturistic system architecture diagram showing a compiler pipeline with Lexer, Parser, AST, and Code Generator stages on deep slate background with cyan accents.</textarea>
+              </div>
+            </div>
+
+            <div class="form-section" id="fig-list-fields" style="display: none;">
+              <label class="section-label">04 // AUTOMATED LOOP CAPTIONS (ONE PER LINE)</label>
+              <div class="input-field">
+                <label for="fig-prefix">Filename Prefix (e.g. img/step-)</label>
+                <input type="text" id="fig-prefix" value="img/captura-">
+              </div>
+              <div class="input-field">
+                <textarea id="fig-list-captures" rows="4">Pantalla inicial d'inici de sessió
+Panell de control de l'usuari
+Formulari d'enviament de tasques
+Confirmació de processament correcte</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 05: DYNAMIC SIZING & LAYOUT -->
+          <div id="tool-grow" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Dynamic Sizing &amp; Layout Studio</h2>
+              <p>Bounded scaling (<code>\pxGrow*</code>) with maximum ceiling height, expandable boxes, zero-setup glossaries, and unified bibliography.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // DYNAMIC FEATURE</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="grow-feature">Feature Kind</label>
+                  <select id="grow-feature">
+                    <option value="grow" selected>Bounded Dynamic Scaling (\pxGrow*)</option>
+                    <option value="box">Dynamic Layout Box (\EXPAND / \BOX)</option>
+                    <option value="glossary">Glossaries &amp; Acronyms (\GL / \GL*)</option>
+                    <option value="bib">Unified Bibliography (\pxBib)</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="grow-factor">Scaling Factor</label>
+                  <input type="text" id="grow-factor" value="1.25">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="grow-inputs-box">
+              <label class="section-label">02 // BOUNDED PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="grow-maxh">Max Ceiling Height (e.g. 0.45\textheight)</label>
+                  <input type="text" id="grow-maxh" value="0.45\textheight">
+                </div>
+                <div class="input-field">
+                  <label for="grow-bibfile">BibTeX File (if bibliography)</label>
+                  <input type="text" id="grow-bibfile" value="referencies.bib">
+                </div>
+              </div>
+              <div class="input-field" style="margin-top: 8px;">
+                <label for="grow-content">Content to Scale / Format</label>
+                <textarea id="grow-content" rows="4">\includegraphics[width=\linewidth]{img/esquema.png}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 06: CODE LISTINGS -->
+          <div id="tool-code" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Code Listing Generator (Darcula)</h2>
+              <p>Generate syntax-highlighted code boxes with Darcula-style frames, line gutters, external file imports, and line slicing.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // CODE LISTING PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="code-mode">Insertion Kind</label>
+                  <select id="code-mode">
+                    <option value="inline" selected>Inline Code Block (\begin{pxCode})</option>
+                    <option value="file">External Source File (\pxCodeFile)</option>
+                    <option value="slice">Line-Sliced File Range (\pxCodeFileInput)</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="code-lang">Language Preset</label>
+                  <select id="code-lang">
+                    <option value="Java" selected>Java</option>
+                    <option value="Python">Python</option>
+                    <option value="C">C / C++</option>
+                    <option value="SQL">SQL</option>
+                    <option value="Bash">Bash / Shell</option>
+                    <option value="Rust">Rust</option>
+                    <option value="Go">Go</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="TypeScript">TypeScript</option>
+                    <option value="YAML">YAML</option>
+                    <option value="Prolog">Prolog</option>
+                    <option value="OWL">OWL / RDF</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="code-caption">Title / Filename Label</label>
+                  <input type="text" id="code-caption" value="LexerTokenAnalyzer.java">
+                </div>
+                <div class="input-field">
+                  <label for="code-range">Line Slicing Range (e.g. 15-45)</label>
+                  <input type="text" id="code-range" value="15-45">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // CODE BODY</label>
+              <div class="input-field">
+                <textarea id="code-body" rows="6">public class LexerTokenAnalyzer {
+    public static void main(String[] args) {
+        String source = "int result = 42;";
+        TokenStream tokens = Lexer.scan(source);
+        System.out.println("Tokens scanned: " + tokens.size());
+    }
+}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 07: ARCHITECTURE & UML -->
+          <div id="tool-uml" class="generator-panel">
+            <div class="panel-intro">
+              <h2>UML Architecture &amp; Class Specification</h2>
+              <p>Single source of truth: define a class once, generate both the visual TikZ/pgf-umlcd diagram and readable report documentation tables.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // CLASS SPECIFICATION</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="uml-classname">Class Name</label>
+                  <input type="text" id="uml-classname" value="Usuari">
+                </div>
+                <div class="input-field">
+                  <label for="uml-type">Class Type</label>
+                  <select id="uml-type">
+                    <option value="class" selected>Concrete Class [class]</option>
+                    <option value="interface">Interface [interface]</option>
+                    <option value="abstract">Abstract Class [abstract]</option>
+                  </select>
+                </div>
+                <div class="input-field" style="grid-column: span 2;">
+                  <label for="uml-output-kind">Output Content</label>
+                  <select id="uml-output-kind">
+                    <option value="both" selected>Both Visual Diagram &amp; Report Specification Lists</option>
+                    <option value="diagram">Visual Diagram Only (\drawclass)</option>
+                    <option value="spec">Report Specification Tables (\printAttributes / \printOperations)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">02 // CLASS ATTRIBUTES (ONE PER LINE)</label>
+              <div class="input-field">
+                <textarea id="uml-attrs" rows="3">- id : String
+- email : String
+- actiu : boolean</textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">03 // CLASS OPERATIONS (ONE PER LINE)</label>
+              <div class="input-field">
+                <textarea id="uml-ops" rows="3">+ autenticar(pass: String) : boolean
++ getEmail() : String
++ desactivar() : void</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 08: GANTT TIMELINE -->
           <div id="tool-gantt" class="generator-panel">
             <div class="panel-intro">
-              <h2>Daily Gantt Timeline Generator (pxGNT)</h2>
-              <p>Generate authentic daily Gantt schedule charts with <code>\pxGantt</code>, automatic day width scaling, and milestone clipping.</p>
+              <h2>Daily Gantt Timeline Generator</h2>
+              <p>Generate authentic daily Gantt schedule charts with <code>\pxGantt</code>, automatic day width scaling, and milestone markers.</p>
             </div>
 
             <div class="form-section">
@@ -253,99 +577,11 @@ Fase 5: Redacció de la Memòria, 10/06/2026, 30/06/2026</textarea>
             </div>
           </div>
 
-          <!-- TOOL 04: ARCHITECTURE & UML -->
-          <div id="tool-uml" class="generator-panel">
-            <div class="panel-intro">
-              <h2>UML Class Diagram Generator (pxUML)</h2>
-              <p>Generate authentic UML class and object diagrams based on <code>pxUML</code>, <code>pgf-umlcd</code>, and TikZ with declarative attributes and operations.</p>
-            </div>
-
-            <div class="form-section">
-              <label class="section-label">01 // CLASS SPECIFICATION</label>
-              <div class="form-grid-2">
-                <div class="input-field">
-                  <label for="uml-classname">Class Name</label>
-                  <input type="text" id="uml-classname" value="Usuari">
-                </div>
-                <div class="input-field">
-                  <label for="uml-type">Class Type</label>
-                  <select id="uml-type">
-                    <option value="class" selected>Concrete Class [class]</option>
-                    <option value="interface">Interface [interface]</option>
-                    <option value="abstract">Abstract Class [abstract]</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <label class="section-label">02 // CLASS ATTRIBUTES (ONE PER LINE)</label>
-              <div class="input-field">
-                <textarea id="uml-attrs" rows="3">- id : String
-- email : String
-- actiu : boolean</textarea>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <label class="section-label">03 // CLASS OPERATIONS (ONE PER LINE)</label>
-              <div class="input-field">
-                <textarea id="uml-ops" rows="3">+ autenticar(pass: String) : boolean
-+ getEmail() : String
-+ desactivar() : void</textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- TOOL 05: CODE LISTINGS -->
-          <div id="tool-code" class="generator-panel">
-            <div class="panel-intro">
-              <h2>Code Listing Generator (pxLST)</h2>
-              <p>Generate syntax-highlighted code boxes with Darcula-style frames, line gutters, and native language presets.</p>
-            </div>
-
-            <div class="form-section">
-              <label class="section-label">01 // CODE LISTING PARAMETERS</label>
-              <div class="form-grid-2">
-                <div class="input-field">
-                  <label for="code-lang">Programming Language Preset</label>
-                  <select id="code-lang">
-                    <option value="Java" selected>Java</option>
-                    <option value="Python">Python</option>
-                    <option value="C">C / C++</option>
-                    <option value="SQL">SQL</option>
-                    <option value="Bash">Bash / Shell</option>
-                    <option value="YAML">YAML</option>
-                    <option value="Prolog">Prolog</option>
-                    <option value="OWL">OWL / RDF</option>
-                  </select>
-                </div>
-                <div class="input-field">
-                  <label for="code-caption">Title / Filename Label</label>
-                  <input type="text" id="code-caption" value="LexerTokenAnalyzer.java">
-                </div>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <label class="section-label">02 // CODE BODY</label>
-              <div class="input-field">
-                <textarea id="code-body" rows="6">public class LexerTokenAnalyzer {
-    public static void main(String[] args) {
-        String source = "int result = 42;";
-        TokenStream tokens = Lexer.scan(source);
-        System.out.println("Tokens scanned: " + tokens.size());
-    }
-}</textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- TOOL 06: COMPILERS & AUTOMATA -->
+          <!-- TOOL 09: COMPILERS & AUTOMATA -->
           <div id="tool-compiler" class="generator-panel">
             <div class="panel-intro">
-              <h2>Compilers, Automata &amp; Logic Generator (pxCMP)</h2>
-              <p>Generate authentic Tombstone compiler diagrams (T-diagrams), DFA/NFA transition tables, and formal BNF grammars with <code>pxCMP</code>.</p>
+              <h2>Compilers, Automata &amp; BNF Grammar Generator</h2>
+              <p>Generate authentic Tombstone compilation diagrams (T-diagrams), DFA/NFA transition tables, and formal BNF grammars.</p>
             </div>
 
             <div class="form-section">
@@ -356,6 +592,7 @@ Fase 5: Redacció de la Memòria, 10/06/2026, 30/06/2026</textarea>
                   <select id="cmp-type">
                     <option value="tombstone" selected>Tombstone Program Compilation (\pxTombstoneCompile)</option>
                     <option value="tcompiler">Compiler Piece T-Block (\pxTCompiler)</option>
+                    <option value="chain">Multi-Stage Compiler Pipeline (\pxTombstoneChain)</option>
                     <option value="dfa">DFA State Transition Table (\pxTransitionTable)</option>
                     <option value="bnf">BNF Grammar Productions (\pxBNF)</option>
                   </select>
@@ -381,6 +618,60 @@ Fase 5: Redacció de la Memòria, 10/06/2026, 30/06/2026</textarea>
                 <div class="input-field">
                   <label for="cmp-impl">Host / Implementation Platform</label>
                   <input type="text" id="cmp-impl" value="JVM">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOOL 10: ANNEXES & MODULAR SLICING -->
+          <div id="tool-annexes" class="generator-panel">
+            <div class="panel-intro">
+              <h2>Annexes, Modular Slicing &amp; TFG Frontmatter</h2>
+              <p>Cross-deliverable document slicing (<code>\pxMEMsource</code> / <code>\pxMEMinclude</code>), lettered annexes (<code>\pxMEMannex</code>), and official TFG workcard.</p>
+            </div>
+
+            <div class="form-section">
+              <label class="section-label">01 // FEATURE SELECTOR</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="annex-kind">Feature Kind</label>
+                  <select id="annex-kind">
+                    <option value="slicing" selected>Cross-Deliverable Modular Slicing (%&lt;*tag&gt;)</option>
+                    <option value="annex">Lettered Annex Appendices (\pxMEMannex)</option>
+                    <option value="tfg">Official TFG Workcard &amp; Bilingual Abstracts</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="annex-docid">Source ID / Document Tag</label>
+                  <input type="text" id="annex-docid" value="pr1">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="annex-slice-fields">
+              <label class="section-label">02 // SLICING PARAMETERS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="annex-sourcefile">Source TeX File</label>
+                  <input type="text" id="annex-sourcefile" value="entregues/PR1-memoria.tex">
+                </div>
+                <div class="input-field">
+                  <label for="annex-tagname">Region Tag Name</label>
+                  <input type="text" id="annex-tagname" value="analisi-requeriments">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="annex-tfg-fields" style="display: none;">
+              <label class="section-label">03 // TFG THESIS DETAILS</label>
+              <div class="form-grid-2">
+                <div class="input-field">
+                  <label for="annex-advisor">Thesis Advisor / Director</label>
+                  <input type="text" id="annex-advisor" value="Dra. Maria Farré">
+                </div>
+                <div class="input-field">
+                  <label for="annex-academic-year">Academic Year</label>
+                  <input type="text" id="annex-academic-year" value="2025/2026">
                 </div>
               </div>
             </div>
