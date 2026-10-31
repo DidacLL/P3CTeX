@@ -22,7 +22,7 @@ Review policy: preserve intended P3CTeX functionality, deliberate TFG formatting
 
 - **S06 (pxSRC defaults)**: resolved in checkpoint 18: direct `l3keys` assignments to typed persistent defaults, copied into per-input working variables. No option-history strings, property replay or key-value reconstruction remain. Full suite pending.
 
-- **S01 (DIAG)**: `label=` is silently ignored when `float=` is omitted. Determine whether a nonfloating diagram should have a reference counter or should reject `label`; avoid inventing numbering in this checkpoint.
+- **S01 (DIAG)**: fixed in checkpoint 19 — nonfloating diagrams with `label=` receive a figure counter, a visible numbered caption (if supplied), and a list-of-figures entry. Unlabelled diagrams retain their previous unnumbered appearance.
 - **S02 (DIAG)**: fixed in checkpoint 17 — uncaptained floats with `label=` advance the normal figure counter before registering their reference; `caption=` still uses standard `\caption`.
 - **S05 (load-time)**: resolved in checkpoint 16 — all forwarded UML/SRC/DIAG/TAB/ORL config keys retain token arguments until package loading, as `TFGconfig` already does.
 - **S04 (ANN)**: resolved in checkpoint 15 — `cleveref` plural annex names use localized `pxTXT` strings; standalone uses Babel's existing appendix heading as fallback.
@@ -70,3 +70,5 @@ Checkpoint 16: changed five pxCORE config-key setters from eager `.tl_set_x:N` t
 Checkpoint 17: corrected `pxDIAG` references when `float=` and `label=` are present without a caption; the figure counter now advances normally, so labels cannot inherit a previous section. Existing captioned floats are unchanged. Focused test added and isolated article-class figure-counter probe verified the behavior; complete module compile remains pending.
 
 Checkpoint 18: replaced checkpoint 13's key-value property roundtrip with direct `l3keys` assignments to typed default variables and simple grouped copies into working input variables. Preserves the existing `\pxSRCsetup{input={...}}` and `\pxInput` API, default mode precedence, nested input isolation and grouping. Updated `pxSRC.defaults.test.tex` for typed int/clist defaults and repeated overrides. Whole-branch TeX compilation not yet run.
+
+Checkpoint 19: nonfloating `pxDIAG` labels now generate proper figure references instead of silently doing nothing; labelled captions show the number and enter the figure list. Unlabelled nonfloat presentation is unchanged; float behavior remains on the normal LaTeX caption path. Added focused counter/reference test. Full module compilation not claimed.

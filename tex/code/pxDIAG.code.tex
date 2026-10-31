@@ -232,11 +232,22 @@
             \par\medskip
             \group_begin:
               \bool_if:NT \l__pxdiag_centering_bool { \centering }
+              % The existing free-standing caption stays unnumbered unless
+              % the caller requests a cross-reference.
+              \tl_if_blank:VF \l__pxdiag_label_tl
+                {\refstepcounter{figure}
+                 \exp_args:NV \label \l__pxdiag_label_tl}
               \leavevmode\__pxdiag_frame_and_scale:n {#1}
               \tl_if_blank:VF \l__pxdiag_caption_tl
                 {
                   \par\smallskip
-                  {\small\sffamily\color{\l__pxdiag_darkcolor_tl}\l__pxdiag_caption_tl\par}
+                  \tl_if_blank:VF \l__pxdiag_label_tl
+                    {\addcontentsline{lof}{figure}
+                      {\protect\numberline{\thefigure}\l__pxdiag_caption_tl}}
+                  {\small\sffamily\color{\l__pxdiag_darkcolor_tl}
+                    \tl_if_blank:VF \l__pxdiag_label_tl
+                      {\figurename~\thefigure:\space}
+                    \l__pxdiag_caption_tl\par}
                 }
               \par
             \group_end:
