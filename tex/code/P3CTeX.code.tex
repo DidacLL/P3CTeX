@@ -114,8 +114,12 @@
 	ORL .default:n = true,
 	TFG .meta:n = {tools={TFG=#1}},
 	TFG .default:n = true,
-	MEM .meta:n = {tools={MEM=#1}},
-	MEM .default:n = true,
+    %% MEM is a report profile: reuse PR's cover/contents defaults, then add
+    %% chapter structure. Later cover/toc keys retain their usual override order.
+    MEM .choice:,
+    MEM / true .meta:n = {PR,tools={MEM=true}},
+    MEM / false .meta:n = {tools={MEM=false}},
+    MEM .default:n = true,
 	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
 	fake	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={example}},
 	EN		.meta:n	={en},
