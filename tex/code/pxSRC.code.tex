@@ -276,5 +276,36 @@
 				{ \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ #4 }{ #5 }{ #5 }
 		}
 }
+% Source-region inclusion. Reuse native catchfilebetweentags parsing rather than
+% implementing a second file reader. Tags in PR files: %<*region> ... %</region>.
+\prop_new:N \l__pxsrc_sources_file_prop
+\prop_new:N \l__pxsrc_sources_region_prop
+\tl_new:N \l__pxsrc_source_region_tl
+\tl_new:N \l__pxsrc_source_file_tl
+\keys_define:nn {pxSRC/source}
+  {region .tl_set:N = \l__pxsrc_source_region_tl}
+
+\cs_new_protected:Npn \__pxsrc_register_source:nnn #1#2#3
+{
+  \tl_clear:N \l__pxsrc_source_region_tl
+  \keys_set:nn {pxSRC/source} {#1}
+  \tl_if_blank:VTF \l__pxsrc_source_region_tl
+    {\PackageError{pxSRC}{Missing source region}{Use region=... when registering a source}}
+    {
+      \prop_put:Nnn \l__pxsrc_sources_file_prop {#2} {#3}
+      \prop_put:NnV \l__pxsrc_sources_region_prop {#2} \l__pxsrc_source_region_tl
+    }
+}
+
+\cs_new_protected:Npn \__pxsrc_use_source:n #1
+{
+  \prop_get:NnNTF \l__pxsrc_sources_file_prop {#1} \l__pxsrc_source_file_tl
+    {
+      \prop_get:NnN \l__pxsrc_sources_region_prop {#1} \l__pxsrc_source_region_tl
+      \ExecuteMetaData[\l__pxsrc_source_file_tl]{\l__pxsrc_source_region_tl}
+    }
+    {\PackageError{pxSRC}{Unknown source '#1'}{Register it with \string\pxSource first}}
+}
+
 \ProcessKeysOptions{ pxSRC }
 \endinput

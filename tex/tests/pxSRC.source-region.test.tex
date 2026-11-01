@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{pxSRC}
+% The file is a whole PR document. Only the marked section may be reused.
+\pxSource[region=objectius]{pr1}{fixtures/pxSRC.samplePR.tex}
+\begin{document}
+\pxUseSource{pr1}
+\ifcsname pxRegionMarker\endcsname
+  \typeout{P3CTEX SOURCE REGION FOUND}
+\else
+  \errmessage{PR source region was not included}
+\fi
+\ifcsname pxLeakMarker\endcsname
+  \errmessage{Text outside the PR region was included}
+\fi
+\end{document}

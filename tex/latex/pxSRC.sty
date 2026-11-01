@@ -38,6 +38,8 @@
 \RequirePackage{hyperref}
 % Foreach loops used by \pxIMGList
 \RequirePackage{pgffor}
+% Reuse tagged regions from existing PR source files.
+\RequirePackage{catchfilebetweentags}
 % Load Code
 \file_input:n {pxSRC.code.tex}
 %%%%%%%%%%%%%%	LaTeX2e API %%
@@ -139,3 +141,14 @@
 		\pxIMG[#1]{#2\i}{\IfBlankF{#3}{#3}\captionItem}[img:#2\i]
 	}
 }
+
+
+% \pxSource[region=<tag>]{<name>}{<PR file>}
+% Register a named region of a previous PR without loading the whole document.
+\NewDocumentCommand{\pxSource}{O{} m m}
+  {\__pxsrc_register_source:nnn {#1}{#2}{#3}}
+
+% \pxUseSource{<name>}
+% Typeset the registered PR region in the current document.
+\NewDocumentCommand{\pxUseSource}{m}
+  {\__pxsrc_use_source:n {#1}}
