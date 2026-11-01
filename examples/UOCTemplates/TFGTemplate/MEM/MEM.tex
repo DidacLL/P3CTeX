@@ -1,0 +1,25 @@
+\documentclass[TFG,MEM,CAT]{P3CTeX}
+\input{../TFGPreamble.tex}
+\PECTeXconfig{cover=false,toc=true,no-plagi=false,
+  data={ca-fullname={Memòria del Treball Final},ca-shortname={MEM}}}
+\begin{document}
+% Original PR1.tex is a complete document. No source registration or markers.
+\chapter{Introducció}
+\pxInput[section={Objectius}]{../PR1/PR1.tex}
+
+\chapter{Metodologia}
+\pxInput[section={Metodologia}]{../PR1/PR1.tex}
+
+\chapter{Conclusions}
+Escriviu aquí les conclusions del treball.
+
+% Optional native lists and an explicit licence page:
+% \listoffigures
+% \listoftables
+% \pxTFGlicencepage
+
+% Annex content is deferred until the end; bibliography remains standard LaTeX.
+\pxMEMannex[label={ann:planificacio}]{Planificació original}{
+  \pxInput[section={Planificació}]{../PR1/PR1.tex}
+}
+\end{document}
