@@ -1,42 +1,36 @@
-# Pre-TFG reconstruction
+# P3CTeX reconstruction
 
 Branch: `restart/pre-tfg-clean-2026-11-01`
-Original authored revision: `0657ad485f6dc133122a7b48032612159a59698c` (5 October 2026).
+Starting revision: `0657ad4` (last pre-TFG authored baseline).
 
-This is a repair-first reconstruction, not a rewrite. Abandoned branches are read-only references. No merging their implementation. Keep corrections separate from added functionality.
+Reconstruct from this revision, not from abandoned branches. Preserve existing PAC/PR behavior. Keep fixes and new features in separate commits.
 
-## 1. Characterize the original baseline
+## 1. Original baseline and repairs
 
-Use original PAC/PR documents, their shared preambles, and the existing `tex/tests` cases. Characterize CAT/ES/EN, cover/no-cover, TOC, module opt-ins and the original `default` bundle (including `pxUML`). Verify source loading and installed MiKTeX root. Do not redesign the class, Babel, global layout or default package choices.
+The source tree and default bundle were inspected; `default` still contains PRP, UML, SRC, TAB and LST.
 
-**Evidence:** Original branch commit and library file hashes checked. Source-level reproducers for six image setters, `pxSRCsetup`, and both `\\pxPageRule` variants reproduced locally under TeX Live. Representative PAC/PR and actual MiKTeX installation checks remain **pending**; do not mark baseline fully verified until those complete.
+Corrections committed:
+- Six `pxDEFimage...` setters now use their arguments.
+- `pxSRCsetup` no longer reprocesses package options in the document body.
+- Both `\\pxPageRule` variants call the correct existing rule.
 
-## 2. Correct reproduced baseline defects only
+Isolated original/fixed LaTeX reproducers were compiled: original failed, corrected definitions passed. This is sufficient to proceed; it is **not** a claim that every original PAC/PR or MiKTeX configuration was tested. Other defects must be reproduced individually before changing code.
 
-- `pxSRC.sty`: six image setters must apply the caller's argument.
-- `pxSRC.sty`: `\\pxSRCsetup` must not reprocess package options in the document body.
-- `P3CTeX.cls`: starred `\\pxPageRule*` must select the thick rule; unstarred `\\pxPageRule` must call the existing thin rule.
-- Other alleged defects: inspect and reproduce individually. No speculative changes.
+## 2. TFG integration
 
-Each correction needs its failing original case, minimal code edit and a passing targeted regression. Keep fixes in independent commits. Then run the original PAC/PR documents and check visible PDF output before accepting the **corrected baseline** milestone.
+- Shared TFG metadata is opt-in via `TFG` and `\\pxTFGsetup`, independent of regular PAC/PR metadata. A standalone metadata smoke document compiles.
+- Named PR source regions can be reused from `pxSRC` using `\\pxSource[region=...]{name}{path}` and `\\pxUseSource{name}`. An isolated PR-to-MEM example compiles.
+- Next: test these features in a real PR, then add license material and TFG-specific front matter. Keep final-memory presentation (`MEM`) separate from TFG semantics, and follow actual UOC requirements.
+- Do not change Babel, existing defaults, cover, TOC, or ordinary PAC/PR behavior unnecessarily.
 
-## 3. TFG essentials — only after baseline acceptance
+## 3. Optional tools
 
-Add shared metadata while preserving PAC/PR semantics; restore source-region inclusion in `pxSRC`; introduce license resources and MEM-only front matter using actual UOC requirements; use native bibliography/glossary/annex tools with only necessary conveniences. Validate PR and MEM independently and source reuse.
+Evaluate `pxCALC`, `pxPM`/Gantt, `pxDIA`, and listing improvements individually, only for concrete student tasks.
 
-## 4. Optional tools
+## 4. Replace main, when ready
 
-Consider `pxCALC`, `pxPM`/Gantt, `pxDIA`, and listing enhancements one at a time, starting from a concrete student use case. Do not make these TFG prerequisites.
+Review the clean reconstructed implementation. Create an integration commit on top of `main` with the same complete file tree; no merge of abandoned work and no force-push.
 
-## 5. Integration
+## Validation
 
-Only when approved, create an integration commit atop `main` whose complete file tree equals the clean branch. Review by PR; no merge of abandoned work and no force-push.
-
-## Validation policy
-
-- During a fix: compile only its small reproducer; inspect the output where relevant.
-- At a milestone: manually compile representative original documents and verify installation when relevant.
-- Before integration: run the complete regression manually.
-- No automatic expensive CI on every push. The existing baseline workflow is `workflow_dispatch` only.
-
-No duplicate frameworks, compatibility shims for discarded APIs, or unsolicited Babel/class/default/layout/text changes.
+Compile a small targeted example for each change. Inspect a PDF when formatting is affected. Run broader examples or installation checks when their code path changes or before a release. CI is manual-only, not a per-commit requirement.
