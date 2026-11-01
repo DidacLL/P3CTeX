@@ -1,0 +1,26 @@
+% P3CTeX — TFG metadata shared by PR and MEM documents.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+\ProvidesExplPackage{pxTFG}{2026/11/01}{v0.1}{Shared TFG metadata}
+
+\keys_define:nn { pxTFG }
+{
+  tutor    .tl_set:N = \l__pxtfg_tutor_tl,
+  tutor    .initial:n = {},
+  pra      .tl_set:N = \l__pxtfg_pra_tl,
+  pra      .initial:n = {},
+  area     .tl_set:N = \l__pxtfg_area_tl,
+  area     .initial:n = {},
+  credits  .tl_set:N = \l__pxtfg_credits_tl,
+  credits  .initial:n = {},
+  keywords .tl_set:N = \l__pxtfg_keywords_tl,
+  keywords .initial:n = {},
+  licence  .tl_set:N = \l__pxtfg_licence_tl,
+  licence  .initial:n = {}
+}
+
+% \pxTFGsetup{tutor=..., pra=..., area=..., credits=..., keywords=..., licence=...}
+% The ordinary P3CTeX/data and PAC/PR fields are unchanged.
+\NewDocumentCommand{\pxTFGsetup}{+m}{\keys_set:nn {pxTFG} {#1}}
+\endinput
