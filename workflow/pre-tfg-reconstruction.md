@@ -19,7 +19,7 @@ Isolated original/fixed LaTeX reproducers were compiled: original failed, correc
 ## 2. TFG integration
 
 - Shared TFG metadata is opt-in via `TFG` and `\\pxTFGsetup`, independent of regular PAC/PR metadata. A standalone metadata smoke document compiles.
-- Named PR source regions can be reused from `pxSRC` using `\\pxSource[region=...]{name}{path}` and `\\pxUseSource{name}`. An isolated PR-to-MEM example compiles.
+- `pxSRC` now supports direct `\pxInput[section=...]` and `\pxInput[subsection=...]` selection from unmodified PRs; optional regions, line ranges and registration remain. Isolated PR input tests compile.
 - Next: test these features in a real PR, then add license material and TFG-specific front matter. Keep final-memory presentation (`MEM`) separate from TFG semantics, and follow actual UOC requirements.
 - Do not change Babel, existing defaults, cover, TOC, or ordinary PAC/PR behavior unnecessarily.
 

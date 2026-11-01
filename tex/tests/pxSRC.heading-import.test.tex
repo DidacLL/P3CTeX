@@ -5,6 +5,7 @@
 \pxInput[section={Objectius}]{fixtures/reuse/PR1.tex}
 \ifcsname pxTestSection\endcsname\else\errmessage{Section not imported}\fi
 \ifcsname pxTestSubsection\endcsname\else\errmessage{Nested subsection not imported}\fi
+\ifcsname pxNestedInput\endcsname\else\errmessage{Relative child file not found}\fi
 \ifcsname pxBefore\endcsname\errmessage{Earlier PR material leaked}\fi
 \ifcsname pxAfter\endcsname\errmessage{Later PR material leaked}\fi
 
