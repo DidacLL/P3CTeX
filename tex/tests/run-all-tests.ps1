@@ -79,6 +79,7 @@ $testFiles = @(
     "pxTFG.no-toc.test.tex",
     "pxTFG.options.test.tex",
     "pxTFG.PR.test.tex",
+    "pxTFG.PAC.test.tex",
     "pxTFG.languages.test.tex",
     "pxGDX.test.tex",
     "pxORL.test.tex",

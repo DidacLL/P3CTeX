@@ -254,7 +254,9 @@
 		text-subsubtitle ={\l__pxdata_subj_code_tl},
 		text-author		 ={\l__pxdata_student_tl},
 		text-date		 ={\l__px_date_tl},
-		text-auxtext	 ={ },
+        %% TFG's public cover renderer is already defined by the selected style.
+        %% Read its metadata when printing; later explicit cover settings still win.
+        text-auxtext = {\cs_if_exist:NT \pxTFGcoverdetails {\pxTFGcoverdetails}},
 	},
 	page-config={
 		author-name	={\l__pxdata_student_tl},

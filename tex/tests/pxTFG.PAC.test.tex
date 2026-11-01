@@ -1,0 +1,15 @@
+\documentclass[TFG,PAC,EN]{P3CTeX}
+\PECTeXconfig{data={student={Current student}}}
+\pxTFGsetup{tutor={Tutor}}
+\begin{document}
+% TFG supplements the PAC; the assessment still controls cover and contents.
+\ExplSyntaxOn
+\bool_if:NT \l_pxdoc_usecover_bool
+  {\PackageError{tfg-pac}{TFG overrode the PAC cover choice}{}}
+\bool_if:NF \l_pxdoc_usetoc_bool
+  {\PackageError{tfg-pac}{TFG lost the PAC contents choice}{}}
+\cs_if_exist:NT \chapter
+  {\PackageError{tfg-pac}{TFG introduced MEM structure}{}}
+\ExplSyntaxOff
+\section{Assignment}Assessment content.
+\end{document}
