@@ -1,0 +1,19 @@
+\documentclass{article}
+\usepackage{pxSRC}
+\begin{document}
+% Import complete source headings, without modifying the original PR.
+\pxInput[section={Objectius}]{fixtures/reuse/PR1.tex}
+\ifcsname pxTestSection\endcsname\else\errmessage{Section not imported}\fi
+\ifcsname pxTestSubsection\endcsname\else\errmessage{Nested subsection not imported}\fi
+\ifcsname pxBefore\endcsname\errmessage{Earlier PR material leaked}\fi
+\ifcsname pxAfter\endcsname\errmessage{Later PR material leaked}\fi
+
+\pxInput[subsection={Metodologia}]{fixtures/reuse/PR1.tex}
+% Markers remain optional for arbitrary excerpts.
+\pxInput[region=fragment]{fixtures/reuse/PR1.tex}
+\ifcsname pxTestRegion\endcsname\else\errmessage{Named region not imported}\fi
+% Registration is optional, not required by \pxInput.
+\pxSource[section={Resultats}]{results}{fixtures/reuse/PR1.tex}
+\pxUseSource{results}
+\ifcsname pxAfter\endcsname\else\errmessage{Registered source not imported}\fi
+\end{document}

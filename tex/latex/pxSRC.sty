@@ -39,7 +39,7 @@
 % Foreach loops used by \pxIMGList
 \RequirePackage{pgffor}
 % Reuse tagged regions from existing PR source files.
-\RequirePackage{catchfilebetweentags}
+\RequirePackage{fvextra}
 % Load Code
 \file_input:n {pxSRC.code.tex}
 %%%%%%%%%%%%%%	LaTeX2e API %%
@@ -143,12 +143,13 @@
 }
 
 
-% \pxSource[region=<tag>]{<name>}{<PR file>}
-% Register a named region of a previous PR without loading the whole document.
+% \pxInput[section=Title|subsection=Title|region=name|first-line=...]{file}
+% Direct native TeX reuse; PR headings require no source markers or registration.
+\NewDocumentCommand{\pxInput}{O{} m}
+  {\__pxsrc_input:nn {#1}{#2}}
+
+% Optional named registration, retaining the existing API.
 \NewDocumentCommand{\pxSource}{O{} m m}
   {\__pxsrc_register_source:nnn {#1}{#2}{#3}}
-
-% \pxUseSource{<name>}
-% Typeset the registered PR region in the current document.
-\NewDocumentCommand{\pxUseSource}{m}
-  {\__pxsrc_use_source:n {#1}}
+\NewDocumentCommand{\pxUseSource}{O{} m}
+  {\__pxsrc_use_source:nn {#1}{#2}}

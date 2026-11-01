@@ -1,0 +1,16 @@
+\documentclass{article}
+\begin{document}
+\section{Introduccio}
+\gdef\pxBefore{incorrect}
+\section{Objectius}
+\gdef\pxTestSection{correct}
+Section body.
+\subsection{Metodologia}
+\gdef\pxTestSubsection{correct}
+\input{child.tex}
+\section{Resultats}
+\gdef\pxAfter{correct}
+%<*fragment>
+\gdef\pxTestRegion{correct}
+%</fragment>
+\end{document}
