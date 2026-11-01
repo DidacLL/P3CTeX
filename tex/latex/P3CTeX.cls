@@ -150,10 +150,22 @@
 %	\glsaddall
 
 	\__ifglossary:nn{
-		\clearpage
-		\addcontentsline{toc}{section}{Glossari}
-		\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
-		\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
+		\@ifpackageloaded{pxMEM}{
+			% MEM uses chapter-level glossary headings and Babel labels.
+			% Only used entries are printed by the existing no-index backend.
+			\clearpage
+			\setglossarysection{chapter}
+			\glstoctrue
+			\printnoidxglossary[type=\acronymtype,
+				title={\iflanguage{catalan}{Acrònims}{\iflanguage{spanish}{Acrónimos}{Acronyms}}}]
+			\printnoidxglossary[title=\glossaryname]
+		}{
+			% Preserve the established PAC/PR glossary presentation.
+			\clearpage
+			\addcontentsline{toc}{section}{Glossari}
+			\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
+			\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
+		}
 	}{}
 %	\__ifbibliography:nn{
 %		\pxBib{ \l__pxdoc_bibpath_tl }
