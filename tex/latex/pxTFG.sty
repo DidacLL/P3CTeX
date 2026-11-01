@@ -1,12 +1,14 @@
 % UOC TFG-specific semantics, independent of generic MEM support.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse}
+\RequirePackage{expl3,xparse,l3keys2e}
 \ProvidesExplPackage{pxTFG}{2026/10/22}{v0.3}{P3CTeX UOC TFG semantics}
 %% TFG consumes P3CTeX's declared metadata, language and graphic interfaces.
 \IfClassLoadedTF{P3CTeX}{}
   {\PackageError{pxTFG}{TFG requires the P3CTeX document class}
     {Select TFG in documentclass options.}}
 \file_input:n {pxTFG.code.tex}
+%% Package options use the same keys as \pxTFGsetup.
+\ProcessKeysOptions{pxTFG}
 
 %% \pxTFGsetup{<key=value,...>}
 %% Set TFG-only metadata: tutor, PRA, area, credits, keywords and licence. Shared information

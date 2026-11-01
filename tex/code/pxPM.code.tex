@@ -107,6 +107,7 @@
 
 \seq_new:N \l__pxpm_gantt_items_seq
 \seq_new:N \l__pxpm_gantt_date_seq
+\tl_new:N \l__pxpm_gantt_options_tl
 \tl_new:N \l__pxpm_gantt_start_date_tl
 \tl_new:N \l__pxpm_gantt_end_date_tl
 \tl_new:N \l__pxpm_gantt_iso_tl
@@ -141,6 +142,7 @@
 
 \keys_define:nn {pxPM/gantt}
   {
+    chart-options .tl_set:N = \l__pxpm_gantt_options_tl,
     start .tl_set:N = \l__pxpm_gantt_start_date_tl,
     end .tl_set:N = \l__pxpm_gantt_end_date_tl,
     days-per-block .int_set:N = \l__pxpm_gantt_days_int,
@@ -183,6 +185,7 @@
 
 \cs_new_protected:Npn \__pxpm_gantt_begin:n #1
   {
+    \tl_clear:N \l__pxpm_gantt_options_tl
     \seq_clear:N \l__pxpm_gantt_items_seq
     \tl_clear:N \l__pxpm_gantt_start_date_tl
     \tl_clear:N \l__pxpm_gantt_end_date_tl
@@ -255,20 +258,36 @@
         \int_if_odd:nTF {\l__pxpm_gantt_row_int}
           {
             \ganttbar[
-              bar/.append~style={fill=primaryColor!65!secondaryColor,draw=primaryColor}
+              pxpm~odd
             ]{#1}{\tl_use:N \l__pxpm_gantt_bar_start_date_tl}
                  {\tl_use:N \l__pxpm_gantt_bar_end_date_tl}
           }
           {
             \ganttbar[
-              bar/.append~style={fill=secondaryColor!75,draw=primaryColor!70}
+              pxpm~even
             ]{#1}{\tl_use:N \l__pxpm_gantt_bar_start_date_tl}
                  {\tl_use:N \l__pxpm_gantt_bar_end_date_tl}
           }
       }
   }
 
-\cs_new_protected:Npn \__pxpm_gantt_chart:
+%% Native pgfgantt styles remain available to advanced documents without wrappers.
+%% Example: \ganttset{pxpm odd/.append style={bar/.append style={fill=green!30}}}.
+\ganttset{pxpm/.style={
+      y~unit~chart=.9\baselineskip,
+      y~unit~title=.75\baselineskip,
+      hgrid={*1{draw=primaryColor!15}},
+      vgrid={*1{draw=primaryColor!18}},
+      canvas/.append~style={fill=secondaryColor!6},
+      title/.append~style={fill=primaryColor!9,draw=primaryColor!40},
+      title~label~font=\scriptsize\bfseries\color{primaryColor},
+      bar~label~font=\footnotesize\color{primaryColor},
+      bar~label~node/.append~style={text~width=\l__pxpm_gantt_label_dim,align=right,inner~sep=0pt},
+      bar~height=.57},
+  pxpm~odd/.style={bar/.append~style={fill=primaryColor!65!secondaryColor,draw=primaryColor}},
+  pxpm~even/.style={bar/.append~style={fill=secondaryColor!75,draw=primaryColor!70}}}
+%% #1 native chart options, applied after the shared style and fitted geometry.
+\cs_new_protected:Npn \__pxpm_gantt_chart:n #1
   {
     \__pxpm_gantt_format_date:nN {\l__pxpm_gantt_window_start_int}
       \l__pxpm_gantt_window_start_date_tl
@@ -291,16 +310,8 @@
       time~slot~format=little-endian,
       time~slot~unit=day,
       x~unit=\l__pxpm_gantt_day_dim,
-      y~unit~chart=.9\baselineskip,
-      y~unit~title=.75\baselineskip,
-      hgrid={*1{draw=primaryColor!15}},
-      vgrid={*1{draw=primaryColor!18}},
-      canvas/.append~style={fill=secondaryColor!6},
-      title/.append~style={fill=primaryColor!9,draw=primaryColor!40},
-      title~label~font=\scriptsize\bfseries\color{primaryColor},
-      bar~label~font=\footnotesize\color{primaryColor},
-      bar~label~node/.append~style={text~width=\l__pxpm_gantt_label_dim,align=right,inner~sep=0pt},
-      bar~height=.57
+      pxpm,
+      #1
     ]{\tl_use:N \l__pxpm_gantt_window_start_date_tl}
      {\tl_use:N \l__pxpm_gantt_window_end_date_tl}
       \gantttitlecalendar{year,month=shortname,day}\ganttnewline
@@ -345,8 +356,8 @@
             {\l__pxpm_gantt_window_start_int+\l__pxpm_gantt_days_int-1}
             {\l__pxpm_gantt_end_int}}
         \bool_if:NTF \l__pxpm_gantt_rotate_bool
-          {\begin{sidewaysfigure}[p]\centering\__pxpm_gantt_chart:\end{sidewaysfigure}}
-          {\__pxpm_gantt_chart:}
+          {\begin{sidewaysfigure}[p]\centering\exp_args:NV \__pxpm_gantt_chart:n \l__pxpm_gantt_options_tl\end{sidewaysfigure}}
+          {\exp_args:NV \__pxpm_gantt_chart:n \l__pxpm_gantt_options_tl}
         \int_set:Nn \l__pxpm_gantt_window_start_int
           {\l__pxpm_gantt_window_end_int+1}
       }

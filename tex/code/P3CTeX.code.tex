@@ -144,9 +144,10 @@
 		debug 		.initial:n 		= 		false,
 		debug 		.default:n 		= 		true,
 	unknown 	.code:n 			= {
-		\tl_if_blank:nTF { #1 }
-			{ \exp_args:Nx \__pxdoc_tools:n { \l_keys_key_str } }
-			{ \exp_args:Nx \__pxdoc_tools:n { \l_keys_key_str = { \exp_not:n { #1 } } } }
+		%% Keep the original permissive unknown-key contract. Only explicit tools
+        %% selection is load-time-only; unknown runtime keys do not load packages.
+        \tl_put_right:Nx \l__pxdoc_unknown_tl
+          {,\l_keys_key_str\tl_if_blank:nF {#1}{={\exp_not:n {#1}}}}
 	}
 }
 %% =================================

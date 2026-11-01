@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage{pxDIA}
+\usepackage{hyperref,pxDIA}
 \begin{document}
 \section{Prior content}\label{sec:prior}
 \pxTCompiler[caption={Decorative, unnumbered}]{A}{B}{C}
@@ -18,5 +18,10 @@
   {\PackageError{pxDIA-reference}{Floating figure numbering changed}{}}
 \ExplSyntaxOff
 \ref{diag:nonfloat}, \ref{diag:float} and \ref{sec:prior}.
-\listoffigures
+Named diagram: \nameref{diag:nonfloat}.\listoffigures
+% On subsequent passes the saved name must describe the object, not its section.
+\ifcsname r@diag:nonfloat\endcsname
+  \ifnum\pdfstrcmp{\getrefbykeydefault{diag:nonfloat}{name}{}}{Referenced, nonfloating}=0\else
+    \PackageError{named-reference}{Object reference retained another heading's name}{}\fi
+\fi
 \end{document}

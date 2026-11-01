@@ -19,6 +19,9 @@
 
 %% \pxGantt{start=dd/mm/yyyy,end=dd/mm/yyyy,days-per-block=28,...}
 %% Initialize a daily chart; chart drawing is deferred to \pxGanttEnd.
+%% Optional chart-options={...} passes native pgfgantt keys after the pxpm style.
+%% Example: \pxGantt{start=01/11/2026,end=14/11/2026,chart-options={bar height=.8}}.
+%% Global appearance: \ganttset{pxpm/.append style={title label font=\small}}.
 \NewDocumentCommand\pxGantt{m}{\group_begin:\__pxpm_gantt_begin:n{#1}}
 %% \pxGanttItem{label}{dd/mm/yyyy}{dd/mm/yyyy}
 %% Add a task. Each task is clipped to the currently displayed date block.

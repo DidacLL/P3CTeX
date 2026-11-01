@@ -20,8 +20,7 @@
 \msg_new:nnn {pxCALC}{unknown}{Unknown~calculation~name~'#1'.~Define~it~before~use.}
 \msg_new:nnn {pxCALC}{cycle}{Cyclic~formula~dependency~at~'#1'.}
 \msg_new:nnn {pxCALC}{name}{Invalid~name~'#1'.~Use~a~letter~followed~by~letters,~digits,~underscores~or~hyphens.}
-\cs_generate_variant:Nn \regex_extract_once:nnNTF {nVNTF}
-\cs_generate_variant:Nn \tl_replace_all:Nnn {Nxx}
+\cs_generate_variant:Nn \regex_extract_all:nnN {nVN}
 \cs_generate_variant:Nn \prop_get:NnNTF {NVNTF}
 \keys_define:nn {pxCALC/use}
   {
@@ -79,17 +78,25 @@
            {\exp_args:NV \__pxcalc_eval:nN \l__pxcalc_work_tl \l__pxcalc_result_tl}
            {\msg_error:nnn {pxCALC}{unknown}{#1}\tl_set:Nn \l__pxcalc_result_tl {nan}}}}
     \exp_args:NNNV \group_end: \tl_set:Nn #2 \l__pxcalc_result_tl}
+%% A display symbol is ordinary math content, not another expression to parse.
+\cs_new:Npn \__pxcalc_symbol:n #1
+  {\prop_if_in:NnTF \l__pxcalc_symbols_prop {#1}
+    {\prop_item:Nn \l__pxcalc_symbols_prop {#1}}
+    {\msg_error:nnn {pxCALC}{unknown}{#1}?}}
+%% #1 expression token list; #2 symbol/number substitution. Regex reaches slots
+%% inside math groups; symbolic replacements are rendered without rescanning them.
 \cs_new_protected:Npn \__pxcalc_slots:Nn #1#2
-  {\regex_extract_once:nVNTF {\[([A-Za-z][A-Za-z0-9_\-]*)\]} #1 \l__pxcalc_match_seq
-    {\tl_set:Nx \l__pxcalc_slot_tl {\seq_item:Nn \l__pxcalc_match_seq {2}}
-     \str_if_eq:nnTF {#2}{symbol}
-       {\prop_get:NVNTF \l__pxcalc_symbols_prop \l__pxcalc_slot_tl \l__pxcalc_value_tl {}
-         {\msg_error:nnx {pxCALC}{unknown}{\l__pxcalc_slot_tl}
-          \tl_set:Nn \l__pxcalc_value_tl {?}}}
-       {\exp_args:NV \__pxcalc_resolve:nN \l__pxcalc_slot_tl \l__pxcalc_value_tl
-        \tl_set:Nx \l__pxcalc_value_tl {(\l__pxcalc_value_tl)}}
-     \regex_replace_all:nnN {\[\u{l__pxcalc_slot_tl}\]} {\u{l__pxcalc_value_tl}} #1
-     \__pxcalc_slots:Nn #1{#2}}{}}
+  {\str_if_eq:nnTF {#2}{symbol}
+    {\regex_replace_all:nnN {\[([A-Za-z][A-Za-z0-9_\-]*)\]}
+       {\c{__pxcalc_symbol:n}\cB\{\1\cE\}} #1}
+    {\regex_extract_all:nVN {\[[A-Za-z][A-Za-z0-9_\-]*\]} #1 \l__pxcalc_match_seq
+     \seq_remove_duplicates:N \l__pxcalc_match_seq
+     \seq_map_inline:Nn \l__pxcalc_match_seq
+       {\tl_set:Nx \l__pxcalc_slot_tl {\tl_range:nnn {##1}{2}{-2}}
+        \exp_args:NV \__pxcalc_resolve:nN \l__pxcalc_slot_tl \l__pxcalc_value_tl
+        \tl_set:Nx \l__pxcalc_value_tl {(\l__pxcalc_value_tl)}
+        \regex_replace_all:nnN {\[\u{l__pxcalc_slot_tl}\]}
+          {\u{l__pxcalc_value_tl}} #1}}}
 \cs_new_protected:Npn \__pxcalc_eval:nN #1#2
   {\group_begin:
     \tl_set:Nn \l__pxcalc_work_tl {#1}
@@ -145,4 +152,10 @@
      {\__pxcalc_resolve:nN {#2}\l__pxcalc_result_tl}
      {\__pxcalc_eval:nN {#2}\l__pxcalc_result_tl}
    \exp_args:NNNV \group_end: \cs_set:Npn #3\l__pxcalc_result_tl}
+%% #1 per-use display/values options; #2 expression. No state escapes the call.
+\cs_new_protected:Npn \__pxcalc_print:nn #1#2
+  {\group_begin:
+   \keys_set:nn {pxCALC/use}{prec=2,steps=3,unit={},symbol={},#1}
+   \__pxcalc_eval:nN {#2}\l__pxcalc_result_tl
+   \__pxcalc_print_result:\group_end:}
 \endinput

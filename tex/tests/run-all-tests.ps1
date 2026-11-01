@@ -77,6 +77,7 @@ $testFiles = @(
     "pxMEM.standalone.test.tex",
     "pxTFG.MEM.test.tex",
     "pxTFG.no-toc.test.tex",
+    "pxTFG.options.test.tex",
     "pxTFG.PR.test.tex",
     "pxTFG.languages.test.tex",
     "pxGDX.test.tex",
@@ -122,7 +123,13 @@ try {
             & pdflatex "-jobname=$jobName" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
             if ($LASTEXITCODE -ne 0) { break }
             if ($testFile -eq "pxGLS.external.test.tex" -and $pass -eq 1) {
-                & makeglossaries $jobName
+                # The Lua wrapper needs no separate Perl installation. An explicit
+                # .aux suffix also preserves job names containing dots.
+                if (Get-Command makeglossaries-lite -ErrorAction SilentlyContinue) {
+                    & makeglossaries-lite "$jobName.aux"
+                } else {
+                    & makeglossaries $jobName
+                }
                 if ($LASTEXITCODE -ne 0) { break }
                 if (-not (Test-Path "$jobName.gls") -or -not (Test-Path "$jobName.acr")) {
                     Write-Host "[FAIL] External glossary output is missing" -ForegroundColor Red

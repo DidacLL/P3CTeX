@@ -8,6 +8,14 @@
 \pxDefFormula{nested}{\sqrt{\frac{[v]^2}{25}}}[symbol=N]
 \pxDefFormula{chain}{[nested]+1}[symbol=C]
 \begin{document}
+% A saved expression is a numeric value reusable in later operations.
+\pxCalcStore{[chain]*2}{\saved}\AssertResult{\saved}{12}
+\pxCalcStore{\saved+1}{\next}\AssertResult{\next}{13}
+% Brackets in a printed symbol are literal; they must not restart slot expansion.
+\pxDefVar{concentration}{3}[{[concentration]}]
+\pxDefFormula{rate}{[concentration]^2}[symbol=r]
+\pxSolve{rate}\par
+\pxCalcStore{rate}{\rate}\AssertResult{\rate}{9}
 \pxCalcStore{Ek}{\result}
 % Divide the physical result to stay within TeX's dimension limit.
 \edef\scaled{\fpeval{\result/1000}}

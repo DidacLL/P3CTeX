@@ -1,10 +1,12 @@
 %% P3CTeX memory/report structure. Source rendering belongs to pxSRC;
 %% terminology, references and annex placement belong to pxEND.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse,pxSRC,pxEND,xcolor}
+\RequirePackage{expl3,xparse,l3keys2e,pxSRC,pxEND,xcolor}
 \ProvidesExplPackage{pxMEM}{2026/10/31}{0.3}{Memory structure and source composition}
 \providecolor{primaryColor}{rgb}{0,0,.47}
 \file_input:n {pxMEM.code.tex}
+%% Package options use the same keys as \pxMEMsetup.
+\ProcessKeysOptions{pxMEM}
 %% \chapter[<contents title>]{<title>} / \chapter*{<title>}
 %% Standard chapter syntax; existing report/book chapter commands are preserved.
 \cs_if_exist:NF \chapter {\cs_new_eq:NN \chapter \__pxmem_chapter:}

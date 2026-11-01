@@ -1,0 +1,13 @@
+% Package options and later setup share one key family; manual placement stays optional.
+\PassOptionsToPackage{print=manual,workcard=false,licence-page=false}{pxTFG}
+\documentclass[TFG,EN]{P3CTeX}
+\newcount\abstractprints
+\pxTFGabstract{EN}{\global\advance\abstractprints by 1 A manually placed project summary.}
+\begin{document}
+\ifnum\abstractprints=0\else
+  \PackageError{tfg-options}{Manual front matter printed automatically}{}\fi
+\pxTFGfrontmatter
+\pxTFGfrontmatter
+\ifnum\abstractprints=1\else
+  \PackageError{tfg-options}{Explicit front matter did not print exactly once}{}\fi
+\end{document}

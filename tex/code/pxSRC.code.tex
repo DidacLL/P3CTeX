@@ -421,8 +421,11 @@
         {\int_compare_p:n {\l__pxsrc_input_starts_int != 1}}
         {\int_compare_p:n {\l__pxsrc_input_ends_int != 1}}
         {\__pxsrc_input_error:n {A~region~must~have~exactly~one~start~and~one~end~marker.}}}
-    \int_compare:nNnT {\l__pxsrc_input_last_int} = {0}
-      {\int_set_eq:NN \l__pxsrc_input_last_int \l__pxsrc_input_lines_int}
+    % Zero means "to end of file" only for a line-range selection. A region
+    % closing on line one has a real end index of zero and must remain invalid.
+    \tl_if_blank:VT \l__pxsrc_input_region_tl
+      {\int_compare:nNnT {\l__pxsrc_input_last_int} = {0}
+        {\int_set_eq:NN \l__pxsrc_input_last_int \l__pxsrc_input_lines_int}}
     \bool_lazy_or:nnT
       {\int_compare_p:n {\l__pxsrc_input_first_int < 1}}
       {\int_compare_p:n {\l__pxsrc_input_last_int > \l__pxsrc_input_lines_int}}
@@ -542,10 +545,15 @@
               {!\tl_if_blank_p:V \l__pxsrc_input_label_tl}
               {\refstepcounter{pxsource}
                \tl_set:Nx \l__pxsrc_input_number_tl {\thepxsource}
+               % Named references describe this source, not the preceding section.
+               \tl_set_eq:NN \@currentlabelname \l__pxsrc_input_caption_tl
+               \tl_if_blank:VT \@currentlabelname
+                 {\tl_set_eq:NN \@currentlabelname \l__pxsrc_input_title_tl}
+               \tl_if_blank:VT \@currentlabelname {\tl_set:Nn \@currentlabelname {#2}}
                \tl_if_blank:VF \l__pxsrc_input_label_tl {\exp_args:NV \label \l__pxsrc_input_label_tl}}
             \__pxsrc_input_render:
             \tl_if_blank:VF \l__pxsrc_input_caption_tl
-              {\par\smallskip\noindent\textbf{\pxSourceName\space\l__pxsrc_input_number_tl :}~
+              {\par\smallskip\noindent\textbf{\pxDEFsourcename\space\l__pxsrc_input_number_tl :}~
                \l__pxsrc_input_caption_tl\par}
             \tl_if_blank:VF \l__pxsrc_input_cite_tl
               {\par\noindent\exp_args:NV \cite \l__pxsrc_input_cite_tl\par}

@@ -61,8 +61,6 @@
 %% Preview a registered source and queue the full file; no path repetition.
 %% #1 - preview/input options overriding registration; #2 - registered source id.
 \NewDocumentCommand\pxUseSourcePreview{O{} m}{\__pxsrc_use_preview:nn {#1}{#2}}
-\providecommand\pxDEFsourcename{Source}
-\providecommand\pxSourceName{\pxDEFsourcename}
 %% \pxSourceRef{<label>}: reference a label relative to the current source prefix.
 \NewDocumentCommand\pxSourceRef{m}{\exp_args:Ne \ref {\l__pxsrc_input_label_prefix_tl #1}}
 %% \pxSource[<input options>]{<id>}{<path>}: register any text/code/native source without reading it.

@@ -1,9 +1,11 @@
 \documentclass{article}
-\usepackage{pxMEM}
+\usepackage[figures=false,tables=false]{pxMEM}
 \begin{document}
 \chapter{Standalone chapter}
 \section{Section inside chapter}
 \ExplSyntaxOn
+\bool_if:nT {\l__pxmem_figures_bool || \l__pxmem_tables_bool}
+  {\PackageError{mem-standalone}{Package options were not applied}{}}
 \int_compare:nNnF {\value{chapter}} = {1}
   {\PackageError{mem-standalone}{Chapter numbering unavailable}{}}
 \int_compare:nNnF {\value{section}} = {1}

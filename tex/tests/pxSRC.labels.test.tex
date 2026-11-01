@@ -7,4 +7,11 @@
 Namespaced optional label: \cref{pr1:outer}.
 Unprefixed nested label: \cref{nested}.
 Namespaced outer label after nested input: \cref{pr1:outer-after}.
+\pxInput[as=text,caption={Imported literal source},label={source:literal}]{sample-range.txt}
+Named source: \nameref{source:literal}.
+% On subsequent passes the saved name must describe the object, not its section.
+\ifcsname r@source:literal\endcsname
+  \ifnum\pdfstrcmp{\getrefbykeydefault{source:literal}{name}{}}{Imported literal source}=0\else
+    \PackageError{named-reference}{Object reference retained another heading's name}{}\fi
+\fi
 \end{document}

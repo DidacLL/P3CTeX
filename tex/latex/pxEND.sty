@@ -82,7 +82,9 @@
 \NewDocumentCommand\pxBibliography{O{plain} m}{\__pxend_bibliography:nn {#1}{#2}}
 \ProcessKeysOptions{pxEND}
 \bool_set_true:N \l__pxgls_backend_locked_bool
-\tl_if_eq:NnT \l__pxgls_backend_tl {noindex}{\makenoidxglossaries}
+%% Selecting a backend initializes it; ordinary use needs no separate setup command.
+\tl_if_eq:NnTF \l__pxgls_backend_tl {noindex}
+  {\makenoidxglossaries}{\makeglossaries}
 \providecommand\pxDEFannexesname{\appendixname}
 \AddToHook{begindocument/before}[pxEND]
   {\cs_if_exist:NT \crefname

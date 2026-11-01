@@ -168,6 +168,8 @@
     \bool_if:NT \l__pxann_toc_bool
       {\addcontentsline{toc}{\l__pxann_level_tl}{\l__pxann_name_tl\space\thepxannex :~#2}}
     \tl_if_blank:VF \l__pxann_label_tl {\exp_args:NV \label \l__pxann_label_tl}
+    % This label identifies this annex only; nested registrations must not reuse it.
+    \tl_clear:N \l__pxann_label_tl
     #3
     % Flush pending floats before restoring their numbering context.
     \par\clearpage
@@ -190,11 +192,13 @@
         pagebreak=\bool_if:NTF \l__pxann_pagebreak_bool {true}{false}}
        {\exp_not:n {#2}}{\exp_not:n {#3}}}
    \group_end:}
-%% Drain once. Native body content participates in references, lists and terminology.
+%% Consume each annex once, including annexes registered by deferred source content.
+%% Process the current batch before newly registered material, preserving queue order.
 \cs_new_protected:Npn \__pxann_print_pending:
   {\group_begin:\seq_set_eq:NN \l__pxann_print_seq \g__pxann_pending_seq
    \seq_gclear:N \g__pxann_pending_seq
-   \seq_map_inline:Nn \l__pxann_print_seq {##1}\group_end:}
+   \seq_map_inline:Nn \l__pxann_print_seq {##1}\group_end:
+   \seq_if_empty:NF \g__pxann_pending_seq {\__pxann_print_pending:}}
 \cs_new_protected:Npn \__pxgls_print_all:
   {\group_begin:
    \bool_if:NT \l__pxgls_terms_bool {\tl_set:Nn \l__pxgls_type_tl {main}\__pxgls_print:}

@@ -30,8 +30,5 @@
 %% Evaluate and print an expression; formatting is local to this call.
 %% #1 - prec (default 2), unit; #2 - expression, optionally using [name] slots.
 \NewDocumentCommand\pxCalc{O{} m}
-  {\group_begin:
-   \keys_set:nn {pxCALC/use}{prec=2,steps=3,unit={},symbol={},#1}
-   \__pxcalc_eval:nN {#2}\l__pxcalc_result_tl
-   \__pxcalc_print_result:\group_end:}
+  {\__pxcalc_print:nn {#1}{#2}}
 \endinput
