@@ -121,8 +121,8 @@
 %% Draw an 80%-text-width rule centered on the page and terminate the line.
 %% * - select the thick rule variant.
 \NewDocumentCommand{\pxPageRule}{s}{
-	\IfBooleanTF{#1}{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
-		{\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\}
+	\IfBooleanTF{#1}{\hspace*{.1\textwidth} \pxHRule*[.8\textwidth]\\}
+		{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
 }
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
