@@ -9,10 +9,11 @@
   \section{Annex section}\label{ann:sect}
   Annex body.
 }
+\pxMEMannex[label={ann:second}]{Further evidence}{Second annex body.}
 \chapter{Second}
 \section{Later}
 \ifnum\value{chapter}=2\else\errmessage{Chapter counter incorrect}\fi
 \ifnum\value{section}=1\else\errmessage{Section counter incorrect}\fi
 \listoffigures
-See annex \ref{ann:data} and section \ref{sec:main}.
+See annexes \ref{ann:data}, \ref{ann:second} and section \ref{sec:main}.
 \end{document}
