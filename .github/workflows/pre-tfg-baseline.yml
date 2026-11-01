@@ -1,8 +1,5 @@
 name: Pre-TFG baseline verification
 on:
-  push:
-    branches:
-      - restart/pre-tfg-clean-2026-11-01
   workflow_dispatch:
 
 jobs:
