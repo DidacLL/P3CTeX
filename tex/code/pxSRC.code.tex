@@ -451,10 +451,14 @@
           {\int_compare:nNnTF {\l__pxsrc_input_first_int} = {1}
             {\int_compare:nNnTF {\l__pxsrc_input_last_int} = {0}
               {\exp_args:NV \file_input:n \l__pxsrc_input_file_tl}
-              {\__pxsrc_input_select: \__pxsrc_input_extract:
-               \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}
-            {\__pxsrc_input_select: \__pxsrc_input_extract:
-             \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}
+              {\__pxsrc_input_select:
+               \bool_if:NT \l__pxsrc_input_valid_bool
+                 {\__pxsrc_input_extract:
+                  \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}}
+            {\__pxsrc_input_select:
+             \bool_if:NT \l__pxsrc_input_valid_bool
+               {\__pxsrc_input_extract:
+                \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}}
           {\__pxsrc_input_select:
            \bool_if:NT \l__pxsrc_input_valid_bool
              {\__pxsrc_input_extract:
