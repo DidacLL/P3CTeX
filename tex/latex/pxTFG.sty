@@ -2,6 +2,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
 \RequirePackage{xparse}
+\RequirePackage{graphicx}
 \ProvidesExplPackage{pxTFG}{2026/11/01}{v0.1}{Shared TFG metadata}
 
 \keys_define:nn { pxTFG }
@@ -23,4 +24,45 @@
 % \pxTFGsetup{tutor=..., pra=..., area=..., credits=..., keywords=..., licence=...}
 % The ordinary P3CTeX/data and PAC/PR fields are unchanged.
 \NewDocumentCommand{\pxTFGsetup}{+m}{\keys_set:nn {pxTFG} {#1}}
+
+% Manual licence page: reuse bundled CC artwork for recognised codes.
+% Other licence descriptions are printed without an assumed logo or legal text.
+\cs_new_protected:Npn \__pxtfg_licence_artwork:
+  {
+    \tl_set:Nx \l_tmpa_tl {\tl_lower_case:n {\tl_use:N \l__pxtfg_licence_tl}}
+    \regex_replace_all:nnN {[^a-z]} {} \l_tmpa_tl
+    \str_case:enT {\tl_use:N \l_tmpa_tl}
+      {{ccby}{}{ccbync}{}{ccbyncnd}{}{ccbyncsa}{}{ccbynd}{}{ccbysa}{}}
+      {
+        \clist_map_inline:nn {licenc/,../code/licenc/,tex/code/licenc/}
+          {
+            \tl_set:Nx \l_tmpb_tl {##1\l_tmpa_tl.png}
+            \exp_args:NV \file_if_exist:nT \l_tmpb_tl
+              {\includegraphics[height=1cm,keepaspectratio]{\l_tmpb_tl}\par\medskip
+               \clist_map_break:}
+          }
+      }
+  }
+\cs_new:Npn \__pxtfg_licence_heading:
+  {
+    \cs_if_exist:NTF \languagename
+      {\str_case:enF {\languagename}
+        {{catalan}{Llicència}{spanish}{Licencia}{english}{Licence}}{Licence}}
+      {Licence}
+  }
+% \pxTFGlicencepage: render the configured licence on demand, not automatically.
+\NewDocumentCommand\pxTFGlicencepage{}
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {\clearpage\thispagestyle{empty}
+       \group_begin:
+       \parindent=0pt\vspace*{\fill}
+       \begin{minipage}{.85\linewidth}
+         \__pxtfg_licence_artwork:
+         \textbf{\__pxtfg_licence_heading:}\par\smallskip
+         \tl_use:N \l__pxtfg_licence_tl\par
+       \end{minipage}
+       \par\vspace*{\fill}
+       \group_end:\clearpage}
+  }
 \endinput
