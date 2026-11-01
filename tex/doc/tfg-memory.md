@@ -1,39 +1,39 @@
 # TFG: PR reuse and final-memory presentation
 
-The \`TFG\` class option provides shared metadata with \`\pxTFGsetup\`.
-\`MEM\` is a separate, opt-in final-memory presentation. It adds chapters
+The `TFG` class option provides shared metadata with `\pxTFGsetup`.
+`MEM` is a separate, opt-in final-memory presentation. It adds chapters
 numbered with sections beneath them without modifying PAC/PR documents.
 
-See \`examples/UOCTemplates/TFGTemplate/\` for a standalone PR and MEM
+See `examples/UOCTemplates/TFGTemplate/` for a standalone PR and MEM
 that reuse the same preamble. The MEM imports native LaTeX directly:
 
-\`\`\`latex
+```latex
 \documentclass[TFG,MEM,CAT]{P3CTeX}
 % Set shared class data and \pxTFGsetup in the preamble.
 \begin{document}
 \chapter{Introducció}
 \pxInput[section={Objectius}]{../PR1/PR1.tex}
-\pxInput[subsection={Metodologia}]{../PR1/PR1.tex}
+\pxInput[section={Metodologia}]{../PR1/PR1.tex}
 \end{document}
-\`\`\`
+```
 
 The PR need not be modified or registered. Heading selectors require
 literal one-line section/subsection titles. Existing LaTeX labels are kept;
 importing the same labelled material twice can therefore duplicate labels.
-See \`source-inclusion.md\` for region, range and path limitations.
+See `source-inclusion.md` for region, range and path limitations.
 
-MEM uses the existing contents machinery. Call native \`\listoffigures\`
-and \`\listoftables\` where wanted; their headings use chapter hierarchy.
-Annexes are queued by \`\pxMEMannex[label={ann:source}]{Title}{Content}\`
+MEM uses the existing contents machinery. Call native `\listoffigures`
+and `\listoftables` where wanted; their headings use chapter hierarchy.
+Annexes are queued by `\pxMEMannex[label={ann:source}]{Title}{Content}`
 and printed at document end, preserving the main chapter/section counters.
 
-Set \`licence={CC BY-NC-SA 4.0}\` through \`\pxTFGsetup\`, then call
-\`\pxTFGlicencepage\` explicitly where required. The command uses bundled
+Set `licence={CC BY-NC-SA 4.0}` through `\pxTFGsetup`, then call
+`\pxTFGlicencepage` explicitly where required. The command uses bundled
 artwork for the six supported CC codes when found, and prints any other
 licence text without assigning it CC artwork. Artwork paths depend on the
-source tree or TeX installation exposing \`tex/code/licenc/\`.
+source tree or TeX installation exposing `tex/code/licenc/`.
 
-The existing \`glossary\` option continues to use standard \`glossaries\`
+The existing `glossary` option continues to use standard `glossaries`
 entries and prints used entries; MEM adjusts only its heading hierarchy
 and CAT/ES/EN titles. Standard LaTeX/BibTeX/biblatex bibliography commands
 are not wrapped or reconfigured.
