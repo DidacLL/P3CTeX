@@ -46,6 +46,84 @@
 % options are being processed; ordinary PAC/PR documents leave them empty.
 \NewHook{P3CTeX/before-toc}
 \NewHook{P3CTeX/after-toc}
+
+% Glossaries are optional and owned by the class, not by a combined endmatter manager.
+\bool_new:N \l__pxdoc_glossary_manual_bool
+\bool_new:N \l__pxdoc_glossary_all_bool
+\bool_new:N \l__pxdoc_glossary_toc_bool
+\bool_new:N \l__pxdoc_glossary_terms_bool
+\bool_new:N \l__pxdoc_glossary_acronyms_bool
+\tl_new:N \l__pxdoc_glossary_type_tl
+\tl_new:N \l__pxdoc_glossary_short_tl
+\tl_new:N \l__pxdoc_glossary_long_tl
+\tl_new:N \l__pxdoc_glossary_entry_options_tl
+\prop_new:N \g__pxdoc_glossary_printed_prop
+\keys_define:nn {P3CTeX/glossary}
+  {
+    print .choice:,
+    print / manual .code:n = {\bool_set_true:N \l__pxdoc_glossary_manual_bool},
+    print / auto .code:n = {\bool_set_false:N \l__pxdoc_glossary_manual_bool},
+    print .initial:n = auto,
+    include .choice:,
+    include / used .code:n = {\bool_set_false:N \l__pxdoc_glossary_all_bool},
+    include / all .code:n = {\bool_set_true:N \l__pxdoc_glossary_all_bool},
+    include .initial:n = used,
+    terms .bool_set:N = \l__pxdoc_glossary_terms_bool,
+    terms .initial:n = true,
+    acronyms .bool_set:N = \l__pxdoc_glossary_acronyms_bool,
+    acronyms .initial:n = true,
+    toc .bool_set:N = \l__pxdoc_glossary_toc_bool,
+    toc .initial:n = true,
+    type .tl_set:N = \l__pxdoc_glossary_type_tl
+  }
+\keys_define:nn {P3CTeX/glossary/acronym}
+  {
+    short .tl_set:N = \l__pxdoc_glossary_short_tl,
+    long .tl_set:N = \l__pxdoc_glossary_long_tl,
+    unknown .code:n = {\tl_put_right:Nx \l__pxdoc_glossary_entry_options_tl
+      {\l_keys_key_str={\exp_not:n {#1}},}}
+  }
+\cs_new_protected:Npn \__pxdoc_acronym_entry:nn #1#2
+  {
+    \group_begin:
+    \tl_clear:N \l__pxdoc_glossary_short_tl
+    \tl_clear:N \l__pxdoc_glossary_long_tl
+    \tl_clear:N \l__pxdoc_glossary_entry_options_tl
+    \keys_set:nn {P3CTeX/glossary/acronym}{#2}
+    \bool_lazy_or:nnTF
+      {\tl_if_blank_p:V \l__pxdoc_glossary_short_tl}
+      {\tl_if_blank_p:V \l__pxdoc_glossary_long_tl}
+      {\PackageError{P3CTeX}{Acronym '#1' needs short and long fields}{}}
+      {\use:x {\exp_not:N \newacronym[\exp_not:V \l__pxdoc_glossary_entry_options_tl]
+        {\exp_not:n {#1}}{\exp_not:V \l__pxdoc_glossary_short_tl}
+        {\exp_not:V \l__pxdoc_glossary_long_tl}}}
+    \group_end:
+  }
+\cs_new_protected:Npn \__pxdoc_glossary_print_type:n #1
+  {
+    \prop_if_in:NnF \g__pxdoc_glossary_printed_prop {#1}
+      {
+        \group_begin:
+        \bool_if:NT \l__pxdoc_glossary_all_bool {\glsaddall[types={#1}]}
+        \bool_if:NTF \l__pxdoc_glossary_toc_bool {\glstoctrue}{\glstocfalse}
+        \str_if_eq:nnTF {#1}{acronym}
+          {\tl_set:Nn \l_tmpa_tl {\pxDEFacronymname}}
+          {\tl_set:Nn \l_tmpa_tl {\pxDEFglossaryname}}
+        \tl_if_eq:NnTF \l__pxdoc_glossary_backend_tl {external}
+          {\printglossary[type={#1},title={\l_tmpa_tl}]}
+          {\printnoidxglossary[type={#1},title={\l_tmpa_tl}]}
+        \prop_gput:Nnn \g__pxdoc_glossary_printed_prop {#1}{true}
+        \group_end:
+      }
+  }
+\cs_new_protected:Npn \__pxdoc_glossary_print_all:
+  {
+    \bool_if:NT \l__pxdoc_glossary_acronyms_bool
+      {\__pxdoc_glossary_print_type:n {acronym}}
+    \bool_if:NT \l__pxdoc_glossary_terms_bool
+      {\__pxdoc_glossary_print_type:n {main}}
+  }
+
 \file_input:n {P3CTeX.code.tex} % Input expl3 code
 %% =================================
 %% ===== PCKG PUBLIC LaTeX2e API ===
@@ -133,12 +211,40 @@
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
 	\__ifglossary:nn{
-		\makenoidxglossaries
+        \tl_if_eq:NnTF \l__pxdoc_glossary_backend_tl {external}
+          {\makeglossaries}{\makenoidxglossaries}
 %% \GL*{<glossary label>}
 %% Glossary shorthand created only when glossary support is enabled.
 %% * - print the long acronym form; unstarred prints the short form.
 %% #1 - glossary/acronym label.
 		\NewDocumentCommand{\GL}{s m}{\IfBooleanTF{#1}{\acrlong{#2} }{\acrshort{#2} } }
+
+        % Native glossary entry model; these commands exist only with glossary enabled.
+        \NewDocumentCommand\pxGlossarySetup{m}
+          {\keys_set:nn {P3CTeX/glossary}{#1}}
+        \NewDocumentCommand\pxGlossaryFile{m}{\file_input:n {#1}}
+        \NewDocumentCommand\pxAcronym{O{} m m m}
+          {\newacronym[#1]{#2}{#3}{#4}}
+        \NewDocumentCommand\pxTerm{O{} m m +m}
+          {\newglossaryentry{#2}{name={#3},description={#4},#1}}
+        \NewDocumentCommand\pxTerms{+m}
+          {\keyval_parse:NNn
+            {\PackageError{P3CTeX}{Term entry needs an id and fields}{}}
+            {\newglossaryentry} {#1}}
+        \NewDocumentCommand\pxAcronyms{+m}
+          {\keyval_parse:NNn
+            {\PackageError{P3CTeX}{Acronym entry needs an id and fields}{}}
+            \__pxdoc_acronym_entry:nn {#1}}
+        \NewDocumentCommand\pxPrintGlossary{O{}}
+          {\group_begin:
+           \tl_set:Nn \l__pxdoc_glossary_type_tl {main}
+           \keys_set:nn {P3CTeX/glossary}{#1}
+           \exp_args:NV \__pxdoc_glossary_print_type:n \l__pxdoc_glossary_type_tl
+           \group_end:}
+        \NewDocumentCommand\pxPrintGlossaries{O{}}
+          {\group_begin:\keys_set:nn {P3CTeX/glossary}{#1}
+           \__pxdoc_glossary_print_all:\group_end:}
+
 	}{}
 	\__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
 }
@@ -153,30 +259,15 @@
 	}
 }
 \AtEndDocument{
-%	\glsaddall
-
-	\__ifglossary:nn{
-		\@ifpackageloaded{pxMEM}{
-			% MEM uses chapter-level glossary headings and Babel labels.
-			% Only used entries are printed by the existing no-index backend.
-			\clearpage
-			\setglossarysection{chapter}
-			\glstoctrue
-			\printnoidxglossary[type=\acronymtype,
-				title={\iflanguage{catalan}{Acrònims}{\iflanguage{spanish}{Acrónimos}{Acronyms}}}]
-			\printnoidxglossary[title=\glossaryname]
-		}{
-			% Preserve the established PAC/PR glossary presentation.
-			\clearpage
-			\addcontentsline{toc}{section}{Glossari}
-			\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
-			\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
-		}
-	}{}
-%	\__ifbibliography:nn{
-%		\pxBib{ \l__pxdoc_bibpath_tl }
-%	}{}
+  \__ifglossary:nn
+    {\bool_if:NF \l__pxdoc_glossary_manual_bool
+      {\clearpage\__pxdoc_glossary_print_all:}}
+    {}
 }
+% Simple BibTeX convenience; \cite and \bibliography remain native and optional.
+\NewDocumentCommand\pxBibliography{O{plain} m}
+  {\bibliographystyle{#1}\bibliography{#2}}
+
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }
