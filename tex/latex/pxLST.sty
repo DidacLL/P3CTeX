@@ -611,6 +611,24 @@
 	{·}{{$\cdot$}}1,
 }
 
+
+\makeatletter
+%% Force-load strings aspect from lstmisc.sty and fix upstream listings [b]
+%% string bug where \<letter>" (e.g. "\$", "\n", "\t") fails to close the
+%% string because \lst@lastother remains \lstum@backslash after letters.
+\lstloadaspects{strings}
+\gdef\lst@StringDM@b#1#2\@empty#3#4#5{%
+    \let\lst@ifbstring\iftrue
+    \lst@CArg #2\relax\lst@DefDelimBE
+       {\lst@ifletter \lst@Output \lst@letterfalse \let\lst@lastother\relax \fi}%
+       {\ifx\lst@lastother\lstum@backslash
+            \expandafter\@gobblethree
+        \fi}{}#3{#1}{#5}#4}
+\global\let\lst@StringDM@bd\lst@StringDM@b
+\global\let\lst@StringDM@db\lst@StringDM@bd
+\makeatother
+
+
 %% =================================
 %% ===== FILE INPUT FUNCTION ========
 %% =================================
