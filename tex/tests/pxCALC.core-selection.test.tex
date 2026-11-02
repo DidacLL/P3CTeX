@@ -1,0 +1,11 @@
+\documentclass{article}
+\usepackage[calculations]{pxCORE}
+\begin{document}
+\makeatletter
+\@ifpackageloaded{pxCALC}{}{\PackageError{core-on}{CALC not loaded}{}}
+\makeatother
+\pxDefVar{n}{7}
+\pxCalcStore{[n]*3}{\result}
+\ifnum\result=21\else\PackageError{core-on}{Wrong result}{}\fi
+\typeout{PXCORE-OPTION-PASS}
+\end{document}
