@@ -34,9 +34,9 @@ Legend: B = authoritative branch, D = discarded `feature/core-modules-audit-and-
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
 | Existing block, inline, external-file listings, language styles | B/D `latex/pxLST.sty` | Present | P, preserve existing public contracts | Already correctly recovered |
-| Quotes, literal dollars, JLex/CUP backslash escapes | D pxLST + `pxLST.quotes.test.tex` | Missing fixes | Retain literal-by-default, explicit mathescape | Awaiting implementation |
-| Plain terminal `pxTerminal` with existing listing palette | D pxLST | Missing | Use existing tcolorbox/listings renderer | Awaiting implementation |
-| Line-range `\pxCodeChunk` and original source line numbers | D pxLST | Missing | Reuse existing file renderer | Awaiting implementation |
+| Quotes, literal dollars, JLex/CUP backslash escapes | D pxLST + `pxLST.quotes.test.tex` | Missing fixes | Retain literal-by-default, explicit mathescape | Recovered but needing correction | (global OT1/T1 and code source quote path restored; JLex/CUP coverage still pending)
+| Plain terminal `pxTerminal` with existing listing palette | D pxLST | Missing | Use existing tcolorbox/listings renderer | Recovered but needing correction |
+| Line-range `\pxCodeChunk` and original source line numbers | D pxLST | Missing | Reuse existing file renderer | Recovered but needing correction |
 | New display variants `pxCodeMini`, `pxCodeBox`, `pxCodeBreak`, `pxCode*` | D pxLST | Partial | No separate engine; preserve starred vs plain behavior | Recovered but needing correction |
 | Original `miniCode`, `CodeBox`, `CodeBox*` and `\pxCodeIn` interfaces | D ledger S03 | Partial | Restore argument conventions as proper aliases, not incompatible forwarding | Recovered but needing correction |
 | Language, IO and syntax preset fixes | D pxLST tests | Partial | Port only justified renderer/fidelity corrections | Recovered but needing correction |
@@ -197,7 +197,7 @@ This expands the domain rows into individual public interfaces. Each entry was f
 | API / defined behavior | Old implementation / B status | Owner and correction | Recovery status |
 | --- | --- | --- | --- |
 | `pxCode` / `pxCode*`: regular and visual listing environments | D/B `pxLST.sty`, existing partially | pxLST; preserve distinct verbatim-aware forms | Recovered but needing correction |
-| `pxCodeMini`, `pxCodeBox`, `pxCodeBreak` | D `pxLST.sty`; B partially | pxLST; preserve original aliases where relevant | Recovered but needing correction |
+| `pxCodeMini`, `pxCodeBox`, `pxCodeBreak` | D `pxLST.sty`; B originals present | pxLST: feature equivalents are established `miniCode`, `CodeBox`, `CodeBox*`; do not add duplicate forwarding names | Recovered but needing correction |
 | `pxTerminal`: plain terminal output | D `pxLST.sty`; B absent | pxLST; same listing renderer | Awaiting implementation |
 | `\pxCodeFile`, `\pxCodeChunk`, `\pxCodeInline`, `\pxCodeIn` | D `pxLST.sty`; B file/inline support partially | pxLST; correct verbatim versus mandatory arguments and source line range | Recovered but needing correction |
 | `\pxSource`, `\pxInput`, `\pxUseSource` | D `pxSRC.sty`; B provides accepted heading-based source extraction | pxSRC; preserve heading selectors and registration-free path | Recovered but needing correction |
@@ -239,3 +239,15 @@ Branch: `restart/pre-tfg-clean-2026-11-01`. Changes are bounded to the establish
 **Verification limit:** these are isolated local TeX probes, not a compilation of the complete repository implementation. Repository fixtures have been created but not yet run against the integrated authoritative tree, and no class-level PDF integration or complete regression run is claimed. Consequently the rows above remain **Recovered but needing correction**, not **Implemented and verified**.
 
 **Still outstanding in pxSRC:** source previews with full-source annex, annex hook integration, complete native label handling inside amsmath environments, full cross-module glossary/citation validation, class/MEM/PR integration compilations and any rendering corrections those reveal. Existing heading-based source selection is a nonnegotiable regression gate. No claim of source-module completion.
+
+## Checkpoint: pxLST code/terminal recovery (2026-11-02)
+
+Branch: `restart/pre-tfg-clean-2026-11-01`.
+
+- `dafcdd1`: add terminal transcript environment `pxTerminal`, inclusive source-range `\pxCodeChunk[language]{file}{first}{last}{title}`, optional title to `\pxCodeFile[language]{file}[title]`, and verbatim-aware `\pxCodeInline`; all use the established listing and tcolorbox renderer. Original `\pxCodeIn` retains its mandatory code argument.
+- `90f1f0e`: consolidate unnecessary forwarding aliases. The discarded `pxCodeMini`, `pxCodeBox`, `pxCodeBreak` correspond to the **unchanged established** `miniCode`, `CodeBox`, `CodeBox*` environments, with compact `miniCode` displaying no line numbers. No capability was deleted; those unreleased duplicate names are intentionally not retained as separate public APIs.
+- `76234b9` and `e65f548`: activate the existing default `pxlst` styling once and preserve later user-selected global styles through `\pxCodeSet`. Listing-specific font encoding remains T1 without switching document encoding.
+- `b07debd` / `3bfbab3`: targeted regression fixture `tex/tests/pxLST.recovery.test.tex` covers terminal, file/chunk, original annotated/compact environments, legacy inline and new verbatim inline.
+- Local TeX Live pdfLaTeX test using representative renderer produced `PXLST-TERMINAL-CHUNK-PASS` and a one-page PDF; quoted shell prompts, a dollar-prefixed command, and a bounded Python slice appeared in the rendered output. Earlier shared pxSRC probe also rendered selected code/text and reproduced/fixed the old quote-encoding error.
+
+**Remaining:** compile the tracked `pxLST.recovery.test.tex` against the complete package; verify specialized JLex/CUP quote escapes and syntax styles, package-local style scoping, and source/terminal interaction in P3CTeX PAC/PR/MEM documents. No full integration result is claimed. Public API changes relative to discarded development: use `miniCode`, `CodeBox`, `CodeBox*` instead of `pxCodeMini`, `pxCodeBox`, `pxCodeBreak`; use `\pxCodeSet` instead of the redundant unreleased `\pxLSTsetup`.
