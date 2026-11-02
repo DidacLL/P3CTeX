@@ -8,6 +8,25 @@ Status vocabulary: **Already correctly recovered** = present in the authoritativ
 
 Legend: B = authoritative branch, D = discarded `feature/core-modules-audit-and-fix`, M = discarded `main`. Source paths below are relative to `tex/`; **P** in correction column means preserve current API/behavior. All status labels reflect repository inspection at inventory creation, before reconstruction changes.
 
+## Integration verification checkpoint — 2026-11-02
+
+**Scope and evidence:** Task branch `fix/foundation-integration-2026-11-02`, starting at `987e2d7181174f1d59ba45424058822fd05d9772`. This is a **partial verification checkpoint, not acceptance of the full foundation**. The complete GitHub tree was inspected through the repository connection, but the isolated TeX runtime could not clone/download the repository (`git ls-remote`: `Could not resolve host: github.com`). Its local staging area contains the exact committed `pxMEM.sty` and `pxMEM.code.tex` blobs, and three committed standalone MEM fixtures. Therefore a complete `P3CTeX.cls` build is **not yet verified**.
+
+| Existing behavior | Source state at the starting commit | Verified by a complete P3CTeX class build? | Executed verification / remaining gate |
+| --- | --- | --- | --- |
+| PAC/PR defaults, covers, contents, running pages and PDF settings | Reconstructed class / pxGDX files present | **No** | Class regression, cover/no-cover matrix, PDF visual output still required |
+| TFG/PR/MEM metadata, language-dependent workcard, abstracts and licence page | pxTFG, pxTXT and pxMEM files and targeted fixtures present | **No** | `pxTFG.presentation-recovery.test.tex`, three-language pages and template examples still required |
+| MEM chapter/annex numbering, Hyperref/Cleveref targets | Existing pxMEM implementation, unchanged | **No** | **Standalone verified**: `pxMEM.standalone.test.tex` and `pxMEM.annex-references.test.tex`, three pdfLaTeX passes each; 6-page and 5-page PDFs inspected; annex A/B and nested section/figure/table/equation labels have distinct, correct `.aux` destinations |
+| MEM annex-to-glossary ordering | Existing pxMEM deferred annex and optional native glossaries | **No** | **Standalone verified**: `pxMEM.annex-glossary-interaction.test.tex`, three passes; 3-page PDF shows annex term on page 2 and glossary entry on page 3. One nonfatal `glossaries` notice remains |
+| Native PR heading/subsection extraction and nested relative paths; source labels and code/text modes | pxSRC / pxLST implementation and fixtures present | **No** | Earlier isolated source probes recorded below; committed integration fixtures and actual PR/MEM examples still need full build |
+| Code listings, terminal, inline and custom global listing styles | Existing pxLST implementation and fixture present | **No** | Earlier isolated listing probes only; `pxLST.recovery.test.tex` must run against full tree |
+| Optional calculations through `pxCORE` and actual class | Existing pxCALC implementation, opt-in CORE selector and fixtures present | **No** | Earlier isolated pxCALC and CORE probes only; `pxCALC.class-integration.test.tex` must run against actual class |
+| Other source domains, table/diagram modules and optional bibliography behavior | Existing sources unchanged | **No** | Not tested in this checkpoint; no completion claim |
+
+Executed from the staged `tex/tests` directory with `TEXINPUTS=".:../latex//:../code//:"`: each of `pxMEM.standalone.test.tex`, `pxMEM.annex-references.test.tex`, and `pxMEM.annex-glossary-interaction.test.tex` passed three `pdflatex -halt-on-error -interaction=nonstopmode` passes. The relevant PDFs were text-inspected; the annex-reference `.aux` contains `pxmemannex.1` and `pxmemannex.2` and distinct nested targets without duplicate-destination warnings. The two committed pxMEM implementation files in the staging area were checked with `git hash-object` against the starting-commit Git blob SHAs (`ba106aa8...` and `68800c72...`).
+
+**Defects corrected in this checkpoint:** none; the executed standalone paths did not reproduce a functional source defect, so working modules were not altered. **Unresolved verification:** complete repository retrieval, committed class-level fixture execution, multi-pass PAC/PR/TFG/MEM builds and visual cover/listing review. The preceding feature-recovery rows are historical inventory, not proof of class-level verification. Do not promote any foundation feature to class-verified from this checkpoint.
+
 ## Source management — owner pxSRC (rendering delegated to pxLST)
 
 | Capability / previous user-visible behavior | Previous implementation | B status | Correction / accepted equivalent | Recovery status |
