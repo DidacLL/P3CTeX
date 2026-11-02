@@ -143,7 +143,7 @@
 }
 
 
-% \pxInput[section=Title|subsection=Title|region=name|first-line=...]{file}
+% \pxInput[as=native|code|text, section=..., region=..., first-line=...]{file}
 % Direct native TeX reuse; PR headings require no source markers or registration.
 \NewDocumentCommand{\pxInput}{O{} m}
   {\__pxsrc_input:nn {#1}{#2}}
@@ -153,3 +153,8 @@
   {\__pxsrc_register_source:nnn {#1}{#2}{#3}}
 \NewDocumentCommand{\pxUseSource}{O{} m}
   {\__pxsrc_use_source:nn {#1}{#2}}
+
+% Reference a label inside the current native source namespace, without
+% changing ordinary \ref semantics for the receiving document.
+\NewDocumentCommand{\pxSourceRef}{m}
+  {\exp_args:Ne \ref {\l__pxsrc_input_label_prefix_tl #1}}
