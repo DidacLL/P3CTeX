@@ -320,3 +320,11 @@ The endmatter renderer now captures and restores the refstep destination,
 including MEM's \`pxmemannex\` variant. These are **isolated reference
 probes**, not full-class compilation; the updated CI matrix includes
 precise AUX-anchor assertions.
+
+
+**Standalone CAT correction**: The imported discarded \`pxEND.sty\`
+standalone-language fallback referenced an undefined
+\`\_pxcore_set_language_catalan\`. Catalan is already the default in
+\`pxTXT.code.tex\`; the fallback now keeps the initialized text and
+uses the actual ES/EN setters. Added \`pxEND.standalone.CAT.test.tex\`
+to cover that path. Its compilation is still pending.
