@@ -69,6 +69,12 @@
 		TAB 	=	true,
 		LST 	=	true
 	},
+	TFG         .bool_set:N = \l_pxcore_tfg_use_bool,
+        TFG         .initial:n = false,
+        TFG         .default:n = true,
+    MEM         .bool_set:N = \l_pxcore_mem_use_bool,
+        MEM         .initial:n = false,
+        MEM         .default:n = true,
 	CALC       .bool_set:N = \l_pxcore_calc_use_bool,
 		CALC       .initial:n = false,
 		CALC       .default:n = true,
@@ -122,6 +128,8 @@
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
+\bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
+\bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
 \bool_if:NT \l_pxcore_anx_use_bool { \RequirePackage{pxANX} }
