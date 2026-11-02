@@ -12,8 +12,8 @@ jobs:
         run: |
           set -euo pipefail
           git init .
-          git remote add origin "https://github.com/\${GITHUB_REPOSITORY}.git"
-          git fetch --no-tags origin "\${GITHUB_SHA}"
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "${GITHUB_SHA}"
           git checkout --detach FETCH_HEAD
       - name: Compile standalone diagrams and optional core fixtures
         shell: bash
