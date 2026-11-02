@@ -86,6 +86,16 @@
         PM          .default:n = true,
     project-management .meta:n = { PM = #1 },
         project-management .default:n = true,
+    ANX         .bool_set:N = \l_pxcore_anx_use_bool,
+        ANX         .initial:n = false,
+        ANX         .default:n = true,
+    annexes .meta:n = {ANX = #1},
+        annexes .default:n = true,
+    GLS         .bool_set:N = \l_pxcore_gls_use_bool,
+        GLS         .initial:n = false,
+        GLS         .default:n = true,
+    glossaries .meta:n = {GLS = #1},
+        glossaries .default:n = true,
     SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
@@ -114,6 +124,8 @@
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
+\bool_if:NT \l_pxcore_anx_use_bool { \RequirePackage{pxANX} }
+\bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
 \bool_if:NT \l_pxcore_dia_use_bool {
     \tl_if_blank:VTF \l_pxcore_dia_config_tl
       { \RequirePackage{pxDIA} }
