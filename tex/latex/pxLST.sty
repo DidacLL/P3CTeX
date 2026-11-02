@@ -142,7 +142,7 @@
 \lstdefinestyle{pxlst}{
 	inputencoding    = utf8,
 	extendedchars    = true,
-	basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{pxfg},
+	basicstyle       = \footnotesize\linespread{1.2}\fontencoding{T1}\ttfamily\selectfont\color{pxfg},
 	identifierstyle  = \color{pxfg},
 	commentstyle     = \itshape\color{pxcomment},
 	stringstyle      = \color{pxstring},
@@ -153,6 +153,9 @@
 	keywordstyle     = [5]\bfseries\color{pxkeyword!65!},
 	emphstyle        = \underbar\color{pxoperator},
 	showstringspaces = false,
+	upquote          = true,
+	mathescape       = false,
+	texcl            = false,
 	showspaces       = false,
 	showtabs         = false,
 	showlines        = false,
@@ -425,7 +428,7 @@
 % No extra listings environment or secondary highlighting engine.
 \cs_new_protected:Npn \pxLST_input_file:nnnn #1 #2 #3 #4 {
 	\tcbinputlisting{
-		listing~options={language={#1},#4},
+		listing~options={style=pxlst,language={#1},#4},
 		colback=pxbg!90!,
 		colframe=pxbg!60!,
 		coltext=pxfg,
