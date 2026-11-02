@@ -1,0 +1,302 @@
+\ProvidesExplFile{pxEND.code.tex}{2026/10/31}{0.1}{References, annexes and terminology}
+\msg_new:nnn {pxEND}{pending-annexes}
+  {Annexes~are~queued~but~automatic~endmatter~printing~is~disabled.}
+\msg_new:nnn {pxEND/glossary}{type}{Unknown~glossary~type~'#1'.~Define~it~before~printing.}
+\prop_new:N \g__pxgls_printed_prop
+\tl_new:N \l__pxgls_backend_tl
+\tl_new:N \l__pxgls_type_tl
+\tl_new:N \l__pxgls_title_tl
+\tl_new:N \l__pxgls_terms_title_tl
+\tl_new:N \l__pxgls_acronyms_title_tl
+\tl_new:N \l__pxgls_options_tl
+\bool_new:N \l__pxgls_auto_bool
+\bool_new:N \l__pxgls_backend_locked_bool
+\bool_new:N \l__pxgls_all_bool
+\bool_new:N \l__pxgls_terms_bool
+\bool_new:N \l__pxgls_acronyms_bool
+\bool_new:N \l__pxgls_toc_bool
+\keys_define:nn {pxEND/glossary}
+  {
+    backend .choices:nn = {noindex,external}{\bool_if:NTF \l__pxgls_backend_locked_bool
+      {\tl_if_eq:NNF \l__pxgls_backend_tl \l_keys_choice_tl
+        {\PackageError{pxEND/glossary}{Glossary~backend~is~a~package-load~option}{Choose~the~backend~before~defining~entries.}}}
+      {\tl_set_eq:NN \l__pxgls_backend_tl \l_keys_choice_tl}},
+    backend .initial:n = noindex,
+    print .choice:,
+    print / manual .code:n = {\bool_set_false:N \l__pxgls_auto_bool},
+    print / auto .code:n = {\bool_set_true:N \l__pxgls_auto_bool},
+    print .initial:n = auto,
+    include .choice:,
+    include / used .code:n = {\bool_set_false:N \l__pxgls_all_bool},
+    include / all .code:n = {\bool_set_true:N \l__pxgls_all_bool},
+    include .initial:n = used,
+    terms .bool_set:N = \l__pxgls_terms_bool,
+    terms .initial:n = true,
+    acronyms .bool_set:N = \l__pxgls_acronyms_bool,
+    acronyms .initial:n = true,
+    toc .bool_set:N = \l__pxgls_toc_bool,
+    toc .initial:n = true,
+    type .tl_set:N = \l__pxgls_type_tl,
+    type .initial:n = main,
+    title .tl_set:N = \l__pxgls_title_tl,
+    terms-title .tl_set:N = \l__pxgls_terms_title_tl,
+    terms-title .initial:n = \pxDEFglossaryname,
+    acronyms-title .tl_set:N = \l__pxgls_acronyms_title_tl,
+    acronyms-title .initial:n = \pxDEFacronymname,
+    options .tl_set:N = \l__pxgls_options_tl
+  }
+\cs_new_protected:Npn \__pxgls_print:
+  {
+    \prop_if_in:NVF \g__pxgls_printed_prop \l__pxgls_type_tl
+      {
+        \exp_args:NV \ifglossaryexists \l__pxgls_type_tl
+          {
+            \group_begin:
+            \@ifpackageloaded{pxMEM}
+              {\setglossarysection{chapter}}
+              {\setglossarysection{section}}
+            \bool_if:NT \l__pxgls_all_bool
+              {\use:x {\exp_not:N \glsaddall[types={\l__pxgls_type_tl}]}}
+            \tl_if_blank:VT \l__pxgls_title_tl
+              {\tl_if_eq:NnTF \l__pxgls_type_tl {acronym}
+                {\tl_set_eq:NN \l__pxgls_title_tl \l__pxgls_acronyms_title_tl}
+                {\tl_set_eq:NN \l__pxgls_title_tl \l__pxgls_terms_title_tl}}
+            \bool_if:NTF \l__pxgls_toc_bool {\glstoctrue}{\glstocfalse}
+            \tl_if_eq:NnTF \l__pxgls_backend_tl {noindex}
+              {\use:x {\exp_not:N \printnoidxglossary[
+                type={\l__pxgls_type_tl},title={\exp_not:V \l__pxgls_title_tl},
+                \exp_not:V \l__pxgls_options_tl]}}
+              {\use:x {\exp_not:N \printglossary[
+                type={\l__pxgls_type_tl},title={\exp_not:V \l__pxgls_title_tl},
+                \exp_not:V \l__pxgls_options_tl]}}
+            \prop_gput:NVn \g__pxgls_printed_prop \l__pxgls_type_tl {true}
+            \group_end:
+          }{}
+      }
+  }
+%% Batch registration keeps the native glossaries entry model and error checks.
+\msg_new:nnn {pxEND/glossary}{entry}{Entry~'#1'~needs~a~braced~field~list.}
+\msg_new:nnn {pxEND/glossary}{acronym}{Acronym~'#1'~requires~short~and~long~fields.}
+\tl_new:N \l__pxgls_short_tl
+\tl_new:N \l__pxgls_long_tl
+\tl_new:N \l__pxgls_entry_options_tl
+\keys_define:nn {pxEND/glossary/acronym}
+  {short .tl_set:N = \l__pxgls_short_tl,
+   long .tl_set:N = \l__pxgls_long_tl,
+   unknown .code:n = {\tl_put_right:Nx \l__pxgls_entry_options_tl
+     {\l_keys_key_str={\exp_not:n {#1}},}}}
+\cs_new_protected:Npn \__pxgls_missing_entry:n #1
+  {\msg_error:nnn {pxEND/glossary}{entry}{#1}}
+\cs_new_protected:Npn \__pxgls_term:nn #1#2
+  {\newglossaryentry{#1}{#2}}
+\cs_new_protected:Npn \__pxgls_acronym:nn #1#2
+  {\group_begin:
+   \tl_clear:N \l__pxgls_short_tl
+   \tl_clear:N \l__pxgls_long_tl
+   \tl_clear:N \l__pxgls_entry_options_tl
+   \keys_set:nn {pxEND/glossary/acronym}{#2}
+   \bool_lazy_or:nnTF {\tl_if_blank_p:V \l__pxgls_short_tl}
+     {\tl_if_blank_p:V \l__pxgls_long_tl}
+     {\msg_error:nnn {pxEND/glossary}{acronym}{#1}}
+     {\use:x {\exp_not:N \newacronym[\exp_not:V \l__pxgls_entry_options_tl]
+       {\exp_not:n {#1}}{\exp_not:V \l__pxgls_short_tl}{\exp_not:V \l__pxgls_long_tl}}}
+   \group_end:}
+
+
+\newcounter{pxannex}
+\renewcommand\thepxannex{\Alph{pxannex}}
+% MEM has the same counter, without running a competing annex sequence.
+\cs_set_eq:cc {c@pxmemannex}{c@pxannex}
+\cs_new:cpn {thepxmemannex}{\thepxannex}
+\cs_new:cpn {theHpxmemannex}{\arabic{pxannex}}
+\seq_new:N \g__pxann_pending_seq
+\seq_new:N \l__pxann_print_seq
+\prop_new:N \l__pxann_saved_counters_prop
+\tl_new:N \l__pxann_label_tl
+\tl_new:N \l__pxann_level_tl
+\tl_new:N \l__pxann_name_tl
+\tl_new:N \l__pxann_anchor_prefix_tl
+\bool_new:N \l__pxann_auto_bool
+\bool_new:N \l__pxann_toc_bool
+\bool_new:N \l__pxann_pagebreak_bool
+\keys_define:nn {pxEND/annex}
+  {
+    print .choice:,
+    print / auto .code:n = {\bool_set_true:N \l__pxann_auto_bool},
+    print / manual .code:n = {\bool_set_false:N \l__pxann_auto_bool},
+    print .initial:n = auto,
+    label .tl_set:N = \l__pxann_label_tl,
+    name .tl_set:N = \l__pxann_name_tl,
+    name .initial:n = \pxDEFannexname,
+    anchor-prefix .tl_set:N = \l__pxann_anchor_prefix_tl,
+    anchor-prefix .initial:n = pxannex,
+    level .choices:nn = {auto,section,chapter}
+      {\tl_set_eq:NN \l__pxann_level_tl \l_keys_choice_tl},
+    level .initial:n = auto,
+    toc .bool_set:N = \l__pxann_toc_bool,
+    toc .initial:n = true,
+    pagebreak .bool_set:N = \l__pxann_pagebreak_bool,
+    pagebreak .initial:n = true
+  }
+\cs_new_protected:Npn \__pxann_print:nnn #1#2#3
+  {
+    \group_begin:
+    \keys_set:nn {pxEND/annex}{#1}
+    \tl_if_eq:NnT \l__pxann_level_tl {auto}
+      {\cs_if_exist:NTF \chapter
+        {\tl_set:Nn \l__pxann_level_tl {chapter}}
+        {\tl_set:Nn \l__pxann_level_tl {section}}}
+    \bool_if:NT \l__pxann_pagebreak_bool {\clearpage}
+    \cs_if_exist:NT \phantomsection {\phantomsection}
+    \tl_if_eq:NnTF \l__pxann_anchor_prefix_tl {pxmemannex}
+      {\refstepcounter{pxmemannex}}
+      {\refstepcounter{pxannex}}
+    \prop_clear:N \l__pxann_saved_counters_prop
+    \clist_map_inline:nn {chapter,section,subsection,subsubsection,equation,figure,table}
+      {\cs_if_exist:cT {c@##1}
+        {\prop_put:Nnx \l__pxann_saved_counters_prop {##1}{\int_use:c {c@##1}}
+         \int_gzero:c {c@##1}}}
+    % Annex numbering is local. Global LaTeX counters are restored after content,
+    % while labels retain the expanded annex-prefixed number written to the aux file.
+    \cs_set:Npn \thechapter {\thepxannex}
+    \tl_if_eq:NnTF \l__pxann_level_tl {chapter}
+      {\cs_set:Npn \thesection {\thepxannex.\arabic{section}}}
+      {\cs_set:Npn \thesection {\thepxannex}
+       \cs_set:Npn \thesubsection {\thepxannex.\arabic{subsection}}}
+    \cs_set:Npn \theequation {\thepxannex.\arabic{equation}}
+    \cs_set:Npn \thefigure {\thepxannex.\arabic{figure}}
+    \cs_set:Npn \thetable {\thepxannex.\arabic{table}}
+    \cs_set:Npn \theHchapter {\l__pxann_anchor_prefix_tl.\arabic{pxannex}}
+    \cs_set:Npn \theHsection {\l__pxann_anchor_prefix_tl.\arabic{pxannex}.\arabic{section}}
+    \cs_set:Npn \theHsubsection {\l__pxann_anchor_prefix_tl.\arabic{pxannex}.\arabic{section}.\arabic{subsection}}
+    \cs_set:Npn \theHsubsubsection {\l__pxann_anchor_prefix_tl.\arabic{pxannex}.\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+    \cs_set:Npn \theHequation {\l__pxann_anchor_prefix_tl.\arabic{pxannex}.\arabic{equation}}
+    \cs_set:Npn \theHfigure {\l__pxann_anchor_prefix_tl.\arabic{pxannex}.\arabic{figure}}
+    \cs_set:Npn \theHtable {\l__pxann_anchor_prefix_tl.\arabic{pxannex}.\arabic{table}}
+    \tl_if_eq:NnTF \l__pxann_level_tl {chapter}
+      {\cs_if_exist:NTF \chapter
+        {\chapter*{\l__pxann_name_tl\space\thepxannex :~#2}}
+        {\PackageError{pxEND/annex}{Chapter~annexes~require~a~chapter-capable~document}{Use~level=section.}}}
+      {\section*{\l__pxann_name_tl\space\thepxannex :~#2}}
+    \protected@edef\@currentlabel{\thepxannex}
+    \def\@currentlabelname{#2}
+    \bool_if:NT \l__pxann_toc_bool
+      {\addcontentsline{toc}{\l__pxann_level_tl}{\l__pxann_name_tl\space\thepxannex :~#2}}
+    \tl_if_blank:VF \l__pxann_label_tl {\exp_args:NV \label \l__pxann_label_tl}
+    % This label identifies this annex only; nested registrations must not reuse it.
+    \tl_clear:N \l__pxann_label_tl
+    #3
+    % Flush pending floats before restoring their numbering context.
+    \par\clearpage
+    \prop_map_inline:Nn \l__pxann_saved_counters_prop
+      {\int_gset:cn {c@##1}{##2}}
+    \group_end:
+  }
+
+
+
+%% Composition interface for source previews and document extensions.
+%% #1 per-annex options; #2 title; #3 deferred body. Preserve local setup for later use.
+\cs_new_protected:Npn \pxEND_add_annex:nnn #1#2#3
+  {\group_begin:\keys_set:nn {pxEND/annex}{#1}
+   \seq_gput_right:Nx \g__pxann_pending_seq
+     {\exp_not:N \__pxann_print:nnn
+       {label={\exp_not:V \l__pxann_label_tl},name={\exp_not:V \l__pxann_name_tl},
+        level={\exp_not:V \l__pxann_level_tl},
+        anchor-prefix={\exp_not:V \l__pxann_anchor_prefix_tl},
+        toc=\bool_if:NTF \l__pxann_toc_bool {true}{false},
+        pagebreak=\bool_if:NTF \l__pxann_pagebreak_bool {true}{false}}
+       {\exp_not:n {#2}}{\exp_not:n {#3}}}
+   \group_end:}
+%% Consume each annex once, including annexes registered by deferred source content.
+%% Process the current batch before newly registered material, preserving queue order.
+\cs_new_protected:Npn \__pxann_print_pending:
+  {\group_begin:\seq_set_eq:NN \l__pxann_print_seq \g__pxann_pending_seq
+   \seq_gclear:N \g__pxann_pending_seq
+   \seq_map_inline:Nn \l__pxann_print_seq {##1}\group_end:
+   \seq_if_empty:NF \g__pxann_pending_seq {\__pxann_print_pending:}}
+\cs_new_protected:Npn \__pxgls_print_all:
+  {\group_begin:
+   \bool_if:NT \l__pxgls_terms_bool {\tl_set:Nn \l__pxgls_type_tl {main}\__pxgls_print:}
+   \bool_if:NT \l__pxgls_acronyms_bool {\tl_set:Nn \l__pxgls_type_tl {acronym}\__pxgls_print:}
+   \group_end:}
+
+%% Common placement; individual renderers keep their own formatting and counters.
+\bool_new:N \l__pxend_auto_bool
+\bool_new:N \l__pxend_manual_bool
+\clist_new:N \l__pxend_order_clist
+\tl_new:N \g__pxend_bib_files_tl
+\tl_new:N \g__pxend_bib_style_tl
+\bool_new:N \g__pxend_bib_biblatex_bool
+\bool_new:N \g__pxend_bib_printed_bool
+\keys_define:nn {pxEND}
+  {print .choice:,
+   print / auto .code:n = \bool_set_true:N \l__pxend_auto_bool,
+   print / manual .code:n = \bool_set_false:N \l__pxend_auto_bool,
+   print .initial:n = auto,
+   order .code:n =
+     {
+       \clist_set:Nn \l__pxend_order_clist {#1}
+       \int_zero:N \l_tmpa_int
+       \int_zero:N \l_tmpb_int
+       \clist_map_indexed_inline:Nn \l__pxend_order_clist
+         {
+           \str_if_eq:nnT {##2}{annexes}{\int_set:Nn \l_tmpa_int {##1}}
+           \str_if_eq:nnT {##2}{glossaries}{\int_set:Nn \l_tmpb_int {##1}}
+         }
+       \int_compare:nNnT {\l_tmpa_int} > {\l_tmpb_int}
+         {\PackageError{pxEND}{Annexes must precede glossaries}
+           {Use order={bibliography,annexes,glossaries}.}}
+     },
+   order .initial:n = {bibliography,annexes,glossaries},
+   glossary .code:n = \keys_set:nn {pxEND/glossary}{#1},
+   annex .code:n = \keys_set:nn {pxEND/annex}{#1}}
+%% #1 BibTeX style; #2 database list. Registration writes no content prematurely.
+\cs_new_protected:Npn \__pxend_bibliography:nn #1#2
+  {
+    \tl_gset:Nn \g__pxend_bib_style_tl {#1}
+    \tl_gset:Nn \g__pxend_bib_files_tl {#2}
+    \@ifpackageloaded{biblatex}
+      {
+        \bool_gset_true:N \g__pxend_bib_biblatex_bool
+        \clist_map_inline:nn {#2}
+          {
+            \regex_match:nnTF {\.bib\s*\Z} {##1}
+              {\addbibresource{##1}}
+              {\addbibresource{##1.bib}}
+          }
+      }{}
+  }
+\cs_new_protected:Npn \__pxend_print_bibliography:
+  {\tl_if_blank:VF \g__pxend_bib_files_tl
+    {\bool_if:NF \g__pxend_bib_printed_bool
+      {\bool_gset_true:N \g__pxend_bib_printed_bool
+       \group_begin:
+       %% Use one translated title for both the printed heading and its TOC entry.
+       \tl_set:Nx \l_tmpa_tl {\cs_if_exist:NTF \refname {\refname}{\bibname}}
+       \cs_set:Npx \refname {\exp_not:V \l_tmpa_tl}
+       \cs_set_eq:NN \bibname \refname
+       \clearpage
+       \bool_if:NF \g__pxend_bib_biblatex_bool
+         {\phantomsection
+          \cs_if_exist:NTF \chapter
+            {\addcontentsline{toc}{chapter}{\cs_if_exist:NTF \bibname {\bibname}{\refname}}}
+            {\addcontentsline{toc}{section}{\refname}}}
+       \bool_if:NTF \g__pxend_bib_biblatex_bool
+         {\printbibliography[heading=bibintoc]}
+         {
+           \exp_args:NV \bibliographystyle \g__pxend_bib_style_tl
+           \cs_if_exist:NT \chapter {\cs_set_eq:NN \section \chapter}
+           \exp_args:NV \bibliography \g__pxend_bib_files_tl
+         }
+       \group_end:}}}
+%% Explicit placement and automatic placement share ordering and once-only state.
+%% Annexes precede noindex glossaries by default so annex-only terms are collected.
+\cs_new_protected:Npn \__pxend_print:
+  {\clist_map_inline:Nn \l__pxend_order_clist
+    {\str_case:nnF {##1}
+      {{bibliography}{\__pxend_print_bibliography:}
+       {annexes}{\bool_if:nT {\l__pxann_auto_bool || \l__pxend_manual_bool} {\__pxann_print_pending:}}
+       {glossaries}{\bool_if:nT {\l__pxgls_auto_bool || \l__pxend_manual_bool} {\__pxgls_print_all:}}}
+      {\PackageError{pxEND}{Unknown~end-matter~part~'##1'}{Use~bibliography,~annexes~or~glossaries.}}}}
+\endinput

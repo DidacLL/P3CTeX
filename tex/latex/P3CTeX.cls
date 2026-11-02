@@ -126,15 +126,7 @@
 }
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
-	\__ifglossary:nn{
-		\makenoidxglossaries
-%% \GL*{<glossary label>}
-%% Glossary shorthand created only when glossary support is enabled.
-%% * - print the long acronym form; unstarred prints the short form.
-%% #1 - glossary/acronym label.
-		\NewDocumentCommand{\GL}{s m}{\IfBooleanTF{#1}{\acrlong{#2} }{\acrshort{#2} } }
-	}{}
-	\__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
+  \__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
 }
 \AfterBeginDocument{
 	\__ifcover:nn{
@@ -145,31 +137,6 @@
 			\__iftoc:nn{\PECTeXprintTOC*}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par \__pxDEV_HRule:}{}
 		}{\__iftoc:nn{\PECTeXprintTOC}{}}
 	}
-}
-\AtEndDocument{
-%	\glsaddall
-
-	\__ifglossary:nn{
-		\@ifpackageloaded{pxMEM}{
-			% MEM uses chapter-level glossary headings and Babel labels.
-			% Only used entries are printed by the existing no-index backend.
-			\clearpage
-			\setglossarysection{chapter}
-			\glstoctrue
-			\printnoidxglossary[type=\acronymtype,
-				title={\iflanguage{catalan}{Acrònims}{\iflanguage{spanish}{Acrónimos}{Acronyms}}}]
-			\printnoidxglossary[title=\glossaryname]
-		}{
-			% Preserve the established PAC/PR glossary presentation.
-			\clearpage
-			\addcontentsline{toc}{section}{Glossari}
-			\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
-			\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
-		}
-	}{}
-%	\__ifbibliography:nn{
-%		\pxBib{ \l__pxdoc_bibpath_tl }
-%	}{}
 }
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.

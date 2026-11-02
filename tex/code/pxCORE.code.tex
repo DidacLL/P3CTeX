@@ -77,7 +77,16 @@
 	SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
-	unknown		.code:n ={}
+	END         .bool_set:N = \l_pxcore_end_use_bool,
+    END         .initial:n = false,
+    END         .default:n = true,
+  annexes     .meta:n = {END = #1},
+    annexes   .default:n = true,
+  glossaries  .meta:n = {END = #1},
+    glossaries .default:n = true,
+  endmatter   .meta:n = {END = #1},
+    endmatter .default:n = true,
+  unknown     .code:n ={}
 }
 \ProcessKeysOptions{ pxCORE }
 %% =================================
@@ -101,6 +110,7 @@
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
+\bool_if:NT \l_pxcore_end_use_bool { \RequirePackage{pxEND} }
 \bool_if:NT \l_pxcore_lst_use_bool {}
 
 
