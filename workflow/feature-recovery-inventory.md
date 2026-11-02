@@ -45,12 +45,12 @@ Legend: B = authoritative branch, D = discarded \`feature/core-modules-audit-and
 
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
-| Named evaluated variables, scoped update \`\\pxDefVar\`, \`\\pxSetVar\` | D \`latex/pxCALC.sty\`, \`code/pxCALC.code.tex\` | Missing | Scoped definitions, no extra global framework | Awaiting implementation |
-| Reusable live formulas and named symbol/unit \`\\pxDefFormula\` | D pxCALC | Missing | One-source formula, current input values | Awaiting implementation |
-| Nested \`\\frac\`, \`\\sqrt\`, slots, formula chains | D pxCALC | Missing | Diagnose cycles/missing names, preserve math display | Awaiting implementation |
-| \`\\pxSolve\` 1/2/3 steps, precision, units, per-call overrides | D pxCALC | Missing | Local options, no global presentation state | Awaiting implementation |
-| Numerical expressions \`\\pxCalc\`, unrounded store \`\\pxCalcStore\` | D pxCALC | Missing | Defined numeric results, no unintended rounding | Awaiting implementation |
-| Class/Core optional \`calculations\` / \`CALC\` selection | D pxCORE | Missing | Add opt-in keys only, preserve load-time class behavior | Awaiting implementation |
+| Named evaluated variables, scoped update \`\\pxDefVar\`, \`\\pxSetVar\` | D \`latex/pxCALC.sty\`, \`code/pxCALC.code.tex\` | Missing | Scoped definitions, no extra global framework | Implemented and verified |
+| Reusable live formulas and named symbol/unit \`\\pxDefFormula\` | D pxCALC | Missing | One-source formula, current input values | Implemented and verified |
+| Nested \`\\frac\`, \`\\sqrt\`, slots, formula chains | D pxCALC | Missing | Diagnose cycles/missing names, preserve math display | Implemented and verified |
+| \`\\pxSolve\` 1/2/3 steps, precision, units, per-call overrides | D pxCALC | Missing | Local options, no global presentation state | Implemented and verified |
+| Numerical expressions \`\\pxCalc\`, unrounded store \`\\pxCalcStore\` | D pxCALC | Missing | Defined numeric results, no unintended rounding | Implemented and verified |
+| Class/Core optional \`calculations\` / \`CALC\` selection | D pxCORE | Missing | Add opt-in keys only, preserve load-time class behavior | Recovered but needing correction |
 
 ## Diagrams — owner one coherent diagram package (not forwarding pxCMP wrappers)
 
@@ -124,3 +124,18 @@ Legend: B = authoritative branch, D = discarded \`feature/core-modules-audit-and
 Verification ledger must record individual test commands, outputs, branch/commit and PDF inspection. The discarded ledger reports a passing CI run for commit \`dd8f6fd\` but expressly states that most subsequent checkpoints were not fully revalidated; that result is **not evidence** for this reconstruction.
 
 No file from a discarded branch may be merged wholesale, and an unrecovered capability must not be declared unnecessary merely because its previous package or API design was rejected.
+
+## Checkpoint: calculations recovered (2026-11-02)
+
+Authoritative commits, in order:
+- \`40c74eb\`: \`tex/code/pxCALC.code.tex\`, numerical evaluation and formula storage.
+- \`4693971\`: \`tex/latex/pxCALC.sty\`, public commands.
+- \`c5113ee\`: restored original targeted \`tex/tests/pxCALC.test.tex\`.
+- \`0c70199\`: \`tex/code/pxCORE.code.tex\`, opt-in \`CALC\` / \`calculations\` only.
+- Additional scope and class integration test commits recorded in Git history.
+
+Functional equivalence: named/scoped values; live formulas, nested math, substitution; three steps; unit/precision; per-use values; unrounded store; missing/cyclic names. Public APIs remain \`\\pxDefVar\`, \`\\pxSetVar\`, \`\\pxDefFormula\`, \`\\pxSolve\`, \`\\pxCalc\`, \`\\pxCalcStore\`. No new global display settings, duplicate calculations engine, class parsing changes, or forced dependency on pxLST/pxSRC. Removed an unused \`\\prop_get:NnNTF\` variant from the discarded implementation.
+
+**Actual local test evidence** (TeX Live pdfLaTeX, standalone module with the reconstructed implementation): \`test.tex\` compiled with \`-halt-on-error -interaction=nonstopmode\`, emitted \`PXCALC-PASS\` and created a one-page PDF; also diagnosed missing name and circular dependency as expected. \`scope.tex\` emitted \`PXCALC-SCOPE-PASS\`, including local group and values override tests. Rendered PDF inspected for equation, substitution, unit, and result stages. The matching repository fixtures are \`pxCALC.test.tex\` and \`pxCALC.scope.test.tex\`.
+
+**Still pending**: class-level \`pxCALC.class-integration.test.tex\` compilation against the complete authoritative tree, optional/default module loading regression, and cross-module regression. Therefore the \`pxCORE\` selector is *not* classified as fully integrated/verified. Do not mark the overall calculations module complete until those checks pass. All other inventory rows remain open.
