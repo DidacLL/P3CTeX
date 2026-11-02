@@ -15,7 +15,7 @@ jobs:
           docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work/tex/tests \
             -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
             ghcr.io/xu-cheng/texlive-debian:latest bash -euc '
-              tests="pxANN.automatic.test pxANN.bibliography-integration.test pxGLS.automatic.test pxGLS.entries.test pxGLS.test pxEND.PAC.test pxEND.PR.test pxEND.MEM.test pxEND.manual-all.test pxEND.bibtex.test pxEND.biblatex.test pxGLS.external.test"
+              tests="pxANN.automatic.test pxANN.bibliography-integration.test pxGLS.automatic.test pxGLS.entries.test pxGLS.test pxEND.PAC.test pxEND.PR.test pxEND.MEM.test pxEND.manual-all.test pxEND.bibtex.test pxEND.biblatex.test pxGLS.external.test pxEND.locale.CAT.test pxEND.locale.ES.test pxEND.locale.EN.test pxMEM.TFG-integration.test pxMEM.standalone.test"
               for name in $tests; do
                 for pass in 1 2 3; do
                   pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > "$name.pass$pass.log" 2>&1 || { tail -n 100 "$name.pass$pass.log"; exit 1; }
@@ -36,6 +36,9 @@ jobs:
               grep -q DEFERRED-GLOSSARY-PAC pxEND.PAC.test.txt
               grep -q MEM-ONLY-GLOSSARY-ENTRY pxEND.MEM.test.txt
               grep -q MANUAL-UNUSED pxEND.manual-all.test.txt
+              grep -q Glossari pxEND.locale.CAT.test.txt
+              grep -q Glosario pxEND.locale.ES.test.txt
+              grep -q Glossary pxEND.locale.EN.test.txt
               grep -q endmatter2026 pxEND.bibtex.test.bbl
               grep -q endmatter2026 pxEND.biblatex.test.bbl
               grep -q UNUSED-DESCRIPTION pxGLS.external.test.txt

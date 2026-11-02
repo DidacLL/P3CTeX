@@ -95,11 +95,11 @@ Legend: B = authoritative branch, D = discarded `feature/core-modules-audit-and-
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
 | Explicit + queued annexes, numbering restore, one-time printing | D `pxEND.sty/.code.tex`; B pxMEM annex | Partial | One annex engine; class/MEM adapters; no permanent `\appendix` in PAC | Recovered but needing correction |
-| Auto annex queue order before glossary, chapter/section selection, cleveref names | D pxEND, ledger F03/F07/S04 | Missing | Own hooks once, localized reference names | Awaiting implementation |
+| Auto annex queue order before glossary, chapter/section selection, cleveref names | D pxEND, ledger F03/F07/S04 | Missing | Shared queue/hook and CAT/ES/EN names; compile/anchor verification pending | Recovered but needing correction |
 | Optional glossary modes: used/all, auto/manual, toc, per-type output | D pxEND; B class `glossary` | Partial | Preserve existing class activation; no competing backend | Recovered but needing correction |
-| Glossary declarations, acronyms/terms, group maps/files | D `\pxTerm`, `\pxAcronym`, etc. | Missing | Reuse glossaries and existing localization | Awaiting implementation |
-| External indexed glossary backend tests | D pxEND + tests | Missing | Only opt-in backend, retain default no-index | Awaiting implementation |
-| Native BibTeX/biblatex-compatible `\pxBibliography` convenience | D pxEND | Missing | Do not force backend or modify normal `\cite` | Awaiting implementation |
+| Glossary declarations, acronyms/terms, group maps/files | D `\pxTerm`, `\pxAcronym`, etc. | Missing | Reused `glossaries`, batch mappings and definition-file loader; compile pending | Recovered but needing correction |
+| External indexed glossary backend tests | D pxEND + tests | Missing | Opt-in indexed backend, no-index default; test restored, execution pending | Recovered but needing correction |
+| Native BibTeX/biblatex-compatible `\pxBibliography` convenience | D pxEND | Missing | Implemented backend-sensitive optional wrapper; integration pending | Recovered but needing correction |
 | Citation/glossary propagation through native versus code sources | D pxSRC + pxEND | Partial | Execution only for native; metadata explicit for code | Recovered but needing correction |
 
 ## Existing-module corrections, configuration, tests
@@ -209,10 +209,10 @@ This expands the domain rows into individual public interfaces. Each entry was f
 | `\pxSWOT`, `\pxPMsetup` | D pxPM; B absent | pxPM; reuse table/localization | Awaiting implementation |
 | `\pxGantt`, `\pxGanttItem`, `\pxGanttEnd`, `\endpxGantt` | D pxPM, M pxGNT; B absent | pxPM; single chart engine, coherent command/environment behavior | Awaiting implementation |
 | `\pxGlossarySetup`, `\pxGlossaryFile`, `\pxPrintGlossary`, `\pxPrintGlossaries` | D pxEND; B class-only auto glossary | Endmatter/class existing glossary; preserve user control and backend | Recovered but needing correction |
-| `\pxAcronym`, `\pxTerm`, `\pxTerms`, `\pxAcronyms` | D pxEND; B absent | Existing glossary facilities; no duplicate glossary backend | Awaiting implementation |
+| `\pxAcronym`, `\pxTerm`, `\pxTerms`, `\pxAcronyms` | D pxEND; B absent | Implemented through standard glossaries, with grouped definitions; execution pending | Recovered but needing correction |
 | `\GL`, `\GL*` | D pxEND and B P3CTeX class | Class/glossary owner; avoid duplicate definitions | Recovered but needing correction |
 | `\pxAnnexSetup`, `\pxAnnex`, `\pxAddAnnex`, `\pxPrintAnnexes` | D pxEND; B pxMEM adapter only | Existing annex/MEM capabilities, optional PAC/PR support | Recovered but needing correction |
-| `\pxEndMatterSetup`, `\pxPrintEndMatter`, `\pxBibliography` | D pxEND; B absent | Document-level endmatter; no bibliography backend replacement | Awaiting implementation |
+| `\pxEndMatterSetup`, `\pxPrintEndMatter`, `\pxBibliography` | D pxEND; B absent | Implemented optional placement/ordering and backend-aware bibliography convenience; execution pending | Recovered but needing correction |
 
 The API reconciliation distinguishes a feature from its old spelling: duplicated forwarding names may change, but the capability remains mandatory. The earlier `pxCMP`/`pxGNT` modules are historical references only; their functionality must remain represented without recreating redundant owners.
 
@@ -253,3 +253,56 @@ Branch: `restart/pre-tfg-clean-2026-11-01`.
 Additional isolated pdfLaTeX inline probe emitted `PXLST-INLINE-PASS` for both delimiter-based and braced verbatim code, including quoted shell text. This is evidence for the underlying renderer/parser only, not a full-package regression. `e0689b7` also corrected old pxLST comments that advertised nonexistent setup/preset commands.
 
 **Remaining:** compile the tracked `pxLST.recovery.test.tex` against the complete package; verify specialized JLex/CUP quote escapes and syntax styles, package-local style scoping, and source/terminal interaction in P3CTeX PAC/PR/MEM documents. No full integration result is claimed. Public API changes relative to discarded development: use `miniCode`, `CodeBox`, `CodeBox*` instead of `pxCodeMini`, `pxCodeBox`, `pxCodeBreak`; use `\pxCodeSet` instead of the redundant unreleased `\pxLSTsetup`.
+
+
+## Checkpoint: annexes, glossary, bibliography and endmatter (2026-11-02)
+
+Task branch: \`recovery/endmatter-2026-11-02\` from authoritative
+\`8cfae208bcb887ba93c019be28dc9b551bcaf37c\`. This is an
+**implemented, committed, but not yet compiled/verified** reconstruction,
+so relevant rows remain "Recovered but needing correction"; none is
+prematurely labelled "Implemented and verified".
+
+- \`b65a3dd\`: optional \`pxEND.sty\` + \`pxEND.code.tex\` recover
+  \`\pxAnnexSetup\`, immediate \`\pxAnnex\`, deferred \`\pxAddAnnex\`,
+  explicit \`\pxPrintAnnexes\`, one-time queue draining and nested registration;
+  section/chapter headings, local figure/table/equation counters, unique H
+  destinations, labels/cleveref, TOC/pagebreak controls and localized headings.
+  \`pxMEMannex\` delegates to that engine and preserves its signature and
+  \`pxmemannex\` Hyperref type. No PAC/PR global \`\appendix\`.
+- Same commit: \`\pxGlossarySetup\`, \`\pxGlossaryFile\`,
+  \`\pxPrintGlossary\`, \`\pxPrintGlossaries\`, \`\pxTerm\`, \`\pxTerms\`,
+  \`\pxAcronym\`, \`\pxAcronyms\`; independent lists, used/all,
+  auto/manual, TOC, per-type selection, standard \`glossaries\` no-index
+  default and external backend option, CAT/ES/EN titles. Exactly one
+  \`\GL\` / \`\GL*\` definition (in endmatter, not the class).
+- Same commit: optional \`\pxBibliography\`, ordinary BibTeX or
+  preloaded biblatex backend, native citations unchanged, one-time
+  output. \`\pxEndMatterSetup\` / \`\pxPrintEndMatter\` coordinate
+  bibliography, queued annexes, then glossaries. No generic framework.
+- \`a4f5798\`: restored six discarded targeted pxANN/pxGLS fixtures.
+  \`434453b\`: new PAC/PR/MEM and bibliography/manual fixtures plus
+  GitHub Actions multi-pass PDF matrix. \`06e4bf5\`: CAT/ES/EN fixtures,
+  shared glossary-definition file and \`tex/doc/endmatter.md\` explaining
+  the stable annex API and its limits.
+- \`8a35b73\`: correct expl3 choice key value capture (not scratch alias);
+  warn when annex queue remains pending. \`268f624\`: preserve
+  glossary opt-in for annex-only and MEM-only class profiles.
+
+**Stable pxSRC contract**: \`\pxAddAnnex[label=ann:source]{Full source}{<native body>}\`
+registers a deferred *unexpanded* body, accepts all annex keys, prints it
+once with its heading/label and enables ordinary \`\ref\`/\`\cref\` links.
+\`pxSRC\`/ \`pxLST\` will own all height measurements, previews and source
+rendering; no preview functionality was implemented in this task.
+
+**Verification actually obtained**: GitHub branch/commit and blob reads
+confirmed; 10 static architectural/registration checks passed. The pushed
+\`.github/workflows/endmatter-recovery.yml\` run
+[41436292956](https://github.com/DidacLL/P3CTeX/actions/runs/41436292956)
+failed during startup *before creating a job* (zero jobs). There are
+**no executed class integration compilations, no multipass test passes,
+no BibTeX/biber/makeglossaries results and no inspected PDF artifacts**
+for this task. All regression fixtures are committed but unverified.
+The next step is to run/fix the matrix in a LaTeX-enabled checkout, inspect
+PDF text and visual output, re-run the existing MEM/PAC/PR tests, then
+promote individual rows to "Implemented and verified" as justified.
