@@ -507,7 +507,7 @@
        \tl_if_blank:VT \@currentlabelname
           {\tl_set_eq:NN \@currentlabelname \l__pxsrc_input_title_tl}
        \tl_if_blank:VF \l__pxsrc_input_label_tl
-          {\exp_args:NV \label \l__pxsrc_input_label_tl}
+          {\exp_args:NV \__pxsrc_document_label:n \l__pxsrc_input_label_tl}
       }
    \str_case:Vn \l__pxsrc_input_mode_tl
     {
@@ -521,8 +521,8 @@
              {\peek_meaning:NTF [
                {\__pxsrc_prefixed_label_optional:w}
                {\__pxsrc_prefixed_label:n}}}
-         \cs_if_exist:NT \ltx@label
-           {\cs_set_eq:NN \ltx@label \label}
+         % Do not rebind \ltx@label: cleveref's handler calls it.
+         % Rebinding both handlers recursively invokes the prefix wrapper.
          \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl
         }
       {text}
