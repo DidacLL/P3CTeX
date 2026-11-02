@@ -280,6 +280,18 @@
 % The extraction writer is adapted from the former pxSRC source-input implementation.
 \prop_new:N \g__pxsrc_sources_prop
 \prop_new:N \g__pxsrc_source_options_prop
+\newcounter{pxsource}
+% Capture the effective document label handler after cleveref/hyperref load.
+\cs_new_eq:NN \__pxsrc_document_label:n \label
+\AddToHook{begindocument/end}
+  {\cs_gset_eq:NN \__pxsrc_document_label:n \label}
+\cs_new_protected:Npn \__pxsrc_prefixed_label:n #1
+  {\use:e {\exp_not:N \__pxsrc_document_label:n
+    {\l__pxsrc_input_label_prefix_tl \exp_not:n {#1}}}}
+\cs_new_protected:Npn \__pxsrc_prefixed_label_optional:w [#1]#2
+  {\use:e {\exp_not:N \__pxsrc_document_label:n
+    [\exp_not:n {#1}]
+    {\l__pxsrc_input_label_prefix_tl \exp_not:n {#2}}}}
 \ior_new:N \l__pxsrc_input_ior
 \int_new:N \g__pxsrc_piece_int
 \newwrite\pxSRCout
@@ -299,6 +311,11 @@
 \tl_new:N \l__pxsrc_input_options_tl
 \tl_new:N \l__pxsrc_input_region_prefix_tl
 \tl_new:N \l__pxsrc_input_region_suffix_tl
+\tl_new:N \l__pxsrc_input_caption_tl
+\tl_new:N \l__pxsrc_input_label_tl
+\tl_new:N \l__pxsrc_input_label_prefix_tl
+\tl_new:N \l__pxsrc_input_cite_tl
+\clist_new:N \l__pxsrc_input_terms_clist
 \seq_new:N \l__pxsrc_input_heading_seq
 \int_new:N \l__pxsrc_input_first_int
 \int_new:N \l__pxsrc_input_last_int
@@ -327,7 +344,12 @@
    title .tl_set:N = \l__pxsrc_input_title_tl,
    listing-options .tl_set:N = \l__pxsrc_input_options_tl,
    region-prefix .tl_set:N = \l__pxsrc_input_region_prefix_tl,
-   region-suffix .tl_set:N = \l__pxsrc_input_region_suffix_tl
+   region-suffix .tl_set:N = \l__pxsrc_input_region_suffix_tl,
+   caption .tl_set:N = \l__pxsrc_input_caption_tl,
+   label .tl_set:N = \l__pxsrc_input_label_tl,
+   label-prefix .tl_set:N = \l__pxsrc_input_label_prefix_tl,
+   cite .tl_set:N = \l__pxsrc_input_cite_tl,
+   terms .clist_set:N = \l__pxsrc_input_terms_clist
  }
 \cs_new_protected:Npn \__pxsrc_input_error:n #1
  {\bool_set_false:N \l__pxsrc_input_valid_bool
@@ -345,6 +367,11 @@
    \tl_clear:N \l__pxsrc_input_options_tl
    \tl_set:Nx \l__pxsrc_input_region_prefix_tl {\c_percent_str}
    \tl_clear:N \l__pxsrc_input_region_suffix_tl
+   \tl_clear:N \l__pxsrc_input_caption_tl
+   \tl_clear:N \l__pxsrc_input_label_tl
+   \tl_clear:N \l__pxsrc_input_label_prefix_tl
+   \tl_clear:N \l__pxsrc_input_cite_tl
+   \clist_clear:N \l__pxsrc_input_terms_clist
    \int_set:Nn \l__pxsrc_input_first_int {1}
    \int_zero:N \l__pxsrc_input_last_int
    \keys_set:nn {pxSRC/input} {#1}
@@ -471,10 +498,33 @@
  {
    \str_if_eq:VnT \l__pxsrc_input_container_tl {minipage}
      {\begin{minipage}{\l__pxsrc_input_width_tl}}
+   \bool_lazy_or:nnT
+      {!\tl_if_blank_p:V \l__pxsrc_input_caption_tl}
+      {!\tl_if_blank_p:V \l__pxsrc_input_label_tl}
+      {
+       \refstepcounter{pxsource}
+       \tl_set_eq:NN \@currentlabelname \l__pxsrc_input_caption_tl
+       \tl_if_blank:VT \@currentlabelname
+          {\tl_set_eq:NN \@currentlabelname \l__pxsrc_input_title_tl}
+       \tl_if_blank:VF \l__pxsrc_input_label_tl
+          {\exp_args:NV \label \l__pxsrc_input_label_tl}
+      }
    \str_case:Vn \l__pxsrc_input_mode_tl
     {
       {native}
-        {\exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}
+        {
+         % The prefix affects only labels defined in this native source.
+         % A nested, unprefixed input restores the real label handler.
+         \tl_if_blank:VTF \l__pxsrc_input_label_prefix_tl
+           {\cs_set_eq:NN \label \__pxsrc_document_label:n}
+           {\cs_set_protected:Npn \label
+             {\peek_meaning:NTF [
+               {\__pxsrc_prefixed_label_optional:w}
+               {\__pxsrc_prefixed_label:n}}}
+         \cs_if_exist:NT \ltx@label
+           {\cs_set_eq:NN \ltx@label \label}
+         \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl
+        }
       {text}
         {\use:x
           {\exp_not:N \VerbatimInput
@@ -498,6 +548,18 @@
               escapeinside={},escapechar={},mathescape=false,texcl=false}}
         }
     }
+   \tl_if_blank:VF \l__pxsrc_input_caption_tl
+     {
+       \par\smallskip\noindent
+       \textbf{
+         \cs_if_exist:NTF \pxDEFsourcename
+           {\pxDEFsourcename}{Source}
+         ~\thepxsource :}
+       ~\l__pxsrc_input_caption_tl\par
+     }
+   \tl_if_blank:VF \l__pxsrc_input_cite_tl
+     {\par\noindent\exp_args:NV \cite \l__pxsrc_input_cite_tl\par}
+   \clist_map_inline:Nn \l__pxsrc_input_terms_clist {\glsadd{##1}}
    \str_if_eq:VnT \l__pxsrc_input_container_tl {minipage}
      {\end{minipage}}
  }
@@ -509,6 +571,10 @@
        {\cs_if_exist:NF \pxLST_input_file:nnnn
          {\__pxsrc_input_error:n
            {Code~sources~require~pxLST.~Load~the~LST~tool~first}}}
+     \clist_if_empty:NF \l__pxsrc_input_terms_clist
+       {\cs_if_exist:NF \glsadd
+         {\__pxsrc_input_error:n
+           {Source~terms~require~glossaries.~Load~the~glossary~tool~first}}}
      \file_get_full_name:nNTF {#2} \l__pxsrc_input_file_tl
       {
        \exp_args:NV \filename@parse \l__pxsrc_input_file_tl
