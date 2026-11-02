@@ -83,6 +83,10 @@
     unknown .code:n = {\tl_put_right:Nx \l__pxdoc_glossary_entry_options_tl
       {\l_keys_key_str={\exp_not:n {#1}},}}
   }
+\cs_new_protected:Npn \__pxdoc_glossary_missing_entry:n #1
+  {\PackageError{P3CTeX}{Glossary entry '#1' needs fields}{}}
+\cs_new_protected:Npn \__pxdoc_glossary_term:nn #1#2
+  {\newglossaryentry{#1}{#2}}
 \cs_new_protected:Npn \__pxdoc_acronym_entry:nn #1#2
   {
     \group_begin:
@@ -228,13 +232,11 @@
         \NewDocumentCommand\pxTerm{O{} m m +m}
           {\newglossaryentry{#2}{name={#3},description={#4},#1}}
         \NewDocumentCommand\pxTerms{+m}
-          {\keyval_parse:NNn
-            {\PackageError{P3CTeX}{Term entry needs an id and fields}{}}
-            {\newglossaryentry} {#1}}
+          {\keyval_parse:NNn \__pxdoc_glossary_missing_entry:n
+             \__pxdoc_glossary_term:nn {#1}}
         \NewDocumentCommand\pxAcronyms{+m}
-          {\keyval_parse:NNn
-            {\PackageError{P3CTeX}{Acronym entry needs an id and fields}{}}
-            \__pxdoc_acronym_entry:nn {#1}}
+          {\keyval_parse:NNn \__pxdoc_glossary_missing_entry:n
+             \__pxdoc_acronym_entry:nn {#1}}
         \NewDocumentCommand\pxPrintGlossary{O{}}
           {\group_begin:
            \tl_set:Nn \l__pxdoc_glossary_type_tl {main}
