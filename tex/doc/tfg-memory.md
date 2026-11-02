@@ -22,16 +22,26 @@ literal one-line section/subsection titles. Existing LaTeX labels are kept;
 importing the same labelled material twice can therefore duplicate labels.
 See `source-inclusion.md` for region, range and path limitations.
 
-MEM uses the existing contents machinery. Call native `\listoffigures`
-and `\listoftables` where wanted; their headings use chapter hierarchy.
+MEM uses the existing contents machinery. With the class TOC enabled,
+`\pxMEMsetup{figures=true,tables=true}` (both default) places chapter-level
+figure/table lists after the TOC; disable either list or use `\pxMEMpreliminaries`
+for manual preliminary placement. `chapter-style` configures MEM chapter headings.
 Annexes are queued by `\pxMEMannex[label={ann:source}]{Title}{Content}`
-and printed at document end, preserving the main chapter/section counters.
+and printed at document end, preserving the main counters. Annex references
+use their own Hyperref destinations and are named for Cleveref when loaded.
 
-Set `licence={CC BY-NC-SA 4.0}` through `\pxTFGsetup`, then call
-`\pxTFGlicencepage` explicitly where required. The command uses bundled
-artwork for the six supported CC codes when found, and prints any other
-licence text without assigning it CC artwork. Artwork paths depend on the
-source tree or TeX installation exposing `tex/code/licenc/`.
+`\pxTFGsetup` keeps tutor, PRA, area, credits, keywords, licence and
+presentation options within TFG. Declare CAT/ES/EN summaries separately with
+`\pxTFGabstract{CAT|ES|EN}{...}`. In automatic mode (the default), TFG supplies
+its licence page, project information sheet, Catalan summary and available
+Spanish/English abstracts before the existing class TOC. For explicit placement,
+set `print=manual` and use `\pxTFGfrontmatter` or its individual
+`\pxTFGworkcard`, `\pxTFGabstracts`, `\pxTFGcoverdetails` commands.
+`\pxTFGlicencepage` remains available explicitly and reuses bundled artwork
+for recognized CC codes when present; unrecognized descriptions receive no
+assumed CC artwork. `licence-page=false` excludes it from automatic preliminaries.
+Artwork lookup depends on the source tree or TeX installation exposing
+`tex/code/licenc/`.
 
 The existing `glossary` option continues to use standard `glossaries`
 entries and prints used entries; MEM adjusts only its heading hierarchy
