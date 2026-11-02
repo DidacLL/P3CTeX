@@ -1,0 +1,130 @@
+\ProvidesExplFile{pxTFG.code.tex}{2026/11/02}{v0.4}
+  {TFG presentation, information sheet and multilingual abstracts}
+% Metadata and licence rendering remain in pxTFG.sty.
+\bool_new:N \l__pxtfg_auto_bool
+\bool_new:N \l__pxtfg_card_bool
+\bool_new:N \l__pxtfg_abstracts_bool
+\bool_new:N \l__pxtfg_licence_bool
+\keys_define:nn {pxTFG}
+  {
+    print .choice:,
+    print / auto .code:n = {\bool_set_true:N \l__pxtfg_auto_bool},
+    print / manual .code:n = {\bool_set_false:N \l__pxtfg_auto_bool},
+    print .initial:n = auto,
+    workcard .bool_set:N = \l__pxtfg_card_bool,
+    workcard .initial:n = true,
+    abstracts .bool_set:N = \l__pxtfg_abstracts_bool,
+    abstracts .initial:n = true,
+    licence-page .bool_set:N = \l__pxtfg_licence_bool,
+    licence-page .initial:n = true
+  }
+\prop_new:N \g__pxtfg_abstracts_prop
+
+\cs_new_protected:Npn \__pxtfg_heading:n #1
+  {
+    \cs_if_exist:NTF \chapter
+      {\chapter*{#1}\cs_if_exist:NT \phantomsection {\phantomsection}\addcontentsline{toc}{chapter}{#1}}
+      {\section*{#1}\cs_if_exist:NT \phantomsection {\phantomsection}\addcontentsline{toc}{section}{#1}}
+  }
+\cs_new:Npn \__pxtfg_row:nn #1#2
+  {\textbf{#1} & #2 \\[0.65ex]}
+
+\cs_new_protected:Npn \__pxtfg_card_render:
+  {
+    \__pxtfg_heading:n
+      {\pxDEFtfgworkcard}
+    \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
+      \__pxtfg_row:nn
+        {\pxDEFtfgtitle}{\l__pxdata_subj_name_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgstudent}{\l__pxdata_student_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgdegree}{\l__pxdata_course_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgactivity}{\l__pxdata_activity_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgtutor}{\l__pxtfg_tutor_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgpra}{\l__pxtfg_pra_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgarea}{\l__pxtfg_area_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgcredits}{\l__pxtfg_credits_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
+      \__pxtfg_row:nn
+        {\pxDEFtfgkeywords}{\l__pxtfg_keywords_tl}
+      \__pxtfg_row:nn
+        {\pxDEFtfgdate}{\l__px_date_tl}
+    \end{tabular}
+    \par\bigskip
+  }
+
+%% Cover detail content uses the cover's own width/alignment, not negative offsets.
+%% Empty optional fields contribute no empty headings or fixed vertical gaps.
+\cs_new_protected:Npn \__pxtfg_cover_row:nN #1#2
+  {\tl_if_blank:VF #2 {\textbf{#1:}~\tl_use:N #2\par}}
+\cs_new_protected:Npn \__pxtfg_cover_details:
+  {\__pxtfg_cover_row:nN {\pxDEFtfgconsultant}\l__pxtfg_tutor_tl
+   \__pxtfg_cover_row:nN {\pxDEFtfgpra}\l__pxtfg_pra_tl
+   \__pxtfg_cover_row:nN {\pxDEFtfgarea}\l__pxtfg_area_tl}
+\cs_new_protected:Npn \__pxtfg_abstract:nn #1#2
+  {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1} {#2}}
+
+\cs_new_protected:Npn \__pxtfg_print_abstract:n #1
+  {
+    \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
+      {
+        \__pxtfg_heading:n
+          {\str_case:nn {#1} {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}
+        \tl_use:N \l_tmpa_tl \par
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_abstracts:
+  {
+    \__pxtfg_print_abstract:n {CAT}
+    \__pxtfg_print_abstract:n {ES}
+    \__pxtfg_print_abstract:n {EN}
+  }
+
+% The information sheet contains the Catalan summary; other supplied
+% summaries follow on separate pages.
+\cs_new_protected:Npn \__pxtfg_frontmatter_render:
+  {
+    \bool_if:NT \l__pxtfg_licence_bool {\pxTFGlicencepage}
+    \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:}
+    \bool_if:NT \l__pxtfg_abstracts_bool
+    {
+    \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
+      {
+        \par\medskip
+        \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
+        \tl_use:N \l_tmpa_tl\par
+      }
+    \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
+      {\clearpage\__pxtfg_print_abstract:n {ES}}
+    \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
+      {\clearpage\__pxtfg_print_abstract:n {EN}}
+    }
+  }
+
+% Automatic and legacy explicit calls must not duplicate preliminary material.
+\bool_new:N \g__pxtfg_card_printed_bool
+\bool_new:N \g__pxtfg_frontmatter_printed_bool
+\cs_new_protected:Npn \__pxtfg_card:
+  {
+    \bool_if:NF \g__pxtfg_card_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_card_printed_bool
+        \__pxtfg_card_render:
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_frontmatter:
+  {
+    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
+        \__pxtfg_frontmatter_render:
+      }
+  }
+\endinput
