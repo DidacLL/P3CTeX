@@ -20,7 +20,7 @@
     backend .choices:nn = {noindex,external}{\bool_if:NTF \l__pxgls_backend_locked_bool
       {\tl_if_eq:NNF \l__pxgls_backend_tl \l_keys_choice_tl
         {\PackageError{pxEND/glossary}{Glossary~backend~is~a~package-load~option}{Choose~the~backend~before~defining~entries.}}}
-      {\tl_set_eq:NN \l__pxgls_backend_tl \l_keys_choice_tl}},
+      {\tl_set:NV \l__pxgls_backend_tl \l_keys_choice_tl}},
     backend .initial:n = noindex,
     print .choice:,
     print / manual .code:n = {\bool_set_false:N \l__pxgls_auto_bool},
@@ -131,7 +131,7 @@
     anchor-prefix .tl_set:N = \l__pxann_anchor_prefix_tl,
     anchor-prefix .initial:n = pxannex,
     level .choices:nn = {auto,section,chapter}
-      {\tl_set_eq:NN \l__pxann_level_tl \l_keys_choice_tl},
+      {\tl_set:NV \l__pxann_level_tl \l_keys_choice_tl},
     level .initial:n = auto,
     toc .bool_set:N = \l__pxann_toc_bool,
     toc .initial:n = true,

@@ -98,9 +98,8 @@
 %% Print before glossaries checks usage and writes its final entry records.
 \DeclareHookRule{enddocument}{pxEND}{before}{glossaries}
 \AddToHook{enddocument}[pxEND]{
-  \bool_if:NTF \l__pxend_auto_bool
-    {\__pxend_print:}
-    {\seq_if_empty:NF \g__pxann_pending_seq
-      {\msg_warning:nn {pxEND}{pending-annexes}}}
+  \bool_if:NT \l__pxend_auto_bool {\__pxend_print:}
+  \seq_if_empty:NF \g__pxann_pending_seq
+    {\msg_warning:nn {pxEND}{pending-annexes}}
 }
 \endinput
