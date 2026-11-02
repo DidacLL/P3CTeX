@@ -6,6 +6,13 @@
 \pxTFGsetup{print=manual,tutor={Example supervisor},pra={PR1},
   area={Software Engineering},credits={12},keywords={LaTeX,automation},
   licence={CC BY-SA 4.0}}
+% The EN class option must select English TFG labels, not Catalan defaults.
+\ifnum\pdfstrcmp{\pxDEFtfglanguagevalue}{English}=0\else
+  \PackageError{pxTFG-presentation}{English TFG language label missing}{}
+\fi
+\ifnum\pdfstrcmp{\pxDEFtfgtutor}{Supervisor}=0\else
+  \PackageError{pxTFG-presentation}{English TFG supervisor label missing}{}
+\fi
 \pxMEMsetup{chapter-style=\normalfont\Large\bfseries,figures=false,tables=false}
 \pxTFGabstract{CAT}{Resum català de prova.}
 \pxTFGabstract{ES}{Resumen de prueba.}
