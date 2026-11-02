@@ -1,0 +1,21 @@
+\documentclass[TFG,MEM,EN,no-cover,no-toc]{P3CTeX}
+\usepackage{pxDIA}
+\PECTeXconfig{no-plagi=false,
+  data={student={Integration test},grade={Software Engineering},
+    subj-fullname={Final project},subj-shortname={TFG},
+    ca-fullname={Memory},ca-shortname={MEM}}}
+\begin{document}
+\chapter{Computational diagrams}
+\pxTCompiler[caption={Main compiler},label={fig:main-compiler}]{C}{x86}{C}
+\pxGraph[caption={Processing graph},label={fig:main-graph}]
+  {start / Input / 0,0 / start; end / Output / 2,0 / goal}
+  {start->end / 1}
+Main compiler: \Cref{fig:main-compiler}. Graph: \ref{fig:main-graph}.
+\pxMEMannex[label={ann:diagram}]{Diagram evidence}{
+  \pxTCompiler[caption={Compiler in annex},label={fig:annex-compiler}]{Pascal}{x86}{C}
+  \pxGraph[caption={Graph in annex},label={fig:annex-graph}]
+    {a / A / 0,0; b / B / 2,0}{a->b}
+  Annex figure: \Cref{fig:annex-compiler} and \ref{fig:annex-graph}.
+}
+Annex: \Cref{ann:diagram}.
+\end{document}
