@@ -15,6 +15,7 @@
   }
 \file_input:n {pxGLS.code.tex}
 \ProcessKeysOptions{pxGLS}
+\bool_set_true:N \l__pxgls_backend_locked_bool
 \tl_if_eq:NnTF \l__pxgls_backend_tl {external}
   {\makeglossaries}{\makenoidxglossaries}
 \NewDocumentCommand\pxGlossarySetup{m}
