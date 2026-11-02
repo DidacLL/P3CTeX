@@ -1,4 +1,4 @@
-\documentclass[TFG,MEM,EN,glossary,diagrams,project-management,calculations,
+\documentclass[TFG,MEM,EN,default,glossary,diagrams,project-management,calculations,
   no-cover,no-toc]{P3CTeX}
 \PECTeXconfig{no-plagi=false,
   data={student={Test author},grade={Software Engineering},
@@ -14,6 +14,7 @@
 \makeatletter
 \@ifpackageloaded{pxDIA}{}{\PackageError{integration}{Missing DIA}{}}
 \@ifpackageloaded{pxPM}{}{\PackageError{integration}{Missing PM}{}}
+\@ifpackageloaded{pxSRC}{}{\PackageError{integration}{Missing source bundle}{}}
 \@ifpackageloaded{pxMEM}{}{\PackageError{integration}{Missing MEM}{}}
 \@ifpackageloaded{pxCALC}{}{\PackageError{integration}{Missing CALC}{}}
 \makeatother
