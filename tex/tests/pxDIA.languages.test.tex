@@ -1,27 +1,13 @@
-\documentclass[PAC,CAT]{P3CTeX}
+\documentclass{article}
+\usepackage[catalan]{babel}
 \usepackage{pxDIA}
-\PECTeXconfig{cover=false,toc=false,no-plagi=false}
 \ExplSyntaxOn
 \str_if_eq:eeF {\pxDEFdiagactual} {Classes~Reals}
- {\PackageError{diag-lang}{Catalan labels missing}{}}
-\ExplSyntaxOff
-\PECTeXconfig{es}
-\ExplSyntaxOn
-\str_if_eq:eeF {\pxDEFdiagpred} {Predicciones}
- {\PackageError{diag-lang}{Spanish labels missing}{}}
-\ExplSyntaxOff
-\PECTeXconfig{en}
-\ExplSyntaxOn
-\str_if_eq:eeF {\pxDEFdiaginput} {Input}
- {\PackageError{diag-lang}{English labels missing}{}}
-\str_if_eq:eeF {\pxDEFdiaganalysisphases} {Analysis~stages}
- {\PackageError{diag-lang}{Compiler stage label not translated}{}}
-\str_if_eq:eeF {\pxDEFdiagerrormanagement} {Error~handling}
- {\PackageError{diag-lang}{Error handling label not translated}{}}
+  {\PackageError{diag-lang}{Catalan labels missing}{}}
+\str_if_eq:eeF {\pxDEFdiagcompilation} {Temps~de~compilaci\'o}
+  {\PackageError{diag-lang}{Catalan compiler label missing}{}}
 \ExplSyntaxOff
 \begin{document}
-\pxConfusionMatrix{Positive,Negative}{3,2;5,5}
-\pxLexemeTable{if / KW\_IF; name / IDENT}
+\pxConfusionMatrix{Positiu,Negatiu}{3,2;5,5}
 \pxCompilerModel
-\pxIRHub{C, Pascal}{IR}{x86}
 \end{document}
