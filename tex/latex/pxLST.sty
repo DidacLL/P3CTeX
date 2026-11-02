@@ -515,7 +515,7 @@
 %% #1 - box width, default .8\linewidth.
 \newtcblisting{miniCode}[1][.8\linewidth]{%
 	width=#1,
-	listing~options={},
+	listing~options={style=pxlst,numbers=none,xleftmargin=0.4em},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	drop~lifted~shadow,%
@@ -624,14 +624,8 @@
       \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }
-% Consistent names for the established verbatim-capable environments.
-% Both begin and end commands refer to the existing engines.
-\cs_new_eq:cc {pxCodeMini} {miniCode}
-\cs_new_eq:cc {endpxCodeMini} {endminiCode}
-\cs_new_eq:cc {pxCodeBox} {CodeBox}
-\cs_new_eq:cc {endpxCodeBox} {endCodeBox}
-\cs_new_eq:cc {pxCodeBreak} {CodeBox*}
-\cs_new_eq:cc {endpxCodeBreak} {endCodeBox*}
+% Compact and annotated listing boxes retain the established names:
+% miniCode, CodeBox and CodeBox*. No forwarding aliases are required.
 
 % Optional file-range convenience; the file renderer is the same one used
 % by \pxCodeFile and \pxInput[as=code].
@@ -672,6 +666,3 @@
     \group_end:
   }
 
-% Existing palette/language selector exposed with the newer naming.
-\NewDocumentCommand{\pxLSTsetup}{O{dark} m O{pxlst}}
-  {\pxCodeSet[#1]{#2}[#3]}
