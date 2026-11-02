@@ -30,13 +30,8 @@
   {\chapter*{\listfigurename}\addcontentsline{toc}{chapter}{\listfigurename}\@starttoc{lof}}
 \RenewDocumentCommand\listoftables{}
   {\chapter*{\listtablename}\addcontentsline{toc}{chapter}{\listtablename}\@starttoc{lot}}
-% MEM is a document profile, not the owner of annexes. The optional
-% independent annex package supplies the same annex functionality to PAC/PR.
+% MEM uses the independent optional annex module.
 \RequirePackage{pxANX}
-% Historical MEM counter names remain aliases; there is only one annex counter.
-\cs_set_eq:cc {c@pxmemannex}{c@pxannex}
-\providecommand\thepxmemannex{\thepxannex}
-\providecommand\theHpxmemannex{\theHpxannex}
 % \pxMEMsetup{chapter-style=...,figures=true|false,tables=true|false}
 \NewDocumentCommand\pxMEMsetup{m}{\keys_set:nn {pxMEM}{#1}}
 % Optional source adapters retain the earlier MEM entry points, but pxSRC
@@ -59,7 +54,4 @@
   {\AddToHook{P3CTeX/after-toc}[pxMEM]{\__pxmem_indexes:}}
   {}
 
-% Compatibility: MEM exposes its familiar name, but uses pxANX's queue.
-\NewDocumentCommand\pxMEMannex{O{} m +m}
-  {\pxAddAnnex[#1]{#2}{#3}}
 \endinput
