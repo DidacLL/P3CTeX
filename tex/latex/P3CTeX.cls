@@ -42,6 +42,10 @@
 
 \LoadClass{article} % Base class
 \RequirePackage{arev} % Fonts
+% TFG and MEM may register class-owned presentation hooks while class
+% options are being processed; ordinary PAC/PR documents leave them empty.
+\NewHook{P3CTeX/before-toc}
+\NewHook{P3CTeX/after-toc}
 \file_input:n {P3CTeX.code.tex} % Input expl3 code
 %% =================================
 %% ===== PCKG PUBLIC LaTeX2e API ===
@@ -62,8 +66,10 @@
 %% Print the table of contents and clear the page afterwards.
 %% * - print the no-plagiarism declaration immediately before the TOC.
 \NewDocumentCommand{\PECTeXprintTOC}{s}{
+	\UseHook{P3CTeX/before-toc}
 	\IfBooleanT{#1}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par\__pxDEV_HRule:}
 	\tableofcontents\clearpage
+	\UseHook{P3CTeX/after-toc}
 }
 %% \pxGDXconfig{<pxGDX keys>}
 %% Direct access to the pxGDX dispatcher; use nested cover-config/page-config/pdf-config keys as needed.
@@ -139,11 +145,11 @@
 \AfterBeginDocument{
 	\__ifcover:nn{
 		\__ifplagi:nn{\PECTeXprintCover*}{\PECTeXprintCover}
-		\__iftoc:nn{\PECTeXprintTOC}{}
+		\__iftoc:nn{\PECTeXprintTOC}{\UseHook{P3CTeX/before-toc}}
 	}{
 		\__ifplagi:nn{
-			\__iftoc:nn{\PECTeXprintTOC*}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par \__pxDEV_HRule:}{}
-		}{\__iftoc:nn{\PECTeXprintTOC}{}}
+			\__iftoc:nn{\PECTeXprintTOC*}{\UseHook{P3CTeX/before-toc}\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par \__pxDEV_HRule:}{}
+		}{\__iftoc:nn{\PECTeXprintTOC}{\UseHook{P3CTeX/before-toc}}}
 	}
 }
 \AtEndDocument{
