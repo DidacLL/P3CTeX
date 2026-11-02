@@ -664,12 +664,12 @@
 
 % The newer verbatim-aware inline form accepts braces or an arbitrary
 % delimiter; keep \pxCodeIn's original mandatory-argument contract.
-\NewDocumentCommand{\pxCodeInline}{O{} v O{pxlst}}
+\NewDocumentCommand{\pxCodeInline}{O{} v o}
   {
     \group_begin:
-      \tl_if_blank:nTF {#1}
-        {\lstset{style=#3}}
-        {\lstset{style=#3,language={#1}}}
+      % No override means the active user-selected listings style remains in use.
+      \IfNoValueF{#3}{\lstset{style=#3}}
+      \tl_if_blank:nF {#1}{\lstset{language={#1}}}
       \__pxlst_code_render_inline:n {#2}
     \group_end:
   }
