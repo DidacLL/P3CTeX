@@ -291,6 +291,14 @@
 \tl_new:N \l__pxsrc_input_region_tl
 \tl_new:N \l__pxsrc_input_section_tl
 \tl_new:N \l__pxsrc_input_subsection_tl
+\tl_new:N \l__pxsrc_input_mode_tl
+\tl_new:N \l__pxsrc_input_container_tl
+\tl_new:N \l__pxsrc_input_width_tl
+\tl_new:N \l__pxsrc_input_language_tl
+\tl_new:N \l__pxsrc_input_title_tl
+\tl_new:N \l__pxsrc_input_options_tl
+\tl_new:N \l__pxsrc_input_region_prefix_tl
+\tl_new:N \l__pxsrc_input_region_suffix_tl
 \seq_new:N \l__pxsrc_input_heading_seq
 \int_new:N \l__pxsrc_input_first_int
 \int_new:N \l__pxsrc_input_last_int
@@ -306,7 +314,20 @@
    subsection .tl_set:N = \l__pxsrc_input_subsection_tl,
    region .tl_set:N = \l__pxsrc_input_region_tl,
    first-line .int_set:N = \l__pxsrc_input_first_int,
-   last-line .int_set:N = \l__pxsrc_input_last_int
+   last-line .int_set:N = \l__pxsrc_input_last_int,
+   as .choice:,
+   as/native .code:n = {\tl_set:Nn \l__pxsrc_input_mode_tl {native}},
+   as/code .code:n = {\tl_set:Nn \l__pxsrc_input_mode_tl {code}},
+   as/text .code:n = {\tl_set:Nn \l__pxsrc_input_mode_tl {text}},
+   container .choice:,
+   container/none .code:n = {\tl_set:Nn \l__pxsrc_input_container_tl {none}},
+   container/minipage .code:n = {\tl_set:Nn \l__pxsrc_input_container_tl {minipage}},
+   width .tl_set:N = \l__pxsrc_input_width_tl,
+   language .tl_set:N = \l__pxsrc_input_language_tl,
+   title .tl_set:N = \l__pxsrc_input_title_tl,
+   listing-options .tl_set:N = \l__pxsrc_input_options_tl,
+   region-prefix .tl_set:N = \l__pxsrc_input_region_prefix_tl,
+   region-suffix .tl_set:N = \l__pxsrc_input_region_suffix_tl
  }
 \cs_new_protected:Npn \__pxsrc_input_error:n #1
  {\bool_set_false:N \l__pxsrc_input_valid_bool
@@ -316,6 +337,14 @@
    \tl_clear:N \l__pxsrc_input_region_tl
    \tl_clear:N \l__pxsrc_input_section_tl
    \tl_clear:N \l__pxsrc_input_subsection_tl
+   \tl_set:Nn \l__pxsrc_input_mode_tl {native}
+   \tl_set:Nn \l__pxsrc_input_container_tl {none}
+   \tl_set:Nn \l__pxsrc_input_width_tl {\linewidth}
+   \tl_clear:N \l__pxsrc_input_language_tl
+   \tl_clear:N \l__pxsrc_input_title_tl
+   \tl_clear:N \l__pxsrc_input_options_tl
+   \tl_set:Nx \l__pxsrc_input_region_prefix_tl {\c_percent_str}
+   \tl_clear:N \l__pxsrc_input_region_suffix_tl
    \int_set:Nn \l__pxsrc_input_first_int {1}
    \int_zero:N \l__pxsrc_input_last_int
    \keys_set:nn {pxSRC/input} {#1}
@@ -339,6 +368,8 @@
         {\int_incr:N \l_tmpa_int}}
    \int_compare:nNnT {\l_tmpa_int} > {1}
       {\__pxsrc_input_error:n {Select~one~region,~heading,~or~line~range}}
+   \int_compare:nNnT {\l__pxsrc_input_first_int} < {1}
+      {\__pxsrc_input_error:n {First~source~line~must~be~positive}}
  }
 \cs_new_protected:Npn \__pxsrc_input_select:
  {
@@ -355,11 +386,11 @@
      \str_if_eq:VnTF \l__pxsrc_input_selector_tl {region}
       {
        \str_if_eq:eeT {\tl_trim_spaces:n {##1}}
-         {\c_percent_str<*\l__pxsrc_input_region_tl>}
+         {\l__pxsrc_input_region_prefix_tl<*\l__pxsrc_input_region_tl>\l__pxsrc_input_region_suffix_tl}
           {\int_incr:N \l__pxsrc_input_matches_int
            \int_set:Nn \l__pxsrc_input_first_int {\l__pxsrc_input_line_int + 1}}
        \str_if_eq:eeT {\tl_trim_spaces:n {##1}}
-         {\c_percent_str</\l__pxsrc_input_region_tl>}
+         {\l__pxsrc_input_region_prefix_tl</\l__pxsrc_input_region_tl>\l__pxsrc_input_region_suffix_tl}
           {\int_incr:N \l__pxsrc_input_region_ends_int
            \int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_input_line_int - 1}}
       }
@@ -434,10 +465,50 @@
      \immediate\closeout\pxSRCout
    \group_end:
  }
+% Source selection stays in pxSRC; executable TeX uses the accepted native
+% importer, while external code delegates presentation to pxLST.
+\cs_new_protected:Npn \__pxsrc_input_render:
+ {
+   \str_if_eq:VnT \l__pxsrc_input_container_tl {minipage}
+     {\begin{minipage}{\l__pxsrc_input_width_tl}}
+   \str_case:Vn \l__pxsrc_input_mode_tl
+    {
+      {native}
+        {\exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}
+      {text}
+        {\use:x
+          {\exp_not:N \VerbatimInput
+           [breaklines=true,breakanywhere=true,
+            firstline=\int_use:N \l__pxsrc_input_first_int,
+            lastline=\int_use:N \l__pxsrc_input_last_int]
+           {\exp_not:V \l__pxsrc_input_file_tl}}}
+      {code}
+        {
+          \tl_if_blank:VT \l__pxsrc_input_title_tl
+            {\tl_set_eq:NN \l__pxsrc_input_title_tl \l__pxsrc_input_file_tl}
+          \use:x
+           {\exp_not:N \pxLST_input_file:nnnn
+             {\exp_not:V \l__pxsrc_input_language_tl}
+             {\exp_not:V \l__pxsrc_input_file_tl}
+             {\exp_not:V \l__pxsrc_input_title_tl}
+             {\exp_not:V \l__pxsrc_input_options_tl,
+              firstline=\int_use:N \l__pxsrc_input_first_int,
+              lastline=\int_use:N \l__pxsrc_input_last_int,
+              firstnumber=\int_use:N \l__pxsrc_input_first_int,
+              escapeinside={},escapechar={},mathescape=false,texcl=false}}
+        }
+    }
+   \str_if_eq:VnT \l__pxsrc_input_container_tl {minipage}
+     {\end{minipage}}
+ }
 \cs_new_protected:Npn \__pxsrc_input:nn #1#2
  {
    \group_begin:
      \__pxsrc_input_configure:n {#1}
+     \str_if_eq:VnT \l__pxsrc_input_mode_tl {code}
+       {\cs_if_exist:NF \pxLST_input_file:nnnn
+         {\__pxsrc_input_error:n
+           {Code~sources~require~pxLST.~Load~the~LST~tool~first}}}
      \file_get_full_name:nNTF {#2} \l__pxsrc_input_file_tl
       {
        \exp_args:NV \filename@parse \l__pxsrc_input_file_tl
@@ -447,22 +518,30 @@
        \edef\Ginput@path{{\filename@area}\Ginput@path}
        \bool_if:NT \l__pxsrc_input_valid_bool
         {
-         \tl_if_blank:VTF \l__pxsrc_input_selector_tl
-          {\int_compare:nNnTF {\l__pxsrc_input_first_int} = {1}
-            {\int_compare:nNnTF {\l__pxsrc_input_last_int} = {0}
-              {\exp_args:NV \file_input:n \l__pxsrc_input_file_tl}
-              {\__pxsrc_input_select:
-               \bool_if:NT \l__pxsrc_input_valid_bool
-                 {\__pxsrc_input_extract:
-                  \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}}
+         \str_if_eq:VnTF \l__pxsrc_input_mode_tl {native}
+          {
+           \tl_if_blank:VTF \l__pxsrc_input_selector_tl
+            {
+             \int_compare:nNnTF {\l__pxsrc_input_first_int} = {1}
+               {\int_compare:nNnTF {\l__pxsrc_input_last_int} = {0}
+                  {\tl_set_eq:NN \l__pxsrc_input_temp_tl \l__pxsrc_input_file_tl
+                   \__pxsrc_input_render:}
+                  {\__pxsrc_input_select:
+                   \bool_if:NT \l__pxsrc_input_valid_bool
+                     {\__pxsrc_input_extract: \__pxsrc_input_render:}}}
+               {\__pxsrc_input_select:
+                \bool_if:NT \l__pxsrc_input_valid_bool
+                  {\__pxsrc_input_extract: \__pxsrc_input_render:}}
+            }
             {\__pxsrc_input_select:
              \bool_if:NT \l__pxsrc_input_valid_bool
-               {\__pxsrc_input_extract:
-                \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}}
-          {\__pxsrc_input_select:
+               {\__pxsrc_input_extract: \__pxsrc_input_render:}}
+          }
+          {
+           \__pxsrc_input_select:
            \bool_if:NT \l__pxsrc_input_valid_bool
-             {\__pxsrc_input_extract:
-              \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}
+             {\__pxsrc_input_render:}
+          }
         }
       }
       {\__pxsrc_input_error:n {Source~file~not~found}}
