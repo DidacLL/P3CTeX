@@ -105,6 +105,23 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 %% \_pxcore_set_language_english
 %% Replace all pxTXT public strings with their English translations; called by the P3CTeX en key.
 \newcommand{\_pxcore_set_language_english}{
+    % TFG labels share the same language-selected catalog as PAC/PR.
+    \renewcommand{\pxDEFtfgworkcard}{Final~Project~Information}
+    \renewcommand{\pxDEFtfgtitle}{Title}
+    \renewcommand{\pxDEFtfgstudent}{Student}
+    \renewcommand{\pxDEFtfgdegree}{Degree}
+    \renewcommand{\pxDEFtfgactivity}{Activity}
+    \renewcommand{\pxDEFtfgtutor}{Supervisor}
+    \renewcommand{\pxDEFtfgpra}{PRA}
+    \renewcommand{\pxDEFtfgarea}{Area}
+    \renewcommand{\pxDEFtfgcredits}{Credits}
+    \renewcommand{\pxDEFtfglanguage}{Language}
+    \renewcommand{\pxDEFtfglanguagevalue}{English}
+    \renewcommand{\pxDEFtfgkeywords}{Keywords}
+    \renewcommand{\pxDEFtfgdate}{Date}
+    \renewcommand{\pxDEFtfgconsultant}{Consultant}
+    \renewcommand{\pxDEFtfglicence}{Rights~and~licence}
+    \renewcommand{\pxDEFtfgsummary}{Project~Summary}
 	\renewcommand{\pxDEFtocname}{Table~of~Contents}
 	\renewcommand{\pxDEFnoplagi}[1]{I,~\textbf{ ##1 }	\label{alumne},~declare~that~I~hold~the~total~and~full~authorship~of~all~the~tasks~that~are~carried~out~in~this~document.~I~am~the~only~one~who~has~elaborated~each~exercise.~I~have~not~shared~the~statements~with~anyone~and~the~only~help~I~have~received~has~been~through~the~UOC~classroom~and~teachers~there.}
 	\renewcommand{\pxDEFpximgname}{Picture}
