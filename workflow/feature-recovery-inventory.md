@@ -1,5 +1,15 @@
 # P3CTeX feature recovery inventory
 
+
+## Consolidated recovery worktree — 2026-11-02
+
+Branch: `rebuild/full-feature-recovery-2026-11-02`. Foundation PAC/PR/TFG/MEM fixes and recovered diagrams remain intact. Restored optional project-management/Gantt, specialized code-listing languages and legacy interfaces, original CAT/ES/EN labels, and class-owned opt-in glossary helpers. Explicit and deferred annexes share the MEM renderer and queue. Normal BibTeX/biblatex are not replaced; `\pxBibliography` is a small optional convenience.
+
+The owner explicitly discarded source previews (`\pxSourcePreview` / `\pxUseSourcePreview`), including automatic preview-to-annex forwarding. `pxSRC` has no MEM dependency. The monolithic `pxEND` remains rejected.
+
+The integrated full-feature fixtures and old regression suites are committed, but **the combined feature recovery has not yet received an actual full-class TeX build**. No new GitHub Actions runs have been initiated. This is an implementation worktree, not a released or verified replacement.
+
+
 Authoritative tree: `restart/pre-tfg-clean-2026-11-01`, initial HEAD `026f26e380cf4171f041a4683a4d581feb261c27`.
 
 Comparison sources: `feature/core-modules-audit-and-fix` (including `workflow/core-modules-fix-ledger.md`, `workflow/source-inclusion-design.md`, `workflow/student-tools-audit.md`, `tex/doc/api-corrections.md`), `main`, and the named development branches `feature/pxcmp-computation-diagrams`, `feature/pxgnt-optional-gantt`, `feature/tfg-mem-uoc-template`. Feature branch inventories and module tests are evidence of intent, **not** proof of present behavior or compilation.
@@ -43,7 +53,7 @@ Executed from the staged `tex/tests` directory with `TEXINPUTS=".:../latex//:../
 | Region prefix/suffix for non-TeX comment styles | D pxSRC | Missing | One selector engine for TeX, Python, shell etc. | Recovered but needing correction |
 | Label prefix + `\pxSourceRef`, optional label type and nested scope | D pxSRC and ledger F02/F04 | Missing/partial | Preserve `\label[type]{...}`, `\ref`, and child scoping | Recovered but needing correction |
 | Captions, source labels and source metadata `cite`/`terms` | D pxSRC | Missing | Explicit metadata; no execution from verbatim | Recovered but needing correction |
-| Height-bounded source preview and linked full-source annex | D `\pxSourcePreview`, `\pxUseSourcePreview` | Missing | Reuse pxLST and annex owner; full source queued once | Awaiting implementation |
+| Height-bounded source preview and linked full-source annex | D `\pxSourcePreview`, `\pxUseSourcePreview` | Missing | Reuse pxLST and annex owner; full source queued once | Discarded by explicit owner decision; use ordinary source inclusion inside MEM annexes |
 | Typed input defaults, nested override isolation, no option-history replay | D ledger F06/S06 | Missing | One l3keys state, no duplicate parser | Recovered but needing correction |
 | Image insertion `\pxIMG`, pairs, list, safe placeholders and extension lookup | B/D pxSRC | Present | P | Already correctly recovered |
 | Image setters, list behavior, source reference correctness | D student-tools audit | Partial | Port argument passing/list defects only; no new API | Recovered but needing correction |
@@ -75,26 +85,26 @@ Executed from the staged `tex/tests` directory with `TEXINPUTS=".:../latex//:../
 
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
-| Unified presets, styles, `\pxDiagramSetup`, save/use preset, generic diagram and note | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; M pxCMP | Missing | Direct owner, no wrapper or duplicate diagram engine | Awaiting implementation |
-| Compiler T-diagrams, tombstone, compile/run, compiler pipeline, bootstrap, IR hub | D pxDIA; M pxCMP | Missing | Retain meaningful specialized interfaces | Awaiting implementation |
-| Syntax trees, automata, state transitions, traces, transition tables, graphs | D pxDIA; M pxCMP | Missing | Preserve diagram-specific types and configurable styles | Awaiting implementation |
-| BNF, derivations, regex/list, lexeme table, IR comparisons, inference rules | D pxDIA; M pxCMP | Missing | One diagram implementation | Awaiting implementation |
-| Venn, logical groups, flowchart, memory/register/endian maps | D pxDIA; M pxCMP | Missing | Local styles and presets | Awaiting implementation |
-| Decision trees, neural networks, confusion matrices, fuzzy plots | D pxDIA; M pxCMP | Missing | Preserve all specialized types | Awaiting implementation |
-| Floating, uncaptioned and nonfloating label/counter/list correctness | D ledger F01/S01/S02 | Missing | Apply corrected standard figure semantics | Awaiting implementation |
-| Multi-language preset headings, compiler/IR labels, valid identifier regex | D ledger F05, checkpoints 21/28 | Missing | Reuse pxTXT translations; fix invalid regex range | Awaiting implementation |
+| Unified presets, styles, `\pxDiagramSetup`, save/use preset, generic diagram and note | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; M pxCMP | Missing | Direct owner, no wrapper or duplicate diagram engine | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| Compiler T-diagrams, tombstone, compile/run, compiler pipeline, bootstrap, IR hub | D pxDIA; M pxCMP | Missing | Retain meaningful specialized interfaces | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| Syntax trees, automata, state transitions, traces, transition tables, graphs | D pxDIA; M pxCMP | Missing | Preserve diagram-specific types and configurable styles | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| BNF, derivations, regex/list, lexeme table, IR comparisons, inference rules | D pxDIA; M pxCMP | Missing | One diagram implementation | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| Venn, logical groups, flowchart, memory/register/endian maps | D pxDIA; M pxCMP | Missing | Local styles and presets | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| Decision trees, neural networks, confusion matrices, fuzzy plots | D pxDIA; M pxCMP | Missing | Preserve all specialized types | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| Floating, uncaptioned and nonfloating label/counter/list correctness | D ledger F01/S01/S02 | Missing | Apply corrected standard figure semantics | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| Multi-language preset headings, compiler/IR labels, valid identifier regex | D ledger F05, checkpoints 21/28 | Missing | Reuse pxTXT translations; fix invalid regex range | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
 
 ## Project management — owner pxPM (Gantt lives here)
 
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
-| SWOT/DAFO `\pxSWOT` | D `latex/pxPM.sty`, `code/pxPM.code.tex` | Missing | Optional, local config, use table system where appropriate | Awaiting implementation |
-| `pxUserStory`, as-a/want/so-that/acceptance criteria | D pxPM | Missing | Localized labels, user-editable content | Awaiting implementation |
-| Given/When/Then `pxScenario` | D pxPM | Missing | Reuse document/container styling | Awaiting implementation |
-| Actors/preconditions/main/alternative/postconditions `pxUseCase` | D pxPM | Missing | Distinct from stories and scenarios | Awaiting implementation |
-| `pxGantt`, `\pxGanttItem`, `\pxGanttEnd` | M `pxGNT`; D pxPM | Missing | Gantt under pxPM, preserve command semantics | Awaiting implementation |
-| Gantt environment, date scaling, label widths, split blocks, rotate | D pxPM | Missing | Chart-only rotation; no global landscape state | Awaiting implementation |
-| PM language labels + `\pxPMsetup` | D pxPM + pxTXT | Missing | Existing localization; local settings | Awaiting implementation |
+| SWOT/DAFO `\pxSWOT` | D `latex/pxPM.sty`, `code/pxPM.code.tex` | Missing | Optional, local config, use table system where appropriate | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
+| `pxUserStory`, as-a/want/so-that/acceptance criteria | D pxPM | Missing | Localized labels, user-editable content | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
+| Given/When/Then `pxScenario` | D pxPM | Missing | Reuse document/container styling | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
+| Actors/preconditions/main/alternative/postconditions `pxUseCase` | D pxPM | Missing | Distinct from stories and scenarios | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
+| `pxGantt`, `\pxGanttItem`, `\pxGanttEnd` | M `pxGNT`; D pxPM | Missing | Gantt under pxPM, preserve command semantics | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
+| Gantt environment, date scaling, label widths, split blocks, rotate | D pxPM | Missing | Chart-only rotation; no global landscape state | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
+| PM language labels + `\pxPMsetup` | D pxPM + pxTXT | Missing | Existing localization; local settings | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
 
 ## TFG, MEM, class, cover, page and PDF — natural owners pxTFG/pxMEM/P3CTeX/pxGDX
 
@@ -114,11 +124,11 @@ Executed from the staged `tex/tests` directory with `TEXINPUTS=".:../latex//:../
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
 | Explicit + queued annexes, numbering restore, one-time printing | D `pxEND.sty/.code.tex`; B pxMEM annex | Partial | One annex engine; class/MEM adapters; no permanent `\appendix` in PAC | Recovered but needing correction |
-| Auto annex queue order before glossary, chapter/section selection, cleveref names | D pxEND, ledger F03/F07/S04 | Missing | Own hooks once, localized reference names | Awaiting implementation |
+| Auto annex queue order before glossary, chapter/section selection, cleveref names | D pxEND, ledger F03/F07/S04 | Missing | Own hooks once, localized reference names | MEM-owned annex queue and references restored; full integration pending |
 | Optional glossary modes: used/all, auto/manual, toc, per-type output | D pxEND; B class `glossary` | Partial | Preserve existing class activation; no competing backend | Recovered but needing correction |
-| Glossary declarations, acronyms/terms, group maps/files | D `\pxTerm`, `\pxAcronym`, etc. | Missing | Reuse glossaries and existing localization | Awaiting implementation |
-| External indexed glossary backend tests | D pxEND + tests | Missing | Only opt-in backend, retain default no-index | Awaiting implementation |
-| Native BibTeX/biblatex-compatible `\pxBibliography` convenience | D pxEND | Missing | Do not force backend or modify normal `\cite` | Awaiting implementation |
+| Glossary declarations, acronyms/terms, group maps/files | D `\pxTerm`, `\pxAcronym`, etc. | Missing | Reuse glossaries and existing localization | Restored as class-owned helpers, available only when glossary is selected |
+| External indexed glossary backend tests | D pxEND + tests | Missing | Only opt-in backend, retain default no-index | Opt-in backend restored via class key; integration tests pending |
+| Native BibTeX/biblatex-compatible `\pxBibliography` convenience | D pxEND | Missing | Do not force backend or modify normal `\cite` | Native bibliography retained; lightweight class convenience restored |
 | Citation/glossary propagation through native versus code sources | D pxSRC + pxEND | Partial | Execution only for native; metadata explicit for code | Recovered but needing correction |
 
 ## Existing-module corrections, configuration, tests
@@ -167,44 +177,44 @@ This expands the domain rows into individual public interfaces. Each entry was f
 
 | Previous entry point | User-visible behavior | Where implemented / B support | Proper owner / issue to correct | Recovery status |
 | --- | --- | --- | --- | --- |
-| \pxTCompiler | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTProgram | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTMachine | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTInterpreter | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneRun | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneInterpret | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneVM | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneCompile | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneChain | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneCompileCompiler | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTombstoneBootstrap | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTranslatorBox | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxCompileRunFlow | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxCompilerModel | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxCompilerPipeline | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxIRHub | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxSyntaxTree | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxAutomaton | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxTransitionTable | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxAutomatonTrace | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxGraph | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxBNF | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxDerivation | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxRegEx | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxRegExList | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxLexemeTable | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxIRCompare | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxInferenceRule | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxVenn | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxLogicGroup | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxFlowchart | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxMemoryMap | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxEndianCompare | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxRegisterMap | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxDecisionTree | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxNeuralNet | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxConfusionMatrix | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
-| \pxFuzzyPlot | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Awaiting implementation |
+| \pxTCompiler | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTProgram | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTMachine | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTInterpreter | Compiler tombstone shapes and components (T-diagram compiler/program/machine/interpreter) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneRun | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneInterpret | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneVM | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneCompile | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneChain | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneCompileCompiler | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTombstoneBootstrap | Execution, translation, chaining and bootstrapping (Tombstone compositions) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTranslatorBox | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxCompileRunFlow | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxCompilerModel | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxCompilerPipeline | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxIRHub | Compiler stages, flows and IR links (Compiler visualizations) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxSyntaxTree | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxAutomaton | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxTransitionTable | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxAutomatonTrace | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxGraph | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxBNF | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxDerivation | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxRegEx | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxRegExList | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxLexemeTable | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxIRCompare | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxInferenceRule | Automata, trees, rules and representations (Formal languages) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxVenn | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxLogicGroup | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxFlowchart | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxMemoryMap | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxEndianCompare | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxRegisterMap | Logic diagrams and hardware/memory layouts (Logic and organization) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxDecisionTree | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxNeuralNet | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxConfusionMatrix | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
+| \pxFuzzyPlot | Decision and learning visualizations (ML and decision tools) | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; B absent | pxDIA; direct implementation, pxTXT labels where needed | Recovered in pxDIA; isolated compilation evidence, combined integration pending |
 | \pxDiagramSetup | configuration | D pxDIA; B absent | pxDIA; no forwarding pxCMP layer | Awaiting implementation |
 | \pxDiagramSavePreset | store diagram preset | D pxDIA; B absent | pxDIA; no forwarding pxCMP layer | Awaiting implementation |
 | \pxDiagramUsePreset | retrieve diagram preset | D pxDIA; B absent | pxDIA; no forwarding pxCMP layer | Awaiting implementation |
@@ -220,12 +230,12 @@ This expands the domain rows into individual public interfaces. Each entry was f
 | `pxTerminal`: plain terminal output | D `pxLST.sty`; B absent | pxLST; same listing renderer | Awaiting implementation |
 | `\pxCodeFile`, `\pxCodeChunk`, `\pxCodeInline`, `\pxCodeIn` | D `pxLST.sty`; B file/inline support partially | pxLST; correct verbatim versus mandatory arguments and source line range | Recovered but needing correction |
 | `\pxSource`, `\pxInput`, `\pxUseSource` | D `pxSRC.sty`; B provides accepted heading-based source extraction | pxSRC; preserve heading selectors and registration-free path | Recovered but needing correction |
-| `\pxSourcePreview`, `\pxUseSourcePreview` | D `pxSRC.sty`; B absent | pxSRC delegates rendered code to pxLST and queued full source to annex owner | Awaiting implementation |
+| `\pxSourcePreview`, `\pxUseSourcePreview` | D `pxSRC.sty`; B absent | pxSRC delegates rendered code to pxLST and queued full source to annex owner | Discarded by explicit owner decision; use ordinary source inclusion inside MEM annexes |
 | `\pxSourceRef` | D `pxSRC.sty`; B absent | pxSRC; scoped label-prefix, optional label support | Awaiting implementation |
 | `\pxSRCsetup`, `\pxDEFimagewidth`, `\pxDEFimagepairwidth`, `\pxDEFimageplaceholdercolor`, `\pxDEFimageposition`, `\pxDEFimagepairgap`, `\pxDEFimagelabelprefix` | D pxSRC; B image config | pxSRC; preserve working setters, no new config engine | Recovered but needing correction |
 | `\pxIMG`, `\pxIMGpair`, `\pxIMGList` | D/B pxSRC | pxSRC; existing image rendering and list | Already correctly recovered |
 | `\pxUserStory`, `\pxScenario`, `\pxUseCase` | D `pxPM.sty` command signatures; B absent | pxPM; **correct inconsistency**: old documentation shows environment/field-style use despite command-style definitions | Awaiting implementation |
-| `\pxSWOT`, `\pxPMsetup` | D pxPM; B absent | pxPM; reuse table/localization | Awaiting implementation |
+| `\pxSWOT`, `\pxPMsetup` | D pxPM; B absent | pxPM; reuse table/localization | Recovered in optional pxPM, includes Gantt; actual module compilation pending |
 | `\pxGantt`, `\pxGanttItem`, `\pxGanttEnd`, `\endpxGantt` | D pxPM, M pxGNT; B absent | pxPM; single chart engine, coherent command/environment behavior | Awaiting implementation |
 | `\pxGlossarySetup`, `\pxGlossaryFile`, `\pxPrintGlossary`, `\pxPrintGlossaries` | D pxEND; B class-only auto glossary | Endmatter/class existing glossary; preserve user control and backend | Recovered but needing correction |
 | `\pxAcronym`, `\pxTerm`, `\pxTerms`, `\pxAcronyms` | D pxEND; B absent | Existing glossary facilities; no duplicate glossary backend | Awaiting implementation |
