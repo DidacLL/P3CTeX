@@ -41,23 +41,33 @@
 
 \section{C\`arrega i activaci\'o del paquet}
 
-Dins d'un document amb la classe \texttt{P3CTeX}, activeu el m\`odul opcional \texttt{diagrams}
-a les opcions de classe (sense perdre els m\`oduls per defecte):
+En documents de la classe \texttt{P3CTeX}, manteniu les opcions de classe
+habituals i carregueu directament el m\`odul opcional. Per exemple:
 
 \begin{verbatim}
-\documentclass[diagrams,PAC,default]{P3CTeX}
+\documentclass[PAC]{P3CTeX}
+\usepackage{pxDIA}
 \end{verbatim}
 
-Tamb\'e es pot carregar a trav\'es de \texttt{pxCORE} o de manera independent en qualsevol
-document est\`andard:
+Per a classes ordin\`aries, \texttt{pxCORE} tamb\'e ofereix una activaci\'o
+expl\'icita, sense afegir diagrames al conjunt de m\`oduls per defecte:
 
 \begin{verbatim}
-% A traves de pxCORE amb opcions:
+\documentclass{article}
 \usepackage[diagrams,diagrams-config={preset=p3c-blueprint}]{pxCORE}
+% Opcionalment: \usepackage[DIA]{pxCORE}
+\end{verbatim}
 
-% O directament de manera independent:
+\texttt{pxDIA} tamb\'e funciona sense \texttt{pxCORE}:
+
+\begin{verbatim}
+\documentclass{article}
 \usepackage[preset=p3c-uoc]{pxDIA}
 \end{verbatim}
+
+Les opcions desconegudes de classe no es modifiquen en aquesta recuperaci\'o;
+no feu servir \texttt{diagrams} com a opci\'o de classe \texttt{P3CTeX}.
+La selecci\'o mitjan\c{c}ant \texttt{pxCORE} es fa en carregar el paquet.
 
 \section{Configuraci\'o i Presets (\texttt{pxDIA})}
 

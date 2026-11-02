@@ -15,7 +15,7 @@ New-Item -ItemType Directory -Force -Path $buildRoot | Out-Null
 $testFiles = @(
     "pxDIA.core-disabled.test.tex",
     "pxDIA.core-selection.test.tex",
-    "pxDIA.class-selection.test.tex",
+    "pxDIA.class-integration.test.tex",
     "pxDIA.probe.test.tex",
     "pxDIA.standalone.test.tex",
     "pxDIA.languages.test.tex",
