@@ -420,19 +420,26 @@
 %% \pxLST_input_file:nn {<language>}{<file>}
 %% Typeset an external source file in the standard pxLST tcolorbox.
 %% #1 - listings language name.  #2 - source filename/path.
-\cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
+% Extended file renderer shared by \pxCodeFile and source inclusion.
+% #1 language, #2 path, #3 displayed title, #4 local listings options.
+% No extra listings environment or secondary highlighting engine.
+\cs_new_protected:Npn \pxLST_input_file:nnnn #1 #2 #3 #4 {
 	\tcbinputlisting{
-		listing~options={language=#1},
+		listing~options={language={#1},#4},
 		colback=pxbg!90!,
 		colframe=pxbg!60!,
 		coltext=pxfg,
-		listing~file=#2,
+		listing~file={#2},
 		listing~only,
 		arc=.25em, outer~arc=.25em,
 		drop~lifted~shadow,
 		toptitle=-.1em,
-		title=\small\hspace*{\fill}\textbf{\ttfamily #2}
+		title=\small\hspace*{\fill}\textbf{\ttfamily #3}
 	}
+}
+% Keep the established two-argument entry point and its visual defaults.
+\cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
+	\pxLST_input_file:nnnn {#1}{#2}{#2}{}
 }
 %% =================================
 %% ===== INLINE CODE RENDER ==========
