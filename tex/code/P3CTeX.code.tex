@@ -40,6 +40,9 @@
 \bool_set_false:N \l_pxdoc_language_bool
 \bool_new:N \l_pxdoc_useglossary_bool
 \bool_set_false:N \l_pxdoc_useglossary_bool
+% Glossary support is class-owned, optional and defaults to no-index.
+\tl_new:N \l__pxdoc_glossary_backend_tl
+\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}
 %\bool_new:N \l_pxdoc_usebibliography_bool
 %\bool_set_false:N \l_pxdoc_usebibliography_bool
 %% =================================
@@ -66,6 +69,10 @@
 									\RequirePackage[acronym]{glossaries}
 									\bool_set_true:N \l_pxdoc_useglossary_bool
 								},
+	glossary-backend .choice:,
+		glossary-backend / noindex .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}},
+		glossary-backend / external .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {external}},
+		glossary-backend .initial:n = noindex,
 %	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
 %		bibliography			.initial:n	= {},
 %	references			.meta:n		={usebibliography={true}, bibpath={#1}},
