@@ -17,15 +17,15 @@ Legend: B = authoritative branch, D = discarded `feature/core-modules-audit-and-
 | Tagged region extraction `region=...` | D/B pxSRC code | Present | P; duplicate/unclosed validation | Already correctly recovered |
 | Inclusive `first-line` / `last-line` selection | D/B pxSRC code | Present for native | Extend to literal and code selection; preserve validation | Recovered but needing correction |
 | Registered source + registered defaults + per-use overrides | D pxSRC `\pxSource`, `\pxUseSource` | Minimal B registry | Restore renderer and default precedence, keep heading selector | Recovered but needing correction |
-| External programming source as syntax-highlighted code `as=code` | D pxSRC + pxLST | Missing | Reuse pxLST file renderer; no new listings engine | Awaiting implementation |
-| Literal text/CSV/log content `as=text` | D pxSRC | Missing | Literal, never execute TeX | Awaiting implementation |
-| Container `minipage`, configurable width | D pxSRC | Missing | Local optional container, no float assumptions | Awaiting implementation |
+| External programming source as syntax-highlighted code `as=code` | D pxSRC + pxLST | Missing | Reuse pxLST file renderer; no new listings engine | Recovered but needing correction |
+| Literal text/CSV/log content `as=text` | D pxSRC | Missing | Literal, never execute TeX | Recovered but needing correction |
+| Container `minipage`, configurable width | D pxSRC | Missing | Local optional container, no float assumptions | Recovered but needing correction |
 | Source-relative native input/graphics paths | D/B pxSRC | Present | Preserve on filtered and nested imports | Already correctly recovered |
-| Region prefix/suffix for non-TeX comment styles | D pxSRC | Missing | One selector engine for TeX, Python, shell etc. | Awaiting implementation |
-| Label prefix + `\pxSourceRef`, optional label type and nested scope | D pxSRC and ledger F02/F04 | Missing/partial | Preserve `\label[type]{...}`, `\ref`, and child scoping | Awaiting implementation |
-| Captions, source labels and source metadata `cite`/`terms` | D pxSRC | Missing | Explicit metadata; no execution from verbatim | Awaiting implementation |
+| Region prefix/suffix for non-TeX comment styles | D pxSRC | Missing | One selector engine for TeX, Python, shell etc. | Recovered but needing correction |
+| Label prefix + `\pxSourceRef`, optional label type and nested scope | D pxSRC and ledger F02/F04 | Missing/partial | Preserve `\label[type]{...}`, `\ref`, and child scoping | Recovered but needing correction |
+| Captions, source labels and source metadata `cite`/`terms` | D pxSRC | Missing | Explicit metadata; no execution from verbatim | Recovered but needing correction |
 | Height-bounded source preview and linked full-source annex | D `\pxSourcePreview`, `\pxUseSourcePreview` | Missing | Reuse pxLST and annex owner; full source queued once | Awaiting implementation |
-| Typed input defaults, nested override isolation, no option-history replay | D ledger F06/S06 | Missing | One l3keys state, no duplicate parser | Awaiting implementation |
+| Typed input defaults, nested override isolation, no option-history replay | D ledger F06/S06 | Missing | One l3keys state, no duplicate parser | Recovered but needing correction |
 | Image insertion `\pxIMG`, pairs, list, safe placeholders and extension lookup | B/D pxSRC | Present | P | Already correctly recovered |
 | Image setters, list behavior, source reference correctness | D student-tools audit | Partial | Port argument passing/list defects only; no new API | Recovered but needing correction |
 
@@ -220,3 +220,22 @@ The API reconciliation distinguishes a feature from its old spelling: duplicated
 
 - Local pdfLaTeX probes of the reconstructed `pxCORE` key/loading code emitted `PXCORE-OPTION-PASS` for `calculations` and `PXCORE-DEFAULT-PASS` without the option. Matching repository fixtures are `tex/tests/pxCALC.core-selection.test.tex` and `tex/tests/pxCALC.core-default.test.tex` (commits `da9c8d5` and `31034d7`). The full P3CTeX class integration is still unverified.
 - Branch comparison cross-check: `feature/pxcmp-computation-diagrams` and `main` carry the older separate `pxCMP`/`pxGNT` design; `feature/pxgnt-optional-gantt` supplies preceding Gantt history; `feature/tfg-mem-uoc-template` supplies earlier TFG/MEM history. Existing historical `pxLST` and `pxTAB` branches add no files beyond the reconstruction baseline in the comparison. The later discarded `pxDIA`/`pxPM` domain grouping remains the recovery target, not a wholesale source replacement.
+
+## Checkpoint: pxSRC source modes and reference recovery (2026-11-02)
+
+Branch: `restart/pre-tfg-clean-2026-11-01`. Changes are bounded to the established `pxSRC` and `pxLST` owners, their fixtures and one existing source-inclusion manual. `P3CTeX.cls`, `P3CTeX.code.tex` and class language loading are unchanged.
+
+- `b58c58b`: extend the existing `pxLST_input_file:nn` renderer with a compatible four-argument form (language/path/title/local options). Original two-argument use remains.
+- `87ea00a`: add `as=native|code|text`, literal/line-range rendering, region-prefix/suffix and optional minipage under the existing `\pxInput` selector; accepted `section`/`subsection` extraction kept.
+- `976be5f`: repair the OT1 double-quote failure in code listings using T1 for listing text only, `upquote` and safe defaults; no global document font encoding switch.
+- `64ef6be` then `9dcfeb8`: add optional source label/caption/cite/terms metadata and native `label-prefix` with correct optional label syntax. The isolated cleveref probe exposed recursion caused by rebinding `\ltx@label` in the discarded branch; removed that rebinding and ensured metadata labels use the original handler.
+- `2f2f7ac`: expose source-relative `\pxSourceRef`.
+- `6db7d1d`: direct, typed, locally scoped defaults for all 18 source-input fields under `\pxSRCsetup{input={...}}`, without serializing or replaying key history.
+- Fixtures: `pxSRC.modes-recovery.test.tex`, `pxSRC.text-standalone.test.tex`, `pxSRC.defaults-labels-recovery.test.tex`, source/text/JS/PR fixtures. Source-specific syntax remains in pxSRC; programming source presentation stays in pxLST.
+- `e68d239`: update the existing source manual, preserving the heading-reuse instructions.
+
+**Actual verification:** Local TeX Live pdfLaTeX focused source probe (representative extracted selector and new rendering paths, with the same TeX primitives) produced a PDF and emitted `PXSRC-PROBE-PASS` and `NESTED-YES`, checking literal text does not execute, code files and custom JS regions render, and the unmodified PR's subsection and relative child import. Its initial OT1 quotation error was reproduced and then resolved by the local T1 listing-style correction. Output text and rendered PDF were inspected. A separate hyperref+cleveref two-pass probe emitted `pr:typed`, `pr:normal`, and unprefixed `after` AUX entries. It also reproduced and eliminated the discarded `\ltx@label` recursion. An isolated expl3 typed-defaults probe emitted `PXSRC-TYPED-DEFAULTS-PASS` after checking that input-mode, container, integer, and list overrides did not mutate defaults.
+
+**Verification limit:** these are isolated local TeX probes, not a compilation of the complete repository implementation. Repository fixtures have been created but not yet run against the integrated authoritative tree, and no class-level PDF integration or complete regression run is claimed. Consequently the rows above remain **Recovered but needing correction**, not **Implemented and verified**.
+
+**Still outstanding in pxSRC:** source previews with full-source annex, annex hook integration, complete native label handling inside amsmath environments, full cross-module glossary/citation validation, class/MEM/PR integration compilations and any rendering corrections those reveal. Existing heading-based source selection is a nonnegotiable regression gate. No claim of source-module completion.
