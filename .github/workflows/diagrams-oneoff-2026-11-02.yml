@@ -1,7 +1,6 @@
 name: One-off diagram verification
 on:
-  push:
-    branches: [verify/diagrams-actions-2026-11-02]
+  workflow_dispatch:
 jobs:
   diagrams:
     runs-on: ubuntu-latest
