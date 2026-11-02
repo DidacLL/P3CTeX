@@ -41,16 +41,24 @@ jobs:
                     break
                   fi
                 done
-                if test "$ok" -eq 1 && test -s "$name.pdf"; then
-                  if grep -Eiq "destination with the same identifier|multiply-defined" "$name.pass3.log"; then
-                    echo "FAIL: duplicate label destination for $name"
+                if test "$ok" -eq 1; then
+                  if test -s "$name.pdf"; then
+                    if grep -Eiq "destination with the same identifier|multiply-defined" "$name.pass3.log"; then
+                      echo "FAIL: duplicate reference warning for $name"
+                      grep -Ei "destination with the same identifier|multiply-defined" "$name.pass3.log" | tail -n 15
+                      ok=0
+                    fi
+                  elif test "$name" = "pxCALC.core-default.test" && grep -q "PXCORE-DEFAULT-PASS" "$name.pass3.log"; then
+                    echo "ASSERTION-ONLY: core disabled (no PDF page required)"
+                  elif test "$name" = "pxCALC.core-selection.test" && grep -q "PXCORE-OPTION-PASS" "$name.pass3.log"; then
+                    echo "ASSERTION-ONLY: core selected (no PDF page required)"
+                  else
+                    echo "FAIL: no PDF or expected assertion marker for $name"
                     ok=0
                   fi
-                else
-                  ok=0
                 fi
                 if test "$ok" -eq 1; then
-                  echo "PASS: $name (PDF produced; 3 LaTeX passes)"
+                  echo "PASS: $name (3 LaTeX passes)"
                 else
                   failed=$((failed+1))
                 fi
