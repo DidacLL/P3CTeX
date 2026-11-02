@@ -1,0 +1,19 @@
+\documentclass{article}
+\usepackage{pxCALC}
+\newcommand\AssertResult[2]{\ifdim #1pt=#2pt\else\PackageError{pxCALC-scope}{Expected #2, got #1}{}\fi}
+\pxDefVar{distance}{10}[d]
+\pxDefVar{time}{2}[t]
+\pxDefFormula{speed}{[distance]/[time]}[symbol=v,unit=m/s]
+\begin{document}
+\pxCalcStore{speed}{\speed}\AssertResult{\speed}{5}
+\begingroup
+  \pxSetVar{time}{4}
+  \pxCalcStore{speed}{\speed}\AssertResult{\speed}{2.5}
+\endgroup
+\pxCalcStore{speed}{\speed}\AssertResult{\speed}{5}
+\pxCalcStore[values={time=5}]{speed}{\speed}\AssertResult{\speed}{2}
+\pxCalcStore{speed}{\speed}\AssertResult{\speed}{5}
+\pxCalc[prec=4]{pi}\quad \pxCalc[unit=m/s,prec=2]{[speed]}\par
+\pxSolve[steps=3,prec=1]{speed}\par
+\typeout{PXCALC-SCOPE-PASS}
+\end{document}
