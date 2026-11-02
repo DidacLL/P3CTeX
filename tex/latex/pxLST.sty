@@ -611,17 +611,17 @@
 
 %% \pxCodeIn[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
-%% #1 - optional listings language.  #2 - inline code.  #3 - listings style (default pxlst).
+%% #1 - optional listings language.  #2 - inline code.  #3 - optional listings style (default: caller's active style).
 \NewDocumentCommand{\pxCodeIn}{ O{} m o }
   {
     \group_begin:
-      % Preserve the caller's active listings style when neither override
-      % was supplied. An explicit style works even without a language.
+      % Preserve the caller's active listings style unless explicitly
+      % overridden, including when only a language is supplied.
       \IfNoValueTF{#3}
         {
           \tl_if_blank:nF {#1}
             {\lstset{xleftmargin=2em,xrightmargin=2em,framesep=1em,
-              language=#1,style=pxlst}}
+              language=#1}}
         }
         {
           \lstset{style=#3}
