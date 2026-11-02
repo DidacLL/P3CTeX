@@ -1,0 +1,27 @@
+\documentclass[MEM,CAT,glossary]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newglossaryentry{word}{name={Paraula final},description={MEM-ONLY-GLOSSARY-ENTRY}}
+\newcount\memcalls
+\begin{document}
+\chapter{First}\section{Main}
+\pxMEMannex[label=ann:mem1]{First memory annex}{
+ \global\advance\memcalls by 1
+ \section{Annex section}\label{sec:ann}
+ \begin{figure}[h]\centering\rule{1cm}{1cm}\caption{Memory figure}\label{fig:mem1}\end{figure}
+ \begin{table}[h]\centering\begin{tabular}{c}A\end{tabular}\caption{Memory table}\label{tab:mem1}\end{table}
+ \begin{equation}\label{eq:mem1}x=3\end{equation}
+ \gls{word}.
+}
+\pxMEMannex[label=ann:mem2]{Second memory annex}{
+ \global\advance\memcalls by 1
+ \begin{figure}[h]\centering\rule{1cm}{1cm}\caption{Second figure}\label{fig:mem2}\end{figure}
+ \begin{table}[h]\centering\begin{tabular}{c}B\end{tabular}\caption{Second table}\label{tab:mem2}\end{table}
+ \begin{equation}\label{eq:mem2}y=4\end{equation}
+}
+\chapter{Second}
+\ifnum\value{chapter}=2\else\errmessage{MEM chapter changed}\fi
+See \cref{ann:mem1,ann:mem2}, \ref{fig:mem1}, \ref{fig:mem2}.
+\AddToHook{enddocument}[mem-check]{\ifnum\memcalls=2\else\errmessage{MEM calls}\fi
+ \ifnum\value{chapter}=2\else\errmessage{Main chapter not restored}\fi}
+\DeclareHookRule{enddocument}{mem-check}{after}{pxEND}
+\end{document}

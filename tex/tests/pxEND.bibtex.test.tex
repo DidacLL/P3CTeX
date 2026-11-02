@@ -1,0 +1,8 @@
+\documentclass[EN,annexes,glossaries]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newglossaryentry{annexonly}{name={Annex-only citation},description={BIBTEX-ANNEX-GLOSSARY}}
+\pxBibliography[plain]{fixtures/pxEND.references}
+\pxAddAnnex[label=ann:bib]{Citation evidence}{Evidence \cite{endmatter2026} and \gls{annexonly}.}
+\begin{document}
+See annex \ref{ann:bib}.
+\end{document}

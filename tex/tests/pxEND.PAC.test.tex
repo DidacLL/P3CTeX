@@ -1,0 +1,34 @@
+\documentclass[PAC,annexes,glossaries]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newglossaryentry{onlyannex}{name={Annex evidence},description={DEFERRED-GLOSSARY-PAC}}
+\newcount\countannex
+\begin{document}
+\section{Main}\label{sec:main}
+\begin{figure}[h]\centering\rule{1cm}{1cm}\caption{Main figure}\label{fig:main}\end{figure}
+\begin{table}[h]\centering\begin{tabular}{c}X\end{tabular}\caption{Main table}\label{tab:main}\end{table}
+\begin{equation}\label{eq:main}x=1\end{equation}
+\pxAddAnnex[label=ann:a]{First}{
+ \global\advance\countannex by 1
+ \subsection{Inside annex}\label{sec:annex}
+ \begin{figure}[h]\centering\rule{1cm}{1cm}\caption{First figure}\label{fig:annexa}\end{figure}
+ \begin{table}[h]\centering\begin{tabular}{c}Y\end{tabular}\caption{First table}\label{tab:annexa}\end{table}
+ \begin{equation}\label{eq:annexa}y=2\end{equation}
+ \gls{onlyannex}.
+}
+\pxAddAnnex[label=ann:b]{Second}{
+ \global\advance\countannex by 1
+ \begin{figure}[h]\centering\rule{1cm}{1cm}\caption{Second figure}\label{fig:annexb}\end{figure}
+ \begin{table}[h]\centering\begin{tabular}{c}Z\end{tabular}\caption{Second table}\label{tab:annexb}\end{table}
+ \begin{equation}\label{eq:annexb}z=3\end{equation}
+}
+\section{After registration}
+\ifnum\value{section}=2\else\errmessage{PAC section changed}\fi
+See \cref{ann:a,ann:b}, \ref{fig:annexa}, \ref{fig:annexb}, \ref{eq:annexa}, \ref{eq:annexb}.
+\AddToHook{enddocument}[pxend-check]{%
+ \ifnum\countannex=2\else\errmessage{Annexes not exactly once}\fi
+ \ifnum\value{section}=2\else\errmessage{Main sections changed}\fi
+ \ifnum\value{figure}=1\else\errmessage{Main figures changed}\fi
+ \ifnum\value{table}=1\else\errmessage{Main tables changed}\fi
+ \ifnum\value{equation}=1\else\errmessage{Main equations changed}\fi}
+\DeclareHookRule{enddocument}{pxend-check}{after}{pxEND}
+\end{document}

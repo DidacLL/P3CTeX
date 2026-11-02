@@ -1,0 +1,17 @@
+\documentclass[PR,EN,annexes]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcount\once
+\begin{document}
+\section{Main}
+\pxAnnex[label=ann:immediate,pagebreak=false]{Immediate}{%
+ \subsection{Nested}\label{sec:immediate}
+ \begin{equation}\label{eq:immediate}a=1\end{equation}}
+\pxAddAnnex[label=ann:deferred]{Deferred}{%
+ \global\advance\once by 1
+ \begin{equation}\label{eq:deferred}b=2\end{equation}}
+\section{Continued}
+\ifnum\value{section}=2\else\errmessage{PR counter not preserved}\fi
+\pxPrintAnnexes\pxPrintAnnexes
+\ifnum\once=1\else\errmessage{Double print}\fi
+See \cref{ann:immediate,ann:deferred}.
+\end{document}

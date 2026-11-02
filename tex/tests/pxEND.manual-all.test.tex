@@ -1,0 +1,13 @@
+\documentclass{article}
+\usepackage[glossary={print=manual,include=all},annex={print=manual}]{pxEND}
+\newglossaryentry{used}{name={Used term},description={MANUAL-USED}}
+\newglossaryentry{unused}{name={Unused term},description={MANUAL-UNUSED}}
+\newacronym{cpu}{CPU}{central processing unit}
+\newcount\manualcalls
+\begin{document}
+\gls{used}. \gls{cpu}.
+\pxAddAnnex[label=ann:man]{Manual}{\global\advance\manualcalls by 1}
+\pxPrintAnnexes\pxPrintAnnexes
+\ifnum\manualcalls=1\else\errmessage{Printed twice}\fi
+\pxPrintGlossary[type=main]\pxPrintGlossary[type=main]\pxPrintGlossaries
+\end{document}
