@@ -1,0 +1,92 @@
+name: Foundation class integration (one-off)
+on:
+  push:
+    branches:
+      - verify/foundation-actions-2026-11-02
+
+jobs:
+  actual-p3ctex:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile tracked foundation fixtures and original templates
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work/tex/tests \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest bash -uc '
+              failed=0
+              count=0
+              run_tex() {
+                file="$1"
+                folder="$2"
+                cd "$folder" || return 1
+                name="$(basename "$file" .tex)"
+                count=$((count+1))
+                printf "\n=== FOUNDATION %s (%s) ===\n" "$name" "$folder"
+                ok=1
+                for pass in 1 2 3; do
+                  if ! pdflatex -halt-on-error -interaction=nonstopmode "$file" > "$name.pass$pass.log" 2>&1; then
+                    echo "FAIL: $name pass $pass"
+                    tail -n 65 "$name.pass$pass.log"
+                    ok=0
+                    break
+                  fi
+                done
+                if test "$ok" -eq 1 && test -s "$name.pdf"; then
+                  pdftotext "$name.pdf" "$name.txt"
+                  if grep -Eiq "destination with the same identifier|multiply-defined" "$name.pass3.log"; then
+                    echo "FAIL: duplicate label destination for $name"
+                    ok=0
+                  fi
+                else
+                  ok=0
+                fi
+                if test "$ok" -eq 1; then
+                  echo "PASS: $name ($(pdfinfo "$name.pdf" | sed -n "s/^Pages: *//p") pages)"
+                else
+                  failed=$((failed+1))
+                fi
+              }
+              cd /work/tex/tests
+              printf "%s\n" \
+                "\documentclass[cat,no-cover,no-toc,default]{P3CTeX}" \
+                "\makeatletter" \
+                "\@ifpackageloaded{glossaries}{\errmessage{Unexpected glossary load}}{}" \
+                "\@ifpackageloaded{pxMEM}{\errmessage{Unexpected MEM load}}{}" \
+                "\makeatother" \
+                "\begin{document}PAC baseline without glossary or MEM.\end{document}" > foundation-optional-dependencies.tex
+              tests="foundation-optional-dependencies P3CTeX.page-rule-regression pxSRC.heading-import pxSRC.source-region pxSRC.modes-recovery pxSRC.defaults-labels-recovery pxSRC.text-standalone pxLST.recovery pxCALC.class-integration pxCALC.core-default pxCALC.core-selection pxTFG.presentation-recovery pxTFG.PR-reuse pxTFG.licence pxMEM.TFG-integration pxMEM.annex-references pxMEM.annex-glossary-interaction pxMEM.standalone"
+              for name in $tests; do
+                if test -f "/work/tex/tests/$name.tex"; then
+                  run_tex "$name.tex" /work/tex/tests
+                else
+                  echo "MISSING fixture: $name.tex"
+                  failed=$((failed+1))
+                fi
+              done
+              run_tex PR1.tex /work/examples/UOCTemplates/TFGTemplate/PR1
+              run_tex MEM.tex /work/examples/UOCTemplates/TFGTemplate/MEM
+              run_tex MinimalTemplatePAC.tex /work/examples/UOCTemplates/MinimalTemplate/PAC1
+              run_tex ExtendedTemplatePAC.tex /work/examples/UOCTemplates/ExtendedTemplate/PAC1
+              echo "FOUNDATION CHECKS: $count attempted; $failed failed"
+              test "$failed" -eq 0
+            '
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: foundation-class-test-results
+          if-no-files-found: warn
+          path: |
+            tex/tests/*.pass*.log
+            tex/tests/*.pdf
+            tex/tests/*.txt
+            examples/UOCTemplates/TFGTemplate/PR1/*.pass*.log
+            examples/UOCTemplates/TFGTemplate/MEM/*.pass*.log
+            examples/UOCTemplates/TFGTemplate/PR1/*.pdf
+            examples/UOCTemplates/TFGTemplate/MEM/*.pdf
+            examples/UOCTemplates/MinimalTemplate/PAC1/*.pass*.log
+            examples/UOCTemplates/ExtendedTemplate/PAC1/*.pass*.log
+            examples/UOCTemplates/MinimalTemplate/PAC1/*.pdf
+            examples/UOCTemplates/ExtendedTemplate/PAC1/*.pdf
