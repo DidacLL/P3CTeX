@@ -237,9 +237,9 @@
               \tl_if_blank:VF \l__pxdiag_label_tl
                 {\refstepcounter{figure}
                  % Supply the title normally established by a floating caption.
-                 \tl_set_eq:NN \@currentlabelname \l__pxdiag_caption_tl
-                 \tl_if_blank:VT \@currentlabelname
-                   {\tl_set_eq:NN \@currentlabelname \l__pxdiag_title_tl}
+                 \cs_set_eq:cN { @currentlabelname } \l__pxdiag_caption_tl
+                 \tl_if_blank:VT \l__pxdiag_caption_tl
+                   {\cs_set_eq:cN { @currentlabelname } \l__pxdiag_title_tl}
                  \exp_args:NV \label \l__pxdiag_label_tl}
               \leavevmode\__pxdiag_frame_and_scale:n {#1}
               \tl_if_blank:VF \l__pxdiag_caption_tl
@@ -265,7 +265,7 @@
                 { % With no caption, a label still needs its own figure counter.
                   \tl_if_blank:VF \l__pxdiag_label_tl
                     {\refstepcounter{figure}
-                     \tl_set_eq:NN \@currentlabelname \l__pxdiag_title_tl} }
+                     \cs_set_eq:cN { @currentlabelname } \l__pxdiag_title_tl} }
                 { \caption{\l__pxdiag_caption_tl} }
               \tl_if_blank:VF \l__pxdiag_label_tl
                 { \label{\l__pxdiag_label_tl} }

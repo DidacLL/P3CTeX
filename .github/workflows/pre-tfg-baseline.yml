@@ -1,13 +1,9 @@
 name: Pre-TFG baseline verification
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - recovery/diagrams-2026-11-02
 
 jobs:
   source-loading:
-    if: github.event_name == 'workflow_dispatch'
     name: Source loading / original examples / options (TeX Live)
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -46,7 +42,6 @@ jobs:
               done
             '
   miktex-install:
-    if: github.event_name == 'workflow_dispatch'
     name: Actual MiKTeX registered-root loading
     runs-on: windows-latest
     timeout-minutes: 45
@@ -87,37 +82,3 @@ jobs:
           } finally {
             Pop-Location
           }
-
-  diagram-recovery:
-    name: pxDIA seven-family regression (TeX Live)
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-      - name: Compile actual optional module and class fixtures
-        shell: bash
-        run: |
-          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
-            -e TEXINPUTS="/work/tex/tests//:/work/tex/latex//:/work/tex/code//:" \
-            ghcr.io/xu-cheng/texlive-debian:latest bash -euc '
-              mkdir -p /work/.build/diagrams
-              cd /work/.build/diagrams
-              for fixture in \
-                pxDIA.core-disabled.test.tex \
-                pxDIA.core-selection.test.tex \
-                pxDIA.class-selection.test.tex \
-                pxDIA.probe.test.tex \
-                pxDIA.standalone.test.tex \
-                pxDIA.languages.test.tex \
-                pxDIA.nonfloating-label.test.tex \
-                pxDIA.uncaptioned-label.test.tex \
-                pxDIA.cleveref.test.tex \
-                pxDIA.test.tex; do
-                echo "RUN $fixture"
-                pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "/work/tex/tests/$fixture"
-                pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "/work/tex/tests/$fixture"
-                test -s "${fixture%.tex}.pdf"
-              done
-              echo "PXDIA-SUITE-PASS: 10 fixtures; two passes each"
-            '

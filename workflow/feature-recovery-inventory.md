@@ -75,14 +75,22 @@ Executed from the staged `tex/tests` directory with `TEXINPUTS=".:../latex//:../
 
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
-| Unified presets, styles, `\pxDiagramSetup`, save/use preset, generic diagram and note | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; M pxCMP | Missing | Direct owner, no wrapper or duplicate diagram engine | Awaiting implementation |
-| Compiler T-diagrams, tombstone, compile/run, compiler pipeline, bootstrap, IR hub | D pxDIA; M pxCMP | Missing | Retain meaningful specialized interfaces | Awaiting implementation |
-| Syntax trees, automata, state transitions, traces, transition tables, graphs | D pxDIA; M pxCMP | Missing | Preserve diagram-specific types and configurable styles | Awaiting implementation |
-| BNF, derivations, regex/list, lexeme table, IR comparisons, inference rules | D pxDIA; M pxCMP | Missing | One diagram implementation | Awaiting implementation |
-| Venn, logical groups, flowchart, memory/register/endian maps | D pxDIA; M pxCMP | Missing | Local styles and presets | Awaiting implementation |
-| Decision trees, neural networks, confusion matrices, fuzzy plots | D pxDIA; M pxCMP | Missing | Preserve all specialized types | Awaiting implementation |
-| Floating, uncaptioned and nonfloating label/counter/list correctness | D ledger F01/S01/S02 | Missing | Apply corrected standard figure semantics | Awaiting implementation |
-| Multi-language preset headings, compiler/IR labels, valid identifier regex | D ledger F05, checkpoints 21/28 | Missing | Reuse pxTXT translations; fix invalid regex range | Awaiting implementation |
+| Unified presets, styles, `\pxDiagramSetup`, save/use preset, generic diagram and note | D `latex/pxDIA.sty`, `code/pxDIA.code.tex`; M pxCMP | Missing | Direct owner, no wrapper or duplicate diagram engine | Recovered but needing correction |
+| Compiler T-diagrams, tombstone, compile/run, compiler pipeline, bootstrap, IR hub | D pxDIA; M pxCMP | Missing | Retain meaningful specialized interfaces | Recovered but needing correction |
+| Syntax trees, automata, state transitions, traces, transition tables, graphs | D pxDIA; M pxCMP | Missing | Preserve diagram-specific types and configurable styles | Recovered but needing correction |
+| BNF, derivations, regex/list, lexeme table, IR comparisons, inference rules | D pxDIA; M pxCMP | Missing | One diagram implementation | Recovered but needing correction |
+| Venn, logical groups, flowchart, memory/register/endian maps | D pxDIA; M pxCMP | Missing | Local styles and presets | Recovered but needing correction |
+| Decision trees, neural networks, confusion matrices, fuzzy plots | D pxDIA; M pxCMP | Missing | Preserve all specialized types | Recovered but needing correction |
+| Floating, uncaptioned and nonfloating label/counter/list correctness | D ledger F01/S01/S02 | Missing | Apply corrected standard figure semantics | Recovered but needing correction |
+| Multi-language preset headings, compiler/IR labels, valid identifier regex | D ledger F05, checkpoints 21/28 | Missing | Reuse pxTXT translations; fix invalid regex range | Recovered but needing correction |
+
+### pxDIA recovery checkpoint — 2026-11-02
+
+Task branch: `recovery/diagrams-2026-11-02`, based on `21ee55a45894c734644cf4b91404955987fdd04d`. Restored the existing `pxDIA.sty` public module and `pxDIA.code.tex` seven-family rendering implementation from the reference commit `1eedb42366924f00daf338e1f1a7a8fb55013e62`; no `pxCMP` alias or additional graphics framework. The public API contains **38 specialized LaTeX2e diagram commands, four helper commands, and the `pxDiagram` environment**. Kept the four original `p3c-uoc`, `p3c-blueprint`, `p3c-minimal` and `p3c-exam` presets. Added opt-in `DIA` / `diagrams` and `diagrams-config` selectors in `pxCORE.code.tex`; `default` remains PRP/UML/SRC/TAB/LST with no diagram load. `P3CTeX.cls`, `P3CTeX.code.tex`, `pxPM`, `pxMEM`, `pxSRC`, `pxLST`, bibliography and Babel initialization are unchanged. Rendering depends only on TikZ/tcolorbox and supporting TeX packages when explicitly selected; labels continue to use shared `pxTXT` localization.
+
+**Actual defect and correction:** the historical reference commit's GitHub Actions run `41284809336` failed `pxDIA.nonfloating-label.test.tex` because `\nameref` retained the preceding section's name. A two-pass local pdfLaTeX reproducer showed the problematic assignment to `\@currentlabelname`, then showed the corrected `.aux` name as `Referenced,nonfloating` using `\cs_set_eq:cN { @currentlabelname }`. Applied the catcode-independent fix for nonfloating and uncaptioned-float targets within `pxDIA.code.tex`. This is **a focused primitive reproduction**, not an actual full-module or class compile.
+
+**Fixtures and remaining gates:** retained the original seven-family standalone example and old `pxDIA` regression files; added CORE-disabled, CORE-selected, class-selected and Hyperref/Cleveref fixtures. The PowerShell runner now includes the language and reference fixtures that the historical runner omitted. A branch-specific GitHub Actions run `41482288857` had `startup_failure` before scheduling any job (the same failure mode is visible on the starting branch), so **zero new module or P3CTeX class fixtures have been executed in the recovered tree**. The isolated runtime has pdfLaTeX, but cannot download/clone GitHub sources (`Could not resolve host: github.com`). These rows remain **Recovered but needing correction**, pending full actual-file compilation and PDF inspection of all seven families, repeat-pass Hyperref/Cleveref, package opt-in and default-off, Catalan/Spanish/English, captions and the P3CTeX integration matrix. No class-integrated success is claimed.
 
 ## Project management — owner pxPM (Gantt lives here)
 
