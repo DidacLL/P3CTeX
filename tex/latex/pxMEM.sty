@@ -34,9 +34,19 @@
 \renewcommand\thepxmemannex{\Alph{pxmemannex}}
 \providecommand*\theHpxmemannex{pxmemannex.\arabic{pxmemannex}}
 \seq_new:N \g__pxmem_annexes_seq
+\seq_new:N \l__pxmem_annex_print_seq
 \prop_new:N \l__pxmem_saved_counters_prop
 \tl_new:N \l__pxmem_annex_label_tl
-\keys_define:nn {pxMEM/annex} {label .tl_set:N = \l__pxmem_annex_label_tl}
+\tl_new:N \l__pxmem_annex_name_tl
+\bool_new:N \l__pxmem_annex_toc_bool
+\keys_define:nn {pxMEM/annex}
+  {
+    label .tl_set:N = \l__pxmem_annex_label_tl,
+    name .tl_set:N = \l__pxmem_annex_name_tl,
+    name .initial:n = \appendixname,
+    toc .bool_set:N = \l__pxmem_annex_toc_bool,
+    toc .initial:n = true
+  }
 \cs_new_protected:Npn \__pxmem_annex_print:nnn #1#2#3
   {
     \clearpage
@@ -58,12 +68,13 @@
       \cs_set:Npn \theHsection {pxmemannex.\arabic{pxmemannex}.\arabic{section}}
       % Place the heading before stepping the labelled counter: starred
       % headings/phantomsection otherwise replace the annex hyperlink target.
-      \chapter*{\appendixname\space
+      \chapter*{\l__pxmem_annex_name_tl\space
         \int_to_Alph:n {\int_eval:n {\value{pxmemannex}+1}}:~#2}
       \refstepcounter{pxmemannex}
       \protected@edef\@currentlabel{\thepxmemannex}
       \def\@currentlabelname{#2}
-      \addcontentsline{toc}{chapter}{\appendixname\space\thepxmemannex{}:~#2}
+      \bool_if:NT \l__pxmem_annex_toc_bool
+        {\addcontentsline{toc}{chapter}{\l__pxmem_annex_name_tl\space\thepxmemannex{}:~#2}}
       \tl_if_blank:VF \l__pxmem_annex_label_tl
         {\exp_args:NV \label \l__pxmem_annex_label_tl}
       #3
@@ -94,10 +105,25 @@
   {\AddToHook{P3CTeX/after-toc}[pxMEM]{\__pxmem_indexes:}}
   {}
 
-% Deferred annexes print once at the end, including native input via \pxInput.
+% One queue: explicit and deferred annexes share the MEM renderer and counters.
+% Drain the queue so manual placement cannot duplicate end-of-document annexes.
+\cs_new_protected:Npn \__pxmem_annex_print_pending:
+  {
+    \seq_if_empty:NF \g__pxmem_annexes_seq
+      {
+        \seq_set_eq:NN \l__pxmem_annex_print_seq \g__pxmem_annexes_seq
+        \seq_gclear:N \g__pxmem_annexes_seq
+        \seq_map_inline:Nn \l__pxmem_annex_print_seq {##1}
+        \__pxmem_annex_print_pending:
+      }
+  }
 \NewDocumentCommand\pxMEMannex{O{} m +m}
   {\seq_gput_right:Nn \g__pxmem_annexes_seq {\__pxmem_annex_print:nnn {#1}{#2}{#3}}}
-\AtEndDocument{\seq_map_inline:Nn \g__pxmem_annexes_seq {#1}}
+\NewDocumentCommand\pxAnnexSetup{m}{\keys_set:nn {pxMEM/annex}{#1}}
+\NewDocumentCommand\pxAnnex{O{} m +m}{\__pxmem_annex_print:nnn {#1}{#2}{#3}}
+\NewDocumentCommand\pxAddAnnex{O{} m +m}{\pxMEMannex[#1]{#2}{#3}}
+\NewDocumentCommand\pxPrintAnnexes{}{\__pxmem_annex_print_pending:}
+\AtEndDocument{\__pxmem_annex_print_pending:}
 % No cleveref dependency: register names only when the user loaded it.
 \AddToHook{begindocument/before}[pxMEM/cleveref]{%
   \cs_if_exist:NT \crefname {%
