@@ -2,6 +2,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3,xparse}
 \ProvidesExplPackage{pxMEM}{2026/11/02}{0.2}{P3CTeX memory presentation}
+% MEM alone needs only the annex facility. Enabling the class glossary option
+% before or after MEM activates the standard glossary output separately.
+\@ifpackageloaded{pxEND}{}
+  {\PassOptionsToPackage{glossary={terms=false,acronyms=false}}{pxEND}}
 \RequirePackage{pxEND}
 \cs_if_exist:NF \chapter
   {

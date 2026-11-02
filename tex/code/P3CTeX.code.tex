@@ -65,9 +65,14 @@
 	glossary    .code:n = {
         \RequirePackage{pxEND}
         \bool_set_true:N \l_pxdoc_useglossary_bool
+        \pxGlossarySetup{terms=true,acronyms=true}
       },
   glossaries .meta:n = {glossary},
-  annexes    .code:n = {\RequirePackage{pxEND}},
+  annexes    .code:n = {
+        \RequirePackage{pxEND}
+        \bool_if:NF \l_pxdoc_useglossary_bool
+          {\pxGlossarySetup{terms=false,acronyms=false}}
+      },
   endmatter  .code:n = {\RequirePackage{pxEND}},
 %	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
 %		bibliography			.initial:n	= {},
