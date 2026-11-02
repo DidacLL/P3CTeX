@@ -69,6 +69,11 @@
 		TAB 	=	true,
 		LST 	=	true
 	},
+	CALC       .bool_set:N = \l_pxcore_calc_use_bool,
+		CALC       .initial:n = false,
+		CALC       .default:n = true,
+	calculations .meta:n = { CALC = #1 },
+		calculations .default:n = true,
 	SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
@@ -95,6 +100,7 @@
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
+\bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
 \bool_if:NT \l_pxcore_lst_use_bool {}
 
 
