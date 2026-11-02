@@ -118,7 +118,20 @@
       }
   }
 \NewDocumentCommand\pxMEMannex{O{} m +m}
-  {\seq_gput_right:Nn \g__pxmem_annexes_seq {\__pxmem_annex_print:nnn {#1}{#2}{#3}}}
+  {
+    \group_begin:
+    \tl_clear:N \l__pxmem_annex_label_tl
+    \keys_set:nn {pxMEM/annex}{#1}
+    % Capture scoped configuration now, but leave source and other annex
+    % content unexpanded until the queue is printed.
+    \seq_gput_right:Nx \g__pxmem_annexes_seq
+      {\exp_not:N \__pxmem_annex_print:nnn
+        {label={\exp_not:V \l__pxmem_annex_label_tl},
+         name={\exp_not:V \l__pxmem_annex_name_tl},
+         toc=\bool_if:NTF \l__pxmem_annex_toc_bool {true}{false}}
+        {\exp_not:n {#2}}{\exp_not:n {#3}}}
+    \group_end:
+  }
 \NewDocumentCommand\pxAnnexSetup{m}{\keys_set:nn {pxMEM/annex}{#1}}
 \NewDocumentCommand\pxAnnex{O{} m +m}{\__pxmem_annex_print:nnn {#1}{#2}{#3}}
 \NewDocumentCommand\pxAddAnnex{O{} m +m}{\pxMEMannex[#1]{#2}{#3}}
