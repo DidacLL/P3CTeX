@@ -25,6 +25,7 @@
   {\chapter*{\listtablename}\addcontentsline{toc}{chapter}{\listtablename}\@starttoc{lot}}
 \newcounter{pxmemannex}
 \renewcommand\thepxmemannex{\Alph{pxmemannex}}
+\providecommand*\theHpxmemannex{pxmemannex.\arabic{pxmemannex}}
 \seq_new:N \g__pxmem_annexes_seq
 \prop_new:N \l__pxmem_saved_counters_prop
 \tl_new:N \l__pxmem_annex_label_tl
@@ -35,7 +36,6 @@
     \group_begin:
       \tl_clear:N \l__pxmem_annex_label_tl
       \keys_set:nn {pxMEM/annex}{#1}
-      \refstepcounter{pxmemannex}
       \prop_clear:N \l__pxmem_saved_counters_prop
       \clist_map_inline:nn {chapter,section,subsection,subsubsection,equation,figure,table}
         {\cs_if_exist:cT {c@##1}
@@ -49,9 +49,13 @@
       \cs_set:Npn \theHtable {pxmemannex.\arabic{pxmemannex}.\arabic{table}}
       \cs_set:Npn \theHequation {pxmemannex.\arabic{pxmemannex}.\arabic{equation}}
       \cs_set:Npn \theHsection {pxmemannex.\arabic{pxmemannex}.\arabic{section}}
-      \chapter*{\appendixname\space\thepxmemannex{}:~#2}
-      \cs_if_exist:NT \phantomsection {\phantomsection}
+      % Place the heading before stepping the labelled counter: starred
+      % headings/phantomsection otherwise replace the annex hyperlink target.
+      \chapter*{\appendixname\space
+        \int_to_Alph:n {\int_eval:n {\value{pxmemannex}+1}}:~#2}
+      \refstepcounter{pxmemannex}
       \protected@edef\@currentlabel{\thepxmemannex}
+      \def\@currentlabelname{#2}
       \addcontentsline{toc}{chapter}{\appendixname\space\thepxmemannex{}:~#2}
       \tl_if_blank:VF \l__pxmem_annex_label_tl
         {\exp_args:NV \label \l__pxmem_annex_label_tl}
@@ -65,4 +69,20 @@
 \NewDocumentCommand\pxMEMannex{O{} m +m}
   {\seq_gput_right:Nn \g__pxmem_annexes_seq {\__pxmem_annex_print:nnn {#1}{#2}{#3}}}
 \AtEndDocument{\seq_map_inline:Nn \g__pxmem_annexes_seq {#1}}
+% No cleveref dependency: register names only when the user loaded it.
+\AddToHook{begindocument/before}[pxMEM/cleveref]{%
+  \cs_if_exist:NT \crefname {%
+    \cs_if_exist:NTF \iflanguage {%
+      \iflanguage{catalan}
+        {\crefname{pxmemannex}{annex}{annexos}%
+         \Crefname{pxmemannex}{Annex}{Annexos}}
+        {\iflanguage{spanish}
+          {\crefname{pxmemannex}{anexo}{anexos}%
+           \Crefname{pxmemannex}{Anexo}{Anexos}}
+          {\crefname{pxmemannex}{appendix}{appendices}%
+           \Crefname{pxmemannex}{Appendix}{Appendices}}}%
+    }{\crefname{pxmemannex}{appendix}{appendices}%
+       \Crefname{pxmemannex}{Appendix}{Appendices}}%
+  }%
+}
 \endinput
