@@ -612,12 +612,24 @@
 %% \pxCodeIn[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
 %% #1 - optional listings language.  #2 - inline code.  #3 - listings style (default pxlst).
-\NewDocumentCommand{\pxCodeIn}{ O{} m O{pxlst}}
+\NewDocumentCommand{\pxCodeIn}{ O{} m o }
   {
     \group_begin:
-      \tl_if_blank:nF { #1 }
-        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, language=#1, style=#3 } }
-      \__pxlst_code_render_inline:n { #2 }
+      % Preserve the caller's active listings style when neither override
+      % was supplied. An explicit style works even without a language.
+      \IfNoValueTF{#3}
+        {
+          \tl_if_blank:nF {#1}
+            {\lstset{xleftmargin=2em,xrightmargin=2em,framesep=1em,
+              language=#1,style=pxlst}}
+        }
+        {
+          \lstset{style=#3}
+          \tl_if_blank:nF {#1}
+            {\lstset{xleftmargin=2em,xrightmargin=2em,framesep=1em,
+              language=#1}}
+        }
+      \__pxlst_code_render_inline:n {#2}
     \group_end:
   }
 % Compact and annotated listing boxes retain the established names:
