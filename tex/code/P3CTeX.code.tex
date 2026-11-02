@@ -40,6 +40,8 @@
 \bool_set_false:N \l_pxdoc_language_bool
 \bool_new:N \l_pxdoc_useglossary_bool
 \bool_set_false:N \l_pxdoc_useglossary_bool
+\bool_new:N \l_pxdoc_useannexes_bool
+\bool_set_false:N \l_pxdoc_useannexes_bool
 % Glossary support is class-owned, optional and defaults to no-index.
 \tl_new:N \l__pxdoc_glossary_backend_tl
 \tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}
@@ -65,10 +67,8 @@
 	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
 		no-plagi	.initial:n 	=	false,
 		no-plagi	.default:n 	=	true,
-	glossary		.code		={
-									\RequirePackage[acronym]{glossaries}
-									\bool_set_true:N \l_pxdoc_useglossary_bool
-								},
+	glossary .code:n = {\bool_set_true:N \l_pxdoc_useglossary_bool},
+	annexes .code:n = {\bool_set_true:N \l_pxdoc_useannexes_bool},
 	glossary-backend .choice:,
 		glossary-backend / noindex .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}},
 		glossary-backend / external .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {external}},
@@ -201,6 +201,15 @@
 \ProcessKeysOptions{P3CTeX}
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
+% Forward independently requested modules through pxCORE only.
+\bool_if:NT \l_pxdoc_useglossary_bool
+  {
+    \tl_if_eq:NnT \l__pxdoc_glossary_backend_tl {external}
+      {\PassOptionsToPackage{external}{pxGLS}}
+    \tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}
+  }
+\bool_if:NT \l_pxdoc_useannexes_bool
+  {\tl_put_right:Nn \l__pxdoc_unknown_tl {,ANX}}
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
 % Load cleveref after optional math modules (pxCALC -> amsmath).
 \RequirePackage{cleveref}
