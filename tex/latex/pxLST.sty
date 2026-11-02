@@ -606,8 +606,9 @@
 %% \pxCodeFile[<language>]{<file>}
 %% Typeset an external file through the standard pxLST file renderer.
 %% #1 - optional listings language.  #2 - source filename/path.
-\NewDocumentCommand{\pxCodeFile}{ O{} m }
-  { \pxLST_input_file:nn { #1 } { #2 } }
+\NewDocumentCommand{\pxCodeFile}{O{} m O{#2}}
+  {\pxLST_input_file:nnnn {#1}{#2}{#3}{}}
+
 
 %% \pxCodeIn[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
@@ -620,3 +621,54 @@
       \__pxlst_code_render_inline:n { #2 }
     \group_end:
   }
+% Consistent names for the established verbatim-capable environments.
+% Both begin and end commands refer to the existing engines.
+\cs_new_eq:cc {pxCodeMini} {miniCode}
+\cs_new_eq:cc {endpxCodeMini} {endminiCode}
+\cs_new_eq:cc {pxCodeBox} {CodeBox}
+\cs_new_eq:cc {endpxCodeBox} {endCodeBox}
+\cs_new_eq:cc {pxCodeBreak} {CodeBox*}
+\cs_new_eq:cc {endpxCodeBreak} {endCodeBox*}
+
+% Optional file-range convenience; the file renderer is the same one used
+% by \pxCodeFile and \pxInput[as=code].
+\NewDocumentCommand{\pxCodeChunk}{O{} m m m m}
+  {
+    \group_begin:
+      \int_compare:nNnTF {#3} < {1}
+        {\PackageError{pxLST}{First~line~must~be~positive}{Use~a~1-based~source~range.}}
+        {
+          \int_compare:nNnTF {#4} < {#3}
+            {\PackageError{pxLST}{Last~line~precedes~first~line}{Use~an~ascending~source~range.}}
+            {\pxLST_input_file:nnnn {#1}{#2}{#5}
+               {firstline=#3,lastline=#4,firstnumber=#3}}
+        }
+    \group_end:
+  }
+
+% Terminal transcripts preserve literal prompts and shell output;
+% options follow the existing pxCode listings configuration.
+\tcbset{pxlst-terminal/.style={
+  enhanced,breakable,listing~only,
+  colback=pxbg!95!,colframe=pxbg!70!,coltext=pxfg,
+  arc=.25em,fonttitle=\small\ttfamily\bfseries}}
+\newtcblisting{pxTerminal}[2][]{
+  pxlst-terminal,title={#2},
+  listing~options={style=pxlst,language={},numbers=none,
+    xleftmargin=0pt,mathescape=false,texcl=false,#1}}
+
+% The newer verbatim-aware inline form accepts braces or an arbitrary
+% delimiter; keep \pxCodeIn's original mandatory-argument contract.
+\NewDocumentCommand{\pxCodeInline}{O{} v O{pxlst}}
+  {
+    \group_begin:
+      \tl_if_blank:nTF {#1}
+        {\lstset{style=#3}}
+        {\lstset{style=#3,language={#1}}}
+      \__pxlst_code_render_inline:n {#2}
+    \group_end:
+  }
+
+% Existing palette/language selector exposed with the newer naming.
+\NewDocumentCommand{\pxLSTsetup}{O{dark} m O{pxlst}}
+  {\pxCodeSet[#1]{#2}[#3]}
