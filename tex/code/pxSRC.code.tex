@@ -145,7 +145,7 @@
 	\group_end:
 }
 \cs_new:Npn \__px_fancy_shadowbox:nnnnn #1 #2 #3 #4 #5 {
-	\__px_fancy_shadowbox:nnnnnnnnn{#1}{#2}{#3}{#4}{\hspace{-.2em}>>}{<<}{#5!75!}{#5!50!}{#5!25!}
+	\__px_fancy_shadowbox:nnnnnnnnn{#1}{#2}{#3}{#4}{\hspace{-.2em}>>}{<<}{ #5 !75!}{ #5 !50!}{ #5 !25!}
 }
 %% \__px_simple_shadowbox:nnnn {<width>}{<back colour>}{<front colour/text>}{<back text>}
 %% Build the legacy two-layer simple placeholder.
@@ -155,11 +155,11 @@
 	\dim_if_exist:NF \l__pexDEV_api_simpl_tmpHb_dim {	\dim_new:N \l__pexDEV_api_simpl_tmpHb_dim	}
 	\dim_set:Nn \l__pexDEV_api_simpl_tmpHa_dim {#1}
 	\dim_set:Nn \l__pexDEV_api_simpl_tmpHb_dim {\dim_eval:n {.633\l__pexDEV_api_simpl_tmpHa_dim }}
-	\fcolorbox{#2!75!}{#2!75!}{
+	\fcolorbox{ #2 !75!}{ #2 !75!}{
 		\parbox[c][.7\l__pexDEV_api_simpl_tmpHb_dim][c]
 		{\l__pexDEV_api_simpl_tmpHa_dim}{\small \vspace{\fill}\hspace{\fill} #4	}}
 	\hspace{-.9\l__pexDEV_api_simpl_tmpHa_dim}
-	\fcolorbox{#3!25!}{#3!25!}{
+	\fcolorbox{ #3 !25!}{ #3 !25!}{
 		\parbox[b][.6\l__pexDEV_api_simpl_tmpHb_dim][c]{.8\l__pexDEV_api_simpl_tmpHa_dim}{#3}
 	}
 }
@@ -254,7 +254,7 @@
 		}
 		{\textbf{~~~--~To Do~--~}}
 		{	\hspace{-.25ex}	X	}	{!}
-		{#3!75!}	{#3!50!}	{#3!25!}
+		{ #3 !75!}	{ #3 !50!}	{ #3 !25!}
 		\caption{ #4 }
 		\label{#5}
 	\end{figure}
@@ -276,5 +276,212 @@
 				{ \dim_use:N \l_tmpa_dim }{ #2 }{ #3 }{ #4 }{ #5 }{ #5 }
 		}
 }
+% Direct source inclusion: select native TeX by region, heading or line range.
+% The extraction writer is adapted from the former pxSRC source-input implementation.
+\prop_new:N \g__pxsrc_sources_prop
+\prop_new:N \g__pxsrc_source_options_prop
+\ior_new:N \l__pxsrc_input_ior
+\int_new:N \g__pxsrc_piece_int
+\newwrite\pxSRCout
+\tl_new:N \l__pxsrc_input_file_tl
+\tl_new:N \l__pxsrc_input_temp_tl
+\tl_new:N \l__pxsrc_input_line_tl
+\tl_new:N \l__pxsrc_input_selector_tl
+\tl_new:N \l__pxsrc_input_heading_tl
+\tl_new:N \l__pxsrc_input_region_tl
+\tl_new:N \l__pxsrc_input_section_tl
+\tl_new:N \l__pxsrc_input_subsection_tl
+\seq_new:N \l__pxsrc_input_heading_seq
+\int_new:N \l__pxsrc_input_first_int
+\int_new:N \l__pxsrc_input_last_int
+\int_new:N \l__pxsrc_input_line_int
+\int_new:N \l__pxsrc_input_matches_int
+\int_new:N \l__pxsrc_input_region_ends_int
+\int_new:N \l__pxsrc_input_level_int
+\int_new:N \l__pxsrc_input_heading_level_int
+\bool_new:N \l__pxsrc_input_valid_bool
+\keys_define:nn {pxSRC/input}
+ {
+   section .tl_set:N = \l__pxsrc_input_section_tl,
+   subsection .tl_set:N = \l__pxsrc_input_subsection_tl,
+   region .tl_set:N = \l__pxsrc_input_region_tl,
+   first-line .int_set:N = \l__pxsrc_input_first_int,
+   last-line .int_set:N = \l__pxsrc_input_last_int
+ }
+\cs_new_protected:Npn \__pxsrc_input_error:n #1
+ {\bool_set_false:N \l__pxsrc_input_valid_bool
+  \PackageError{pxSRC}{#1}{Check~the~source~selector.}}
+\cs_new_protected:Npn \__pxsrc_input_configure:n #1
+ {
+   \tl_clear:N \l__pxsrc_input_region_tl
+   \tl_clear:N \l__pxsrc_input_section_tl
+   \tl_clear:N \l__pxsrc_input_subsection_tl
+   \int_set:Nn \l__pxsrc_input_first_int {1}
+   \int_zero:N \l__pxsrc_input_last_int
+   \keys_set:nn {pxSRC/input} {#1}
+   \bool_set_true:N \l__pxsrc_input_valid_bool
+   \int_zero:N \l_tmpa_int
+   \tl_clear:N \l__pxsrc_input_selector_tl
+   \tl_if_blank:VF \l__pxsrc_input_region_tl
+      {\int_incr:N \l_tmpa_int \tl_set:Nn \l__pxsrc_input_selector_tl {region}}
+   \tl_if_blank:VF \l__pxsrc_input_section_tl
+      {\int_incr:N \l_tmpa_int \tl_set:Nn \l__pxsrc_input_selector_tl {section}
+       \tl_set_eq:NN \l__pxsrc_input_heading_tl \l__pxsrc_input_section_tl
+       \int_set:Nn \l__pxsrc_input_level_int {2}}
+   \tl_if_blank:VF \l__pxsrc_input_subsection_tl
+      {\int_incr:N \l_tmpa_int \tl_set:Nn \l__pxsrc_input_selector_tl {subsection}
+       \tl_set_eq:NN \l__pxsrc_input_heading_tl \l__pxsrc_input_subsection_tl
+       \int_set:Nn \l__pxsrc_input_level_int {3}}
+   \int_compare:nT {\l__pxsrc_input_first_int != 1}
+      {\int_incr:N \l_tmpa_int}
+   \int_compare:nT {\l__pxsrc_input_last_int != 0}
+      {\int_compare:nNnT {\l__pxsrc_input_first_int} = {1}
+        {\int_incr:N \l_tmpa_int}}
+   \int_compare:nNnT {\l_tmpa_int} > {1}
+      {\__pxsrc_input_error:n {Select~one~region,~heading,~or~line~range}}
+ }
+\cs_new_protected:Npn \__pxsrc_input_select:
+ {
+   \int_zero:N \l__pxsrc_input_matches_int
+   \int_zero:N \l__pxsrc_input_region_ends_int
+   \int_zero:N \l__pxsrc_input_line_int
+   \tl_if_blank:VF \l__pxsrc_input_selector_tl
+     {\int_zero:N \l__pxsrc_input_last_int}
+   \exp_args:NNV \ior_open:Nn \l__pxsrc_input_ior \l__pxsrc_input_file_tl
+   \ior_str_map_inline:Nn \l__pxsrc_input_ior
+    {
+     \int_incr:N \l__pxsrc_input_line_int
+     \tl_set:Nn \l__pxsrc_input_line_tl {##1}
+     \str_if_eq:VnTF \l__pxsrc_input_selector_tl {region}
+      {
+       \str_if_eq:eeT {\tl_trim_spaces:n {##1}}
+         {\c_percent_str<*\l__pxsrc_input_region_tl>}
+          {\int_incr:N \l__pxsrc_input_matches_int
+           \int_set:Nn \l__pxsrc_input_first_int {\l__pxsrc_input_line_int + 1}}
+       \str_if_eq:eeT {\tl_trim_spaces:n {##1}}
+         {\c_percent_str</\l__pxsrc_input_region_tl>}
+          {\int_incr:N \l__pxsrc_input_region_ends_int
+           \int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_input_line_int - 1}}
+      }
+      {
+       \tl_if_blank:VF \l__pxsrc_input_selector_tl
+        {
+         % Match the conventional one-line \section{Title} and
+         % \subsection[Short]{Title} forms (starred variants included).
+         \regex_extract_once:nVNTF
+          {\A\s*\\(chapter|section|subsection|subsubsection)\*?\s*(?:\[[^\]]*\]\s*)?\{([^{}]*)\}}
+          \l__pxsrc_input_line_tl \l__pxsrc_input_heading_seq
+          {
+           \str_case:en {\seq_item:Nn \l__pxsrc_input_heading_seq {2}}
+             {{chapter}{\int_set:Nn \l__pxsrc_input_heading_level_int {1}}
+              {section}{\int_set:Nn \l__pxsrc_input_heading_level_int {2}}
+              {subsection}{\int_set:Nn \l__pxsrc_input_heading_level_int {3}}
+              {subsubsection}{\int_set:Nn \l__pxsrc_input_heading_level_int {4}}}
+           \int_compare:nNnT {\l__pxsrc_input_matches_int} > {0}
+            {\int_compare:nNnT {\l__pxsrc_input_last_int} = {0}
+              {\int_compare:nT {\l__pxsrc_input_heading_level_int <= \l__pxsrc_input_level_int}
+                {\int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_input_line_int-1}}}}
+           \int_compare:nNnT {\l__pxsrc_input_heading_level_int} = {\l__pxsrc_input_level_int}
+            {\str_if_eq:eeT
+               {\seq_item:Nn \l__pxsrc_input_heading_seq {3}}
+               {\tl_to_str:V \l__pxsrc_input_heading_tl}
+               {\int_incr:N \l__pxsrc_input_matches_int
+                \int_set:Nn \l__pxsrc_input_first_int {\l__pxsrc_input_line_int}}}
+          }{}
+         \int_compare:nNnT {\l__pxsrc_input_matches_int} > {0}
+          {\int_compare:nNnT {\l__pxsrc_input_last_int} = {0}
+           {\regex_match:nVT
+              {\A\s*\\end\s*\{document\}}
+              \l__pxsrc_input_line_tl
+             {\int_set:Nn \l__pxsrc_input_last_int {\l__pxsrc_input_line_int-1}}}}
+        }
+      }
+    }
+   \ior_close:N \l__pxsrc_input_ior
+   \str_if_eq:VnT \l__pxsrc_input_selector_tl {region}
+      {\int_compare:nNnF {\l__pxsrc_input_region_ends_int} = {1}
+        {\__pxsrc_input_error:n {Source~region~must~have~exactly~one~closing~marker}}}
+   \tl_if_blank:VF \l__pxsrc_input_selector_tl
+    {
+     \int_compare:nNnF {\l__pxsrc_input_matches_int} = {1}
+       {\__pxsrc_input_error:n {Source~selector~must~match~exactly~once}}
+    }
+   \int_compare:nNnT {\l__pxsrc_input_last_int} = {0}
+     {\int_set_eq:NN \l__pxsrc_input_last_int \l__pxsrc_input_line_int}
+   \int_compare:nNnT {\l__pxsrc_input_last_int} < {\l__pxsrc_input_first_int}
+     {\__pxsrc_input_error:n {Empty~or~reversed~source~selection}}
+   \int_compare:nNnT {\l__pxsrc_input_last_int} > {\l__pxsrc_input_line_int}
+     {\__pxsrc_input_error:n {Source~line~range~outside~file}}
+ }
+\cs_new_protected:Npn \__pxsrc_input_extract:
+ {
+   \int_gincr:N \g__pxsrc_piece_int
+   \tl_set:Nx \l__pxsrc_input_temp_tl
+    {\c_sys_jobname_str.pxsrc-\int_use:N \g__pxsrc_piece_int.tex}
+   \group_begin:
+     \int_gzero:N \FV@CodeLineNo
+     \def\FV@FindStartStop{\FV@DefineFindStart\FV@FindStartStop}
+     \FV@DefineWhiteSpace
+     \def\FV@Space{\space}
+     \FV@DefineTabOut
+     \let\FV@FontScanPrep\relax
+     \let\@noligs\relax
+     \fvset{firstline=\int_use:N \l__pxsrc_input_first_int,
+            lastline=\int_use:N \l__pxsrc_input_last_int}
+     \def\FV@ProcessLine{\immediate\write\pxSRCout}
+     \immediate\openout\pxSRCout=\l__pxsrc_input_temp_tl\relax
+     \exp_args:NV \FV@Input \l__pxsrc_input_file_tl
+     \immediate\closeout\pxSRCout
+   \group_end:
+ }
+\cs_new_protected:Npn \__pxsrc_input:nn #1#2
+ {
+   \group_begin:
+     \__pxsrc_input_configure:n {#1}
+     \file_get_full_name:nNTF {#2} \l__pxsrc_input_file_tl
+      {
+       \exp_args:NV \filename@parse \l__pxsrc_input_file_tl
+       \providecommand\input@path{}
+       \edef\input@path{{\filename@area}\input@path}
+       \providecommand\Ginput@path{}
+       \edef\Ginput@path{{\filename@area}\Ginput@path}
+       \bool_if:NT \l__pxsrc_input_valid_bool
+        {
+         \tl_if_blank:VTF \l__pxsrc_input_selector_tl
+          {\int_compare:nNnTF {\l__pxsrc_input_first_int} = {1}
+            {\int_compare:nNnTF {\l__pxsrc_input_last_int} = {0}
+              {\exp_args:NV \file_input:n \l__pxsrc_input_file_tl}
+              {\__pxsrc_input_select:
+               \bool_if:NT \l__pxsrc_input_valid_bool
+                 {\__pxsrc_input_extract:
+                  \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}}
+            {\__pxsrc_input_select:
+             \bool_if:NT \l__pxsrc_input_valid_bool
+               {\__pxsrc_input_extract:
+                \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}}
+          {\__pxsrc_input_select:
+           \bool_if:NT \l__pxsrc_input_valid_bool
+             {\__pxsrc_input_extract:
+              \exp_args:NV \file_input:n \l__pxsrc_input_temp_tl}}
+        }
+      }
+      {\__pxsrc_input_error:n {Source~file~not~found}}
+   \group_end:
+ }
+\cs_new_protected:Npn \__pxsrc_register_source:nnn #1#2#3
+ {
+   \prop_gput:Nnn \g__pxsrc_sources_prop {#2} {#3}
+   \prop_gput:Nnn \g__pxsrc_source_options_prop {#2} {#1}
+ }
+\cs_new_protected:Npn \__pxsrc_use_source:nn #1#2
+ {
+   \prop_get:NnNTF \g__pxsrc_sources_prop {#2} \l__pxsrc_input_file_tl
+    {\prop_get:NnN \g__pxsrc_source_options_prop {#2} \l_tmpa_tl
+     \use:x {\exp_not:N \__pxsrc_input:nn
+       {\exp_not:V \l_tmpa_tl,\exp_not:n {#1}}
+       {\exp_not:V \l__pxsrc_input_file_tl}}}
+    {\PackageError{pxSRC}{Unknown~source~'#2'}{Register~it~using~\string\pxSource}}
+ }
+
 \ProcessKeysOptions{ pxSRC }
 \endinput

@@ -30,7 +30,7 @@
 %% =================================
 %% pxCORE package keys.
 %% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
-%% PRP/UML/GNT/CMP/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig/CMPconfig forward option strings to those packages.
+%% PRP/UML/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig forward option strings to those packages.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
@@ -43,14 +43,6 @@
 	PRP			.bool_set:N 	= \l_pxcore_prp_use_bool,
 		PRP			.initial:n	= false,
 		PRP			.default:n	= true,
-	GNT			.bool_set:N	=	\l_pxcore_gnt_use_bool,
-		GNT			.initial:n	=	false,
-		GNT			.default:n	=	true,
-	CMP			.bool_set:N	=	\l_pxcore_cmp_use_bool,
-		CMP			.initial:n	=	false,
-		CMP			.default:n	=	true,
-	CMPconfig	.tl_set_x:N 	= \l_pxcore_cmp_config_tl,
-		CMPconfig	.initial:n	= {},
 	UML			.bool_set:N 	= \l_pxcore_uml_use_bool,
 		UML			.initial:n	= false,
 		UML			.default:n	= true,
@@ -70,12 +62,6 @@
 	ORL			.bool_set:N = \l_pxcore_orl_use_bool,
 		ORL         .initial:n  = false,
 		ORL         .default:n  = true,
-	TFG			.bool_set:N	= \l_pxcore_tfg_use_bool,
-		TFG			.initial:n	= false,
-		TFG			.default:n	= true,
-	MEM			.bool_set:N	= \l_pxcore_mem_use_bool,
-		MEM			.initial:n	= false,
-		MEM			.default:n	= true,
 	default		.meta:n	=	{
 		PRP		=	true,
 		UML		=	true,
@@ -109,15 +95,6 @@
 \bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
-\bool_if:NT \l_pxcore_gnt_use_bool { \RequirePackage{pxGNT} }
-\bool_if:NT \l_pxcore_cmp_use_bool
-	{
-		\tl_if_blank:VTF \l_pxcore_cmp_config_tl
-			{ \RequirePackage{pxCMP} }
-			{ \RequirePackage[\l_pxcore_cmp_config_tl]{pxCMP} }
-	}
-\bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
-\bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
 \bool_if:NT \l_pxcore_lst_use_bool {}
 
 

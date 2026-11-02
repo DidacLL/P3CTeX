@@ -1,0 +1,19 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{pxMEM}
+\begin{document}
+\tableofcontents
+\chapter{First}
+\section{Main}\label{sec:main}
+\pxMEMannex[label={ann:data}]{Evidence}{
+  \section{Annex section}\label{ann:sect}
+  Annex body.
+}
+\pxMEMannex[label={ann:second}]{Further evidence}{Second annex body.}
+\chapter{Second}
+\section{Later}
+\ifnum\value{chapter}=2\else\errmessage{Chapter counter incorrect}\fi
+\ifnum\value{section}=1\else\errmessage{Section counter incorrect}\fi
+\listoffigures
+See annexes \ref{ann:data}, \ref{ann:second} and section \ref{sec:main}.
+\end{document}

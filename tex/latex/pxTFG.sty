@@ -1,52 +1,68 @@
-% UOC TFG-specific semantics, independent of generic MEM support.
+% P3CTeX — TFG metadata shared by PR and MEM documents.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse}
-\ProvidesExplPackage{pxTFG}{2026/10/22}{v0.3}{P3CTeX UOC TFG semantics}
-\file_input:n {pxTFG.code.tex}
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+\RequirePackage{graphicx}
+\ProvidesExplPackage{pxTFG}{2026/11/01}{v0.1}{Shared TFG metadata}
 
-%% \pxTFGsetup{<key=value,...>}
-%% Set TFG-only metadata: tutor, PRA, area, credits, keywords and licence. Shared information
-%% (student, degree, project title, activity, date) stays in P3CTeX data keys.
-\NewDocumentCommand\pxTFGsetup{m}{\keys_set:nn {pxTFG} {#1}}
-%% \pxTFGabstract{CAT|ES|EN}{<text>}
-%% Store or replace one language-specific abstract for later printing.
-%% This does not change the document language or immediately typeset it.
-\NewDocumentCommand\pxTFGabstract{m +m}{\__pxtfg_abstract:nn {#1}{#2}}
-%% \pxTFGworkcard
-%% Typeset the UOC final-project information card using the current class
-%% metadata and TFG-specific fields, with headings in the document language.
-\NewDocumentCommand\pxTFGworkcard{}{\__pxtfg_card:}
-%% \pxTFGabstracts
-%% Print the abstracts already supplied by \pxTFGabstract, ordered CAT/ES/EN;
-%% missing languages are omitted.
-\NewDocumentCommand\pxTFGabstracts{}{\__pxtfg_abstracts:}
-%% \pxTFGcoverdetails
-%% Print TFG-specific cover metadata in an existing pxGDX text slot.
-\NewDocumentCommand\pxTFGcoverdetails{}{\__pxtfg_cover_details:}
-%% \pxTFGlicencepage
-%% Print the configured licence page, if any.
-\NewDocumentCommand\pxTFGlicencepage{}{\__pxtfg_licence_page:}
-%% \pxTFGfrontmatter
-%% Print only TFG-specific preliminary content: optional licence page,
-%% information sheet with CAT summary, then ES/EN abstracts.
-%% pxMEM is responsible for the complete memory structure and indexes.
-\NewDocumentCommand\pxTFGfrontmatter{}{\__pxtfg_frontmatter:}
+\keys_define:nn { pxTFG }
+{
+  tutor    .tl_set:N = \l__pxtfg_tutor_tl,
+  tutor    .initial:n = {},
+  pra      .tl_set:N = \l__pxtfg_pra_tl,
+  pra      .initial:n = {},
+  area     .tl_set:N = \l__pxtfg_area_tl,
+  area     .initial:n = {},
+  credits  .tl_set:N = \l__pxtfg_credits_tl,
+  credits  .initial:n = {},
+  keywords .tl_set:N = \l__pxtfg_keywords_tl,
+  keywords .initial:n = {},
+  licence  .tl_set:N = \l__pxtfg_licence_tl,
+  licence  .initial:n = {}
+}
 
-% P3CTeX owns the cover and TOC. TFG contributes its own front matter
-% before that TOC, without changing the class or depending on pxMEM.
-\@ifclassloaded{P3CTeX}{%
-  \AddToHook{begindocument/before}{%
-    \NewCommandCopy\__pxtfg_saved_toc:\PECTeXprintTOC
-    \RenewDocumentCommand\PECTeXprintTOC{s}{%
-      \pxTFGfrontmatter
-      \clearpage
-      \IfBooleanTF{#1}{\__pxtfg_saved_toc:*}{\__pxtfg_saved_toc:}%
-    }%
-  }%
-  % When no TOC is requested, print the TFG content after the class cover.
-  \AddToHook{begindocument/end}{%
-    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
-      {\pxTFGfrontmatter\clearpage}%
-  }%
-}{}
+% \pxTFGsetup{tutor=..., pra=..., area=..., credits=..., keywords=..., licence=...}
+% The ordinary P3CTeX/data and PAC/PR fields are unchanged.
+\NewDocumentCommand{\pxTFGsetup}{+m}{\keys_set:nn {pxTFG} {#1}}
+
+% Manual licence page: reuse bundled CC artwork for recognised codes.
+% Other licence descriptions are printed without an assumed logo or legal text.
+\cs_new_protected:Npn \__pxtfg_licence_artwork:
+  {
+    \tl_set:Nx \l_tmpa_tl {\tl_lower_case:n {\tl_to_str:V \l__pxtfg_licence_tl}}
+    \regex_replace_all:nnN {[^a-z]} {} \l_tmpa_tl
+    \str_case:enT {\tl_use:N \l_tmpa_tl}
+      {{ccby}{}{ccbync}{}{ccbyncnd}{}{ccbyncsa}{}{ccbynd}{}{ccbysa}{}}
+      {
+        \clist_map_inline:nn {licenc/,../code/licenc/,tex/code/licenc/}
+          {
+            \tl_set:Nx \l_tmpb_tl {##1\l_tmpa_tl.png}
+            \exp_args:NV \file_if_exist:nT \l_tmpb_tl
+              {\includegraphics[height=1cm,keepaspectratio]{\l_tmpb_tl}\par\medskip
+               \clist_map_break:}
+          }
+      }
+  }
+\cs_new:Npn \__pxtfg_licence_heading:
+  {
+    \cs_if_exist:NTF \languagename
+      {\str_case:enF {\languagename}
+        {{catalan}{Llicència}{spanish}{Licencia}{english}{Licence}}{Licence}}
+      {Licence}
+  }
+% \pxTFGlicencepage: render the configured licence on demand, not automatically.
+\NewDocumentCommand\pxTFGlicencepage{}
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {\clearpage\thispagestyle{empty}
+       \group_begin:
+       \parindent=0pt\vspace*{\fill}
+       \begin{minipage}{.85\linewidth}
+         \__pxtfg_licence_artwork:
+         \textbf{\__pxtfg_licence_heading:}\par\smallskip
+         \tl_use:N \l__pxtfg_licence_tl\par
+       \end{minipage}
+       \par\vspace*{\fill}
+       \group_end:\clearpage}
+  }
 \endinput
