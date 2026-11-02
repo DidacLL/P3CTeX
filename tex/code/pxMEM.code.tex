@@ -1,0 +1,27 @@
+\ProvidesExplFile{pxMEM.code.tex}{2026/11/02}{0.4}
+  {Configurable memory chapter and index presentation}
+% The memory owns its own presentation; it does not load source or glossary tools.
+\tl_new:N \l__pxmem_chapter_style_tl
+\bool_new:N \l__pxmem_figures_bool
+\bool_new:N \l__pxmem_tables_bool
+\bool_new:N \g__pxmem_indexes_done_bool
+\keys_define:nn {pxMEM}
+  {
+    chapter-style .tl_set:N = \l__pxmem_chapter_style_tl,
+    chapter-style .initial:n = \normalfont\huge\bfseries,
+    figures .bool_set:N = \l__pxmem_figures_bool,
+    figures .initial:n = true,
+    tables .bool_set:N = \l__pxmem_tables_bool,
+    tables .initial:n = true
+  }
+% Reuse the existing chapter-level list commands: no second list renderer.
+\cs_new_protected:Npn \__pxmem_indexes:
+  {
+    \bool_if:NF \g__pxmem_indexes_done_bool
+      {
+        \bool_gset_true:N \g__pxmem_indexes_done_bool
+        \bool_if:NT \l__pxmem_figures_bool {\listoffigures\clearpage}
+        \bool_if:NT \l__pxmem_tables_bool {\listoftables\clearpage}
+      }
+  }
+\endinput
