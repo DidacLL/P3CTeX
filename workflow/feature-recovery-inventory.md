@@ -306,3 +306,17 @@ for this task. All regression fixtures are committed but unverified.
 The next step is to run/fix the matrix in a LaTeX-enabled checkout, inspect
 PDF text and visual output, re-run the existing MEM/PAC/PR tests, then
 promote individual rows to "Implemented and verified" as justified.
+
+
+**Reference-target correction**: A focused local two-pass hyperref + cleveref
+probe reproduced a real defect: the starred annex heading replaced
+\`\@currentHref\` with \`section*.1\` after \`\refstepcounter{pxannex}\`,
+so an annex \`\label\` pointed at the heading anchor rather than at the
+typed \`pxannex.1\` destination. The corrected standalone probe emitted
+\`BEFORE-HEADING-HREF=pxannex.1\`,
+\`AFTER-HEADING-HREF=pxannex.1\` and
+\`newlabel{ann:a}{{A}{2}{Annex A}{pxannex.1}{}}\`.
+The endmatter renderer now captures and restores the refstep destination,
+including MEM's \`pxmemannex\` variant. These are **isolated reference
+probes**, not full-class compilation; the updated CI matrix includes
+precise AUX-anchor assertions.

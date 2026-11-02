@@ -39,6 +39,10 @@ jobs:
               grep -q Glossari pxEND.locale.CAT.test.txt
               grep -q Glosario pxEND.locale.ES.test.txt
               grep -q Glossary pxEND.locale.EN.test.txt
+              grep -q -E 'newlabel\{ann:a\}.*pxannex\.1' pxEND.PAC.test.aux
+              grep -q -E 'newlabel\{ann:b\}.*pxannex\.2' pxEND.PAC.test.aux
+              grep -q -E 'newlabel\{ann:mem1\}.*pxmemannex\.1' pxEND.MEM.test.aux
+              grep -q -E 'newlabel\{ann:mem2\}.*pxmemannex\.2' pxEND.MEM.test.aux
               grep -q endmatter2026 pxEND.bibtex.test.bbl
               grep -q endmatter2026 pxEND.biblatex.test.bbl
               grep -q UNUSED-DESCRIPTION pxGLS.external.test.txt

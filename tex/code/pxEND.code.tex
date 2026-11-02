@@ -116,6 +116,7 @@
 \tl_new:N \l__pxann_level_tl
 \tl_new:N \l__pxann_name_tl
 \tl_new:N \l__pxann_anchor_prefix_tl
+\tl_new:N \l__pxann_saved_href_tl
 \bool_new:N \l__pxann_auto_bool
 \bool_new:N \l__pxann_toc_bool
 \bool_new:N \l__pxann_pagebreak_bool
@@ -147,10 +148,12 @@
         {\tl_set:Nn \l__pxann_level_tl {chapter}}
         {\tl_set:Nn \l__pxann_level_tl {section}}}
     \bool_if:NT \l__pxann_pagebreak_bool {\clearpage}
-    \cs_if_exist:NT \phantomsection {\phantomsection}
     \tl_if_eq:NnTF \l__pxann_anchor_prefix_tl {pxmemannex}
       {\refstepcounter{pxmemannex}}
       {\refstepcounter{pxannex}}
+    % The following starred heading creates its own Hyperref destination.
+    % Keep the reference-step destination for the annex label and its TOC entry.
+    \tl_set:Nx \l__pxann_saved_href_tl {\@currentHref}
     \prop_clear:N \l__pxann_saved_counters_prop
     \clist_map_inline:nn {chapter,section,subsection,subsubsection,equation,figure,table}
       {\cs_if_exist:cT {c@##1}
@@ -178,6 +181,7 @@
         {\chapter*{\l__pxann_name_tl\space\thepxannex :~#2}}
         {\PackageError{pxEND/annex}{Chapter~annexes~require~a~chapter-capable~document}{Use~level=section.}}}
       {\section*{\l__pxann_name_tl\space\thepxannex :~#2}}
+    \cs_set:Npx \@currentHref {\l__pxann_saved_href_tl}
     \protected@edef\@currentlabel{\thepxannex}
     \def\@currentlabelname{#2}
     \bool_if:NT \l__pxann_toc_bool
