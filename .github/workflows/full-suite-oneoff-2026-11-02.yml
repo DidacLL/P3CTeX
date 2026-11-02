@@ -1,0 +1,35 @@
+name: Full P3CTeX regression (single authorized run)
+on:
+  push:
+    branches:
+      - ci/full-suite-2026-11-02
+
+permissions:
+  contents: read
+
+jobs:
+  all-source-tests-and-documents:
+    name: "Full CI / ${{ matrix.suite }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [core, diagrams, listings, pmcalc, integration, docs]
+    steps:
+      - name: Checkout exact recovery commit with shell-only Git
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git fetch --no-tags origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+          git rev-parse HEAD
+      - name: Run complete current P3CTeX test suite (3 pdfLaTeX passes each)
+        shell: bash
+        env:
+          SUITE: "${{ matrix.suite }}"
+        run: |
+          set -euo pipefail
+          docker run --rm -e SUITE -v "$GITHUB_WORKSPACE:/work" -w /work/tex/tests ghcr.io/xu-cheng/texlive-debian:latest bash /work/tex/tests/run-full-ci-once.sh "$SUITE"

@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Single-revision P3CTeX regression: all root test documents, examples, and manuals.
+set -uo pipefail
+suite="$1"
+count=0
+failed=0
+warned=0
+pdf_less=0
+skipped=0
+export TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:"
+case "$suite" in
+  core) patterns="P3CTeX*.tex pxCORE*.tex pxGDX*.tex pxPRP*.tex pxORL*.tex pxTAB*.tex pxUML*.tex pxSRC*.tex" ;;
+  diagrams) patterns="pxDIA*.tex" ;;
+  listings) patterns="pxLST*.tex" ;;
+  pmcalc) patterns="pxPM*.tex pxCALC*.tex" ;;
+  integration) patterns="pxMEM*.tex pxTFG*.tex pxFULL*.tex pxANX*.tex pxGLS*.tex" ;;
+  docs) patterns="" ;;
+  *) echo "Unknown suite: $suite" >&2; exit 2 ;;
+esac
+mkdir -p "/work/.full-ci/$suite"
+run_document() {
+  local src="$1" kind="$2" relative="$3"
+  local dir filename name out log pass ok=1
+  count=$((count+1))
+  dir="$(dirname "$src")"
+  filename="$(basename "$src")"
+  name="$(basename "$src" .tex)"
+  out="/work/.full-ci/$suite/$count"
+  mkdir -p "$out"
+  echo "=== START $suite [$count] $relative ==="
+  for pass in 1 2 3; do
+    log="$out/stdout-pass-$pass.log"
+    if ! (cd "$dir" && pdflatex -halt-on-error -file-line-error -interaction=nonstopmode "-output-directory=$out" "$filename" > "$log" 2>&1); then
+      echo "FAIL $relative (pdfLaTeX pass $pass)"
+      grep -E -A 8 '^! |^.*:[0-9]+:|Fatal error occurred' "$log" | tail -n 60 || true
+      tail -n 35 "$log" || true
+      ok=0
+      break
+    fi
+  done
+  if ((ok==1)) && [[ "$kind" == "document" && ! -s "$out/$name.pdf" ]]; then
+    echo "FAIL $relative (expected PDF not produced)"
+    ok=0
+  fi
+  if ((ok==1)) && [[ "$kind" == "test" && ! -s "$out/$name.pdf" ]]; then
+    pdf_less=$((pdf_less+1))
+    echo "ASSERTION-ONLY $relative (no PDF page)"
+  fi
+  if ((ok==1)); then
+    if grep -Eiq 'destination with the same identifier|multiply-defined|multiply defined' "$out/stdout-pass-3.log"; then
+      echo "FAIL $relative (duplicate destination/label)"
+      grep -Ei 'destination with the same identifier|multiply-defined|multiply defined' "$out/stdout-pass-3.log" | tail -n 12
+      ok=0
+    fi
+    if grep -Eiq 'LaTeX Warning: There were undefined references|LaTeX Warning: Reference .*undefined|LaTeX Warning: Citation .*undefined' "$out/stdout-pass-3.log"; then
+      warned=$((warned+1))
+      echo "$relative" >> "/work/.full-ci/$suite/warnings.txt"
+      echo "WARNING $relative (unresolved reference/citation)"
+    fi
+  fi
+  if ((ok==1)); then
+    echo "PASS $relative (3 pdfLaTeX passes)"
+  else
+    failed=$((failed+1))
+    echo "$relative" >> "/work/.full-ci/$suite/failures.txt"
+  fi
+}
+if [[ "$suite" == "docs" ]]; then
+  while IFS= read -r -d '' src; do
+    relative="$(realpath --relative-to=/work "$src")"
+    if ! grep -Eq '^[[:space:]]*\\documentclass[[:space:]]*(\[|\{)' "$src"; then
+      skipped=$((skipped+1))
+      echo "SKIP non-standalone document fragment: $relative"
+      continue
+    fi
+    run_document "$src" document "$relative"
+  done < <(find /work/tex/doc /work/examples -type f -name '*.tex' -print0 | sort -z)
+else
+  cd /work/tex/tests || exit 2
+  for pattern in $patterns; do
+    for src in $pattern; do
+      [[ -f "$src" ]] || continue
+      run_document "/work/tex/tests/$src" test "tex/tests/$src"
+    done
+  done
+fi
+echo "=== SUITE SUMMARY $suite: $count attempted, $failed failed, $warned unresolved-reference warnings, $pdf_less assertion-only, $skipped fragments skipped ==="
+if ((failed>0)); then
+  sed 's/^/FAILED TEST: /' "/work/.full-ci/$suite/failures.txt"
+fi
+if ((warned>0)); then
+  sed 's/^/UNRESOLVED REFS: /' "/work/.full-ci/$suite/warnings.txt"
+fi
+if ((count==0)); then
+  echo "FAIL: no documents were selected"; exit 2
+fi
+if ((failed>0)); then exit 1; fi
+echo "PASS SUITE $suite"
