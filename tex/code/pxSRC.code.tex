@@ -366,8 +366,8 @@
 \tl_set:Nn \l__pxsrc_default_mode_tl {native}
 \tl_new:N \l__pxsrc_default_container_tl
 \tl_set:Nn \l__pxsrc_default_container_tl {none}
-\tl_new:N \l__pxsrc_default_width_tl
-\tl_set:Nn \l__pxsrc_default_width_tl {\linewidth}
+\tl_new:N \l__pxsrc_input_default_width_tl
+\tl_set:Nn \l__pxsrc_input_default_width_tl {\linewidth}
 \tl_new:N \l__pxsrc_default_language_tl
 \tl_clear:N \l__pxsrc_default_language_tl
 \tl_new:N \l__pxsrc_default_title_tl
@@ -399,7 +399,7 @@
      {\tl_set:Nx \l__pxsrc_default_mode_tl {\l_keys_choice_tl}},
    container .choices:nn = {none,minipage}
      {\tl_set:Nx \l__pxsrc_default_container_tl {\l_keys_choice_tl}},
-   width .tl_set:N = \l__pxsrc_default_width_tl,
+   width .tl_set:N = \l__pxsrc_input_default_width_tl,
    language .tl_set:N = \l__pxsrc_default_language_tl,
    title .tl_set:N = \l__pxsrc_default_title_tl,
    listing-options .tl_set:N = \l__pxsrc_default_options_tl,
@@ -425,7 +425,7 @@
    \int_set_eq:NN \l__pxsrc_input_last_int \l__pxsrc_default_last_int
    \tl_set_eq:NN \l__pxsrc_input_mode_tl \l__pxsrc_default_mode_tl
    \tl_set_eq:NN \l__pxsrc_input_container_tl \l__pxsrc_default_container_tl
-   \tl_set_eq:NN \l__pxsrc_input_width_tl \l__pxsrc_default_width_tl
+   \tl_set_eq:NN \l__pxsrc_input_width_tl \l__pxsrc_input_default_width_tl
    \tl_set_eq:NN \l__pxsrc_input_language_tl \l__pxsrc_default_language_tl
    \tl_set_eq:NN \l__pxsrc_input_title_tl \l__pxsrc_default_title_tl
    \tl_set_eq:NN \l__pxsrc_input_options_tl \l__pxsrc_default_options_tl

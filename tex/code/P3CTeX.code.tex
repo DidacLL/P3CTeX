@@ -195,6 +195,8 @@
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
+% Load cleveref after optional math modules (pxCALC -> amsmath).
+\RequirePackage{cleveref}
 \pxGDX_config:n { %% Pass P3CTeX / data keys to pxCORE
 	cover-config={
 		text-backtitle	 ={\l__pxdata_course_tl},

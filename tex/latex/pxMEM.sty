@@ -6,6 +6,9 @@
 \cs_if_exist:NF \chapter
   {
     \newcounter{chapter}
+    % article does not define the chapter heading prefix used by hyperref/nameref.
+    \providecommand\chaptername{Chapter}
+    \providecommand\@chapapp{\chaptername}
     \providecommand\chaptermark[1]{}
     \@addtoreset{section}{chapter}
     \renewcommand\thesection{\thechapter.\arabic{section}}
