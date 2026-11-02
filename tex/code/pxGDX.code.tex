@@ -34,8 +34,8 @@
 \RequirePackage{tcolorbox}
 % Hyperlinks configuration
 \RequirePackage{hyperref}
-% --- FIX cleveref must be loaded after hyperref
-\RequirePackage{cleveref}
+% cleveref is loaded by P3CTeX after optional pxCORE modules,
+% so amsmath (from pxCALC when selected) loads first.
 %allow ref to total pages and link to last page
 \RequirePackage{lastpage}
 \newgeometry{hmargin=1in,vmargin=1.2in}
