@@ -2,6 +2,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
 \RequirePackage{xparse}
+\RequirePackage{l3keys2e}
 \RequirePackage{graphicx}
 \ProvidesExplPackage{pxTFG}{2026/11/01}{v0.1}{Shared TFG metadata}
 
@@ -18,7 +19,11 @@
   keywords .tl_set:N = \l__pxtfg_keywords_tl,
   keywords .initial:n = {},
   licence  .tl_set:N = \l__pxtfg_licence_tl,
-  licence  .initial:n = {}
+  licence  .initial:n = {},
+  licence-text .tl_set:N = \l__pxtfg_licence_text_tl,
+  licence-text .initial:n = {},
+  licence-icon .tl_set:N = \l__pxtfg_licence_icon_tl,
+  licence-icon .initial:n = {}
 }
 
 % \pxTFGsetup{tutor=..., pra=..., area=..., credits=..., keywords=..., licence=...}
@@ -58,11 +63,35 @@
        \group_begin:
        \parindent=0pt\vspace*{\fill}
        \begin{minipage}{.85\linewidth}
-         \__pxtfg_licence_artwork:
+         \tl_if_blank:VTF \l__pxtfg_licence_icon_tl
+           {\__pxtfg_licence_artwork:}
+           {\includegraphics[height=1cm,keepaspectratio]
+              {\l__pxtfg_licence_icon_tl}\par\medskip}
          \textbf{\__pxtfg_licence_heading:}\par\smallskip
          \tl_use:N \l__pxtfg_licence_tl\par
+         \tl_if_blank:VF \l__pxtfg_licence_text_tl
+           {\medskip\tl_use:N \l__pxtfg_licence_text_tl\par}
        \end{minipage}
        \par\vspace*{\fill}
        \group_end:\clearpage}
   }
+
+% Presentation and abstract implementations are separate from the public API.
+\file_input:n {pxTFG.code.tex}
+\ProcessKeysOptions{pxTFG}
+% Keep the class's existing cover/contents sequence; TFG supplies only its
+% own preliminary content. Standalone licence use does not alter article.
+\@ifclassloaded{P3CTeX}
+  {\AddToHook{P3CTeX/before-toc}[pxTFG]
+    {\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_frontmatter:}}}
+  {}
+
+% \pxTFGabstract{CAT|ES|EN}{text}: store a language-specific abstract.
+\NewDocumentCommand\pxTFGabstract{m +m}
+  {\__pxtfg_abstract:nn {#1}{#2}}
+% Explicit presentation is available with print=manual or independently.
+\NewDocumentCommand\pxTFGworkcard{}{\__pxtfg_card:}
+\NewDocumentCommand\pxTFGabstracts{}{\__pxtfg_abstracts:}
+\NewDocumentCommand\pxTFGcoverdetails{}{\__pxtfg_cover_details:}
+\NewDocumentCommand\pxTFGfrontmatter{}{\__pxtfg_frontmatter:}
 \endinput
