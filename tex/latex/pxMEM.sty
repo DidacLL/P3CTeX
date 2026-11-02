@@ -1,7 +1,8 @@
 % Final-memory presentation for P3CTeX. Ordinary PAC/PR layout is untouched.
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3,xparse}
-\ProvidesExplPackage{pxMEM}{2026/11/01}{0.1}{P3CTeX memory presentation}
+\ProvidesExplPackage{pxMEM}{2026/11/02}{0.4}{P3CTeX memory presentation}
+\file_input:n {pxMEM.code.tex}
 \cs_if_exist:NF \chapter
   {
     \newcounter{chapter}
@@ -11,12 +12,15 @@
     \cs_new_protected:Npn \__pxmem_chapter:
       {\clearpage\@startsection{chapter}{0}{\z@}
         {-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}
-        {\normalfont\huge\bfseries}}
+        {\l__pxmem_chapter_style_tl}}
     \cs_new_eq:NN \chapter \__pxmem_chapter:
     \providecommand*\l@chapter{\@dottedtocline{0}{0em}{2.5em}}
     \renewcommand*\l@section{\@dottedtocline{1}{2.5em}{3em}}
     \renewcommand*\l@subsection{\@dottedtocline{2}{5.5em}{4em}}
     \renewcommand*\l@subsubsection{\@dottedtocline{3}{9.5em}{5em}}
+    % Explicit traditional appendix mode remains separate from queued annexes.
+    \renewcommand\appendix{\setcounter{chapter}{0}\setcounter{section}{0}%
+      \renewcommand\thechapter{\Alph{chapter}}}
   }
 % Native \listoffigures and \listoftables remain optional, with chapter-level headings.
 \RenewDocumentCommand\listoffigures{}
@@ -65,6 +69,28 @@
         {\int_gset:cn {c@##1}{##2}}
     \group_end:
   }
+% \pxMEMsetup{chapter-style=...,figures=true|false,tables=true|false}
+\NewDocumentCommand\pxMEMsetup{m}{\keys_set:nn {pxMEM}{#1}}
+% Optional source adapters retain the earlier MEM entry points, but pxSRC
+% remains selected independently. Both use its public API.
+\NewDocumentCommand\pxMEMsource{O{} m m}
+  {\cs_if_exist:NTF \pxSource {\pxSource[#1]{#2}{#3}}
+    {\PackageError{pxMEM}{Source handling requires pxSRC}{Select SRC explicitly.}}}
+\NewDocumentCommand\pxMEMinclude{O{} m m}
+  {\cs_if_exist:NTF \pxUseSource
+    {\pxUseSource[region={#3},#1]{#2}}
+    {\PackageError{pxMEM}{Source handling requires pxSRC}{Select SRC explicitly.}}}
+% Manual preliminaries for a document with no automatic contents.
+\NewDocumentCommand\pxMEMpreliminaries{+m}
+  {#1\bool_if:NF \g__pxmem_indexes_done_bool
+    {\clearpage\cs_if_exist:NTF \PECTeXprintTOC
+       {\PECTeXprintTOC}
+       {\tableofcontents\clearpage}
+     \__pxmem_indexes:}}
+\@ifclassloaded{P3CTeX}
+  {\AddToHook{P3CTeX/after-toc}[pxMEM]{\__pxmem_indexes:}}
+  {}
+
 % Deferred annexes print once at the end, including native input via \pxInput.
 \NewDocumentCommand\pxMEMannex{O{} m +m}
   {\seq_gput_right:Nn \g__pxmem_annexes_seq {\__pxmem_annex_print:nnn {#1}{#2}{#3}}}
