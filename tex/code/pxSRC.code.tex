@@ -351,29 +351,91 @@
    cite .tl_set:N = \l__pxsrc_input_cite_tl,
    terms .clist_set:N = \l__pxsrc_input_terms_clist
  }
+% Typed, scoped defaults: no serialized key history or per-input option replay.
+\tl_new:N \l__pxsrc_default_section_tl
+\tl_clear:N \l__pxsrc_default_section_tl
+\tl_new:N \l__pxsrc_default_subsection_tl
+\tl_clear:N \l__pxsrc_default_subsection_tl
+\tl_new:N \l__pxsrc_default_region_tl
+\tl_clear:N \l__pxsrc_default_region_tl
+\int_new:N \l__pxsrc_default_first_int
+\int_set:Nn \l__pxsrc_default_first_int {1}
+\int_new:N \l__pxsrc_default_last_int
+\int_set:Nn \l__pxsrc_default_last_int {0}
+\tl_new:N \l__pxsrc_default_mode_tl
+\tl_set:Nn \l__pxsrc_default_mode_tl {native}
+\tl_new:N \l__pxsrc_default_container_tl
+\tl_set:Nn \l__pxsrc_default_container_tl {none}
+\tl_new:N \l__pxsrc_default_width_tl
+\tl_set:Nn \l__pxsrc_default_width_tl {\linewidth}
+\tl_new:N \l__pxsrc_default_language_tl
+\tl_clear:N \l__pxsrc_default_language_tl
+\tl_new:N \l__pxsrc_default_title_tl
+\tl_clear:N \l__pxsrc_default_title_tl
+\tl_new:N \l__pxsrc_default_options_tl
+\tl_clear:N \l__pxsrc_default_options_tl
+\tl_new:N \l__pxsrc_default_region_prefix_tl
+\tl_set:Nx \l__pxsrc_default_region_prefix_tl {\c_percent_str}
+\tl_new:N \l__pxsrc_default_region_suffix_tl
+\tl_clear:N \l__pxsrc_default_region_suffix_tl
+\tl_new:N \l__pxsrc_default_caption_tl
+\tl_clear:N \l__pxsrc_default_caption_tl
+\tl_new:N \l__pxsrc_default_label_tl
+\tl_clear:N \l__pxsrc_default_label_tl
+\tl_new:N \l__pxsrc_default_label_prefix_tl
+\tl_clear:N \l__pxsrc_default_label_prefix_tl
+\tl_new:N \l__pxsrc_default_cite_tl
+\tl_clear:N \l__pxsrc_default_cite_tl
+\clist_new:N \l__pxsrc_default_terms_clist
+\clist_clear:N \l__pxsrc_default_terms_clist
+\keys_define:nn {pxSRC/input-defaults}
+ {
+   section .tl_set:N = \l__pxsrc_default_section_tl,
+   subsection .tl_set:N = \l__pxsrc_default_subsection_tl,
+   region .tl_set:N = \l__pxsrc_default_region_tl,
+   first-line .int_set:N = \l__pxsrc_default_first_int,
+   last-line .int_set:N = \l__pxsrc_default_last_int,
+   as .choices:nn = {native,code,text}
+     {\tl_set:Nx \l__pxsrc_default_mode_tl {\l_keys_choice_tl}},
+   container .choices:nn = {none,minipage}
+     {\tl_set:Nx \l__pxsrc_default_container_tl {\l_keys_choice_tl}},
+   width .tl_set:N = \l__pxsrc_default_width_tl,
+   language .tl_set:N = \l__pxsrc_default_language_tl,
+   title .tl_set:N = \l__pxsrc_default_title_tl,
+   listing-options .tl_set:N = \l__pxsrc_default_options_tl,
+   region-prefix .tl_set:N = \l__pxsrc_default_region_prefix_tl,
+   region-suffix .tl_set:N = \l__pxsrc_default_region_suffix_tl,
+   caption .tl_set:N = \l__pxsrc_default_caption_tl,
+   label .tl_set:N = \l__pxsrc_default_label_tl,
+   label-prefix .tl_set:N = \l__pxsrc_default_label_prefix_tl,
+   cite .tl_set:N = \l__pxsrc_default_cite_tl,
+   terms .clist_set:N = \l__pxsrc_default_terms_clist
+ }
+\keys_define:nn {pxSRC}
+ {input .code:n = {\keys_set:nn {pxSRC/input-defaults}{#1}}}
 \cs_new_protected:Npn \__pxsrc_input_error:n #1
  {\bool_set_false:N \l__pxsrc_input_valid_bool
   \PackageError{pxSRC}{#1}{Check~the~source~selector.}}
 \cs_new_protected:Npn \__pxsrc_input_configure:n #1
  {
-   \tl_clear:N \l__pxsrc_input_region_tl
-   \tl_clear:N \l__pxsrc_input_section_tl
-   \tl_clear:N \l__pxsrc_input_subsection_tl
-   \tl_set:Nn \l__pxsrc_input_mode_tl {native}
-   \tl_set:Nn \l__pxsrc_input_container_tl {none}
-   \tl_set:Nn \l__pxsrc_input_width_tl {\linewidth}
-   \tl_clear:N \l__pxsrc_input_language_tl
-   \tl_clear:N \l__pxsrc_input_title_tl
-   \tl_clear:N \l__pxsrc_input_options_tl
-   \tl_set:Nx \l__pxsrc_input_region_prefix_tl {\c_percent_str}
-   \tl_clear:N \l__pxsrc_input_region_suffix_tl
-   \tl_clear:N \l__pxsrc_input_caption_tl
-   \tl_clear:N \l__pxsrc_input_label_tl
-   \tl_clear:N \l__pxsrc_input_label_prefix_tl
-   \tl_clear:N \l__pxsrc_input_cite_tl
-   \clist_clear:N \l__pxsrc_input_terms_clist
-   \int_set:Nn \l__pxsrc_input_first_int {1}
-   \int_zero:N \l__pxsrc_input_last_int
+   \tl_set_eq:NN \l__pxsrc_input_section_tl \l__pxsrc_default_section_tl
+   \tl_set_eq:NN \l__pxsrc_input_subsection_tl \l__pxsrc_default_subsection_tl
+   \tl_set_eq:NN \l__pxsrc_input_region_tl \l__pxsrc_default_region_tl
+   \int_set_eq:NN \l__pxsrc_input_first_int \l__pxsrc_default_first_int
+   \int_set_eq:NN \l__pxsrc_input_last_int \l__pxsrc_default_last_int
+   \tl_set_eq:NN \l__pxsrc_input_mode_tl \l__pxsrc_default_mode_tl
+   \tl_set_eq:NN \l__pxsrc_input_container_tl \l__pxsrc_default_container_tl
+   \tl_set_eq:NN \l__pxsrc_input_width_tl \l__pxsrc_default_width_tl
+   \tl_set_eq:NN \l__pxsrc_input_language_tl \l__pxsrc_default_language_tl
+   \tl_set_eq:NN \l__pxsrc_input_title_tl \l__pxsrc_default_title_tl
+   \tl_set_eq:NN \l__pxsrc_input_options_tl \l__pxsrc_default_options_tl
+   \tl_set_eq:NN \l__pxsrc_input_region_prefix_tl \l__pxsrc_default_region_prefix_tl
+   \tl_set_eq:NN \l__pxsrc_input_region_suffix_tl \l__pxsrc_default_region_suffix_tl
+   \tl_set_eq:NN \l__pxsrc_input_caption_tl \l__pxsrc_default_caption_tl
+   \tl_set_eq:NN \l__pxsrc_input_label_tl \l__pxsrc_default_label_tl
+   \tl_set_eq:NN \l__pxsrc_input_label_prefix_tl \l__pxsrc_default_label_prefix_tl
+   \tl_set_eq:NN \l__pxsrc_input_cite_tl \l__pxsrc_default_cite_tl
+   \clist_set_eq:NN \l__pxsrc_input_terms_clist \l__pxsrc_default_terms_clist
    \keys_set:nn {pxSRC/input} {#1}
    \bool_set_true:N \l__pxsrc_input_valid_bool
    \int_zero:N \l_tmpa_int
