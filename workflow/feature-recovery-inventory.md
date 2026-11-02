@@ -257,47 +257,47 @@ Additional isolated pdfLaTeX inline probe emitted `PXLST-INLINE-PASS` for both d
 
 ## Checkpoint: annexes, glossary, bibliography and endmatter (2026-11-02)
 
-Task branch: \`recovery/endmatter-2026-11-02\` from authoritative
-\`8cfae208bcb887ba93c019be28dc9b551bcaf37c\`. This is an
+Task branch: `recovery/endmatter-2026-11-02` from authoritative
+`8cfae208bcb887ba93c019be28dc9b551bcaf37c`. This is an
 **implemented, committed, but not yet compiled/verified** reconstruction,
 so relevant rows remain "Recovered but needing correction"; none is
 prematurely labelled "Implemented and verified".
 
-- \`b65a3dd\`: optional \`pxEND.sty\` + \`pxEND.code.tex\` recover
-  \`\pxAnnexSetup\`, immediate \`\pxAnnex\`, deferred \`\pxAddAnnex\`,
-  explicit \`\pxPrintAnnexes\`, one-time queue draining and nested registration;
+- `b65a3dd`: optional `pxEND.sty` + `pxEND.code.tex` recover
+  `\pxAnnexSetup`, immediate `\pxAnnex`, deferred `\pxAddAnnex`,
+  explicit `\pxPrintAnnexes`, one-time queue draining and nested registration;
   section/chapter headings, local figure/table/equation counters, unique H
   destinations, labels/cleveref, TOC/pagebreak controls and localized headings.
-  \`pxMEMannex\` delegates to that engine and preserves its signature and
-  \`pxmemannex\` Hyperref type. No PAC/PR global \`\appendix\`.
-- Same commit: \`\pxGlossarySetup\`, \`\pxGlossaryFile\`,
-  \`\pxPrintGlossary\`, \`\pxPrintGlossaries\`, \`\pxTerm\`, \`\pxTerms\`,
-  \`\pxAcronym\`, \`\pxAcronyms\`; independent lists, used/all,
-  auto/manual, TOC, per-type selection, standard \`glossaries\` no-index
+  `pxMEMannex` delegates to that engine and preserves its signature and
+  `pxmemannex` Hyperref type. No PAC/PR global `\appendix`.
+- Same commit: `\pxGlossarySetup`, `\pxGlossaryFile`,
+  `\pxPrintGlossary`, `\pxPrintGlossaries`, `\pxTerm`, `\pxTerms`,
+  `\pxAcronym`, `\pxAcronyms`; independent lists, used/all,
+  auto/manual, TOC, per-type selection, standard `glossaries` no-index
   default and external backend option, CAT/ES/EN titles. Exactly one
-  \`\GL\` / \`\GL*\` definition (in endmatter, not the class).
-- Same commit: optional \`\pxBibliography\`, ordinary BibTeX or
+  `\GL` / `\GL*` definition (in endmatter, not the class).
+- Same commit: optional `\pxBibliography`, ordinary BibTeX or
   preloaded biblatex backend, native citations unchanged, one-time
-  output. \`\pxEndMatterSetup\` / \`\pxPrintEndMatter\` coordinate
+  output. `\pxEndMatterSetup` / `\pxPrintEndMatter` coordinate
   bibliography, queued annexes, then glossaries. No generic framework.
-- \`a4f5798\`: restored six discarded targeted pxANN/pxGLS fixtures.
-  \`434453b\`: new PAC/PR/MEM and bibliography/manual fixtures plus
-  GitHub Actions multi-pass PDF matrix. \`06e4bf5\`: CAT/ES/EN fixtures,
-  shared glossary-definition file and \`tex/doc/endmatter.md\` explaining
+- `a4f5798`: restored six discarded targeted pxANN/pxGLS fixtures.
+  `434453b`: new PAC/PR/MEM and bibliography/manual fixtures plus
+  GitHub Actions multi-pass PDF matrix. `06e4bf5`: CAT/ES/EN fixtures,
+  shared glossary-definition file and `tex/doc/endmatter.md` explaining
   the stable annex API and its limits.
-- \`8a35b73\`: correct expl3 choice key value capture (not scratch alias);
-  warn when annex queue remains pending. \`268f624\`: preserve
+- `8a35b73`: correct expl3 choice key value capture (not scratch alias);
+  warn when annex queue remains pending. `268f624`: preserve
   glossary opt-in for annex-only and MEM-only class profiles.
 
-**Stable pxSRC contract**: \`\pxAddAnnex[label=ann:source]{Full source}{<native body>}\`
+**Stable pxSRC contract**: `\pxAddAnnex[label=ann:source]{Full source}{<native body>}`
 registers a deferred *unexpanded* body, accepts all annex keys, prints it
-once with its heading/label and enables ordinary \`\ref\`/\`\cref\` links.
-\`pxSRC\`/ \`pxLST\` will own all height measurements, previews and source
+once with its heading/label and enables ordinary `\ref`/`\cref` links.
+`pxSRC`/ `pxLST` will own all height measurements, previews and source
 rendering; no preview functionality was implemented in this task.
 
 **Verification actually obtained**: GitHub branch/commit and blob reads
 confirmed; 10 static architectural/registration checks passed. The pushed
-\`.github/workflows/endmatter-recovery.yml\` run
+`.github/workflows/endmatter-recovery.yml` run
 [41436292956](https://github.com/DidacLL/P3CTeX/actions/runs/41436292956)
 failed during startup *before creating a job* (zero jobs). There are
 **no executed class integration compilations, no multipass test passes,
@@ -310,29 +310,29 @@ promote individual rows to "Implemented and verified" as justified.
 
 **Reference-target correction**: A focused local two-pass hyperref + cleveref
 probe reproduced a real defect: the starred annex heading replaced
-\`\@currentHref\` with \`section*.1\` after \`\refstepcounter{pxannex}\`,
-so an annex \`\label\` pointed at the heading anchor rather than at the
-typed \`pxannex.1\` destination. The corrected standalone probe emitted
-\`BEFORE-HEADING-HREF=pxannex.1\`,
-\`AFTER-HEADING-HREF=pxannex.1\` and
-\`newlabel{ann:a}{{A}{2}{Annex A}{pxannex.1}{}}\`.
+`\@currentHref` with `section*.1` after `\refstepcounter{pxannex}`,
+so an annex `\label` pointed at the heading anchor rather than at the
+typed `pxannex.1` destination. The corrected standalone probe emitted
+`BEFORE-HEADING-HREF=pxannex.1`,
+`AFTER-HEADING-HREF=pxannex.1` and
+`newlabel{ann:a}{{A}{2}{Annex A}{pxannex.1}{}}`.
 The endmatter renderer now captures and restores the refstep destination,
-including MEM's \`pxmemannex\` variant. These are **isolated reference
+including MEM's `pxmemannex` variant. These are **isolated reference
 probes**, not full-class compilation; the updated CI matrix includes
 precise AUX-anchor assertions.
 
 
-**Standalone CAT correction**: The imported discarded \`pxEND.sty\`
+**Standalone CAT correction**: The imported discarded `pxEND.sty`
 standalone-language fallback referenced an undefined
-\`\_pxcore_set_language_catalan\`. Catalan is already the default in
-\`pxTXT.code.tex\`; the fallback now keeps the initialized text and
-uses the actual ES/EN setters. Added \`pxEND.standalone.CAT.test.tex\`
+`\_pxcore_set_language_catalan`. Catalan is already the default in
+`pxTXT.code.tex`; the fallback now keeps the initialized text and
+uses the actual ES/EN setters. Added `pxEND.standalone.CAT.test.tex`
 to cover that path. Its compilation is still pending.
 
 
-**Discarded fixture decoupling**: \`pxGLS.entries.test.tex\` originally
-selected \`project-management\` and invoked \`\pxSWOT\` despite testing
+**Discarded fixture decoupling**: `pxGLS.entries.test.tex` originally
+selected `project-management` and invoked `\pxSWOT` despite testing
 only glossary declarations. Those dependencies are not part of this
-endmatter task (and \`pxPM\` is intentionally untouched); the adapted
+endmatter task (and `pxPM` is intentionally untouched); the adapted
 test keeps all glossary declarations/uses but removes the unrelated PM
 command. The optional standalone CAT test is included in the test matrix.
