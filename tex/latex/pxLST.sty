@@ -387,6 +387,169 @@
 	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% --- pxJavaScript: JavaScript/ECMAScript (listings has no built-in; define keywords) ---
+\lstdefinelanguage{pxSTM32C}{
+	language         = C,
+	deletekeywords   = {int,char,short,long,float,double,unsigned,signed},
+	morekeywords     = [1]{void,if,else,for,while,do,switch,case,default,break,continue,return,
+		sizeof,typedef,struct,enum,union,static,const,volatile,extern,inline,__IO,__I,__O},
+	morekeywords     = [2]{main,SystemClock_Config,Error_Handler,
+		HAL_Init,HAL_DeInit,HAL_Delay,HAL_GetTick,HAL_IncTick,HAL_SuspendTick,HAL_ResumeTick,
+		HAL_GPIO_Init,HAL_GPIO_DeInit,HAL_GPIO_ReadPin,HAL_GPIO_WritePin,HAL_GPIO_TogglePin,
+		HAL_GPIO_LockPin,HAL_GPIO_EXTI_IRQHandler,HAL_GPIO_EXTI_Callback,
+		HAL_GPIO_EXTI_Rising_Callback,HAL_GPIO_EXTI_Falling_Callback,
+		HAL_TIM_Base_Init,HAL_TIM_Base_DeInit,HAL_TIM_Base_Start,HAL_TIM_Base_Stop,
+		HAL_TIM_Base_Start_IT,HAL_TIM_Base_Stop_IT,HAL_TIM_Base_Start_DMA,HAL_TIM_Base_Stop_DMA,
+		HAL_TIM_PeriodElapsedCallback,HAL_TIM_OC_DelayElapsedCallback,HAL_TIM_IC_CaptureCallback,
+		HAL_TIM_PWM_PulseFinishedCallback,HAL_TIM_IRQHandler,
+		HAL_UART_Init,HAL_UART_DeInit,HAL_UART_Transmit,HAL_UART_Receive,
+		HAL_UART_Transmit_IT,HAL_UART_Receive_IT,HAL_UART_Transmit_DMA,HAL_UART_Receive_DMA,
+		HAL_UART_TxCpltCallback,HAL_UART_RxCpltCallback,
+		HAL_ADC_Init,HAL_ADC_Start,HAL_ADC_Stop,HAL_ADC_PollForConversion,HAL_ADC_GetValue,
+		HAL_NVIC_SetPriority,HAL_NVIC_EnableIRQ,HAL_NVIC_DisableIRQ,HAL_NVIC_SystemReset,
+		__HAL_RCC_GPIOA_CLK_ENABLE,__HAL_RCC_GPIOB_CLK_ENABLE,__HAL_RCC_GPIOC_CLK_ENABLE,
+		__HAL_RCC_GPIOD_CLK_ENABLE,__HAL_RCC_GPIOE_CLK_ENABLE,__HAL_RCC_GPIOF_CLK_ENABLE,
+		__HAL_RCC_GPIOG_CLK_ENABLE,__HAL_RCC_GPIOH_CLK_ENABLE,__HAL_RCC_TIM6_CLK_ENABLE,
+		__HAL_TIM_SET_COUNTER,__HAL_TIM_GET_COUNTER,__HAL_TIM_SET_AUTORELOAD,
+		__NOP,__WFI,__WFE,__enable_irq,__disable_irq,
+		UOC_GPIO_Init,UOC_LEDs_SetAll,UOC_LEDs_ToggleAll,UOC_LEDs_Render},
+	morekeywords     = [3]{int,char,short,long,float,double,unsigned,signed,
+		uint8_t,uint16_t,uint32_t,uint64_t,int8_t,int16_t,int32_t,int64_t,size_t,bool,
+		GPIO_TypeDef,GPIO_InitTypeDef,GPIO_PinState,TIM_TypeDef,TIM_HandleTypeDef,
+		TIM_Base_InitTypeDef,TIM_OC_InitTypeDef,TIM_IC_InitTypeDef,
+		USART_TypeDef,UART_HandleTypeDef,I2C_HandleTypeDef,SPI_HandleTypeDef,
+		ADC_HandleTypeDef,DMA_HandleTypeDef,EXTI_HandleTypeDef,HAL_StatusTypeDef,
+		UOC_LED_Pin_t,UOC_JoyDir_t},
+	morekeywords     = [4]{HAL_OK,HAL_ERROR,HAL_BUSY,HAL_TIMEOUT,
+		GPIO_PIN_SET,GPIO_PIN_RESET,GPIO_PIN_0,GPIO_PIN_1,GPIO_PIN_2,GPIO_PIN_3,
+		GPIO_PIN_4,GPIO_PIN_5,GPIO_PIN_6,GPIO_PIN_7,GPIO_PIN_8,GPIO_PIN_9,
+		GPIO_PIN_10,GPIO_PIN_11,GPIO_PIN_12,GPIO_PIN_13,GPIO_PIN_14,GPIO_PIN_15,GPIO_PIN_All,
+		GPIO_MODE_INPUT,GPIO_MODE_OUTPUT_PP,GPIO_MODE_OUTPUT_OD,GPIO_MODE_AF_PP,GPIO_MODE_AF_OD,
+		GPIO_MODE_ANALOG,GPIO_MODE_IT_RISING,GPIO_MODE_IT_FALLING,GPIO_MODE_IT_RISING_FALLING,
+		GPIO_NOPULL,GPIO_PULLUP,GPIO_PULLDOWN,
+		GPIO_SPEED_FREQ_LOW,GPIO_SPEED_FREQ_MEDIUM,GPIO_SPEED_FREQ_HIGH,GPIO_SPEED_FREQ_VERY_HIGH,
+		GPIOA,GPIOB,GPIOC,GPIOD,GPIOE,GPIOF,GPIOG,GPIOH,
+		TIM1,TIM2,TIM3,TIM4,TIM5,TIM6,TIM7,TIM8,TIM15,TIM16,TIM17,USART1,USART2,USART3,
+		LED_0_Pin,LED_0_GPIO_Port,LED_1_Pin,LED_1_GPIO_Port,LED_2_Pin,LED_2_GPIO_Port,
+		LED_3_Pin,LED_3_GPIO_Port,LED_4_Pin,LED_4_GPIO_Port,LED_5_Pin,LED_5_GPIO_Port,
+		JOYSTICK_UP_Pin,JOYSTICK_UP_GPIO_Port,JOYSTICK_DO_Pin,JOYSTICK_DO_GPIO_Port,
+		JOYSTICK_RI_Pin,JOYSTICK_RI_GPIO_Port,JOYSTICK_LE_Pin,JOYSTICK_LE_GPIO_Port,
+		JOY_NONE,JOY_UP,JOY_DOWN,JOY_LEFT,JOY_RIGHT,true,false,NULL},
+	sensitive        = true,
+	morecomment      = [s]{/*}{*/},
+	morecomment      = [l]{//},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+%% --- pxJLex: JLex / Lex / Flex lexical analyzer specification (Compiladors) ---
+%% Standalone definition (does not load language=Java so single quotes ' inside
+%% regex character classes such as [^'$]+ never open a runaway string literal).
+\lstdefinelanguage{pxJLex}{
+	alsoletter       = {\%},
+	morekeywords     = [1]{\%class,\%function,\%type,\%integer,\%intwrap,\%init,\%initthrow,
+		\%eof,\%eofval,\%eofthrow,\%yylexthrow,\%ignorecase,\%state,\%states,\%xstate,
+		\%char,\%line,\%full,\%unicode,\%7bit,\%8bit,\%16bit,\%notunix,\%cup,\%public,
+		\%apiprivate,\%final,\%abstract,\%debug,\%standalone,\%\%,
+		package,import,public,private,protected,class,interface,extends,implements,
+		static,final,void,return,if,else,for,while,do,switch,case,default,break,continue,
+		new,try,catch,finally,throw,throws,this,super},
+	morekeywords     = [2]{yylex,yytext,yylength,yyline,yychar,yybegin,yyclose,yyreset,yypushback,
+		initLex,endLex,parseInt,parseDouble,parseFloat,parseLong,parseBoolean,valueOf,
+		toString,equals,equalsIgnoreCase,substring,charAt,length,trim,println,print,format,
+		emitKeyword,emitIdent,emitIntConstant,emitRealConstant,emitBooleanConstant,
+		emitShortStringConstant,emitStartLongString,emitEndLongString,emitParameter,
+		emitOperator,emitSeparator,emitLexicalError,emitComment},
+	morekeywords     = [3]{int,boolean,char,byte,short,long,float,double,
+		Symbol,Eval,Lexer,Keyword,Separator,Operator,Token,Yytoken,
+		String,Integer,Boolean,Double,Float,Long,Character,Object,System,Math,
+		StringBuffer,StringBuilder,IOException,Reader,InputStream},
+	morekeywords     = [4]{YYINITIAL,YYEOF,LONG_STRING,STRING,COMMENT,
+		WORKFLOW,DATA,TOOL,AGENT,DECISION,USES,FORMAT,URL,METHOD,MODEL,
+		PROMPT,INPUT,OUTPUT,TEXT,IMAGE,AUDIO,VIDEO,IF,THEN,ELSE,ABORT,
+		TRUE,FALSE,true,false,null},
+	sensitive        = true,
+	morecomment      = [s]{/*}{*/},
+	morecomment      = [l]{//},
+	morestring       = [b]",
+	literate         =
+	{<}{{{\color{pxtag}<}}}1
+	{>}{{{\color{pxtag}>}}}1
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+\lstdefinelanguage{pxLex}{language=pxJLex}
+\lstdefinelanguage{pxFlex}{language=pxJLex}
+%% --- pxCUP: CUP / Yacc / Bison parser specification (Compiladors) ---
+\lstdefinelanguage{pxCUP}{
+	alsoletter       = {\%},
+	otherkeywords    = {::=,|},
+	morekeywords     = [1]{package,import,terminal,non,nonterminal,precedence,left,right,nonassoc,
+		start,with,action,code,parser,init,scan,\%prec,
+		public,private,protected,class,static,final,void,return,if,else,for,while,switch,case,break,new,try,catch,throw,throws},
+	morekeywords     = [2]{RESULT,parse,debug_parse,report_error,report_fatal_error,syntax_error,unrecovered_syntax_error,
+		println,print,format,parseInt,valueOf,toString,equals,add,get,put,size},
+	morekeywords     = [3]{int,boolean,char,long,float,double,
+		Symbol,sym,lr_parser,Scanner,String,Integer,Boolean,Double,Float,Object,System,List,ArrayList,Map,HashMap},
+	morekeywords     = [4]{error,EOF,true,false,null},
+	sensitive        = true,
+	morecomment      = [s]{/*}{*/},
+	morecomment      = [l]{//},
+	morestring       = [b]",
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+\lstdefinelanguage{pxYacc}{language=pxCUP}
+\lstdefinelanguage{pxBison}{language=pxCUP}
+%% --- pxWorkflow: Declarative workflow / multi-agent DSL specification (Compiladors) ---
+\lstdefinelanguage{pxWorkflow}{
+	morekeywords     = [1]{WORKFLOW,DATA,TOOL,AGENT,DECISION,USES,IF,THEN,ELSE,ABORT},
+	morekeywords     = [2]{FORMAT,URL,METHOD,MODEL,PROMPT,INPUT,OUTPUT},
+	morekeywords     = [3]{TEXT,IMAGE,AUDIO,VIDEO,POST,GET,PUT,DELETE,JSON,HTML,XML,CSV},
+	morekeywords     = [4]{true,false,TRUE,FALSE,AND,OR,NOT},
+	sensitive        = false,
+	morecomment      = [l]{--},
+	morestring       = [b]",
+	morestring       = [s]{'''}{'''},
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+\lstdefinelanguage{pxDSL}{language=pxWorkflow}
+%% --- pxASM: Assembly & Low-Level IR (ARM Cortex-M, x86/AMD64, 3-Address IR) ---
+\lstdefinelanguage{pxASM}{
+	morekeywords     = [1]{MOV,MOVS,MOVW,MOVT,LDR,LDRB,LDRH,STR,STRB,STRH,PUSH,POP,
+		ADD,ADDS,SUB,SUBS,MUL,DIV,UDIV,SDIV,AND,ORR,EOR,BIC,LSL,LSR,ASR,ROR,diagrams,CMN,TST,TEQ,
+		B,BL,BX,BLX,BEQ,BNE,BGT,BGE,BLT,BLE,BHI,BLS,BCS,BCC,BMI,BPL,CBZ,CBNZ,IT,ITE,ITT,
+		NOP,WFI,WFE,SEV,CPSID,CPSIE,ISB,DSB,DMB,SVC,
+		CALL,RET,JMP,JE,JNE,JG,JGE,JL,JLE,JA,JB,LEA,XOR,SHL,SHR,SAR,INC,DEC,NEG,IMUL,IDIV,
+		GOTO,GO,TO,IF,THEN,IFZ,IFNZ,PARAM,RETURN},
+	morekeywords     = [2]{R0,R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,SP,LR,PC,PSR,APSR,IPSR,EPSR,PRIMASK,CONTROL,MSP,PSP,
+		r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,sp,lr,pc,
+		EAX,EBX,ECX,EDX,ESI,EDI,ESP,EBP,RAX,RBX,RCX,RDX,RSI,RDI,RSP,RBP},
+	morekeywords     = [3]{.text,.data,.bss,.rodata,.global,.globl,.extern,.word,.hword,.byte,.half,.quad,.ascii,.asciz,.string,.align,.balign,.thumb,.thumb_func,.syntax,.type,.size,.section,.equ},
+	sensitive        = false,
+	morecomment      = [l]{;},
+	morecomment      = [l]{//},
+	morecomment      = [s]{/*}{*/},
+	morestring       = [b]",
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+%% --- pxJavaScript: JavaScript/ECMAScript (listings has no built-in; define keywords) ---
 \lstdefinelanguage{pxJavaScript}{
 	morekeywords     = {function,var,let,const,return,if,else,for,while,do,switch,case,
 		true,false,null,undefined,new,this,class,extends,async,await,
@@ -420,6 +583,34 @@
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
+\lstdefinelanguage{pxR}{
+	alsoletter       = {.},
+	morekeywords     = [1]{function,if,else,for,in,while,repeat,break,next,return,library,require,source},
+	morekeywords     = [2]{c,list,data.frame,tibble,matrix,array,factor,as.factor,as.numeric,as.character,as.integer,as.matrix,as.data.frame,
+		read.csv,read.table,read.delim,write.csv,head,tail,str,summary,dim,nrow,ncol,names,colnames,rownames,length,
+		subset,ifelse,which,is.na,na.omit,complete.cases,unique,table,prop.table,apply,lapply,sapply,tapply,
+		seq,rep,sort,order,rank,rev,paste,paste0,sprintf,grep,grepl,sub,gsub,
+		mean,sd,var,median,quantile,min,max,sum,round,cor,cov,scale,set.seed,sample,
+		lm,glm,predict,residuals,anova,aov,t.test,chisq.test,shapiro.test,wilcox.test,
+		prcomp,princomp,kmeans,hclust,cutree,dist,daisy,pam,clara,agnes,diana,dbscan,silhouette,
+		apriori,eclat,inspect, select,filter,mutate,summarise,summarize,arrange,group_by,ungroup,left_join,inner_join,bind_rows,bind_cols,
+		ggplot,aes,geom_point,geom_line,geom_bar,geom_col,geom_histogram,geom_boxplot,geom_density,geom_smooth,
+		facet_wrap,facet_grid,labs,theme_minimal,theme_bw,theme,coord_flip,
+		fviz_eig,fviz_pca_ind,fviz_pca_var,fviz_pca_biplot,fviz_cluster,fviz_nbclust,fviz_silhouette,fviz_dend,
+		train,trainControl,confusionMatrix,createDataPartition,rpart,rpart.plot,randomForest,knn},
+	morekeywords     = [3]{numeric,integer,character,logical,complex,raw,double,Date,POSIXct,POSIXlt,formula},
+	morekeywords     = [4]{TRUE,FALSE,T,F,NULL,NA,Inf,NaN},
+	sensitive        = true,
+	morecomment      = [l]{\#},
+	morestring       = [b]",
+	morestring       = [b]',
+	literate         =
+	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+	{·}{{$\cdot$}}1,
+}
+
 %% =================================
 %% ===== FILE INPUT FUNCTION ========
 %% =================================
@@ -488,6 +679,10 @@
     style=#3%
   }%
 }
+% Historical setup spelling, identical to the established palette/language selector.
+\NewDocumentCommand\pxLSTsetup{O{dark} m O{pxlst}}
+  {\pxCodeSet[#1]{#2}[#3]}
+
 %% -----------------------------------------------------------------------
 %% pxCode -- inline code listing with optional local key overrides.
 %%   #1 = optional key-value options (local to this environment)
@@ -632,6 +827,13 @@
       \__pxlst_code_render_inline:n {#2}
     \group_end:
   }
+% Preserve the older public environment names without another listing renderer.
+\cs_new_eq:cc {pxCodeMini}{miniCode}
+\cs_new_eq:cc {endpxCodeMini}{endminiCode}
+\cs_new_eq:cc {pxCodeBox}{CodeBox}
+\cs_new_eq:cc {endpxCodeBox}{endCodeBox}
+\cs_new_eq:cc {pxCodeBreak}{CodeBox*}
+\cs_new_eq:cc {endpxCodeBreak}{endCodeBox*}
 % Compact and annotated listing boxes retain the established names:
 % miniCode, CodeBox and CodeBox*. No forwarding aliases are required.
 
