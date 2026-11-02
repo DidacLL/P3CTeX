@@ -1,7 +1,5 @@
 name: Endmatter recovery matrix
 on:
-  push:
-    branches: [recovery/endmatter-2026-11-02]
   workflow_dispatch:
 jobs:
   compile:
