@@ -110,9 +110,19 @@
         \group_begin:
         \bool_if:NT \l__pxdoc_glossary_all_bool {\glsaddall[types={#1}]}
         \bool_if:NTF \l__pxdoc_glossary_toc_bool {\glstoctrue}{\glstocfalse}
+        % MEM uses chapter-level terminology, ordinary PAC/PR keeps its normal section level.
+        \cs_if_exist:NT \pxMEMsetup {\setglossarysection{chapter}}
         \str_if_eq:nnTF {#1}{acronym}
           {\tl_set:Nn \l_tmpa_tl {\pxDEFacronymname}}
           {\tl_set:Nn \l_tmpa_tl {\pxDEFglossaryname}}
+        % Preserve the established centred terminology headings in Catalan
+        % PAC/PR documents; MEM uses the regular chapter heading.
+        \cs_if_exist:NF \pxMEMsetup
+          {\iflanguage{catalan}
+            {\str_if_eq:nnTF {#1}{acronym}
+               {\tl_set:Nn \l_tmpa_tl {\hspace*{\fill}Acrònims\hspace*{\fill}}}
+               {\tl_set:Nn \l_tmpa_tl {\hspace*{\fill}Definicions\hspace*{\fill}}}}
+            {}}
         \tl_if_eq:NnTF \l__pxdoc_glossary_backend_tl {external}
           {\printglossary[type={#1},title={\l_tmpa_tl}]}
           {\printnoidxglossary[type={#1},title={\l_tmpa_tl}]}
