@@ -1,0 +1,4 @@
+Log start
+$ENV #tag 100% literal
+\gdef\pxTextMustNotRun{BAD}
+Log end
