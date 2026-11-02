@@ -1,0 +1,13 @@
+\documentclass[PAC,annexes,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{no-plagi=false}
+\makeatletter
+\@ifpackageloaded{pxANX}{}{\PackageError{pxANX-test}{Annex selector failed}{}}
+\@ifpackageloaded{pxGLS}{\PackageError{pxANX-test}{Unexpected glossary dependency}{}}{}
+\@ifpackageloaded{pxMEM}{\PackageError{pxANX-test}{Annex module requires MEM}{}}{}
+\makeatother
+\begin{document}
+\section{PAC evidence}
+\pxAddAnnex[label=ann:pac]{PAC evidence}{\section{Data}Attached text.}
+\pxPrintAnnexes
+See \Cref{ann:pac}.
+\end{document}
