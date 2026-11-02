@@ -1,0 +1,44 @@
+name: One-off diagram verification
+on:
+  push:
+    branches: [verify/diagrams-actions-2026-11-02]
+jobs:
+  diagrams:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Get repository revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/\${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "\${GITHUB_SHA}"
+          git checkout --detach FETCH_HEAD
+      - name: Compile standalone diagrams and optional core fixtures
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work/tex/tests \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest bash -uc '
+              failures=0
+              for name in pxDIA.core-disabled.test pxDIA.core-selection.test pxDIA.nonfloating-label.test pxDIA.uncaptioned-label.test pxDIA.cleveref.test pxDIA.test pxDIA.probe.test pxDIA.standalone.test; do
+                echo "=== DIAGRAM TEST $name ==="
+                ok=1
+                for pass in 1 2; do
+                  if ! pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > "$name.pass$pass.log" 2>&1; then
+                    echo "FAIL $name pass $pass"
+                    tail -n 60 "$name.pass$pass.log"
+                    ok=0
+                    break
+                  fi
+                done
+                if test "$ok" -eq 1 && test -s "$name.pdf"; then
+                  echo "PASS $name"
+                else
+                  failures=$((failures+1))
+                fi
+              done
+              echo "DIAGRAM RESULT failures=$failures of 8"
+              test "$failures" -eq 0
+            '
