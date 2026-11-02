@@ -64,7 +64,7 @@ jobs:
                 "\@ifpackageloaded{pxMEM}{\errmessage{Unexpected MEM load}}{}" \
                 "\makeatother" \
                 "\begin{document}PAC baseline without glossary or MEM.\end{document}" > foundation-optional-dependencies.tex
-              tests="foundation-optional-dependencies P3CTeX.page-rule-regression pxSRC.heading-import pxSRC.source-region pxSRC.modes-recovery pxSRC.defaults-labels-recovery pxSRC.text-standalone pxLST.recovery pxCALC.class-integration pxCALC.core-default pxCALC.core-selection pxTFG.presentation-recovery pxTFG.PR-reuse pxTFG.licence pxMEM.TFG-integration pxMEM.annex-references pxMEM.annex-glossary-interaction pxMEM.standalone"
+              tests="foundation-optional-dependencies P3CTeX.page-rule-regression pxSRC.heading-import.test pxSRC.source-region.test pxSRC.modes-recovery.test pxSRC.defaults-labels-recovery.test pxSRC.text-standalone.test pxLST.recovery.test pxCALC.class-integration.test pxCALC.core-default.test pxCALC.core-selection.test pxTFG.presentation-recovery.test pxTFG.PR-reuse.test pxTFG.licence.test pxMEM.TFG-integration.test pxMEM.annex-references.test pxMEM.annex-glossary-interaction.test pxMEM.standalone.test"
               for name in $tests; do
                 if test -f "/work/tex/tests/$name.tex"; then
                   run_tex "$name.tex" /work/tex/tests
