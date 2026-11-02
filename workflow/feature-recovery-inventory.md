@@ -3,9 +3,9 @@
 
 ## Consolidated recovery worktree — 2026-11-02
 
-Branch: `rebuild/full-feature-recovery-2026-11-02`. Foundation PAC/PR/TFG/MEM fixes and recovered diagrams remain intact. Restored optional project-management/Gantt, specialized code-listing languages and legacy interfaces, original CAT/ES/EN labels, and class-owned opt-in glossary helpers. Explicit and deferred annexes share the MEM renderer and queue. Normal BibTeX/biblatex are not replaced; `\pxBibliography` is a small optional convenience.
+Branch: `rebuild/full-feature-recovery-2026-11-02`. Foundation PAC/PR/TFG/MEM fixes and recovered diagrams remain intact. Restored optional project-management/Gantt, specialized code-listing languages and legacy interfaces, original CAT/ES/EN labels, and independent opt-in `pxGLS` and `pxANX` modules. MEM uses `pxANX`; it does not own its renderer or queue. Normal BibTeX/biblatex are not replaced; `\pxBibliography` is a small optional convenience.
 
-The owner explicitly discarded source previews (`\pxSourcePreview` / `\pxUseSourcePreview`), including automatic preview-to-annex forwarding. `pxSRC` has no MEM dependency. The monolithic `pxEND` remains rejected.
+The owner explicitly discarded source previews (`\pxSourcePreview` / `\pxUseSourcePreview`), including automatic preview-to-annex forwarding. `pxSRC` has no MEM dependency. `pxGLS` is inactive unless selected (`glossary` or `GLS`/`glossaries`), and `pxANX` is independent of the MEM document profile. The monolithic `pxEND` remains rejected.
 
 The integrated full-feature fixtures and old regression suites are committed, but **the combined feature recovery has not yet received an actual full-class TeX build**. No new GitHub Actions runs have been initiated. This is an implementation worktree, not a released or verified replacement.
 
@@ -17,6 +17,10 @@ Comparison sources: `feature/core-modules-audit-and-fix` (including `workflow/co
 Status vocabulary: **Already correctly recovered** = present in the authoritative tree with a matching established interface (still subject to integration regression); **Recovered but needing correction** = partly implemented or known follow-up; **Awaiting implementation** = missing from authoritative tree; **Implemented and verified** = tested after reconstruction. No feature is excluded because an old API or implementation was defective.
 
 Legend: B = authoritative branch, D = discarded `feature/core-modules-audit-and-fix`, M = discarded `main`. Source paths below are relative to `tex/`; **P** in correction column means preserve current API/behavior. All status labels reflect repository inspection at inventory creation, before reconstruction changes.
+
+## Module ownership correction — 2026-11-02
+
+`pxANX.sty` + `pxANX.code.tex` now own annex rendering, numbering, queuing, manual/automatic output and Cleveref names, in both ordinary article/PAC/PR and MEM. MEM retains only `\pxMEMannex` as an adapter. `pxGLS.sty` + `pxGLS.code.tex` own optional glossary/acronym commands and print lifecycle, with no default loading. P3CTeX's `glossary`/`glossary-backend` and `annexes` keys forward initial activation to `pxCORE`; direct standalone `\usepackage{pxGLS}` and `\usepackage{pxANX}` are supported. `pxEND` remains rejected. The distinct-module and combined-mode fixtures are committed; they are not yet compiled.
 
 ## Integration verification checkpoint — 2026-11-02
 
@@ -119,15 +123,15 @@ Executed from the staged `tex/tests` directory with `TEXINPUTS=".:../latex//:../
 | Page rules, metadata and PDF link/color behavior | B pxGDX/P3CTeX | Present | Audit D differences without altering language timing | Recovered but needing correction |
 | PAC/PR cover/TOC/no-plagi semantics and class option processing | B P3CTeX | Present | Keep eager Babel loading; reject D deferred-language architecture | Already correctly recovered |
 
-## Endmatter, glossaries, bibliography and annexes — class + existing MEM/TXT, optional endmatter capability
+## Endmatter, glossaries, bibliography and annexes — optional `pxANX` + `pxGLS` modules; class selects, MEM consumes
 
 | Capability / behavior | Previous implementation | B status | Correction | Recovery status |
 | --- | --- | --- | --- | --- |
-| Explicit + queued annexes, numbering restore, one-time printing | D `pxEND.sty/.code.tex`; B pxMEM annex | Partial | One annex engine; class/MEM adapters; no permanent `\appendix` in PAC | Recovered but needing correction |
-| Auto annex queue order before glossary, chapter/section selection, cleveref names | D pxEND, ledger F03/F07/S04 | Missing | Own hooks once, localized reference names | MEM-owned annex queue and references restored; full integration pending |
+| Explicit + queued annexes, numbering restore, one-time printing | D `pxEND.sty/.code.tex`; current `pxANX` | Partial | One annex engine; class/MEM adapters; no permanent `\appendix` in PAC | Recovered but needing correction |
+| Auto annex queue order before glossary, chapter/section selection, cleveref names | D pxEND, ledger F03/F07/S04; current pxANX | Missing | Own hooks once, localized reference names | Independent `pxANX` queue and references restored; MEM uses the public API; full integration pending |
 | Optional glossary modes: used/all, auto/manual, toc, per-type output | D pxEND; B class `glossary` | Partial | Preserve existing class activation; no competing backend | Recovered but needing correction |
-| Glossary declarations, acronyms/terms, group maps/files | D `\pxTerm`, `\pxAcronym`, etc. | Missing | Reuse glossaries and existing localization | Restored as class-owned helpers, available only when glossary is selected |
-| External indexed glossary backend tests | D pxEND + tests | Missing | Only opt-in backend, retain default no-index | Opt-in backend restored via class key; integration tests pending |
+| Glossary declarations, acronyms/terms, group maps/files | D `\pxTerm`, `\pxAcronym`, etc. | Missing | Reuse native glossaries via optional `pxGLS` and existing localization | Restored as `pxGLS` APIs; package is not loaded by default |
+| External indexed glossary backend tests | D pxEND + tests | Missing | Only opt-in backend, retain default no-index | Opt-in backend restored in `pxGLS`, with a class option forwarding adapter; integration tests pending |
 | Native BibTeX/biblatex-compatible `\pxBibliography` convenience | D pxEND | Missing | Do not force backend or modify normal `\cite` | Native bibliography retained; lightweight class convenience restored |
 | Citation/glossary propagation through native versus code sources | D pxSRC + pxEND | Partial | Execution only for native; metadata explicit for code | Recovered but needing correction |
 
