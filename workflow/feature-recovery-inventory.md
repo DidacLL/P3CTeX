@@ -215,3 +215,8 @@ This expands the domain rows into individual public interfaces. Each entry was f
 | `\pxEndMatterSetup`, `\pxPrintEndMatter`, `\pxBibliography` | D pxEND; B absent | Document-level endmatter; no bibliography backend replacement | Awaiting implementation |
 
 The API reconciliation distinguishes a feature from its old spelling: duplicated forwarding names may change, but the capability remains mandatory. The earlier `pxCMP`/`pxGNT` modules are historical references only; their functionality must remain represented without recreating redundant owners.
+
+### Core-selection regression checkpoint
+
+- Local pdfLaTeX probes of the reconstructed `pxCORE` key/loading code emitted `PXCORE-OPTION-PASS` for `calculations` and `PXCORE-DEFAULT-PASS` without the option. Matching repository fixtures are `tex/tests/pxCALC.core-selection.test.tex` and `tex/tests/pxCALC.core-default.test.tex` (commits `da9c8d5` and `31034d7`). The full P3CTeX class integration is still unverified.
+- Branch comparison cross-check: `feature/pxcmp-computation-diagrams` and `main` carry the older separate `pxCMP`/`pxGNT` design; `feature/pxgnt-optional-gantt` supplies preceding Gantt history; `feature/tfg-mem-uoc-template` supplies earlier TFG/MEM history. Existing historical `pxLST` and `pxTAB` branches add no files beyond the reconstruction baseline in the comparison. The later discarded `pxDIA`/`pxPM` domain grouping remains the recovery target, not a wholesale source replacement.
