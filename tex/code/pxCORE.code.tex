@@ -81,6 +81,11 @@
         diagrams    .default:n = true,
     diagrams-config .tl_set_x:N = \l_pxcore_dia_config_tl,
         diagrams-config .initial:n = {},
+    PM          .bool_set:N = \l_pxcore_pm_use_bool,
+        PM          .initial:n = false,
+        PM          .default:n = true,
+    project-management .meta:n = { PM = #1 },
+        project-management .default:n = true,
     SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
@@ -108,6 +113,7 @@
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
+\bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
 \bool_if:NT \l_pxcore_dia_use_bool {
     \tl_if_blank:VTF \l_pxcore_dia_config_tl
       { \RequirePackage{pxDIA} }
