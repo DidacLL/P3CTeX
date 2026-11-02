@@ -1,0 +1,26 @@
+\documentclass[PAC,diagrams,CAT]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFdiagactual} {Classes~Reals}
+ {\PackageError{diag-lang}{Catalan labels missing}{}}
+\ExplSyntaxOff
+\PECTeXconfig{es}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFdiagpred} {Predicciones}
+ {\PackageError{diag-lang}{Spanish labels missing}{}}
+\ExplSyntaxOff
+\PECTeXconfig{en}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFdiaginput} {Input}
+ {\PackageError{diag-lang}{English labels missing}{}}
+\str_if_eq:eeF {\pxDEFdiaganalysisphases} {Analysis~stages}
+ {\PackageError{diag-lang}{Compiler stage label not translated}{}}
+\str_if_eq:eeF {\pxDEFdiagerrormanagement} {Error~handling}
+ {\PackageError{diag-lang}{Error handling label not translated}{}}
+\ExplSyntaxOff
+\begin{document}
+\pxConfusionMatrix{Positive,Negative}{3,2;5,5}
+\pxLexemeTable{if / KW\_IF; name / IDENT}
+\pxCompilerModel
+\pxIRHub{C, Pascal}{IR}{x86}
+\end{document}

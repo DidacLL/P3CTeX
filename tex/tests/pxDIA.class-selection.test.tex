@@ -1,0 +1,9 @@
+\documentclass[PAC,diagrams]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\begin{document}
+\ifcsname pxTCompiler\endcsname\else
+  \PackageError{pxDIA-test}{P3CTeX class did not activate optional diagrams}{}
+\fi
+\pxTCompiler[caption={PAC optional diagrams},label={diag:pac}]{C}{LLVM}{C}
+See Figure~\ref{diag:pac}.
+\end{document}
