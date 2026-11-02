@@ -1,0 +1,16 @@
+\documentclass[EN,no-cover,no-toc,calculations]{P3CTeX}
+\begin{document}
+\makeatletter
+\@ifpackageloaded{pxCALC}{}{\PackageError{pxCALC-integration}{CALC not loaded via pxCORE}{}}
+\makeatother
+\pxDefVar{r}{4}[r]
+\pxDefFormula{area}{pi*[r]^2}[symbol=A,unit=m^2]
+\pxCalcStore{area}{\testArea}
+\ifdim\testArea pt>50pt\else
+  \PackageError{pxCALC-integration}{Formula evaluation failed}{}
+\fi
+\section{Calculation integration}
+\pxSolve[prec=2]{area}\par
+\pxCalc[prec=2]{[area]/2}
+\typeout{PXCALC-CLASS-PASS}
+\end{document}
