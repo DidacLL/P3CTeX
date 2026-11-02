@@ -1,5 +1,6 @@
 % Glossary data and print behavior are owned only by optional pxGLS.
 \ProvidesExplFile{pxGLS.code.tex}{2026/11/02}{0.1}{Glossary configuration}
+\bool_new:N \l__pxgls_backend_locked_bool
 \bool_new:N \l__pxgls_manual_bool
 \bool_new:N \l__pxgls_all_bool
 \bool_new:N \l__pxgls_toc_bool
@@ -14,8 +15,14 @@
 \keys_define:nn {pxGLS}
   {
     backend .choice:,
-    backend / noindex .code:n = {\tl_set:Nn \l__pxgls_backend_tl {noindex}},
-    backend / external .code:n = {\tl_set:Nn \l__pxgls_backend_tl {external}},
+    backend / noindex .code:n =
+      {\bool_if:NTF \l__pxgls_backend_locked_bool
+        {\PackageError{pxGLS}{Backend must be selected before package loading}{}}
+        {\tl_set:Nn \l__pxgls_backend_tl {noindex}}},
+    backend / external .code:n =
+      {\bool_if:NTF \l__pxgls_backend_locked_bool
+        {\PackageError{pxGLS}{Backend must be selected before package loading}{}}
+        {\tl_set:Nn \l__pxgls_backend_tl {external}}},
     backend .initial:n = noindex,
     noindex .meta:n = {backend=noindex},
     external .meta:n = {backend=external},
