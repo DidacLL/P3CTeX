@@ -328,3 +328,11 @@ standalone-language fallback referenced an undefined
 \`pxTXT.code.tex\`; the fallback now keeps the initialized text and
 uses the actual ES/EN setters. Added \`pxEND.standalone.CAT.test.tex\`
 to cover that path. Its compilation is still pending.
+
+
+**Discarded fixture decoupling**: \`pxGLS.entries.test.tex\` originally
+selected \`project-management\` and invoked \`\pxSWOT\` despite testing
+only glossary declarations. Those dependencies are not part of this
+endmatter task (and \`pxPM\` is intentionally untouched); the adapted
+test keeps all glossary declarations/uses but removes the unrelated PM
+command. The optional standalone CAT test is included in the test matrix.
