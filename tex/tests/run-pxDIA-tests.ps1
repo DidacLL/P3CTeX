@@ -1,0 +1,108 @@
+param(
+    [switch]$CleanArtifacts
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$latexDir = Resolve-Path (Join-Path $scriptDir "..\latex")
+$codeDir = Resolve-Path (Join-Path $scriptDir "..\code")
+$testsDir = Resolve-Path $scriptDir
+$buildRoot = Join-Path (Resolve-Path (Join-Path $scriptDir "..\..")) ".build\diagrams"
+New-Item -ItemType Directory -Force -Path $buildRoot | Out-Null
+
+$testFiles = @(
+    "pxDIA.core-disabled.test.tex",
+    "pxDIA.core-selection.test.tex",
+    "pxDIA.class-integration.test.tex",
+    "pxDIA.probe.test.tex",
+    "pxDIA.standalone.test.tex",
+    "pxDIA.languages.test.tex",
+    "pxDIA.nonfloating-label.test.tex",
+    "pxDIA.uncaptioned-label.test.tex",
+    "pxDIA.cleveref.test.tex",
+    "pxDIA.test.tex",
+    "pxCORE.test.tex",
+    "P3CTeX.test.tex"
+)
+
+$oldTexInputs = $env:TEXINPUTS
+$oldLocation = Get-Location
+try {
+    # Keep default TeX search path by ending with ';'.
+    $env:TEXINPUTS = "$buildRoot;$latexDir;$codeDir;$testsDir;"
+
+    Write-Host "== pxDIA quality gate =="
+    Write-Host "TEXINPUTS=$($env:TEXINPUTS)"
+    Write-Host ""
+
+    $results = @()
+    Set-Location $buildRoot
+
+    foreach ($testFile in $testFiles) {
+        $testPath = Join-Path $testsDir $testFile
+        if (-not (Test-Path $testPath)) {
+            $results += [PSCustomObject]@{
+                TestFile  = $testFile
+                ExitCode  = 2
+                Status    = "MISSING"
+            }
+            Write-Host "[MISSING] $testFile" -ForegroundColor Red
+            continue
+        }
+
+        Write-Host "---- Running $testFile ----"
+        & pdflatex --include-directory="$latexDir" --include-directory="$codeDir" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
+        $exitCode = $LASTEXITCODE
+        if ($exitCode -eq 0) {
+            # References, counters, and nameref/cleveref require a second pass.
+            & pdflatex --include-directory="$latexDir" --include-directory="$codeDir" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
+            $exitCode = $LASTEXITCODE
+        }
+        $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
+
+        $results += [PSCustomObject]@{
+            TestFile  = $testFile
+            ExitCode  = $exitCode
+            Status    = $status
+        }
+
+        if ($exitCode -eq 0) {
+            Write-Host "[PASS] $testFile (exit=$exitCode)" -ForegroundColor Green
+        } else {
+            Write-Host "[FAIL] $testFile (exit=$exitCode)" -ForegroundColor Red
+        }
+
+        if ($CleanArtifacts) {
+            $baseName = [System.IO.Path]::GetFileNameWithoutExtension($testFile)
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.aux")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.log")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.out")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.pdf")
+            Remove-Item -ErrorAction SilentlyContinue (Join-Path $buildRoot "$baseName.synctex.gz")
+        }
+
+        Write-Host ""
+    }
+
+    Write-Host "== pxDIA quality gate summary =="
+    foreach ($result in $results) {
+        Write-Host ("{0} | exit={1} | {2}" -f $result.TestFile, $result.ExitCode, $result.Status)
+    }
+
+    $failedCount = @($results | Where-Object { $_.ExitCode -ne 0 }).Count
+    if ($failedCount -gt 0) {
+        Write-Host ""
+        Write-Host "QUALITY GATE: FAILED ($failedCount failing test(s))" -ForegroundColor Red
+        exit 1
+    }
+
+    Write-Host ""
+    Write-Host "QUALITY GATE: PASSED" -ForegroundColor Green
+    exit 0
+}
+finally {
+    Set-Location $oldLocation
+    $env:TEXINPUTS = $oldTexInputs
+}

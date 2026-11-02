@@ -1,0 +1,13 @@
+\documentclass{article}
+\usepackage[catalan]{babel}
+\usepackage{pxDIA}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFdiagactual} {Classes~Reals}
+  {\PackageError{diag-lang}{Catalan labels missing}{}}
+\str_if_eq:eeF {\pxDEFdiagcompilation} {Temps~de~compilaci\'o}
+  {\PackageError{diag-lang}{Catalan compiler label missing}{}}
+\ExplSyntaxOff
+\begin{document}
+\pxConfusionMatrix{Positiu,Negatiu}{3,2;5,5}
+\pxCompilerModel
+\end{document}

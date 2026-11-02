@@ -1,0 +1,10 @@
+\documentclass{article}
+\usepackage{pxCORE}
+\makeatletter
+\@ifpackageloaded{pxDIA}{\PackageError{pxDIA-test}{Diagrams enabled by default}{}}{}
+\@ifpackageloaded{tikz}{\PackageError{pxDIA-test}{TikZ loaded despite diagrams being off}{}}{}
+\makeatother
+\ifcsname pxTCompiler\endcsname
+  \PackageError{pxDIA-test}{Diagram API exposed with diagrams disabled}{}
+\fi
+\begin{document}Core loads without diagrams.\end{document}

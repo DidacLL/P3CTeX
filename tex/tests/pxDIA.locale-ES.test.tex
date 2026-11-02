@@ -1,0 +1,12 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage{pxDIA}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFdiagpred} {Predicciones}
+  {\PackageError{diag-lang}{Spanish prediction label missing}{}}
+\str_if_eq:eeF {\pxDEFdiagerrormanagement} {Gestión~de~errores}
+  {\PackageError{diag-lang}{Spanish error label missing}{}}
+\ExplSyntaxOff
+\begin{document}
+\pxConfusionMatrix{Positivo,Negativo}{3,2;5,5}
+\end{document}

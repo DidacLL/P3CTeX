@@ -30,7 +30,7 @@
 %% =================================
 %% pxCORE package keys.
 %% Configure at load with \usepackage[<keys>]{pxCORE}; P3CTeX also forwards its unrecognised class option here.
-%% PRP/UML/SRC/TAB/LST/ORL select modules; UMLconfig/SRCconfig forward option strings to those packages.
+%% PRP/UML/SRC/TAB/LST/ORL select modules; DIA is opt-in. Config keys forward options.
 %% default enables the standard PRP+UML+SRC+TAB+LST bundle.
 \keys_define:nn { pxCORE }
 {
@@ -74,7 +74,14 @@
 		CALC       .default:n = true,
 	calculations .meta:n = { CALC = #1 },
 		calculations .default:n = true,
-	SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
+	DIA         .bool_set:N = \l_pxcore_dia_use_bool,
+        DIA         .initial:n = false,
+        DIA         .default:n = true,
+    diagrams    .meta:n = { DIA = #1 },
+        diagrams    .default:n = true,
+    diagrams-config .tl_set_x:N = \l_pxcore_dia_config_tl,
+        diagrams-config .initial:n = {},
+    SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
 	unknown		.code:n ={}
@@ -101,6 +108,11 @@
 \bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
 \bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
 \bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
+\bool_if:NT \l_pxcore_dia_use_bool {
+    \tl_if_blank:VTF \l_pxcore_dia_config_tl
+      { \RequirePackage{pxDIA} }
+      { \RequirePackage[\l_pxcore_dia_config_tl]{pxDIA} }
+}
 \bool_if:NT \l_pxcore_lst_use_bool {}
 
 
