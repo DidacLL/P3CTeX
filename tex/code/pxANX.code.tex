@@ -1,0 +1,100 @@
+% Generic, document-independent annex rendering and deferred queue.
+\ProvidesExplFile{pxANX.code.tex}{2026/11/02}{0.1}{P3CTeX annex implementation}
+\newcounter{pxannex}
+\renewcommand\thepxannex{\Alph{pxannex}}
+\providecommand*\theHpxannex{pxannex.\arabic{pxannex}}
+\seq_new:N \g__pxanx_pending_seq
+\seq_new:N \l__pxanx_batch_seq
+\prop_new:N \l__pxanx_counters_prop
+\tl_new:N \l__pxanx_label_tl
+\tl_new:N \l__pxanx_name_tl
+\tl_new:N \l__pxanx_level_tl
+\bool_new:N \l__pxanx_toc_bool
+\keys_define:nn {pxANX}
+  {
+    label .tl_set:N = \l__pxanx_label_tl,
+    name .tl_set:N = \l__pxanx_name_tl,
+    name .initial:n = \appendixname,
+    level .choices:nn = {auto,section,chapter}
+      {\tl_set_eq:NN \l__pxanx_level_tl \l_keys_choice_tl},
+    level .initial:n = auto,
+    toc .bool_set:N = \l__pxanx_toc_bool,
+    toc .initial:n = true
+  }
+\cs_new_protected:Npn \__pxanx_print:nnn #1#2#3
+  {
+    \clearpage
+    \group_begin:
+      \tl_clear:N \l__pxanx_label_tl
+      \keys_set:nn {pxANX}{#1}
+      \tl_if_eq:NnT \l__pxanx_level_tl {auto}
+        {\cs_if_exist:NTF \chapter
+          {\tl_set:Nn \l__pxanx_level_tl {chapter}}
+          {\tl_set:Nn \l__pxanx_level_tl {section}}}
+      \prop_clear:N \l__pxanx_counters_prop
+      \clist_map_inline:nn {chapter,section,subsection,subsubsection,equation,figure,table}
+        {\cs_if_exist:cT {c@##1}
+          {\prop_put:Nnx \l__pxanx_counters_prop {##1}{\int_use:c {c@##1}}
+           \int_gzero:c {c@##1}}}
+      \cs_set:Npn \thechapter {\thepxannex}
+      \tl_if_eq:NnTF \l__pxanx_level_tl {chapter}
+        {\cs_set:Npn \thesection {\thepxannex.\arabic{section}}}
+        {\cs_set:Npn \thesection {\thepxannex}
+         \cs_set:Npn \thesubsection {\thepxannex.\arabic{subsection}}}
+      \cs_set:Npn \thefigure {\thepxannex.\arabic{figure}}
+      \cs_set:Npn \thetable {\thepxannex.\arabic{table}}
+      \cs_set:Npn \theequation {\thepxannex.\arabic{equation}}
+      \cs_set:Npn \theHchapter {pxannex.\arabic{pxannex}}
+      \cs_set:Npn \theHsection {pxannex.\arabic{pxannex}.\arabic{section}}
+      \cs_set:Npn \theHsubsection
+        {pxannex.\arabic{pxannex}.\arabic{section}.\arabic{subsection}}
+      \cs_set:Npn \theHfigure {pxannex.\arabic{pxannex}.\arabic{figure}}
+      \cs_set:Npn \theHtable {pxannex.\arabic{pxannex}.\arabic{table}}
+      \cs_set:Npn \theHequation {pxannex.\arabic{pxannex}.\arabic{equation}}
+      % A starred heading must precede the labelled annex counter, otherwise
+      % the label can inherit the section* or phantom-section destination.
+      \tl_if_eq:NnTF \l__pxanx_level_tl {chapter}
+        {\cs_if_exist:NTF \chapter
+          {\chapter*{\l__pxanx_name_tl\space
+             \int_to_Alph:n {\int_eval:n {\value{pxannex}+1}}:~#2}}
+          {\PackageError{pxANX}{Chapter-level annex needs a chapter command}{Use level=section.}}}
+        {\section*{\l__pxanx_name_tl\space
+            \int_to_Alph:n {\int_eval:n {\value{pxannex}+1}}:~#2}}
+      \refstepcounter{pxannex}
+      \protected@edef\@currentlabel{\thepxannex}
+      \def\@currentlabelname{#2}
+      \bool_if:NT \l__pxanx_toc_bool
+        {\addcontentsline{toc}{\l__pxanx_level_tl}
+          {\l__pxanx_name_tl\space\thepxannex{}:~#2}}
+      \tl_if_blank:VF \l__pxanx_label_tl
+        {\exp_args:NV \label \l__pxanx_label_tl}
+      #3
+      \par\clearpage
+      \prop_map_inline:Nn \l__pxanx_counters_prop {\int_gset:cn {c@##1}{##2}}
+    \group_end:
+  }
+\cs_new_protected:Npn \__pxanx_enqueue:nnn #1#2#3
+  {
+    \group_begin:
+    \tl_clear:N \l__pxanx_label_tl
+    \keys_set:nn {pxANX}{#1}
+    \seq_gput_right:Nx \g__pxanx_pending_seq
+      {\exp_not:N \__pxanx_print:nnn
+        {label={\exp_not:V \l__pxanx_label_tl},
+         name={\exp_not:V \l__pxanx_name_tl},
+         level={\exp_not:V \l__pxanx_level_tl},
+         toc=\bool_if:NTF \l__pxanx_toc_bool {true}{false}}
+        {\exp_not:n {#2}}{\exp_not:n {#3}}}
+    \group_end:
+  }
+\cs_new_protected:Npn \__pxanx_flush:
+  {
+    \seq_if_empty:NF \g__pxanx_pending_seq
+      {
+        \seq_set_eq:NN \l__pxanx_batch_seq \g__pxanx_pending_seq
+        \seq_gclear:N \g__pxanx_pending_seq
+        \seq_map_inline:Nn \l__pxanx_batch_seq {##1}
+        \__pxanx_flush:
+      }
+  }
+\endinput
