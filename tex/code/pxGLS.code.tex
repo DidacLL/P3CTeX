@@ -1,0 +1,90 @@
+% Glossary data and print behavior are owned only by optional pxGLS.
+\ProvidesExplFile{pxGLS.code.tex}{2026/11/02}{0.1}{Glossary configuration}
+\bool_new:N \l__pxgls_manual_bool
+\bool_new:N \l__pxgls_all_bool
+\bool_new:N \l__pxgls_toc_bool
+\bool_new:N \l__pxgls_terms_bool
+\bool_new:N \l__pxgls_acronyms_bool
+\tl_new:N \l__pxgls_backend_tl
+\tl_new:N \l__pxgls_type_tl
+\tl_new:N \l__pxgls_short_tl
+\tl_new:N \l__pxgls_long_tl
+\tl_new:N \l__pxgls_entry_options_tl
+\prop_new:N \g__pxgls_printed_prop
+\keys_define:nn {pxGLS}
+  {
+    backend .choice:,
+    backend / noindex .code:n = {\tl_set:Nn \l__pxgls_backend_tl {noindex}},
+    backend / external .code:n = {\tl_set:Nn \l__pxgls_backend_tl {external}},
+    backend .initial:n = noindex,
+    noindex .meta:n = {backend=noindex},
+    external .meta:n = {backend=external},
+    print .choice:,
+    print / manual .code:n = {\bool_set_true:N \l__pxgls_manual_bool},
+    print / auto .code:n = {\bool_set_false:N \l__pxgls_manual_bool},
+    print .initial:n = auto,
+    include .choice:,
+    include / used .code:n = {\bool_set_false:N \l__pxgls_all_bool},
+    include / all .code:n = {\bool_set_true:N \l__pxgls_all_bool},
+    include .initial:n = used,
+    terms .bool_set:N = \l__pxgls_terms_bool,
+    terms .initial:n = true,
+    acronyms .bool_set:N = \l__pxgls_acronyms_bool,
+    acronyms .initial:n = true,
+    toc .bool_set:N = \l__pxgls_toc_bool,
+    toc .initial:n = true,
+    type .tl_set:N = \l__pxgls_type_tl
+  }
+\keys_define:nn {pxGLS/acronym}
+  {
+    short .tl_set:N = \l__pxgls_short_tl,
+    long .tl_set:N = \l__pxgls_long_tl,
+    unknown .code:n =
+      {\tl_put_right:Nx \l__pxgls_entry_options_tl
+        {\l_keys_key_str={\exp_not:n {#1}},}}
+  }
+\cs_new_protected:Npn \__pxgls_missing_entry:n #1
+  {\PackageError{pxGLS}{Entry '#1' needs a braced key-value field list}{}}
+\cs_new_protected:Npn \__pxgls_term:nn #1#2 {\newglossaryentry{#1}{#2}}
+\cs_new_protected:Npn \__pxgls_acronym:nn #1#2
+  {
+    \group_begin:
+    \tl_clear:N \l__pxgls_short_tl
+    \tl_clear:N \l__pxgls_long_tl
+    \tl_clear:N \l__pxgls_entry_options_tl
+    \keys_set:nn {pxGLS/acronym}{#2}
+    \bool_lazy_or:nnTF
+      {\tl_if_blank_p:V \l__pxgls_short_tl}
+      {\tl_if_blank_p:V \l__pxgls_long_tl}
+      {\PackageError{pxGLS}{Acronym '#1' needs short and long fields}{}}
+      {\use:x {\exp_not:N \newacronym[\exp_not:V \l__pxgls_entry_options_tl]
+        {\exp_not:n {#1}}{\exp_not:V \l__pxgls_short_tl}
+        {\exp_not:V \l__pxgls_long_tl}}}
+    \group_end:
+  }
+\cs_new_protected:Npn \__pxgls_print_type:n #1
+  {
+    \prop_if_in:NnF \g__pxgls_printed_prop {#1}
+      {
+        \group_begin:
+        \bool_if:NT \l__pxgls_all_bool {\glsaddall[types={#1}]}
+        \bool_if:NTF \l__pxgls_toc_bool {\glstoctrue}{\glstocfalse}
+        \cs_if_exist:NT \chapter {\setglossarysection{chapter}}
+        \str_if_eq:nnTF {#1}{acronym}
+          {\tl_set:Nn \l_tmpa_tl {\pxDEFacronymname}}
+          {\tl_set:Nn \l_tmpa_tl {\pxDEFglossaryname}}
+        \tl_if_eq:NnTF \l__pxgls_backend_tl {external}
+          {\printglossary[type={#1},title={\l_tmpa_tl}]}
+          {\printnoidxglossary[type={#1},title={\l_tmpa_tl}]}
+        \prop_gput:Nnn \g__pxgls_printed_prop {#1}{true}
+        \group_end:
+      }
+  }
+\cs_new_protected:Npn \__pxgls_print_all:
+  {
+    \bool_if:NT \l__pxgls_acronyms_bool
+      {\__pxgls_print_type:n {acronym}}
+    \bool_if:NT \l__pxgls_terms_bool
+      {\__pxgls_print_type:n {main}}
+  }
+\endinput
