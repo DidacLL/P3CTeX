@@ -1,12 +1,7 @@
 % Final-memory presentation for P3CTeX. Ordinary PAC/PR layout is untouched.
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3,xparse}
-\ProvidesExplPackage{pxMEM}{2026/11/02}{0.2}{P3CTeX memory presentation}
-% MEM alone needs only the annex facility. Enabling the class glossary option
-% before or after MEM activates the standard glossary output separately.
-\@ifpackageloaded{pxEND}{}
-  {\PassOptionsToPackage{glossary={terms=false,acronyms=false}}{pxEND}}
-\RequirePackage{pxEND}
+\ProvidesExplPackage{pxMEM}{2026/11/01}{0.1}{P3CTeX memory presentation}
 \cs_if_exist:NF \chapter
   {
     \newcounter{chapter}
@@ -28,8 +23,46 @@
   {\chapter*{\listfigurename}\addcontentsline{toc}{chapter}{\listfigurename}\@starttoc{lof}}
 \RenewDocumentCommand\listoftables{}
   {\chapter*{\listtablename}\addcontentsline{toc}{chapter}{\listtablename}\@starttoc{lot}}
-% One annex queue/counter shared by PAC, PR and MEM.
-% pxmemannex is an alias to the common annex counter.
+\newcounter{pxmemannex}
+\renewcommand\thepxmemannex{\Alph{pxmemannex}}
+\seq_new:N \g__pxmem_annexes_seq
+\prop_new:N \l__pxmem_saved_counters_prop
+\tl_new:N \l__pxmem_annex_label_tl
+\keys_define:nn {pxMEM/annex} {label .tl_set:N = \l__pxmem_annex_label_tl}
+\cs_new_protected:Npn \__pxmem_annex_print:nnn #1#2#3
+  {
+    \clearpage
+    \group_begin:
+      \tl_clear:N \l__pxmem_annex_label_tl
+      \keys_set:nn {pxMEM/annex}{#1}
+      \refstepcounter{pxmemannex}
+      \prop_clear:N \l__pxmem_saved_counters_prop
+      \clist_map_inline:nn {chapter,section,subsection,subsubsection,equation,figure,table}
+        {\cs_if_exist:cT {c@##1}
+          {\prop_put:Nnx \l__pxmem_saved_counters_prop {##1}{\int_use:c {c@##1}}
+           \int_gzero:c {c@##1}}}
+      \cs_set:Npn \thesection {\thepxmemannex.\arabic{section}}
+      \cs_set:Npn \thefigure {\thepxmemannex.\arabic{figure}}
+      \cs_set:Npn \thetable {\thepxmemannex.\arabic{table}}
+      \cs_set:Npn \theequation {\thepxmemannex.\arabic{equation}}
+      \cs_set:Npn \theHfigure {pxmemannex.\arabic{pxmemannex}.\arabic{figure}}
+      \cs_set:Npn \theHtable {pxmemannex.\arabic{pxmemannex}.\arabic{table}}
+      \cs_set:Npn \theHequation {pxmemannex.\arabic{pxmemannex}.\arabic{equation}}
+      \cs_set:Npn \theHsection {pxmemannex.\arabic{pxmemannex}.\arabic{section}}
+      \chapter*{\appendixname\space\thepxmemannex{}:~#2}
+      \cs_if_exist:NT \phantomsection {\phantomsection}
+      \protected@edef\@currentlabel{\thepxmemannex}
+      \addcontentsline{toc}{chapter}{\appendixname\space\thepxmemannex{}:~#2}
+      \tl_if_blank:VF \l__pxmem_annex_label_tl
+        {\exp_args:NV \label \l__pxmem_annex_label_tl}
+      #3
+      \par\clearpage
+      \prop_map_inline:Nn \l__pxmem_saved_counters_prop
+        {\int_gset:cn {c@##1}{##2}}
+    \group_end:
+  }
+% Deferred annexes print once at the end, including native input via \pxInput.
 \NewDocumentCommand\pxMEMannex{O{} m +m}
-  {\pxEND_add_annex:nnn {level=chapter,anchor-prefix=pxmemannex,#1}{#2}{#3}}
+  {\seq_gput_right:Nn \g__pxmem_annexes_seq {\__pxmem_annex_print:nnn {#1}{#2}{#3}}}
+\AtEndDocument{\seq_map_inline:Nn \g__pxmem_annexes_seq {#1}}
 \endinput
