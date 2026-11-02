@@ -42,7 +42,6 @@ jobs:
                   fi
                 done
                 if test "$ok" -eq 1 && test -s "$name.pdf"; then
-                  pdftotext "$name.pdf" "$name.txt"
                   if grep -Eiq "destination with the same identifier|multiply-defined" "$name.pass3.log"; then
                     echo "FAIL: duplicate label destination for $name"
                     ok=0
@@ -51,7 +50,7 @@ jobs:
                   ok=0
                 fi
                 if test "$ok" -eq 1; then
-                  echo "PASS: $name ($(pdfinfo "$name.pdf" | sed -n "s/^Pages: *//p") pages)"
+                  echo "PASS: $name (PDF produced; 3 LaTeX passes)"
                 else
                   failed=$((failed+1))
                 fi
