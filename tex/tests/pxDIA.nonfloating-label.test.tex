@@ -20,8 +20,10 @@
 \ref{diag:nonfloat}, \ref{diag:float} and \ref{sec:prior}.
 Named diagram: \nameref{diag:nonfloat}.\listoffigures
 % On subsequent passes the saved name must describe the object, not its section.
-\ifcsname r@diag:nonfloat\endcsname
+\makeatletter
+\@ifundefined{r@diag:nonfloat}{}{
   \ifnum\pdfstrcmp{\getrefbykeydefault{diag:nonfloat}{name}{}}{Referenced, nonfloating}=0\else
     \PackageError{named-reference}{Object reference retained another heading's name}{}\fi
-\fi
+}
+\makeatother
 \end{document}
