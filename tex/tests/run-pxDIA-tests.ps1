@@ -55,6 +55,11 @@ try {
         Write-Host "---- Running $testFile ----"
         & pdflatex --include-directory="$latexDir" --include-directory="$codeDir" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
         $exitCode = $LASTEXITCODE
+        if ($exitCode -eq 0) {
+            # References, counters, and nameref/cleveref require a second pass.
+            & pdflatex --include-directory="$latexDir" --include-directory="$codeDir" -halt-on-error -file-line-error -interaction=nonstopmode $testPath
+            $exitCode = $LASTEXITCODE
+        }
         $status = if ($exitCode -eq 0) { "PASS" } else { "FAIL" }
 
         $results += [PSCustomObject]@{

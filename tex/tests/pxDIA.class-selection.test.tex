@@ -1,6 +1,11 @@
 \documentclass[PAC,diagrams]{P3CTeX}
 \PECTeXconfig{cover=false,toc=false,no-plagi=false}
 \begin{document}
+\makeatletter
+\@ifpackageloaded{pxPM}{\PackageError{pxDIA-test}{Unexpected pxPM load}{}}{}
+\@ifpackageloaded{pxMEM}{\PackageError{pxDIA-test}{Unexpected pxMEM load}{}}{}
+\@ifpackageloaded{pxSRC}{\PackageError{pxDIA-test}{Unexpected pxSRC load}{}}{}
+\makeatother
 \ifcsname pxTCompiler\endcsname\else
   \PackageError{pxDIA-test}{P3CTeX class did not activate optional diagrams}{}
 \fi
