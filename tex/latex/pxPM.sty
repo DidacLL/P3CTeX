@@ -11,7 +11,7 @@
   {\file_input:n {pxTXT.code.tex}
    \cs_if_exist:NTF \languagename
      {\exp_args:Ne \str_case:nnF {\languagename}
-       {{catalan}{\_pxcore_set_language_catalan}
+       {{catalan}{} % Catalan strings are the shared catalog defaults
         {spanish}{\_pxcore_set_language_spanish}}
        {\_pxcore_set_language_english}}
      {\_pxcore_set_language_english}}
