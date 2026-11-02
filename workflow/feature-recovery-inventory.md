@@ -3,9 +3,9 @@
 
 ## Consolidated recovery worktree — 2026-11-02
 
-Branch: `rebuild/full-feature-recovery-2026-11-02`. Foundation PAC/PR/TFG/MEM fixes and recovered diagrams remain intact. Restored optional project-management/Gantt, specialized code-listing languages and legacy interfaces, original CAT/ES/EN labels, and independent opt-in `pxGLS` and `pxANX` modules. MEM uses `pxANX`; it does not own its renderer or queue. Normal BibTeX/biblatex are not replaced; `\pxBibliography` is a small optional convenience.
+Branch: `rebuild/full-feature-recovery-2026-11-02`. Foundation PAC/PR/TFG/MEM fixes and recovered diagrams remain intact. Restored optional project-management/Gantt, specialized code-listing languages and legacy interfaces, original CAT/ES/EN labels, and independent opt-in `pxGLS` and `pxANX` modules. MEM activates `pxANX`, independently of TFG; annexes remain owned by `pxANX`. Normal BibTeX/biblatex are not replaced; `\pxBibliography` is a small optional convenience.
 
-The owner explicitly discarded source previews (`\pxSourcePreview` / `\pxUseSourcePreview`), including automatic preview-to-annex forwarding. `pxSRC` has no MEM dependency. `pxGLS` is inactive unless selected (`glossary` or `GLS`/`glossaries`), and `pxANX` is independent of the MEM document profile. The monolithic `pxEND` remains rejected.
+The owner explicitly discarded source previews (`\pxSourcePreview` / `\pxUseSourcePreview`), including automatic preview-to-annex forwarding. `pxSRC` has no MEM dependency. `pxGLS` is inactive unless selected (`glossary` or `GLS`/`glossaries`), and `pxANX` can be selected independently; selecting MEM additionally activates it. The monolithic `pxEND` remains rejected.
 
 The integrated full-feature fixtures and old regression suites are committed, but **the combined feature recovery has not yet received an actual full-class TeX build**. No new GitHub Actions runs have been initiated. This is an implementation worktree, not a released or verified replacement.
 
@@ -20,7 +20,7 @@ Legend: B = authoritative branch, D = discarded `feature/core-modules-audit-and-
 
 ## Module ownership correction — 2026-11-02
 
-`pxANX.sty` + `pxANX.code.tex` now own annex rendering, numbering, queuing, manual/automatic output and Cleveref names, in both ordinary article/PAC/PR and MEM. MEM retains only `\pxMEMannex` as an adapter. `pxGLS.sty` + `pxGLS.code.tex` own optional glossary/acronym commands and print lifecycle, with no default loading. P3CTeX's `glossary`/`glossary-backend` and `annexes` keys forward initial activation to `pxCORE`; direct standalone `\usepackage{pxGLS}` and `\usepackage{pxANX}` are supported. `pxEND` remains rejected. The distinct-module and combined-mode fixtures are committed; they are not yet compiled.
+`pxANX.sty` + `pxANX.code.tex` now own annex rendering, numbering, queuing, manual/automatic output and Cleveref names, in both ordinary article/PAC/PR and MEM. MEM loads `pxANX` because a memory-style document includes annex support, but MEM introduces no alias or annex implementation. TFG alone does not select MEM or annexes. `pxGLS.sty` + `pxGLS.code.tex` own optional glossary/acronym commands and print lifecycle, with no default loading. P3CTeX's `glossary`/`glossary-backend` and `annexes` keys forward initial activation to `pxCORE`; direct standalone `\usepackage{pxGLS}` and `\usepackage{pxANX}` are supported. `pxEND` remains rejected. The distinct-module and combined-mode fixtures are committed; they are not yet compiled.
 
 ## Integration verification checkpoint — 2026-11-02
 

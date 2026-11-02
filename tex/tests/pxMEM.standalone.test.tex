@@ -5,11 +5,11 @@
 \tableofcontents
 \chapter{First}
 \section{Main}\label{sec:main}
-\pxMEMannex[label={ann:data}]{Evidence}{
+\pxAddAnnex[label={ann:data}]{Evidence}{
   \section{Annex section}\label{ann:sect}
   Annex body.
 }
-\pxMEMannex[label={ann:second}]{Further evidence}{Second annex body.}
+\pxAddAnnex[label={ann:second}]{Further evidence}{Second annex body.}
 \chapter{Second}
 \section{Later}
 \ifnum\value{chapter}=2\else\errmessage{Chapter counter incorrect}\fi

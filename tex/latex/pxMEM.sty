@@ -1,4 +1,4 @@
-% Final-memory presentation for P3CTeX. Ordinary PAC/PR layout is untouched.
+% Optional memory-style presentation for any P3CTeX document: PAC, PR or TFG.
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3,xparse}
 \ProvidesExplPackage{pxMEM}{2026/11/02}{0.4}{P3CTeX memory presentation}
@@ -30,7 +30,7 @@
   {\chapter*{\listfigurename}\addcontentsline{toc}{chapter}{\listfigurename}\@starttoc{lof}}
 \RenewDocumentCommand\listoftables{}
   {\chapter*{\listtablename}\addcontentsline{toc}{chapter}{\listtablename}\@starttoc{lot}}
-% MEM uses the independent optional annex module.
+% MEM activates the independent annex module; TFG alone does not.
 \RequirePackage{pxANX}
 % \pxMEMsetup{chapter-style=...,figures=true|false,tables=true|false}
 \NewDocumentCommand\pxMEMsetup{m}{\keys_set:nn {pxMEM}{#1}}

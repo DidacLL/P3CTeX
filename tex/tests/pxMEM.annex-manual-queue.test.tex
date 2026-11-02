@@ -7,7 +7,7 @@
 \pxAnnexSetup{name=Evidence}
 \pxAnnex[label=ann:immediate]{Immediate annex}{Immediate content.}
 \pxPrintAnnexes
-\ifnum\value{pxmemannex}=2\else
+\ifnum\value{pxannex}=2\else
   \PackageError{pxMEM-queue}{Expected two annexes}{}
 \fi
 The queued annex is \Cref{ann:queued} and the immediate annex is
