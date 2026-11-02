@@ -1,0 +1,29 @@
+\documentclass[PAC,annexes,glossaries]{P3CTeX}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\newcount\annexexecutions
+\newglossaryentry{evidence}{name={Annex term},description={ANNEX-GLOSSARY-CONTENT}}
+\pxAddAnnex[label=ann:first]{Preamble evidence}{
+  \global\advance\annexexecutions by 1
+  PREAMBLE-ANNEX-CONTENT. \gls{evidence}.
+}
+\AddToHook{enddocument}[annex-test]{%
+  \ifnum\annexexecutions=3\else\PackageError{annex-test}{Automatic annex count wrong}{}\fi
+}
+\DeclareHookRule{enddocument}{annex-test}{after}{pxEND}
+\begin{document}
+MAIN-BODY-CONTENT. See annexes \ref{ann:first} and \ref{ann:second}. Also see \cref{ann:first} and \cref{ann:first,ann:second}.
+\pxAddAnnex[label=ann:second]{Body evidence}{
+  \global\advance\annexexecutions by 1
+  BODY-ANNEX-CONTENT.
+  \pxAddAnnex{Evidence registered while including a source}{
+    \global\advance\annexexecutions by 1
+    LATER-ANNEX-CONTENT.
+  }
+}
+\ifnum\annexexecutions=0\else\PackageError{annex-test}{Annex printed prematurely}{}\fi
+% An unlabelled nested registration must not overwrite its parent's reference.
+\ifcsname r@ann:second\endcsname
+  \ifnum\pdfstrcmp{\getrefnumber{ann:second}}{B}=0\else
+    \PackageError{annex-test}{Nested annex reused its parent's label}{}\fi
+\fi
+\end{document}
