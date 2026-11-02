@@ -1,0 +1,65 @@
+% Project-management tools, reusing P3CTeX colours and table layout.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,l3keys2e}
+\RequirePackage{pxTAB,pgfgantt,rotating,tcolorbox}
+\tcbuselibrary{breakable,skins}
+\ProvidesExplPackage{pxPM}{2026/10/30}{0.1}{Project planning and analysis tools}
+\providecolor{primaryColor}{rgb}{0,0,.47}
+\providecolor{secondaryColor}{rgb}{.45,.93,1}
+%% Use the shared string table, including standalone documents; do not duplicate captions.
+\cs_if_exist:NF \pxDEFtocname
+  {\file_input:n {pxTXT.code.tex}
+   \cs_if_exist:NTF \languagename
+     {\exp_args:Ne \str_case:nnF {\languagename}
+       {{catalan}{\_pxcore_set_language_catalan}
+        {spanish}{\_pxcore_set_language_spanish}}
+       {\_pxcore_set_language_english}}
+     {\_pxcore_set_language_english}}
+\file_input:n {pxPM.code.tex}
+
+%% \pxGantt{start=dd/mm/yyyy,end=dd/mm/yyyy,days-per-block=28,...}
+%% Initialize a daily chart; chart drawing is deferred to \pxGanttEnd.
+%% Optional chart-options={...} passes native pgfgantt keys after the pxpm style.
+%% Example: \pxGantt{start=01/11/2026,end=14/11/2026,chart-options={bar height=.8}}.
+%% Global appearance: \ganttset{pxpm/.append style={title label font=\small}}.
+\NewDocumentCommand\pxGantt{m}{\group_begin:\__pxpm_gantt_begin:n{#1}}
+%% \pxGanttItem{label}{dd/mm/yyyy}{dd/mm/yyyy}
+%% Add a task. Each task is clipped to the currently displayed date block.
+\NewDocumentCommand\pxGanttItem{mmm}{\__pxpm_gantt_item:nnn{#1}{#2}{#3}}
+%% \pxGanttEnd
+%% Draw consecutive portrait blocks (or chart-only rotated floats when requested).
+\NewDocumentCommand\pxGanttEnd{}{\__pxpm_gantt_render:\group_end:}
+%% \begin{pxGantt}{<chart keys>} ... \end{pxGantt}
+%% The same chart can be written as a normal LaTeX environment. Its closing
+%% delimiter renders collected items, so no separate \pxGanttEnd is needed.
+%% The existing \pxGantt command supplies the opening delimiter.
+\NewDocumentCommand\endpxGantt{}{\pxGanttEnd}
+
+
+%% \pxPMsetup{<keys>}: override translated labels and shared box-options in the current group.
+\NewDocumentCommand\pxPMsetup{m}{\keys_set:nn {pxPM}{#1}}
+%% \pxUserStory[<options>]{<title>}{<role>}{<goal>}
+%% A story needs its title, actor and desired capability. Optional id, epic,
+%% purpose and criteria add detail; box-options customises the normal P3CTeX box.
+%% Criteria may be ordinary prose or \item entries; no list wrapper is required.
+\NewDocumentCommand\pxUserStory{O{} m +m +m}
+  {\__pxpm_story:nnnn {#1}{#2}{#3}{#4}}
+%% \pxScenario[<options>]{<title>}{<given>}{<when>}{<then>}
+%% Render the three parts of a scenario. Optional id and and add identification
+%% and a further precondition; box-options controls local appearance.
+\NewDocumentCommand\pxScenario{O{} m +m +m +m}
+  {\__pxpm_scenario:nnnnn {#1}{#2}{#3}{#4}{#5}}
+%% \pxUseCase[<options>]{<title>}{<flow>}
+%% Describe the interaction directly. Optional actors, preconditions,
+%% alternatives and postconditions add detail without mandatory empty arguments.
+%% Flow and optional fields accept paragraphs, lists and shared commands.
+\NewDocumentCommand\pxUseCase{O{} m +m}
+  {\__pxpm_usecase:nnn {#1}{#2}{#3}}
+%% \pxSWOT[<table options>]{<strengths>}{<weaknesses>}{<opportunities>}{<threats>}
+%% Render a translated analysis table; options use the existing pxTAB interface.
+\NewDocumentCommand\pxSWOT{O{} +m +m +m +m}
+  {\__pxpm_swot:nnnnn {#1}{#2}{#3}{#4}{#5}}
+%% \pxDAFO has the same arguments, using the Catalan/Spanish analysis name.
+\NewCommandCopy\pxDAFO\pxSWOT
+\ProcessKeysOptions{pxPM}
+\endinput
