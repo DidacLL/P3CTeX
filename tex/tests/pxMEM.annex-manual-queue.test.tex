@@ -1,0 +1,15 @@
+\documentclass[TFG,MEM,EN,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{no-plagi=false}
+\begin{document}
+\chapter{Body}
+\pxAnnexSetup{name=Appendix,toc=true}
+\pxAddAnnex[label=ann:queued]{Queued annex}{\section{Data}Deferred content.}
+\pxAnnexSetup{name=Evidence}
+\pxAnnex[label=ann:immediate]{Immediate annex}{Immediate content.}
+\pxPrintAnnexes
+\ifnum\value{pxannex}=2\else
+  \PackageError{pxMEM-queue}{Expected two annexes}{}
+\fi
+The queued annex is \Cref{ann:queued} and the immediate annex is
+\Cref{ann:immediate}.
+\end{document}

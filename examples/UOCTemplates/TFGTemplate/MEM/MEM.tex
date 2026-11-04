@@ -1,68 +1,25 @@
 \documentclass[TFG,MEM,CAT]{P3CTeX}
 \input{../TFGPreamble.tex}
-\PECTeXconfig{cover=true,toc=true,data={ca-fullname={Memòria del Treball Final},ca-shortname={MEM}}}
-\pxTFGabstract{CAT}{Resum del treball final.}
-\pxTFGabstract{EN}{Final project abstract.}
-
+\PECTeXconfig{cover=false,toc=true,no-plagi=false,
+  data={ca-fullname={Memòria del Treball Final},ca-shortname={MEM}}}
 \begin{document}
-% TFG front matter and generic MEM indexes print automatically.
-\pxMEMsource{PR1}{../PR1/PR1.tex}
-\pxMEMsource{PR2}{../PR2/PR2.tex}
-
-\chapter{Resum}
-Resum del treball.
-
+% Original PR1.tex is a complete document. No source registration or markers.
 \chapter{Introducció}
-\section{Context i justificació del Treball}
-Context del projecte.
-
-\section{Objectius del Treball}
-\pxMEMinclude{PR1}{objectius}
-
-\section{Enfocament i mètode seguit}
-Enfocament del projecte.
-
-\section{Planificació del Treball}
-Planificació i fites del projecte.
-
-\section{Breu sumari de contribucions i productes obtinguts}
-Principals contribucions.
-
-\section{Breu descripció dels altres capítols de la memòria}
-Organització de la memòria.
-
-\chapter{Estat de l'art}
-Estat de l'art del tema.
+\pxInput[section={Objectius}]{../PR1/PR1.tex}
 
 \chapter{Metodologia}
-Metodologia emprada.
-
-\chapter{Resultats}
-Resultats del projecte.
-
-\chapter{Discussió}
-Discussió dels resultats.
-
-% Si el projecte ho requereix, afegiu:
-% \chapter{Valoració econòmica}
+\pxInput[section={Metodologia}]{../PR1/PR1.tex}
 
 \chapter{Conclusions}
-\section{Conclusions}
-Conclusions del treball.
+Escriviu aquí les conclusions del treball.
 
-\section{Línies de futur}
-Treballs futurs.
+% Optional native lists and an explicit licence page:
+% \listoffigures
+% \listoftables
+% \pxTFGlicencepage
 
-\section{Seguiment de la planificació}
-Seguiment del projecte.
-
-\chapter{Glossari}
-Termes i acrònims rellevants.
-
-\chapter{Bibliografia}
-% Afegiu les referències del treball.
-
-\pxMEMannex{Implementació de la PR2}{
-  \pxMEMinclude{PR2}{implementacio}
+% Annex content is deferred until the end; bibliography remains standard LaTeX.
+\pxAddAnnex[label={ann:planificacio}]{Planificació original}{
+  \pxInput[section={Planificació}]{../PR1/PR1.tex}
 }
 \end{document}

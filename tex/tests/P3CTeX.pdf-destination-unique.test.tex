@@ -1,0 +1,25 @@
+\documentclass[cat,no-cover,no-toc,default]{P3CTeX}
+\PECTeXconfig{no-plagi=false}
+\begin{document}
+\section{First}
+\begin{figure}[ht]
+  \centering\rule{1cm}{1cm}
+  \caption{First figure}\label{fig:first}
+\end{figure}
+% Deliberately restart displayed numbering, as can happen in separate chapters.
+\setcounter{figure}{0}
+\begin{figure}[ht]
+  \centering\rule{1cm}{1cm}
+  \caption{Second figure}\label{fig:second}
+\end{figure}
+\makeatletter
+\@ifundefined{r@fig:second}{}{
+  \ifnum\pdfstrcmp
+    {\getrefbykeydefault{fig:first}{anchor}{}}
+    {\getrefbykeydefault{fig:second}{anchor}{}}=0
+      \PackageError{pxGDX}{Restarted figure counter reused PDF destination}{}
+  \fi
+}
+\makeatother
+Both references resolve: \ref{fig:first}, \ref{fig:second}.
+\end{document}

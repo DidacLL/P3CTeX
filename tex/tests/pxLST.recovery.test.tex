@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{pxLST}
+\begin{document}
+% Terminal content is verbatim; dollar and quotes remain literal.
+\begin{pxTerminal}{Shell session}
+$ printf '%s\n' "$HOME" # literal shell prompt
+/home/student
+\end{pxTerminal}
+
+% The same file renderer handles a full file and a selected range.
+\pxCodeFile[pxJava]{sample.java}[Java source]
+\pxCodeChunk[pxJava]{sample.java}{2}{5}{Java excerpt}
+
+% Retain the original compact/annotated environments and their behavior.
+\begin{miniCode}
+int a = 2; // literal # % and $
+\end{miniCode}
+\begin{CodeBox}{new-label}{Code with note}{note}{Annotation}
+int b = 3;
+\end{CodeBox}
+\begin{CodeBox*}{new-break}{Breakable code}{note}{Annotation}
+int c = 4;
+\end{CodeBox*}
+% Original public contracts must remain operational.
+\begin{miniCode}
+int old = 1;
+\end{miniCode}
+\begin{CodeBox}{old-label}{Legacy box}{note}{Note}
+int oldBox = 2;
+\end{CodeBox}
+\begin{CodeBox*}{old-break}{Legacy break}{note}{Note}
+int oldBreak = 3;
+\end{CodeBox*}
+\pxCodeIn[pxJava]{int oldCall = 4;}
+New inline: \pxCodeInline[pxJava]|int newCall = 5;|.
+\typeout{PXLST-RECOVERY-PASS}
+\end{document}

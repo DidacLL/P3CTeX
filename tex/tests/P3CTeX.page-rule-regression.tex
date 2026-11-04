@@ -1,0 +1,17 @@
+\documentclass[cat,SRC,no-cover,no-toc]{P3CTeX}
+\begin{document}
+% Before correction: starred form forwarded the thin variant;
+% unstarred form called undefined \pxHrule.
+\newcounter{pxthick}
+\newcounter{pxthin}
+\RenewDocumentCommand{\pxHRule}{s o}{%
+  \IfBooleanTF{#1}{\stepcounter{pxthick}}{\stepcounter{pxthin}}%
+}
+\noindent First rule.\par\noindent
+\pxPageRule*
+\noindent Second rule.\par\noindent
+\pxPageRule
+\ifnum\value{pxthick}=1\else\errmessage{pxPageRule star was not thick}\fi
+\ifnum\value{pxthin}=1\else\errmessage{pxPageRule unstar was not thin}\fi
+\noindent Both variants passed.
+\end{document}

@@ -1,0 +1,11 @@
+\documentclass{article}
+\gdef\pxLeakMarker{outside-region}
+\begin{document}
+This source file is a complete PR, not an input fragment.
+%<*objectius>
+\gdef\pxRegionMarker{region-found}
+\section{Objectius}
+Content reused by the final memory.
+%</objectius>
+This paragraph must not appear in the imported memory.
+\end{document}

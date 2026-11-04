@@ -8,15 +8,13 @@
 %%
 %%	Author: Scvria
 %%	File: pxLST.sty
-%%	Version: v0.2 (10/2026)
+%%	Version: v0.1 (03/2026)
 %%	Description:
 %%		Professional code listing environments and commands
 %%		for P3CTeX: syntax-highlighted code blocks with
 %%		Darcula-style tcolorbox frames, named preset system,
 %%		multi-language support (Java, Prolog, OWL, TAD,
-%%		YAML, Algorithm, Bash, Python, C, STM32C, ASM,
-%%		JLex/Lex, CUP/Yacc, Workflow/DSL, JS, SQL),
-%%		and UTF-8 accent handling.
+%%		YAML, Algorithm, Bash), and UTF-8 accent handling.
 %%
 %%	This file may be distributed and/or modified:
 %%
@@ -33,8 +31,7 @@
 \RequirePackage[table]{xcolor}
 \RequirePackage{tcolorbox}
 \tcbuselibrary{listings,listingsutf8,breakable,xparse,skins}
-\ProvidesExplPackage{pxLST}{2026/10/27}{v0.2}{P3CTeX professional code listings}
-\ExplSyntaxOff
+\ProvidesExplPackage{pxLST}{2026/03/04}{v0.1}{P3CTeX professional code listings}
 
 \definecolor{dark-bg}      {RGB}{40,  44,  52 }
 \definecolor{dark-fg}      {RGB}{250, 250, 250}
@@ -145,35 +142,40 @@
 \lstdefinestyle{pxlst}{
 	inputencoding    = utf8,
 	extendedchars    = true,
-	basicstyle       = \footnotesize\linespread{1.2}\ttfamily\color{pxfg},
+	basicstyle       = \footnotesize\linespread{1.2}\fontencoding{T1}\ttfamily\selectfont\color{pxfg},
 	identifierstyle  = \color{pxfg},
 	commentstyle     = \itshape\color{pxcomment},
 	stringstyle      = \color{pxstring},
 	keywordstyle     = \bfseries\color{pxkeyword},
 	keywordstyle     = [2]\bfseries\color{pxfunction},
-	keywordstyle     = [3]\bfseries\color{pxtype},
+	keywordstyle     = [3]\color{pxtype},
 	keywordstyle     = [4]\itshape\color{pxtag},
 	keywordstyle     = [5]\bfseries\color{pxkeyword!65!},
 	emphstyle        = \underbar\color{pxoperator},
 	showstringspaces = false,
+	upquote          = true,
+	mathescape       = false,
+	texcl            = false,
 	showspaces       = false,
 	showtabs         = false,
 	showlines        = false,
 	breaklines       = true,
 	breakatwhitespace= true,
-	breakindent      = 2em,
+	breakindent      = 4em,
 	breakautoindent  = false,
 	keepspaces       = true,
 	tabsize          = 4,
 	escapeinside     = {\%*}{*)},
 	captionpos       = b,
 	numbers          = left,
-	numbersep        = .8em,
-	xleftmargin      = 1.4em,
-	xrightmargin     = 0.4em,
+	numbersep		 = .8em,
 	numberstyle      = \tiny\ttfamily\color{gray},
-	prebreak         = \raisebox{0ex}[0ex][0ex]{\scalebox{-.8}[1.2]{\ensuremath{\hookrightarrow}}},
-	postbreak        = \raisebox{0ex}[0ex][0ex]{\scalebox{.8}{\ensuremath{\hookrightarrow}}\space},
+	prebreak  = \parbox[t][.1em][c]{\fill}{%
+		\vspace{.5em}\raggedleft
+		\scalebox{-.8}[1.2]{$\hookrightarrow$}
+	},
+	postbreak = \parbox[b][1em][c]{2em}{\scalebox{.8}{%
+			$\hookrightarrow$\hspace{2em}}},
 	literate =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
@@ -184,15 +186,19 @@
 	{â}{{\^a}}1  {ê}{{\^e}}1  {î}{{\^i}}1  {ô}{{\^o}}1  {û}{{\^u}}1
 	{Â}{{\^A}}1  {Ê}{{\^E}}1  {Î}{{\^I}}1  {Ô}{{\^O}}1  {Û}{{\^U}}1
 	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1 {º}{{\textordmasculine}}1 {ª}{{\textordfeminine}}1
-	{¿}{{?`}}1   {¡}{{!`}}1,
+	{¿}{{?`}}1   {¡}{{!`}}1
+	{·}{{$\cdot$}}1 {º}{{\textordmasculine}}1 {ª}{{\textordfeminine}}1,
+
 }
 
-%% Activate default dark palette and base pxlst style at package load
-\pxLSTpalettedark
-\lstset{style=pxlst}
+
+
+
 
 %% =================================
+% Use the established palette/style by default; \pxCodeSet may override it.
+\lstset{style=pxlst}
+
 %% ===== STYLE DEFINITIONS ==========
 %% =================================
 \lstdefinestyle{block}{
@@ -219,19 +225,15 @@
 \lstdefinelanguage{pxJava}{
 	language         = Java,
 	emph             = {this,super},
-	deletekeywords   = {boolean,byte,char,double,float,int,long,short,void,true,false,null},
-	morekeywords     = [1]{void,var,record,sealed,permits,yield},
-	morekeywords     = [2]{main,println,print,printf,format,add,get,set,size,remove,put,
-		contains,containsKey,keySet,values,entrySet,equals,equalsIgnoreCase,hashCode,
-		toString,compareTo,length,charAt,substring,indexOf,split,trim,valueOf,
-		parseInt,parseDouble,parseLong,parseBoolean,iterator,hasNext,next,close,read,write},
-	morekeywords     = [3]{boolean,byte,char,double,float,int,long,short,
-		String,Integer,Double,Float,Long,Boolean,Character,Byte,Short,Object,Class,
-		System,Math,StringBuilder,StringBuffer,List,ArrayList,LinkedList,Map,HashMap,
-		TreeMap,Set,HashSet,TreeSet,Collection,Collections,Arrays,Optional,Stream,
-		Exception,RuntimeException,IOException,NullPointerException,IllegalArgumentException,
-		Scanner,File,Reader,Writer,InputStream,OutputStream},
-	morekeywords     = [4]{true,false,null,out,in,err},
+	deletekeywords     = {void,new,null,true,false,for,if,else,elseif,while,do,switch,case,foreach,break},
+	morekeywords     = [5]{void,new,null,true,false,for,if,else,elseif,while,do,switch,case,foreach,break},
+	deletekeywords     = {main,println,System,out,in,err,format,add,get,size,remove,put,contains,keySet,values,equals},
+	deletekeywords     = {String,Integer,int,char,long,short,byte,float,Double,Boolean,boolean,ArrayList,List,Map,Set},
+	morekeywords     = [2]{String,Integer,int,char,long,short,byte,float,Double,Boolean,boolean,ArrayList,List,Map,Set},
+	morekeywords     = [2]{main,println,System,out,in,err,format,add,get,size,remove,put,contains,keySet,values,equals},
+	moredelim        = [s][stringstyle]{<<}{>>},
+	moredelim 		 =**[s][stringstyle]{[}{]},
+	moredelim        = [s][commentstyle]{/*}{*/},
 	moredelim        = [l][\itshape\color{pxtag}]{@},
 }
 %% --- pxProlog: Prolog with operator literate coloring ---
@@ -239,8 +241,7 @@
 	language         = Prolog,
 	keywordstyle     = \color{pxkeyword}\bfseries,
 	keywordstyle     = [3]\color{pxfunction}\bfseries,
-	morekeywords     = [3]{atom_length,append,member,length,findall,nl,write,is,mod,rem,div,
-		assert,asserta,assertz,retract,abolish,consult,true,fail,halt},
+	morekeywords     = [3]{atom_length,append,member,length,findall,nl,write},
 	literate         =
 	{(}{{\color{pxfunction}(}}1
 	{)}{{\color{pxfg})}}1
@@ -253,8 +254,7 @@
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% --- pxOWL: Manchester OWL Syntax ---
 \lstdefinelanguage{pxOWL}{
@@ -277,10 +277,10 @@
 		and,exactly,inverse,langPattern,length,
 		max,maxLength,min,minLength,
 		not,only,or,pattern,some,that,value},
-	morekeywords     = [3]{rdf,owl,xsd,rdfs},
+	morekeywords     = [3]{rdf,owl},
 	keywordstyle     = \color{pxkeyword}\bfseries,
 	keywordstyle     = [3]\color{pxfunction}\bfseries,
-	morecomment      = [l]\#,
+	morecomment      = [l]{\#},
 	morestring       = [b]",
 	literate         =
 	{.}{{\color{pxoperator}\bfseries.\color{pxfg}}}1
@@ -288,11 +288,12 @@
 }
 %% --- pxTAD: Abstract Data Type specification language ---
 \lstdefinelanguage{pxTAD}{
-	morekeywords     = [1]{create,return,if,else,then,endif,for,while,do,end},
-	morekeywords     = [2]{TAD,Invariant,Pre,Post},
-	morekeywords     = [3]{Boolean,Integer,Real,Char,String,Date,List,Set,Stack,Queue,Map,Dictionary,Array,Element},
-	morekeywords     = [4]{true,false,null,empty},
-	moredelim        = [l][\itshape\color{pxtag}]{@},
+	morekeywords     = {create,return,if,else,true,false,null},
+	morekeywords     = [2]{TAD,@pre,@post,Invariant,Boolean,Integer,String,Date,List},
+	morekeywords     = [3]{},
+	keywordstyle     = \color{pxkeyword}\bfseries,
+	keywordstyle     = [2]\color{pxfunction}\bfseries,
+	keywordstyle     = [3]\color{pxtype}\bfseries,
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
@@ -304,33 +305,29 @@
 	{>}{{\color{pxoperator}>\color{pxfg}}}1
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% --- pxYAML: YAML configuration files ---
 \lstdefinelanguage{pxYAML}{
-	morekeywords     = {true,false,null,yes,no,on,off},
+	morekeywords     = {true,false,null,yes,no},
 	morestring       = [b]',
 	morestring       = [b]",
 	sensitive        = false,
-	morecomment      = [l]\#,
+	comment          = [l]{\#},
 	literate         =
-	{:}{{\color{pxoperator}:}}1
-	{,}{{\color{pxoperator},}}1
-	{[}{{\color{pxtype}[}}1
-	{]}{{\color{pxtype}]}}1
-	{>}{{\color{pxfunction}>}}1
-	{|}{{\color{pxfunction}|}}1,
+	{:}{{\color{pxoperator} :}}1
+	{,}{{\color{pxoperator} ,}}1
+	{[}{{\color{pxtype} [ }}1
+	{]}{{\color{pxtype} ] }}1
+	{>}{{\color{pxfunction} > }}1
+	{|}{{\color{pxfunction} | }}1,
 }
 %% --- algoritme: Catalan pseudocode with math symbol literate ---
 \lstdefinelanguage{algoritme}{
-	morekeywords     = [1]{Funcio,Fi,Funció,Accio,Acció,Algorisme,Si,Llavors,Sinó,Sino,Mentre,Fer,
-		Per,Cada,A,Pas,Retornar,Sortir, Excepció, Tipus, Registre, FRegistre, Vector, Taula, Constant, Var},
-	morekeywords     = [2]{Nova,Nou,Afegir,Extreure,Empilar,Desempilar,Encuar,Desencuar,Primer, Cim, Buit, Buida, Llegir, Escriure},
-	morekeywords     = [3]{enter,real,boolea,booleà,caracter,caràcter,cadena,punter},
-	morekeywords     = [4]{Cert,Fals,cert,fals,NUL,nul, i, o, no},
+	morekeywords     = {Funcio,Fi,Funció,Si,Llavors,Sinó,Mentre,Fer,
+		Per,Cada,A,Retornar,Sortir,Nova,Nou,Afegir,Extreure},
+	keywordstyle     = \color{pxkeyword}\bfseries,
 	sensitive        = true,
-	moredelim        = [l][\itshape\color{pxtag}]{@},
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
@@ -345,40 +342,30 @@
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% --- pxBash: Bash/shell scripts ---
 \lstdefinelanguage{pxBash}{
 	language         = bash,
-	morekeywords     = [2]{git,docker,python,python3,gcc,g++,make,cmake,java,javac,pdflatex,bibtex,
-		curl,wget,ssh,scp,tar,zip,unzip,chmod,chown,mkdir,rm,cp,mv,ls,find,grep,sed,awk,cat,head,tail,sort,uniq},
 	keywordstyle     = \color{pxkeyword}\bfseries,
 	stringstyle      = \color{pxstring},
 	commentstyle     = \color{pxcomment}\itshape,
 	numberstyle      = \tiny\color{pxnumber},
-	showstringspaces = false,
+	showstringspaces  = false,
 	columns          = flexible,
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
 	{À}{{\`{A}}}1 {È}{{\`{E}}}1 {Ì}{{\`{I}}}1 {Ò}{{\`{O}}}1 {Ù}{{\`{U}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% --- pxPython: Python with Darcula styles and extended built-ins ---
 \lstdefinelanguage{pxPython}{
 	language         = Python,
-	deletekeywords   = {True,False,None,print,range,len,str,int,float,list,dict,set,tuple,bool,type,object,open,super},
-	morekeywords     = [1]{async,await,match,case,nonlocal},
-	morekeywords     = [2]{print,range,len,enumerate,zip,map,filter,sorted,reversed,sum,min,max,abs,round,
-		open,input,isinstance,issubclass,getattr,setattr,hasattr,super,__init__,__str__,__repr__,__len__},
-	morekeywords     = [3]{int,float,complex,str,bytes,bool,list,tuple,dict,set,frozenset,object,type,
-		Exception,ValueError,TypeError,KeyError,IndexError,RuntimeError,StopIteration},
-	morekeywords     = [4]{True,False,None,self,cls},
-	moredelim        = [l][\itshape\color{pxtag}]{@},
-	morecomment      = [l]\#,
+	morekeywords     = [2]{print,range,len,str,int,float,def,class,self,True,False,
+		None,and,or,not,in,is,lambda,yield,async,await,list,dict,set},
+	morecomment      = [l]{\#},
 	morestring       = [b]',
 	morestring       = [b]",
 	morestring       = [s]{"""}{"""},
@@ -386,34 +373,21 @@
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
-%% --- pxC: C with Darcula styles, stdint/stdbool types, and common stdlib ---
+%% --- pxC: C with Darcula styles and common stdlib ---
 \lstdefinelanguage{pxC}{
 	language         = C,
-	deletekeywords   = {int,char,short,long,float,double,unsigned,signed},
-	morekeywords     = [1]{void,if,else,for,while,do,switch,case,default,break,continue,return,
-		sizeof,typedef,struct,enum,union,static,const,volatile,extern,inline,include,define,ifdef,ifndef,endif,pragma},
-	morekeywords     = [2]{main,printf,scanf,fprintf,fscanf,snprintf,puts,putchar,getchar,fgets,fputs,
-		fopen,fclose,fread,fwrite,fseek,ftell,rewind,malloc,calloc,realloc,free,
-		memcpy,memmove,memset,memcmp,strlen,strcmp,strncmp,strcpy,strncpy,strcat,strncat,strchr,strstr,
-		atoi,atol,atof,strtol,strtoul,exit,abort,assert,qsort,bsearch},
-	morekeywords     = [3]{int,char,short,long,float,double,unsigned,signed,
-		uint8_t,uint16_t,uint32_t,uint64_t,int8_t,int16_t,int32_t,int64_t,
-		size_t,ssize_t,uintptr_t,intptr_t,ptrdiff_t,bool,FILE},
-	morekeywords     = [4]{true,false,NULL,EOF,EXIT_SUCCESS,EXIT_FAILURE,stdin,stdout,stderr},
+	morekeywords     = [2]{printf,scanf,malloc,free,sizeof,typedef,struct,enum,include,define},
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
-	morestring       = [b]',
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
-%% --- pxSTM32C: Embedded C for STM32 / ARM Cortex-M / CMSIS / HAL (SSEE) ---
+%% --- pxJavaScript: JavaScript/ECMAScript (listings has no built-in; define keywords) ---
 \lstdefinelanguage{pxSTM32C}{
 	language         = C,
 	deletekeywords   = {int,char,short,long,float,double,unsigned,signed},
@@ -501,7 +475,7 @@
 	sensitive        = true,
 	morecomment      = [s]{/*}{*/},
 	morecomment      = [l]{//},
-	morestring       = [d]",
+	morestring       = [b]",
 	literate         =
 	{<}{{{\color{pxtag}<}}}1
 	{>}{{{\color{pxtag}>}}}1
@@ -527,7 +501,7 @@
 	sensitive        = true,
 	morecomment      = [s]{/*}{*/},
 	morecomment      = [l]{//},
-	morestring       = [d]",
+	morestring       = [b]",
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
@@ -556,7 +530,7 @@
 %% --- pxASM: Assembly & Low-Level IR (ARM Cortex-M, x86/AMD64, 3-Address IR) ---
 \lstdefinelanguage{pxASM}{
 	morekeywords     = [1]{MOV,MOVS,MOVW,MOVT,LDR,LDRB,LDRH,STR,STRB,STRH,PUSH,POP,
-		ADD,ADDS,SUB,SUBS,MUL,DIV,UDIV,SDIV,AND,ORR,EOR,BIC,LSL,LSR,ASR,ROR,CMP,CMN,TST,TEQ,
+		ADD,ADDS,SUB,SUBS,MUL,DIV,UDIV,SDIV,AND,ORR,EOR,BIC,LSL,LSR,ASR,ROR,diagrams,CMN,TST,TEQ,
 		B,BL,BX,BLX,BEQ,BNE,BGT,BGE,BLT,BLE,BHI,BLS,BCS,BCC,BMI,BPL,CBZ,CBNZ,IT,ITE,ITT,
 		NOP,WFI,WFE,SEV,CPSID,CPSIE,ISB,DSB,DMB,SVC,
 		CALL,RET,JMP,JE,JNE,JG,JGE,JL,JLE,JA,JB,LEA,XOR,SHL,SHR,SAR,INC,DEC,NEG,IMUL,IDIV,
@@ -578,15 +552,10 @@
 }
 %% --- pxJavaScript: JavaScript/ECMAScript (listings has no built-in; define keywords) ---
 \lstdefinelanguage{pxJavaScript}{
-	morekeywords     = [1]{function,var,let,const,return,if,else,for,while,do,switch,case,default,
-		new,this,super,class,extends,async,await,yield,import,export,from,as,
-		try,catch,throw,finally,typeof,instanceof,in,of,delete,break,continue,void},
-	morekeywords     = [2]{console,log,warn,error,info,parseInt,parseFloat,isNaN,isFinite,
-		fetch,then,catch,map,filter,reduce,forEach,find,includes,push,pop,slice,splice,join,split,
-		setTimeout,setInterval,clearTimeout,clearInterval,stringify,parse},
-	morekeywords     = [3]{Object,Array,String,Number,Boolean,Symbol,BigInt,Math,Date,RegExp,
-		Promise,Map,Set,WeakMap,WeakSet,Error,TypeError,JSON,Math,window,document},
-	morekeywords     = [4]{true,false,null,undefined,NaN,Infinity},
+	morekeywords     = {function,var,let,const,return,if,else,for,while,do,switch,case,
+		true,false,null,undefined,new,this,class,extends,async,await,
+		try,catch,throw,finally,typeof,instanceof,in,of,delete,break,continue},
+	morekeywords     = [2]{console,log,warn,error,parseInt,parseFloat,Object,Array,String,Number},
 	morecomment      = [l]{//},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]",
@@ -594,8 +563,7 @@
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
 %% pxJS: alias for pxJavaScript (language=pxJS or language=pxJavaScript)
 \lstdefinelanguage{pxJS}{
@@ -603,25 +571,19 @@
 }
 %% --- pxSQL: SQL (no built-in in listings) ---
 \lstdefinelanguage{pxSQL}{
-	morekeywords     = [1]{SELECT,FROM,WHERE,INSERT,UPDATE,DELETE,JOIN,LEFT,RIGHT,INNER,OUTER,FULL,CROSS,
-		ON,AND,OR,NOT,AS,ORDER,BY,ASC,DESC,GROUP,HAVING,LIMIT,OFFSET,DISTINCT,UNION,ALL,
-		CREATE,TABLE,INDEX,VIEW,DROP,ALTER,ADD,PRIMARY,KEY,FOREIGN,REFERENCES,
-		UNIQUE,DEFAULT,CHECK,INTO,VALUES,SET,BEGIN,COMMIT,ROLLBACK,TRANSACTION,CASE,WHEN,THEN,ELSE,END},
-	morekeywords     = [2]{COUNT,SUM,AVG,MIN,MAX,COALESCE,NULLIF,CAST,ROUND,UPPER,LOWER,LENGTH,SUBSTRING,NOW,DATE},
-	morekeywords     = [3]{INT,INTEGER,SMALLINT,BIGINT,DECIMAL,NUMERIC,FLOAT,REAL,DOUBLE,
-		VARCHAR,CHAR,TEXT,DATE,TIME,TIMESTAMP,DATETIME,BOOLEAN,BOOL,SERIAL,BLOB},
-	morekeywords     = [4]{NULL,TRUE,FALSE,LIKE,ILIKE,BETWEEN,IN,EXISTS,IS},
-	sensitive        = false,
+	morekeywords     = {SELECT,FROM,WHERE,INSERT,UPDATE,DELETE,JOIN,LEFT,RIGHT,INNER,OUTER,
+		ON,AND,OR,NOT,NULL,AS,ORDER,BY,GROUP,HAVING,LIMIT,OFFSET,
+		CREATE,TABLE,INDEX,VIEW,DROP,ALTER,PRIMARY,KEY,FOREIGN,REFERENCES,
+		UNIQUE,DEFAULT,CHECK,INTO,VALUES,SET},
+	morekeywords     = [2]{COUNT,SUM,AVG,MIN,MAX,LIKE,BETWEEN,IN,EXISTS},
 	morecomment      = [l]{--},
 	morecomment      = [s]{/*}{*/},
 	morestring       = [b]',
 	literate         =
 	{á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
 	{à}{{\`{a}}}1 {è}{{\`{e}}}1 {ì}{{\`{i}}}1 {ò}{{\`{o}}}1 {ù}{{\`{u}}}1
-	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1
-	{·}{{$\cdot$}}1,
+	{ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
 }
-%% --- pxR: R Statistical & Data Mining Language (Mineria de Dades, AC, Estadistica) ---
 \lstdefinelanguage{pxR}{
 	alsoletter       = {.},
 	morekeywords     = [1]{function,if,else,for,in,while,repeat,break,next,return,library,require,source},
@@ -650,6 +612,7 @@
 	{·}{{$\cdot$}}1,
 }
 
+
 \makeatletter
 %% Force-load strings aspect from lstmisc.sty and fix upstream listings [b]
 %% string bug where \<letter>" (e.g. "\$", "\n", "\t") fails to close the
@@ -666,46 +629,33 @@
 \global\let\lst@StringDM@db\lst@StringDM@bd
 \makeatother
 
-\ExplSyntaxOn
+
 %% =================================
 %% ===== FILE INPUT FUNCTION ========
 %% =================================
-%% \pxLST_input_file:nnn {<language>}{<file>}{<title>}
-%% Typeset an external source file in a breakable pxLST tcolorbox.
-%% #1 - listings language name.  #2 - source filename/path.  #3 - header title.
-\cs_new_protected:Npn \pxLST_input_file:nnn #1 #2 #3 {
-	\tl_if_blank:nTF {#1}
-		{
-			\tcbinputlisting{
-				listing~options={style=pxlst},
-				colback=pxbg!90!,
-				colframe=pxbg!60!,
-				coltext=pxfg,
-				listing~file=#2,
-				listing~only,
-				breakable,
-				arc=.25em, outer~arc=.25em,
-				toptitle=-.1em,
-				title=\small\hspace*{\fill}\textbf{\ttfamily #3}
-			}
-		}
-		{
-			\tcbinputlisting{
-				listing~options={style=pxlst,language=#1},
-				colback=pxbg!90!,
-				colframe=pxbg!60!,
-				coltext=pxfg,
-				listing~file=#2,
-				listing~only,
-				breakable,
-				arc=.25em, outer~arc=.25em,
-				toptitle=-.1em,
-				title=\small\hspace*{\fill}\textbf{\ttfamily #3}
-			}
-		}
+%% \pxLST_input_file:nn {<language>}{<file>}
+%% Typeset an external source file in the standard pxLST tcolorbox.
+%% #1 - listings language name.  #2 - source filename/path.
+% Extended file renderer shared by \pxCodeFile and source inclusion.
+% #1 language, #2 path, #3 displayed title, #4 local listings options.
+% No extra listings environment or secondary highlighting engine.
+\cs_new_protected:Npn \pxLST_input_file:nnnn #1 #2 #3 #4 {
+	\tcbinputlisting{
+		listing~options={language={#1},#4},
+		colback=pxbg!90!,
+		colframe=pxbg!60!,
+		coltext=pxfg,
+		listing~file={#2},
+		listing~only,
+		arc=.25em, outer~arc=.25em,
+		drop~lifted~shadow,
+		toptitle=-.1em,
+		title=\small\hspace*{\fill}\textbf{\ttfamily #3}
+	}
 }
+% Keep the established two-argument entry point and its visual defaults.
 \cs_new_protected:Npn \pxLST_input_file:nn #1 #2 {
-	\pxLST_input_file:nnn {#1} {#2} {#2}
+	\pxLST_input_file:nnnn {#1}{#2}{#2}{}
 }
 %% =================================
 %% ===== INLINE CODE RENDER ==========
@@ -732,16 +682,12 @@
 }
 
 
-%%% so that \usepackage[preset=pxcode]{pxLST} works).
-%\ProcessKeysOptions{ pxLST }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%      --  PUBLIC LaTeX2e API   --         %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Package configuration (pxLST key family).
-%%   \pxLSTsetup{key=value,...} applies keys in current TeX group scope.
-%%   At document level, effects are global until overridden or group ends.
-%%   Preset names are registered via \pxLSTsavepreset{name}{option-string}
-%%   and applied via \pxLSTusepreset{name} or key preset=name.
+%% Palette, language and style are configured by the established
+%% \pxCodeSet[palette]{language}[style]. No separate setup-key or preset
+%% registry is exposed by this package.
 %% \pxCodeSet[<palette>]{<language>}[<style>]
 %% Select a palette and set the global listings language/style.
 %% #1 - palette (default dark).  #2 - listings language.  #3 - listings style (default pxlst).
@@ -752,6 +698,10 @@
     style=#3%
   }%
 }
+% Historical setup spelling, identical to the established palette/language selector.
+\NewDocumentCommand\pxLSTsetup{O{dark} m O{pxlst}}
+  {\pxCodeSet[#1]{#2}[#3]}
+
 %% -----------------------------------------------------------------------
 %% pxCode -- inline code listing with optional local key overrides.
 %%   #1 = optional key-value options (local to this environment)
@@ -760,7 +710,7 @@
 %% Standard titled code-listing environment.
 %% #1 - optional listings options.  #2 - title/label text shown in the title bar.
 \newtcblisting{pxCode}[2][]{%
-	listing~options={style=pxlst,#1},
+	listing~options={#1},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	drop~lifted~shadow,%
@@ -792,7 +742,7 @@
 %% \begin{pxCode*}[<listing options>]{<label>} ... \end{pxCode*}
 %% Alternate darker code-listing environment with the same argument contract as pxCode.
 \newtcblisting{pxCode*}[2][]{%
-	listing~options={style=pxlst,#1},
+	listing~options={#1},
 	listing~only,%
 	arc=.25em,outer~arc=.25em,%
 	colback=pxbg!70!gray,
@@ -813,7 +763,7 @@
 %% Non-breakable listing with an external comment panel and cross-reference label cdbx:<label>.
 %% #1 - listings options.  #2 - label id.  #3 - title.  #4 - short note id.  #5 - note text.
 \newtcblisting{CodeBox}[5][]{%
-	listing~options={style=pxlst,#1},
+	listing~options={#1},
   enhanced,%
   colback=pxbg!90!,
   colframe=pxbg!60!,
@@ -842,7 +792,7 @@
 %% \begin{CodeBox*}[<listing options>]{<label>}{<title>}{<note id>}{<note text>} ... \end{CodeBox*}
 %% Breakable CodeBox variant; continuation titles refer back to cdbx:<label>.
 \newtcblisting{CodeBox*}[5][]{%
-	listing~options={style=pxlst,#1},
+	listing~options={#1},
   enhanced,%
   breakable,%
   listing~and~comment,%
@@ -866,27 +816,82 @@
   comment~outside~listing,%
   listing~above~comment%
 }
-%% \pxCodeFile[<language>]{<file>}[<title>]
-%% Typeset an external file through the standard breakable pxLST file renderer.
-%% #1 - optional listings language.  #2 - source filename/path.  #3 - optional header title (defaults to #2).
-\NewDocumentCommand{\pxCodeFile}{ O{} m O{#2} }
-  { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
+%% \pxCodeFile[<language>]{<file>}
+%% Typeset an external file through the standard pxLST file renderer.
+%% #1 - optional listings language.  #2 - source filename/path.
+\NewDocumentCommand{\pxCodeFile}{O{} m O{#2}}
+  {\pxLST_input_file:nnnn {#1}{#2}{#3}{}}
 
-%% \pxCodeFileInput[<language>]{<file>}[<title>]
-%% Convenience alias for \pxCodeFile (defaults to pxJLex when language is omitted).
-\NewDocumentCommand{\pxCodeFileInput}{ O{pxJLex} m O{#2} }
-  { \pxLST_input_file:nnn { #1 } { #2 } { #3 } }
 
 %% \pxCodeIn[<language>]{<code>}[<style>]
 %% Render one inline snippet; optional language/style changes are local to this command.
-%% #1 - optional listings language.  #2 - inline code.  #3 - listings style (default pxlst).
-\NewDocumentCommand{\pxCodeIn}{ O{} m O{pxlst}}
+%% #1 - optional listings language.  #2 - inline code.  #3 - optional listings style (default: caller's active style).
+\NewDocumentCommand{\pxCodeIn}{ O{} m o }
   {
     \group_begin:
-      \tl_if_blank:nTF { #1 }
-        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, style=#3 } }
-        { \lstset{ xleftmargin=2em, xrightmargin=2em, framesep=1em, language=#1, style=#3 } }
-      \__pxlst_code_render_inline:n { #2 }
+      % Preserve the caller's active listings style unless explicitly
+      % overridden, including when only a language is supplied.
+      \IfNoValueTF{#3}
+        {
+          \tl_if_blank:nF {#1}
+            {\lstset{xleftmargin=2em,xrightmargin=2em,framesep=1em,
+              language=#1}}
+        }
+        {
+          \lstset{style=#3}
+          \tl_if_blank:nF {#1}
+            {\lstset{xleftmargin=2em,xrightmargin=2em,framesep=1em,
+              language=#1}}
+        }
+      \__pxlst_code_render_inline:n {#2}
     \group_end:
   }
-\endinput
+% Preserve the older public environment names without another listing renderer.
+\cs_new_eq:cc {pxCodeMini}{miniCode}
+\cs_new_eq:cc {endpxCodeMini}{endminiCode}
+\cs_new_eq:cc {pxCodeBox}{CodeBox}
+\cs_new_eq:cc {endpxCodeBox}{endCodeBox}
+\cs_new_eq:cc {pxCodeBreak}{CodeBox*}
+\cs_new_eq:cc {endpxCodeBreak}{endCodeBox*}
+% Compact and annotated listing boxes retain the established names:
+% miniCode, CodeBox and CodeBox*. No forwarding aliases are required.
+
+% Optional file-range convenience; the file renderer is the same one used
+% by \pxCodeFile and \pxInput[as=code].
+\NewDocumentCommand{\pxCodeChunk}{O{} m m m m}
+  {
+    \group_begin:
+      \int_compare:nNnTF {#3} < {1}
+        {\PackageError{pxLST}{First~line~must~be~positive}{Use~a~1-based~source~range.}}
+        {
+          \int_compare:nNnTF {#4} < {#3}
+            {\PackageError{pxLST}{Last~line~precedes~first~line}{Use~an~ascending~source~range.}}
+            {\pxLST_input_file:nnnn {#1}{#2}{#5}
+               {firstline=#3,lastline=#4,firstnumber=#3}}
+        }
+    \group_end:
+  }
+
+% Terminal transcripts preserve literal prompts and shell output;
+% options follow the existing pxCode listings configuration.
+\tcbset{pxlst-terminal/.style={
+  enhanced,breakable,listing~only,
+  colback=pxbg!95!,colframe=pxbg!70!,coltext=pxfg,
+  arc=.25em,fonttitle=\small\ttfamily\bfseries}}
+\newtcblisting{pxTerminal}[2][]{
+  pxlst-terminal,title={#2},
+  listing~options={style=pxlst,language={},numbers=none,
+    xleftmargin=0pt,mathescape=false,texcl=false,#1}}
+
+% The newer verbatim-aware inline form accepts braces or an arbitrary
+% delimiter; keep \pxCodeIn's original mandatory-argument contract.
+\NewDocumentCommand{\pxCodeInline}{O{} v o}
+  {
+    \group_begin:
+      % No override means the active user-selected listings style remains in use.
+      \IfNoValueF{#3}{\lstset{style=#3}}
+      \tl_if_blank:nF {#1}{\lstset{language={#1}}}
+      \__pxlst_code_render_inline:n {#2}
+    \group_end:
+  }
+

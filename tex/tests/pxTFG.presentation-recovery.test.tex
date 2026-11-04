@@ -1,0 +1,27 @@
+\documentclass[TFG,MEM,EN,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{no-plagi=false,data={
+  student={Example student},grade={Software Engineering},
+  subj-fullname={Final project},ca-fullname={Memory},ca-shortname={MEM}
+}}
+\pxTFGsetup{print=manual,tutor={Example supervisor},pra={PR1},
+  area={Software Engineering},credits={12},keywords={LaTeX,automation},
+  licence={CC BY-SA 4.0}}
+% The EN class option must select English TFG labels, not Catalan defaults.
+\ifnum\pdfstrcmp{\pxDEFtfglanguagevalue}{English}=0\else
+  \PackageError{pxTFG-presentation}{English TFG language label missing}{}
+\fi
+\ifnum\pdfstrcmp{\pxDEFtfgtutor}{Supervisor}=0\else
+  \PackageError{pxTFG-presentation}{English TFG supervisor label missing}{}
+\fi
+\pxMEMsetup{chapter-style=\normalfont\Large\bfseries,figures=false,tables=false}
+\pxTFGabstract{CAT}{Resum català de prova.}
+\pxTFGabstract{ES}{Resumen de prueba.}
+\pxTFGabstract{EN}{Test abstract.}
+\begin{document}
+\pxTFGcoverdetails
+\pxTFGfrontmatter
+\chapter{Introduction}
+\section{Scope}
+MEM content after the restored preliminary material.
+\typeout{PXTFG-PRESENTATION-FIXTURE}
+\end{document}

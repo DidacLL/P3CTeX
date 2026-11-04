@@ -36,10 +36,19 @@
 {
 	P3CTeX main P3CTeX.cls expl3 code file
 }
+\bool_new:N \l__pxdoc_loading_bool
+\bool_set_true:N \l__pxdoc_loading_bool
+\bool_new:N \l__pxdoc_tfg_bool
+\bool_new:N \l__pxdoc_mem_bool
 \bool_new:N \l_pxdoc_language_bool
 \bool_set_false:N \l_pxdoc_language_bool
 \bool_new:N \l_pxdoc_useglossary_bool
 \bool_set_false:N \l_pxdoc_useglossary_bool
+\bool_new:N \l_pxdoc_useannexes_bool
+\bool_set_false:N \l_pxdoc_useannexes_bool
+% Glossary support is class-owned, optional and defaults to no-index.
+\tl_new:N \l__pxdoc_glossary_backend_tl
+\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}
 %\bool_new:N \l_pxdoc_usebibliography_bool
 %\bool_set_false:N \l_pxdoc_usebibliography_bool
 %% =================================
@@ -49,12 +58,6 @@
 %% Configure at class load (\documentclass[<keys>]{P3CTeX}) or later with \PECTeXconfig{<keys>}.
 %% cover/toc/no-plagi/glossary/preamble control document features; data={...} delegates metadata to P3CTeX/data.
 %% Unrecognised options are stored in \l__pxdoc_unknown_tl and later forwarded to pxCORE.
-\bool_new:N \l__pxdoc_loading_bool
-\bool_new:N \l__pxdoc_tfg_bool
-\bool_new:N \l__pxdoc_mem_bool
-\bool_new:N \l__pxdoc_gnt_bool
-\bool_new:N \l__pxdoc_cmp_bool
-\bool_set_true:N \l__pxdoc_loading_bool
 \keys_define:nn {P3CTeX}
 {
 	cover		.bool_set:N 	=\l_pxdoc_usecover_bool,
@@ -68,10 +71,12 @@
 	no-plagi	.bool_set:N 	=\l_pxdoc_useplagi_bool,
 		no-plagi	.initial:n 	=	false,
 		no-plagi	.default:n 	=	true,
-	glossary		.code		={
-									\RequirePackage[acronym]{glossaries}
-									\bool_set_true:N \l_pxdoc_useglossary_bool
-								},
+	glossary .code:n = {\bool_set_true:N \l_pxdoc_useglossary_bool},
+	annexes .code:n = {\bool_set_true:N \l_pxdoc_useannexes_bool},
+	glossary-backend .choice:,
+		glossary-backend / noindex .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}},
+		glossary-backend / external .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {external}},
+		glossary-backend .initial:n = noindex,
 %	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
 %		bibliography			.initial:n	= {},
 %	references			.meta:n		={usebibliography={true}, bibpath={#1}},
@@ -85,26 +90,14 @@
 	PAC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true},cat},
 	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
 	PR		.meta:n	={cover = {true} , toc ={ true }},
-	GNT .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_gnt_bool}
-			{\ClassError{P3CTeX}{GNT must be selected at class loading}{Put GNT in \string\documentclass}}
-	},
-	CMP .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_cmp_bool}
-			{\ClassError{P3CTeX}{CMP must be selected at class loading}{Put CMP in \string\documentclass}}
-	},
-	TFG .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_tfg_bool}
-			{\ClassError{P3CTeX}{TFG must be selected at class loading}{Put TFG in \string\documentclass}}
-	},
-	MEM .code:n = {
-		\bool_if:NTF \l__pxdoc_loading_bool
-			{\bool_set_true:N \l__pxdoc_mem_bool}
-			{\ClassError{P3CTeX}{MEM must be selected at class loading}{Put MEM in \string\documentclass}}
-	},
+	TFG .code:n =
+      {\bool_if:NTF \l__pxdoc_loading_bool
+        {\bool_set_true:N \l__pxdoc_tfg_bool}
+        {\ClassError{P3CTeX}{TFG must be selected at class loading}{Select TFG in \string\documentclass}}},
+	MEM .code:n =
+      {\bool_if:NTF \l__pxdoc_loading_bool
+        {\bool_set_true:N \l__pxdoc_mem_bool}
+        {\ClassError{P3CTeX}{MEM must be selected at class loading}{Select MEM in \string\documentclass}}},
 	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
 	fake	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={example}},
 	EN		.meta:n	={en},
@@ -217,13 +210,22 @@
 \file_input:n {pxTXT.code.tex}%% Load multilanguage text comands
 \ProcessKeysOptions{P3CTeX}
 \bool_set_false:N \l__pxdoc_loading_bool
-\bool_if:NT \l__pxdoc_tfg_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,TFG} }
-\bool_if:NT \l__pxdoc_mem_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM} }
-\bool_if:NT \l__pxdoc_gnt_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,GNT} }
-\bool_if:NT \l__pxdoc_cmp_bool { \tl_put_right:Nn \l__pxdoc_unknown_tl {,CMP} }
 \bool_if:NF	\l_pxdoc_language_bool {\RequirePackage[catalan]{babel}} %% Default language setup
 \file_input:n {pxGDX.code.tex} %% Load Graphic module
+% Forward independently requested modules through pxCORE only.
+\bool_if:NT \l_pxdoc_useglossary_bool
+  {
+    \tl_if_eq:NnT \l__pxdoc_glossary_backend_tl {external}
+      {\PassOptionsToPackage{external}{pxGLS}}
+    \tl_put_right:Nn \l__pxdoc_unknown_tl {,GLS}
+  }
+\bool_if:NT \l_pxdoc_useannexes_bool
+  {\tl_put_right:Nn \l__pxdoc_unknown_tl {,ANX}}
+\bool_if:NT \l__pxdoc_tfg_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,TFG}}
+\bool_if:NT \l__pxdoc_mem_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM}}
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
+% Load cleveref after optional math modules (pxCALC -> amsmath).
+\RequirePackage{cleveref}
 \pxGDX_config:n { %% Pass P3CTeX / data keys to pxCORE
 	cover-config={
 		text-backtitle	 ={\l__pxdata_course_tl},
@@ -233,7 +235,7 @@
 		text-subtitle	 ={\l__pxdata_activity_tl},
 		text-subsubtitle ={\l__pxdata_subj_code_tl},
 		text-author		 ={\l__pxdata_student_tl},
-		text-date		 ={\l__px_date_tl},
+		text-date		 ={\today},
 		text-auxtext	 ={ },
 	},
 	page-config={

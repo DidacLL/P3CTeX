@@ -1,0 +1,26 @@
+% Independent annexes for article, PAC, PR, TFG and MEM document configurations.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse}
+\ProvidesExplPackage{pxANX}{2026/11/02}{0.1}{Independent annexes}
+\file_input:n {pxANX.code.tex}
+\NewDocumentCommand\pxAnnexSetup{m}{\keys_set:nn {pxANX}{#1}}
+\NewDocumentCommand\pxAnnex{O{} m +m}{\__pxanx_print:nnn {#1}{#2}{#3}}
+\NewDocumentCommand\pxAddAnnex{O{} m +m}{\__pxanx_enqueue:nnn {#1}{#2}{#3}}
+\NewDocumentCommand\pxPrintAnnexes{}{\__pxanx_flush:}
+% Annexes are flushed before glossaries so annex-only terms are included.
+\AddToHook{enddocument}[pxANX]{\__pxanx_flush:}
+\DeclareHookRule{enddocument}{pxANX}{before}{pxGLS}
+\AddToHook{begindocument/before}[pxANX/cleveref]
+  {\cs_if_exist:NT \crefname
+    {\cs_if_exist:NTF \iflanguage
+       {\iflanguage{catalan}
+          {\crefname{pxannex}{annex}{annexos}
+           \Crefname{pxannex}{Annex}{Annexos}}
+          {\iflanguage{spanish}
+             {\crefname{pxannex}{anexo}{anexos}
+              \Crefname{pxannex}{Anexo}{Anexos}}
+             {\crefname{pxannex}{appendix}{appendices}
+              \Crefname{pxannex}{Appendix}{Appendices}}}}
+       {\crefname{pxannex}{appendix}{appendices}
+        \Crefname{pxannex}{Appendix}{Appendices}}}}
+\endinput

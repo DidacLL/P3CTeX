@@ -1,0 +1,13 @@
+\documentclass[EN,glossary,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{no-plagi=false}
+\pxGlossarySetup{print=manual,include=used,toc=true}
+\pxAcronym{API}{API}{Application Programming Interface}
+\pxTerm{graph}{Graph}{A graph has vertices and edges.}
+\pxTerms{node={name={Node},description={A vertex of a graph.}}}
+\pxAcronyms{IR={short={IR},long={Intermediate Representation}}}
+\begin{document}
+\section{Term registration}
+The \gls{API} manipulates a \gls{graph}; the \gls{IR} contains a \gls{node}.
+\pxPrintGlossary[type=acronym]
+\pxPrintGlossaries
+\end{document}

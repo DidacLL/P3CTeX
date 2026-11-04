@@ -1,0 +1,30 @@
+\documentclass[TFG,PR,CAT]{P3CTeX}
+\PECTeXconfig{
+  cover=false,toc=false,no-plagi=false,
+  data={
+    student={Estudiant de prova},
+    grade={Enginyeria Informàtica},
+    subj-fullname={Treball Final de Grau},
+    subj-shortname={TFG},
+    ca-fullname={Primera prova de seguiment},
+    ca-shortname={PR1}
+  }
+}
+\pxTFGsetup{
+  tutor={Tutoria de prova},pra={PR1},area={Enginyeria del programari},
+  credits={12},keywords={LaTeX,reutilització},licence={CC BY-SA 4.0}
+}
+\begin{document}
+\section{Material recuperat}
+% The source is a complete, independently compilable PR, with no region markers.
+\pxInput[section={Objectius}]{fixtures/tfg/PR1.tex}
+\ifcsname pxTFGImportedObjective\endcsname\else\errmessage{Objectives missing}\fi
+\ifcsname pxTFGImportedScope\endcsname\else\errmessage{Nested subsection missing}\fi
+\ifcsname pxTFGImportedChild\endcsname\else\errmessage{Relative child input missing}\fi
+\ifcsname pxTFGOutside\endcsname\errmessage{Earlier section leaked}\fi
+\ifcsname pxTFGOutsideEnd\endcsname\errmessage{Later section leaked}\fi
+\pxInput[subsection={Metodologia}]{fixtures/tfg/PR1.tex}
+\ifcsname pxTFGImportedMethod\endcsname\else\errmessage{Methodology missing}\fi
+El contingut recuperat manté les referències \ref{sec:pr1-objectius}
+i \ref{sec:pr1-metodologia}.
+\end{document}

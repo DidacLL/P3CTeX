@@ -1,0 +1,11 @@
+\documentclass[TFG,PAC,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{no-plagi=false}
+\makeatletter
+\@ifpackageloaded{pxTFG}{}{\PackageError{profile}{Missing TFG metadata support}{}}
+\@ifpackageloaded{pxMEM}{\PackageError{profile}{TFG PAC unexpectedly loaded MEM}{}}{}
+\@ifpackageloaded{pxANX}{\PackageError{profile}{TFG PAC unexpectedly loaded annexes}{}}{}
+\makeatother
+\begin{document}
+\section{TFG continuous assessment}
+TFG metadata does not imply a memory or annexes.
+\end{document}

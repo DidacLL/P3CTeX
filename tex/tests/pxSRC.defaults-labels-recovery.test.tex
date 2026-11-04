@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{pxSRC}
+\usepackage{pxLST}
+% Repeated includes must not change persistent defaults or label handlers.
+\pxSRCsetup{input={as=text,first-line=1,last-line=0}}
+\pxSource[as=native,label-prefix=PR1:]{objective}{fixtures/pxSRC.recovery-labels.tex}
+\begin{document}
+\section{Prefixed imports}
+\pxUseSource{objective}
+\pxInput[as=native,label-prefix=PR2:]{fixtures/pxSRC.recovery-labels.tex}
+\pxInput[as=text,caption={Original log},label=src:log,
+  first-line=2,last-line=3]{fixtures/pxSRC.recovery-text.txt}
+\ifcsname pxTextMustNotRun\endcsname
+  \PackageError{pxSRC-defaults}{Literal text unexpectedly executed}{}
+\fi
+% Override the global text mode for the accepted native heading path.
+\pxInput[as=native,section={Objectius}]{fixtures/reuse/PR1.tex}
+\ifcsname pxTestSection\endcsname\else
+  \PackageError{pxSRC-defaults}{Heading mode override failed}{}
+\fi
+\ifcsname pxNestedInput\endcsname\else
+  \PackageError{pxSRC-defaults}{Source-relative child input regressed}{}
+\fi
+\section{After import}\label{sec:after}
+First: \ref{PR1:sec:objective}, second: \cref{PR2:sec:objective}.
+Source: \ref{src:log}. Normal: \ref{sec:after}.
+\typeout{PXSRC-DEFAULTS-LABELS-PASS}
+\end{document}

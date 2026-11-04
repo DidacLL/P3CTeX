@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{pxTFG}
+\pxTFGsetup{
+  tutor={ExampleTutor},
+  pra={PR1},
+  area={Engineering},
+  credits={12},
+  keywords={LaTeX,reuse},
+  licence={CC-BY-SA}
+}
+\ExplSyntaxOn
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_tutor_tl} {ExampleTutor}
+ {\errmessage{TFG tutor mismatch}}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_pra_tl} {PR1}
+ {\errmessage{TFG PR mismatch}}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_area_tl} {Engineering}
+ {\errmessage{TFG area mismatch}}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_credits_tl} {12}
+ {\errmessage{TFG credits mismatch}}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_keywords_tl} {LaTeX,reuse}
+ {\errmessage{TFG keywords mismatch}}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_licence_tl} {CC-BY-SA}
+ {\errmessage{TFG licence mismatch}}
+\ExplSyntaxOff
+\begin{document}
+TFG shared metadata smoke test.
+\end{document}

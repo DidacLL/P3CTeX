@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{pxMEM}
+\begin{document}
+\tableofcontents
+\chapter{Main chapters}
+\section{First section}\label{sec:original}
+\begin{figure}[ht]
+\centering\rule{2cm}{1cm}
+\caption{Main figure}\label{fig:original}
+\end{figure}
+\pxAddAnnex[label={ann:one}]{Source evidence}{
+  \section{First annex section}\label{sec:ann-one}
+  \begin{figure}[ht]
+    \centering\rule{2cm}{1cm}
+    \caption{Annex A figure}\label{fig:ann-one}
+  \end{figure}
+  \begin{table}[ht]
+    \centering\begin{tabular}{c}A\end{tabular}
+    \caption{Annex A table}\label{tab:ann-one}
+  \end{table}
+  \begin{equation}\label{eq:ann-one} 2+2=4 \end{equation}
+}
+\pxAddAnnex[label={ann:two}]{Further evidence}{
+  \section{Second annex section}\label{sec:ann-two}
+  \begin{figure}[ht]
+    \centering\rule{2cm}{1cm}
+    \caption{Annex B figure}\label{fig:ann-two}
+  \end{figure}
+  \begin{table}[ht]
+    \centering\begin{tabular}{c}B\end{tabular}
+    \caption{Annex B table}\label{tab:ann-two}
+  \end{table}
+  \begin{equation}\label{eq:ann-two} 3+3=6 \end{equation}
+}
+\chapter{Final main chapter}
+\section{Main after annex registrations}\label{sec:final}
+\ifnum\value{chapter}=2\else\errmessage{MEM main chapter counter changed}\fi
+\ifnum\value{section}=1\else\errmessage{MEM main section counter changed}\fi
+\ifnum\value{figure}=1\else\errmessage{MEM main figure counter changed}\fi
+Annexes \cref{ann:one,ann:two}, their sections
+\cref{sec:ann-one,sec:ann-two}, figures \cref{fig:ann-one,fig:ann-two},
+tables \cref{tab:ann-one,tab:ann-two}, equations
+\cref{eq:ann-one,eq:ann-two}, and main \cref{sec:original,fig:original}.
+% Inspect .aux after two passes: annex label anchors must identify the independent pxannex counter,
+% be unique, and not point to section*; nested destinations must be unique.
+\typeout{PXMEM-ANNEX-REFERENCES-FIXTURE}
+\end{document}

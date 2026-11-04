@@ -1,0 +1,14 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{pxDIA}
+\begin{document}
+\section{Control section}\label{sec:control}
+\pxTCompiler[caption={Nonfloating compiler},label={diag:nonfloat-cleveref}]{A}{B}{C}
+\pxTCompiler[float=htbp,caption={Floating compiler},label={diag:float-cleveref}]{A}{B}{C}
+\begin{pxDiagram}[caption={General diagram},label={diag:canvas}]
+\pxTProgram{A}{B}[0,0]
+\end{pxDiagram}
+\Cref{diag:nonfloat-cleveref,diag:float-cleveref,diag:canvas};
+\nameref{diag:nonfloat-cleveref}; \ref{sec:control}.
+\end{document}

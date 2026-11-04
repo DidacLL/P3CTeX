@@ -38,6 +38,8 @@
 \RequirePackage{hyperref}
 % Foreach loops used by \pxIMGList
 \RequirePackage{pgffor}
+% Reuse tagged regions from existing PR source files.
+\RequirePackage{fvextra}
 % Load Code
 \file_input:n {pxSRC.code.tex}
 %%%%%%%%%%%%%%	LaTeX2e API %%
@@ -48,16 +50,16 @@
 %% #1 - pxSRC key list.
 \NewDocumentCommand{\pxSRCsetup}{m}{
 	\keys_set:nn { pxSRC } { #1 }
-	\ProcessKeysOptions{ pxSRC }
 }
 %% Legacy default setters: \pxDEFimagewidth{...}, \pxDEFimagepairwidth{...}, \pxDEFimageplaceholdercolor{...},
 %% \pxDEFimageposition{...}, \pxDEFimagepairgap{...}, \pxDEFimagelabelprefix{...}.
-\NewDocumentCommand{\pxDEFimagewidth}{O{.8\linewidth} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_default_width_tl {#1}}{\tl_set:Nn \l__pxsrc_default_width_tl {#2}}}
-\NewDocumentCommand{\pxDEFimagepairwidth}{O{.4\linewidth} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_pair_width_tl {#1}}{\tl_set:Nn \l__pxsrc_pair_width_tl {#2}}}
-\NewDocumentCommand{\pxDEFimageplaceholdercolor}{O{primaryColor} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_placeholder_color_tl {#1}}{\tl_set:Nn \l__pxsrc_placeholder_color_tl {#2}}}
-\NewDocumentCommand{\pxDEFimageposition}{O{H} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_float_spec_tl {#1}}{\tl_set:Nn \l__pxsrc_float_spec_tl {#2}}}
-\NewDocumentCommand{\pxDEFimagepairgap}{O{4em} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_pair_gap_tl {#1}}{\tl_set:Nn \l__pxsrc_pair_gap_tl {#2}}}
-\NewDocumentCommand{\pxDEFimagelabelprefix}{O{img:} g}{\IfNoValueTF{#2}{\tl_set:Nn \l__pxsrc_label_prefix_tl {#1}}{\tl_set:Nn \l__pxsrc_label_prefix_tl {#2}}}
+%% Setters apply the caller's value to the corresponding pxSRC default.
+\NewDocumentCommand{\pxDEFimagewidth}{m}{\tl_set:Nn \l__pxsrc_default_width_tl { #1 }}
+\NewDocumentCommand{\pxDEFimagepairwidth}{m}{\tl_set:Nn \l__pxsrc_pair_width_tl { #1 }}
+\NewDocumentCommand{\pxDEFimageplaceholdercolor}{m}{\tl_set:Nn \l__pxsrc_placeholder_color_tl { #1 }}
+\NewDocumentCommand{\pxDEFimageposition}{m}{\tl_set:Nn \l__pxsrc_float_spec_tl { #1 }}
+\NewDocumentCommand{\pxDEFimagepairgap}{m}{\tl_set:Nn \l__pxsrc_pair_gap_tl { #1 }}
+\NewDocumentCommand{\pxDEFimagelabelprefix}{m}{\tl_set:Nn \l__pxsrc_label_prefix_tl { #1 }}
 
 %% SAFE INCLUDE IMAGES OR PLACEHOLDER
 %% [#1] IMAGE WIDTH *optional
@@ -139,4 +141,20 @@
 		\pxIMG[#1]{#2\i}{\IfBlankF{#3}{#3}\captionItem}[img:#2\i]
 	}
 }
-\endinput
+
+
+% \pxInput[as=native|code|text, section=..., region=..., first-line=...]{file}
+% Direct native TeX reuse; PR headings require no source markers or registration.
+\NewDocumentCommand{\pxInput}{O{} m}
+  {\__pxsrc_input:nn {#1}{#2}}
+
+% Optional named registration, retaining the existing API.
+\NewDocumentCommand{\pxSource}{O{} m m}
+  {\__pxsrc_register_source:nnn {#1}{#2}{#3}}
+\NewDocumentCommand{\pxUseSource}{O{} m}
+  {\__pxsrc_use_source:nn {#1}{#2}}
+
+% Reference a label inside the current native source namespace, without
+% changing ordinary \ref semantics for the receiving document.
+\NewDocumentCommand{\pxSourceRef}{m}
+  {\exp_args:Ne \ref {\l__pxsrc_input_label_prefix_tl #1}}

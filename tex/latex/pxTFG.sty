@@ -1,52 +1,32 @@
-% UOC TFG-specific semantics, independent of generic MEM support.
+% P3CTeX — TFG metadata shared by PR and MEM documents.
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3,xparse}
-\ProvidesExplPackage{pxTFG}{2026/10/22}{v0.3}{P3CTeX UOC TFG semantics}
-\file_input:n {pxTFG.code.tex}
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+\RequirePackage{graphicx}
+\ProvidesExplPackage{pxTFG}{2026/11/01}{v0.1}{Shared TFG metadata}
 
-%% \pxTFGsetup{<key=value,...>}
-%% Set TFG-only metadata: tutor, PRA, area, credits, keywords and licence. Shared information
-%% (student, degree, project title, activity, date) stays in P3CTeX data keys.
-\NewDocumentCommand\pxTFGsetup{m}{\keys_set:nn {pxTFG} {#1}}
-%% \pxTFGabstract{CAT|ES|EN}{<text>}
-%% Store or replace one language-specific abstract for later printing.
-%% This does not change the document language or immediately typeset it.
-\NewDocumentCommand\pxTFGabstract{m +m}{\__pxtfg_abstract:nn {#1}{#2}}
-%% \pxTFGworkcard
-%% Typeset the UOC final-project information card using the current class
-%% metadata and TFG-specific fields, with headings in the document language.
-\NewDocumentCommand\pxTFGworkcard{}{\__pxtfg_card:}
-%% \pxTFGabstracts
-%% Print the abstracts already supplied by \pxTFGabstract, ordered CAT/ES/EN;
-%% missing languages are omitted.
-\NewDocumentCommand\pxTFGabstracts{}{\__pxtfg_abstracts:}
-%% \pxTFGcoverdetails
-%% Print TFG-specific cover metadata in an existing pxGDX text slot.
-\NewDocumentCommand\pxTFGcoverdetails{}{\__pxtfg_cover_details:}
-%% \pxTFGlicencepage
-%% Print the configured licence page, if any.
+% \pxTFGsetup{tutor=..., pra=..., area=..., credits=..., keywords=..., licence=...}
+% The ordinary P3CTeX/data and PAC/PR fields are unchanged.
+\NewDocumentCommand{\pxTFGsetup}{+m}{\keys_set:nn {pxTFG} {#1}}
+
+% Render the configured licence through the internal implementation.
 \NewDocumentCommand\pxTFGlicencepage{}{\__pxtfg_licence_page:}
-%% \pxTFGfrontmatter
-%% Print only TFG-specific preliminary content: optional licence page,
-%% information sheet with CAT summary, then ES/EN abstracts.
-%% pxMEM is responsible for the complete memory structure and indexes.
-\NewDocumentCommand\pxTFGfrontmatter{}{\__pxtfg_frontmatter:}
 
-% P3CTeX owns the cover and TOC. TFG contributes its own front matter
-% before that TOC, without changing the class or depending on pxMEM.
-\@ifclassloaded{P3CTeX}{%
-  \AddToHook{begindocument/before}{%
-    \NewCommandCopy\__pxtfg_saved_toc:\PECTeXprintTOC
-    \RenewDocumentCommand\PECTeXprintTOC{s}{%
-      \pxTFGfrontmatter
-      \clearpage
-      \IfBooleanTF{#1}{\__pxtfg_saved_toc:*}{\__pxtfg_saved_toc:}%
-    }%
-  }%
-  % When no TOC is requested, print the TFG content after the class cover.
-  \AddToHook{begindocument/end}{%
-    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
-      {\pxTFGfrontmatter\clearpage}%
-  }%
-}{}
+% Presentation and abstract implementations are separate from the public API.
+\file_input:n {pxTFG.code.tex}
+% Keep the class's existing cover/contents sequence; TFG supplies only its
+% own preliminary content. Standalone licence use does not alter article.
+\@ifclassloaded{P3CTeX}
+  {\AddToHook{P3CTeX/before-toc}[pxTFG]
+    {\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_frontmatter:}}}
+  {}
+
+% \pxTFGabstract{CAT|ES|EN}{text}: store a language-specific abstract.
+\NewDocumentCommand\pxTFGabstract{m +m}
+  {\__pxtfg_abstract:nn {#1}{#2}}
+% Explicit presentation is available with print=manual or independently.
+\NewDocumentCommand\pxTFGworkcard{}{\__pxtfg_card:}
+\NewDocumentCommand\pxTFGabstracts{}{\__pxtfg_abstracts:}
+\NewDocumentCommand\pxTFGcoverdetails{}{\__pxtfg_cover_details:}
+\NewDocumentCommand\pxTFGfrontmatter{}{\__pxtfg_frontmatter:}
 \endinput

@@ -1,0 +1,15 @@
+\documentclass[PAC]{P3CTeX}
+\usepackage{pxDIA}
+\PECTeXconfig{cover=false,toc=false,no-plagi=false}
+\begin{document}
+\makeatletter
+\@ifpackageloaded{pxPM}{\PackageError{pxDIA-test}{Unexpected pxPM load}{}}{}
+\@ifpackageloaded{pxMEM}{\PackageError{pxDIA-test}{Unexpected pxMEM load}{}}{}
+\@ifpackageloaded{pxSRC}{}{\PackageError{pxDIA-test}{PAC default lost pxSRC}{}}
+\makeatother
+\ifcsname pxTCompiler\endcsname\else
+  \PackageError{pxDIA-test}{Explicit optional diagrams failed inside P3CTeX class}{}
+\fi
+\pxTCompiler[caption={PAC optional diagrams},label={diag:pac}]{C}{LLVM}{C}
+See Figure~\ref{diag:pac}.
+\end{document}

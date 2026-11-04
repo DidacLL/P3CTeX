@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{pxSRC}
+\usepackage{pxLST}
+\begin{document}
+\section{Literal text}
+% Literal logs are never executed as TeX.
+\pxInput[as=text,first-line=2,last-line=3]{fixtures/pxSRC.recovery-text.txt}
+\ifcsname pxTextMustNotRun\endcsname
+  \PackageError{pxSRC-modes}{Literal input executed TeX}{}
+\fi
+% Registered defaults must be overridden only for this use.
+\pxSource[as=text,first-line=2,last-line=3]{log}{fixtures/pxSRC.recovery-text.txt}
+\pxUseSource[container=minipage,width=.75\linewidth]{log}
+
+\section{Code}
+% The original code file is rendered using pxLST, preserving its line numbers.
+\pxInput[as=code,language=Python,first-line=2,last-line=4,
+  title={Selected Python},container=minipage,width=.9\linewidth]
+  {fixtures/pxSRC.recovery-code.py}
+\ifcsname pxCodeMustNotRun\endcsname
+  \PackageError{pxSRC-modes}{Source code executed TeX}{}
+\fi
+% Non-TeX marker styles must work without a separate extraction engine.
+\pxInput[as=code,region=selected,region-prefix=//,
+  title={Selected JavaScript}]{fixtures/pxSRC.recovery-marked.js}
+\ifcsname pxCodeRegionMustNotRun\endcsname
+  \PackageError{pxSRC-modes}{Region code executed TeX}{}
+\fi
+
+\section{Existing native heading support}
+% Heading-based extraction from unmodified PR files remains supported.
+\pxInput[subsection={Metodologia}]{fixtures/reuse/PR1.tex}
+\ifcsname pxTestSubsection\endcsname\else
+  \PackageError{pxSRC-modes}{Accepted heading selector regressed}{}
+\fi
+\ifcsname pxNestedInput\endcsname\else
+  \PackageError{pxSRC-modes}{Source-relative native input regressed}{}
+\fi
+\typeout{PXSRC-MODES-PASS}
+\end{document}

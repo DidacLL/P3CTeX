@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{pxMEM}
+\makeatletter
+\@ifpackageloaded{glossaries}
+  {\errmessage{MEM unexpectedly loaded glossaries}}{}
+\makeatother
+\usepackage[acronym]{glossaries}
+\makenoidxglossaries
+\newglossaryentry{annexonly}{
+  name={annex-only term},description={Used in the deferred annex}}
+% Mirrors the class's existing optional no-index output, placed after MEM
+% loaded its end-document annex printer.
+\AtEndDocument{\printnoidxglossary[title={Terms}]}
+\begin{document}
+\chapter{Main body}
+\pxAddAnnex[label={ann:glossary}]{Glossary evidence}{
+  The annex contributes an \gls{annexonly}.
+}
+\typeout{PXMEM-ANNEX-GLOSSARY-FIXTURE}
+\end{document}
