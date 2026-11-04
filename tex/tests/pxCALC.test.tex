@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{pxCALC}
+\newcommand\AssertResult[2]{\ifdim #1pt=#2pt\else
+  \PackageError{pxCALC-test}{Expected #2, got #1}{}\fi}
+\pxDefVar{m}{1200}[m]
+\pxDefVar{v}{25}[v]
+\pxDefFormula{Ek}{\frac{1}{2}[m][v]^2}[symbol=E_k,unit=J]
+\pxDefFormula{nested}{\sqrt{\frac{[v]^2}{25}}}[symbol=N]
+\pxDefFormula{chain}{[nested]+1}[symbol=C]
+\begin{document}
+% A saved expression is a numeric value reusable in later operations.
+\pxCalcStore{[chain]*2}{\saved}\AssertResult{\saved}{12}
+\pxCalcStore{\saved+1}{\next}\AssertResult{\next}{13}
+% Brackets in a printed symbol are literal; they must not restart slot expansion.
+\pxDefVar{concentration}{3}[{[concentration]}]
+\pxDefFormula{rate}{[concentration]^2}[symbol=r]
+\pxSolve{rate}\par
+\pxCalcStore{rate}{\rate}\AssertResult{\rate}{9}
+\pxCalcStore{Ek}{\result}
+% Divide the physical result to stay within TeX's dimension limit.
+\edef\scaled{\fpeval{\result/1000}}
+\AssertResult{\scaled}{375}
+\pxSolve{Ek}\par
+\pxSolve[values={m=800,v=40}]{Ek}\par
+\pxCalcStore[values={m=800,v=40}]{Ek}{\result}
+\edef\scaled{\fpeval{\result/1000}}
+\AssertResult{\scaled}{640}
+\pxCalcStore{Ek}{\result}
+\edef\scaled{\fpeval{\result/1000}}
+\AssertResult{\scaled}{375}
+\pxCalcStore{chain}{\result}\AssertResult{\result}{6}
+\pxSolve{nested}\par
+\pxSetVar{v}{-10}
+\pxCalcStore{chain}{\result}\AssertResult{\result}{3}
+\pxSolve[steps=1]{Ek}\par
+\pxSolve[steps=2]{Ek}\par
+\pxCalc{\sqrt{\frac{81}{9}}}\par
+% Error paths must terminate and identify the problem; warnings are local to this test.
+\begingroup
+\ExplSyntaxOn
+\msg_redirect_name:nnn {pxCALC}{unknown}{warning}
+\msg_redirect_name:nnn {pxCALC}{cycle}{warning}
+\ExplSyntaxOff
+\pxDefFormula{missing}{[undefined]+1}
+\pxCalcStore{missing}{\result}
+\ifnum\pdfstrcmp{\result}{nan}=0\else
+  \PackageError{pxCALC-test}{Missing variable did not produce nan}{}\fi
+\pxDefFormula{loopA}{[loopB]+1}
+\pxDefFormula{loopB}{[loopA]+1}
+\pxCalcStore{loopA}{\result}
+\ifnum\pdfstrcmp{\result}{nan}=0\else
+  \PackageError{pxCALC-test}{Dependency cycle did not produce nan}{}\fi
+\endgroup
+\ExplSyntaxOn
+\cs_new_eq:NN \__test_calc_print: \__pxcalc_print_result:
+\int_new:N \g__test_calc_expected_steps_int
+\int_new:N \g__test_calc_expected_precision_int
+\cs_set_protected:Npn \__pxcalc_print_result:
+  {\int_compare:nNnF {\l__pxcalc_steps_int}={\g__test_calc_expected_steps_int}
+     {\errmessage{Calculation steps leaked between uses}}
+   \int_compare:nNnF {\l__pxcalc_precision_int}={\g__test_calc_expected_precision_int}
+     {\errmessage{Calculation precision leaked between uses}}
+   \__test_calc_print:}
+\int_gset:Nn \g__test_calc_expected_steps_int {1}
+\int_gset:Nn \g__test_calc_expected_precision_int {4}
+\ExplSyntaxOff
+\pxSolve[steps=1,prec=4]{Ek}\par
+\ExplSyntaxOn
+\int_gset:Nn \g__test_calc_expected_steps_int {3}
+\int_gset:Nn \g__test_calc_expected_precision_int {2}
+\ExplSyntaxOff
+\pxSolve{Ek}\par
+\ExplSyntaxOn
+\cs_set_eq:NN \__pxcalc_print_result: \__test_calc_print:
+\ExplSyntaxOff
+\typeout{PXCALC-PASS: values, overrides, scope, nested math and formula chaining}
+\end{document}

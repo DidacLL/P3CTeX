@@ -42,6 +42,11 @@
 
 \LoadClass{article} % Base class
 \RequirePackage{arev} % Fonts
+% TFG and MEM may register class-owned presentation hooks while class
+% options are being processed; ordinary PAC/PR documents leave them empty.
+\NewHook{P3CTeX/before-toc}
+\NewHook{P3CTeX/after-toc}
+
 \file_input:n {P3CTeX.code.tex} % Input expl3 code
 %% =================================
 %% ===== PCKG PUBLIC LaTeX2e API ===
@@ -62,8 +67,10 @@
 %% Print the table of contents and clear the page afterwards.
 %% * - print the no-plagiarism declaration immediately before the TOC.
 \NewDocumentCommand{\PECTeXprintTOC}{s}{
+	\UseHook{P3CTeX/before-toc}
 	\IfBooleanT{#1}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par\__pxDEV_HRule:}
 	\tableofcontents\clearpage
+	\UseHook{P3CTeX/after-toc}
 }
 %% \pxGDXconfig{<pxGDX keys>}
 %% Direct access to the pxGDX dispatcher; use nested cover-config/page-config/pdf-config keys as needed.
@@ -121,77 +128,36 @@
 %% Draw an 80%-text-width rule centered on the page and terminate the line.
 %% * - select the thick rule variant.
 \NewDocumentCommand{\pxPageRule}{s}{
-	\IfBooleanTF{#1}{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
-		{\hspace*{.1\textwidth} \pxHrule[.8\textwidth]\\}
+	\IfBooleanTF{#1}{\hspace*{.1\textwidth} \pxHRule*[.8\textwidth]\\}
+		{\hspace*{.1\textwidth} \pxHRule[.8\textwidth]\\}
 }
 %% AUTO LOAD COVER AND TOC
 \AtEndOfClass{
-	\__ifglossary:nn{
-		\makenoidxglossaries
-%% \GL*{<glossary label>}
-%% Glossary shorthand created only when glossary support is enabled.
-%% * - print the long acronym form; unstarred prints the short form.
-%% #1 - glossary/acronym label.
-		\NewDocumentCommand{\GL}{s m}{\IfBooleanTF{#1}{\acrlong{#2} }{\acrshort{#2} } }
-	}{}
-	\__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
+  \__ifpreamble:nn{\input{\tl_use:N \l__pxdoc_preamblepath_tl}}{}
 }
 \AfterBeginDocument{
 	\__ifcover:nn{
 		\__ifplagi:nn{\PECTeXprintCover*}{\PECTeXprintCover}
-		\__iftoc:nn{\PECTeXprintTOC}{}
+		\__iftoc:nn{\PECTeXprintTOC}{\UseHook{P3CTeX/before-toc}}
 	}{
 		\__ifplagi:nn{
-			\__iftoc:nn{\PECTeXprintTOC*}{\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par \__pxDEV_HRule:}{}
-		}{\__iftoc:nn{\PECTeXprintTOC}{}}
+			\__iftoc:nn{\PECTeXprintTOC*}{\UseHook{P3CTeX/before-toc}\par\noindent\pxDEFnoplagi{\l__gdx_cover_author_tl}\par \__pxDEV_HRule:}{}
+		}{\__iftoc:nn{\PECTeXprintTOC}{\UseHook{P3CTeX/before-toc}}}
 	}
 }
-\AtEndDocument{
-%	\glsaddall
+% Simple BibTeX convenience; \cite and \bibliography remain native and optional.
+\NewDocumentCommand\pxBibliography{O{plain} m}
+  {\bibliographystyle{#1}\bibliography{#2}}
 
-	\__ifglossary:nn{
-		\clearpage
-		\addcontentsline{toc}{section}{Glossari}
-		\printnoidxglossary[type=\acronymtype,title=\hspace*{\fill}Acrònims\hspace*{\fill}]
-		\printnoidxglossary[title=\hspace*{\fill}Definicions\hspace*{\fill}]
-	}{}
-%	\__ifbibliography:nn{
-%		\pxBib{ \l__pxdoc_bibpath_tl }
-%	}{}
-}
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }
-
-%% =================================
-%% ===== STANDARD UOC SHORTHANDS ===
-%% =================================
-%% Built-in list, typography, table and bibliography helpers used across UOC PAC/PEC preambles.
-\ExplSyntaxOff
-\providecommand{\textbc}[1]{\textbf{\textcolor{primaryColor}{#1}}}
-\def\itembf#1:{\item\textbf{#1:} }
-\def\subitembf#1:{\subitem\textbf{#1:} }
-\def\subsubitembf#1:{\subsubitem\textbf{#1:} }
-\def\itembc#1:{\item\textbc{#1:} }
-\def\subitembc#1:{\subitem\textbc{#1:} }
-\def\subsubitembc#1:{\subsubitem\textbc{#1:} }
-\def\BOX#1:#2;{\parbox[c]{#1\linewidth}{#2}}
-\def\itemT#1:#2;{\item\textbf{#1:}\subitem \BOX.8:#2;}
-\providecommand{\FL}{\hspace*{\fill}}
-\providecommand{\REF}[1]{$^\text{\textcolor{gray}{\small Pàg[\pageref{#1}]}}$}
-\providecommand{\EXPAND}[1]{\resizebox{\linewidth}{!}{#1}}
-\providecommand{\adjH}{\rule[1ex]{0pt}{3ex}}
-\providecommand{\headRow}{\rowcolor{secondaryColor}\adjH}
-\providecommand{\oddRow}{\rowcolor{secondaryColor!20!}\adjH}
-
-%% \pxBib[<style>]{<bibfile>} or \pxBib[<style>][<bibfile>]
-%% Print bibliography on a new page and register it in the TOC.
-\NewDocumentCommand{\pxBib}{ O{apalike} g O{../references} }{%
-	\newpage
-	\nocite{*}%
-	\addcontentsline{toc}{section}{Referències}%
-	\bibliographystyle{#1}%
-	\IfNoValueTF{#2}{\bibliography{#3}}{\bibliography{#2}}%
-}
-\ExplSyntaxOn
-\endinput
+%\makeatletter
+%\def\pxBib#1{
+%	\newpage
+%	\nocite{*}
+%	\addcontentsline{toc}{section}{Referències}
+%	\bibliographystyle{abbrvnat}
+%	\bibliography{ #1 }
+%}
+%\makeatother

@@ -1,0 +1,15 @@
+\documentclass[PAC,MEM,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{no-plagi=false}
+\makeatletter
+\@ifpackageloaded{pxMEM}{}{\PackageError{profile}{MEM unavailable in PAC}{}}
+\@ifpackageloaded{pxANX}{}{\PackageError{profile}{MEM did not activate annexes}{}}
+\@ifpackageloaded{pxTFG}{\PackageError{profile}{PAC MEM must not require TFG}{}}{}
+\makeatother
+\begin{document}
+\chapter{PAC memory}
+\section{Evidence}
+\pxAddAnnex[label=ann:pacmem]{PAC annex}{\section{Attached source}PAC evidence.}
+\pxPrintAnnexes
+\ifnum\value{pxannex}=1\else\PackageError{profile}{PAC memory annex count wrong}{}\fi
+Annex: \Cref{ann:pacmem}.
+\end{document}

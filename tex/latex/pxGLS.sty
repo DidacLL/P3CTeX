@@ -1,0 +1,48 @@
+% Optional, standalone glossary and acronym conveniences.
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,l3keys2e}
+\RequirePackage[acronym]{glossaries}
+\ProvidesExplPackage{pxGLS}{2026/11/02}{0.1}{Optional glossaries}
+\cs_if_exist:NF \pxDEFtocname
+  {
+    \file_input:n {pxTXT.code.tex}
+    \cs_if_exist:NTF \languagename
+      {\str_case:enF {\languagename}
+        {{catalan}{}{spanish}{\_pxcore_set_language_spanish}
+         {english}{\_pxcore_set_language_english}}
+        {}}
+      {}
+  }
+\file_input:n {pxGLS.code.tex}
+\ProcessKeysOptions{pxGLS}
+\bool_set_true:N \l__pxgls_backend_locked_bool
+\tl_if_eq:NnTF \l__pxgls_backend_tl {external}
+  {\makeglossaries}{\makenoidxglossaries}
+\NewDocumentCommand\pxGlossarySetup{m}
+  {\keys_set:nn {pxGLS}{#1}}
+\NewDocumentCommand\pxGlossaryFile{m}{\file_input:n {#1}}
+\NewDocumentCommand\pxAcronym{O{} m m m}
+  {\newacronym[#1]{#2}{#3}{#4}}
+\NewDocumentCommand\pxTerm{O{} m m +m}
+  {\newglossaryentry{#2}{name={#3},description={#4},#1}}
+\NewDocumentCommand\pxTerms{+m}
+  {\keyval_parse:NNn \__pxgls_missing_entry:n \__pxgls_term:nn {#1}}
+\NewDocumentCommand\pxAcronyms{+m}
+  {\keyval_parse:NNn \__pxgls_missing_entry:n \__pxgls_acronym:nn {#1}}
+\NewDocumentCommand\GL{s m}
+  {\IfBooleanTF{#1}{\acrlong{#2}}{\acrshort{#2}}}
+\NewDocumentCommand\pxPrintGlossary{O{}}
+  {
+    \group_begin:
+    \tl_set:Nn \l__pxgls_type_tl {main}
+    \keys_set:nn {pxGLS}{#1}
+    \exp_args:NV \__pxgls_print_type:n \l__pxgls_type_tl
+    \group_end:
+  }
+\NewDocumentCommand\pxPrintGlossaries{O{}}
+  {\group_begin:\keys_set:nn {pxGLS}{#1}\__pxgls_print_all:\group_end:}
+% The annex package has higher priority when both are selected.
+\AddToHook{enddocument}[pxGLS]
+  {\bool_if:NF \l__pxgls_manual_bool
+     {\clearpage\__pxgls_print_all:}}
+\endinput

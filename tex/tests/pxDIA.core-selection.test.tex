@@ -1,0 +1,16 @@
+\documentclass{article}
+\usepackage[diagrams,diagrams-config={preset=p3c-minimal}]{pxCORE}
+\makeatletter
+\@ifpackageloaded{pxDIA}{}{\PackageError{pxDIA-test}{CORE did not load pxDIA}{}}
+\@ifpackageloaded{tikz}{}{\PackageError{pxDIA-test}{TikZ not loaded by active diagrams}{}}
+\makeatother
+\ExplSyntaxOn
+\bool_if:NT \l__pxdiag_framed_bool
+  {\PackageError{pxDIA-test}{CORE did not apply p3c-minimal preset}{}}
+\ExplSyntaxOff
+\begin{document}
+\pxTCompiler[caption={Compiler caption},label={diag:core}]{C}{x86}{C}
+Reference \ref{diag:core}.
+\pxDiagramUsePreset{p3c-blueprint}
+\pxTProgram{source}{C}
+\end{document}

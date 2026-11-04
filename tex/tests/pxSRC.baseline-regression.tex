@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage[default-width={.25\linewidth},pair-width={.3\linewidth}]{pxSRC}
+\begin{document}
+% Original failure: \pxSRCsetup invoked \ProcessKeysOptions during the document.
+\pxSRCsetup{default-width=.7\linewidth,pair-width=.35\linewidth}
+\ExplSyntaxOn
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.7\linewidth}
+ {\PackageError{pxSRC regression}{Runtime width ignored}{}}
+\dim_compare:nNnF {\l__pxsrc_pair_width_tl} = {.35\linewidth}
+ {\PackageError{pxSRC regression}{Runtime pair width ignored}{}}
+\ExplSyntaxOff
+% Original failure: all six setters discarded the supplied arguments.
+\pxDEFimagewidth{.61\linewidth}
+\pxDEFimagepairwidth{.32\linewidth}
+\pxDEFimageplaceholdercolor{red}
+\pxDEFimageposition{htbp}
+\pxDEFimagepairgap{2em}
+\pxDEFimagelabelprefix{custom:}
+\ExplSyntaxOn
+\dim_compare:nNnF {\l__pxsrc_default_width_tl} = {.61\linewidth}
+ {\PackageError{pxSRC regression}{imagewidth ignored}{}}
+\dim_compare:nNnF {\l__pxsrc_pair_width_tl} = {.32\linewidth}
+ {\PackageError{pxSRC regression}{imagepairwidth ignored}{}}
+\tl_if_eq:NnF \l__pxsrc_placeholder_color_tl {red}
+ {\PackageError{pxSRC regression}{placeholdercolor ignored}{}}
+\tl_if_eq:NnF \l__pxsrc_float_spec_tl {htbp}
+ {\PackageError{pxSRC regression}{imageposition ignored}{}}
+\dim_compare:nNnF {\l__pxsrc_pair_gap_tl} = {2em}
+ {\PackageError{pxSRC regression}{imagepairgap ignored}{}}
+\str_if_eq:eeF {\tl_to_str:V \l__pxsrc_label_prefix_tl} {custom:}
+ {\PackageError{pxSRC regression}{imagelabelprefix ignored}{}}
+\ExplSyntaxOff
+\noindent pxSRC runtime configuration and all six setters verified.
+\end{document}

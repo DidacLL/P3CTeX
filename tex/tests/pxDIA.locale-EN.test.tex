@@ -1,0 +1,14 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{pxDIA}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFdiaginput} {Input}
+  {\PackageError{diag-lang}{English input label missing}{}}
+\str_if_eq:eeF {\pxDEFdiaganalysisphases} {Analysis~stages}
+  {\PackageError{diag-lang}{English analysis label missing}{}}
+\str_if_eq:eeF {\pxDEFdiagerrormanagement} {Error~handling}
+  {\PackageError{diag-lang}{English error label missing}{}}
+\ExplSyntaxOff
+\begin{document}
+\pxCompilerModel
+\end{document}

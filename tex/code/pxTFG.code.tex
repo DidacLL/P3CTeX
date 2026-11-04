@@ -1,36 +1,96 @@
-\ProvidesExplFile{pxTFG.code.tex}{2026/10/22}{v0.3}{UOC TFG metadata and preliminary content}
-% TFG-specific information only. P3CTeX owns shared metadata and layout;
-% pxMEM owns chapters and the document structure.
-\tl_new:N \l__pxtfg_tutor_tl
-\tl_new:N \l__pxtfg_pra_tl
-\tl_new:N \l__pxtfg_area_tl
-\tl_new:N \l__pxtfg_credits_tl
-\tl_new:N \l__pxtfg_keywords_tl
-\tl_new:N \l__pxtfg_licence_tl
-\tl_new:N \l__pxtfg_licence_text_tl
-\tl_new:N \l__pxtfg_licence_icon_tl
+\ProvidesExplFile{pxTFG.code.tex}{2026/11/02}{v0.4}
+  {TFG presentation, information sheet and multilingual abstracts}
+% Metadata and licence internals belong here; public commands live in pxTFG.sty.
+\keys_define:nn { pxTFG }
+{
+  tutor    .tl_set:N = \l__pxtfg_tutor_tl,
+  tutor    .initial:n = {},
+  pra      .tl_set:N = \l__pxtfg_pra_tl,
+  pra      .initial:n = {},
+  area     .tl_set:N = \l__pxtfg_area_tl,
+  area     .initial:n = {},
+  credits  .tl_set:N = \l__pxtfg_credits_tl,
+  credits  .initial:n = {},
+  keywords .tl_set:N = \l__pxtfg_keywords_tl,
+  keywords .initial:n = {},
+  licence  .tl_set:N = \l__pxtfg_licence_tl,
+  licence  .initial:n = {},
+  licence-text .tl_set:N = \l__pxtfg_licence_text_tl,
+  licence-text .initial:n = {},
+  licence-icon .tl_set:N = \l__pxtfg_licence_icon_tl,
+  licence-icon .initial:n = {}
+}
+
+% Manual licence page: reuse bundled CC artwork for recognised codes.
+% Other licence descriptions are printed without an assumed logo or legal text.
+\cs_new_protected:Npn \__pxtfg_licence_artwork:
+  {
+    \tl_set:Nx \l_tmpa_tl {\tl_lower_case:n {\tl_to_str:V \l__pxtfg_licence_tl}}
+    \regex_replace_all:nnN {[^a-z]} {} \l_tmpa_tl
+    \str_case:enT {\tl_use:N \l_tmpa_tl}
+      {{ccby}{}{ccbync}{}{ccbyncnd}{}{ccbyncsa}{}{ccbynd}{}{ccbysa}{}}
+      {
+        \clist_map_inline:nn {licenc/,../code/licenc/,tex/code/licenc/}
+          {
+            \tl_set:Nx \l_tmpb_tl {##1\l_tmpa_tl.png}
+            \exp_args:NV \file_if_exist:nT \l_tmpb_tl
+              {\includegraphics[height=1cm,keepaspectratio]{\l_tmpb_tl}\par\medskip
+               \clist_map_break:}
+          }
+      }
+  }
+\cs_new:Npn \__pxtfg_licence_heading:
+  {
+    \cs_if_exist:NTF \languagename
+      {\str_case:enF {\languagename}
+        {{catalan}{Llicència}{spanish}{Licencia}{english}{Licence}}{Licence}}
+      {Licence}
+  }
+\cs_new_protected:Npn \__pxtfg_licence_page:
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {\clearpage\thispagestyle{empty}
+       \group_begin:
+       \parindent=0pt\vspace*{\fill}
+       \begin{minipage}{.85\linewidth}
+         \tl_if_blank:VTF \l__pxtfg_licence_icon_tl
+           {\__pxtfg_licence_artwork:}
+           {\includegraphics[height=1cm,keepaspectratio]
+              {\l__pxtfg_licence_icon_tl}\par\medskip}
+         \textbf{\__pxtfg_licence_heading:}\par\smallskip
+         \tl_use:N \l__pxtfg_licence_tl\par
+         \tl_if_blank:VF \l__pxtfg_licence_text_tl
+           {\medskip\tl_use:N \l__pxtfg_licence_text_tl\par}
+       \end{minipage}
+       \par\vspace*{\fill}
+       \group_end:\clearpage}
+  }
+
+
+\bool_new:N \l__pxtfg_auto_bool
+\bool_new:N \l__pxtfg_card_bool
+\bool_new:N \l__pxtfg_abstracts_bool
+\bool_new:N \l__pxtfg_licence_bool
 \keys_define:nn {pxTFG}
   {
-    tutor        .tl_set:N = \l__pxtfg_tutor_tl,
-    pra          .tl_set:N = \l__pxtfg_pra_tl,
-    area         .tl_set:N = \l__pxtfg_area_tl,
-    credits      .tl_set:N = \l__pxtfg_credits_tl,
-    keywords     .tl_set:N = \l__pxtfg_keywords_tl,
-    licence      .tl_set:N = \l__pxtfg_licence_tl,
-    licence-text .tl_set:N = \l__pxtfg_licence_text_tl,
-    licence-icon .tl_set:N = \l__pxtfg_licence_icon_tl,
+    print .choice:,
+    print / auto .code:n = {\bool_set_true:N \l__pxtfg_auto_bool},
+    print / manual .code:n = {\bool_set_false:N \l__pxtfg_auto_bool},
+    print .initial:n = auto,
+    workcard .bool_set:N = \l__pxtfg_card_bool,
+    workcard .initial:n = true,
+    abstracts .bool_set:N = \l__pxtfg_abstracts_bool,
+    abstracts .initial:n = true,
+    licence-page .bool_set:N = \l__pxtfg_licence_bool,
+    licence-page .initial:n = true
   }
 \prop_new:N \g__pxtfg_abstracts_prop
-
-% Babel is selected by P3CTeX's CAT / ES / EN options.
-\cs_new:Npn \__pxtfg_text:nnn #1#2#3
-  {\iflanguage{catalan}{#1}{\iflanguage{spanish}{#2}{#3}}}
 
 \cs_new_protected:Npn \__pxtfg_heading:n #1
   {
     \cs_if_exist:NTF \chapter
-      {\chapter*{#1}\phantomsection\addcontentsline{toc}{chapter}{#1}}
-      {\section*{\textcolor{primaryColor}{#1}}\phantomsection\addcontentsline{toc}{section}{#1}}
+      {\chapter*{#1}\cs_if_exist:NT \phantomsection {\phantomsection}\addcontentsline{toc}{chapter}{#1}}
+      {\section*{#1}\cs_if_exist:NT \phantomsection {\phantomsection}\addcontentsline{toc}{section}{#1}}
   }
 \cs_new:Npn \__pxtfg_row:nn #1#2
   {\textbf{#1} & #2 \\[0.65ex]}
@@ -38,72 +98,42 @@
 \cs_new_protected:Npn \__pxtfg_card_render:
   {
     \__pxtfg_heading:n
-      {\__pxtfg_text:nnn{Fitxa~del~Treball~Final}
-        {Ficha~del~Trabajo~Final}{Final~Project~Information}}
+      {\pxDEFtfgworkcard}
     \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Títol}{Título}{Title}}{\l__pxdata_subj_name_tl}
+        {\pxDEFtfgtitle}{\l__pxdata_subj_name_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Estudiant}{Estudiante}{Student}}{\l__pxdata_student_tl}
+        {\pxDEFtfgstudent}{\l__pxdata_student_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Titulació}{Titulación}{Degree}}{\l__pxdata_course_tl}
+        {\pxDEFtfgdegree}{\l__pxdata_course_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Activitat}{Actividad}{Assessment}}{\l__pxdata_activity_tl}
+        {\pxDEFtfgactivity}{\l__pxdata_activity_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Tutor/a}{Tutor/a}{Supervisor}}{\l__pxtfg_tutor_tl}
+        {\pxDEFtfgtutor}{\l__pxtfg_tutor_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{PRA}{PRA}{Course~Coordinator}}{\l__pxtfg_pra_tl}
+        {\pxDEFtfgpra}{\l__pxtfg_pra_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Àrea}{Área}{Area}}{\l__pxtfg_area_tl}
+        {\pxDEFtfgarea}{\l__pxtfg_area_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Crèdits}{Créditos}{Credits}}{\l__pxtfg_credits_tl}
+        {\pxDEFtfgcredits}{\l__pxtfg_credits_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Idioma}{Idioma}{Language}}{\__pxtfg_text:nnn{Català}{Castellà}{English}}
+        {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Paraules~clau}{Palabras~clave}{Keywords}}{\l__pxtfg_keywords_tl}
+        {\pxDEFtfgkeywords}{\l__pxtfg_keywords_tl}
       \__pxtfg_row:nn
-        {\__pxtfg_text:nnn{Data}{Fecha}{Date}}{\l__px_date_tl}
+        {\pxDEFtfgdate}{\l__px_date_tl}
     \end{tabular}
     \par\bigskip
   }
 
-% Printable metadata for the existing pxGDX cover auxiliary-text slot.
+%% Cover detail content uses the cover's own width/alignment, not negative offsets.
+%% Empty optional fields contribute no empty headings or fixed vertical gaps.
+\cs_new_protected:Npn \__pxtfg_cover_row:nN #1#2
+  {\tl_if_blank:VF #2 {\textbf{#1:}~\tl_use:N #2\par}}
 \cs_new_protected:Npn \__pxtfg_cover_details:
-  {
-    \hspace*{-10em}\textbf{\small\__pxtfg_text:nnn{Consultor/a}{Consultor/a}{Supervisor}:}~\hspace{\fill}\par
-      \hspace{\fill}~\l__pxtfg_tutor_tl\par\bigskip
-    \hspace*{-10em}\textbf{\small PRA:}~\hspace{\fill}\par\hspace{\fill}~\l__pxtfg_pra_tl\par
-    \hspace*{-10em}\textbf{\small\__pxtfg_text:nnn{Àrea}{Área}{Area}:}~\par\bigskip
-      \hspace{\fill}~\l__pxtfg_area_tl\par
-  }
-
-\cs_new_protected:Npn \__pxtfg_licence_page:
-  {
-    \tl_if_blank:VF \l__pxtfg_licence_tl
-      {
-        \clearpage
-        \thispagestyle{empty}
-        \begingroup
-          \parindent=0pt
-          \vspace*{\fill}
-          \begin{minipage}{.85\linewidth}
-            \tl_if_blank:VF \l__pxtfg_licence_icon_tl
-              {
-                \includegraphics[height=1cm,keepaspectratio]
-                  {\l__pxtfg_licence_icon_tl}\par\medskip
-              }
-            \textbf{\__pxtfg_text:nnn{Drets~i~llicència}
-              {Derechos~y~licencia}{Rights~and~licence}}\par\smallskip
-            \l__pxtfg_licence_tl\par
-            \tl_if_blank:VF \l__pxtfg_licence_text_tl
-              {\medskip\l__pxtfg_licence_text_tl\par}
-          \end{minipage}
-          \par\vspace*{\fill}
-        \endgroup
-        \clearpage
-      }
-  }
-
+  {\__pxtfg_cover_row:nN {\pxDEFtfgconsultant}\l__pxtfg_tutor_tl
+   \__pxtfg_cover_row:nN {\pxDEFtfgpra}\l__pxtfg_pra_tl
+   \__pxtfg_cover_row:nN {\pxDEFtfgarea}\l__pxtfg_area_tl}
 \cs_new_protected:Npn \__pxtfg_abstract:nn #1#2
   {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1} {#2}}
 
@@ -112,7 +142,7 @@
     \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
       {
         \__pxtfg_heading:n
-          {\str_case:nn {#1} {{CAT}{Resum}{ES}{Resumen}{EN}{Abstract}}}
+          {\str_case:nn {#1} {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}
         \tl_use:N \l_tmpa_tl \par
       }
   }
@@ -127,20 +157,21 @@
 % summaries follow on separate pages.
 \cs_new_protected:Npn \__pxtfg_frontmatter_render:
   {
-    \__pxtfg_licence_page:
-    \setcounter{page}{1}
-    \__pxtfg_card:
+    \bool_if:NT \l__pxtfg_licence_bool {\pxTFGlicencepage}
+    \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:}
+    \bool_if:NT \l__pxtfg_abstracts_bool
+    {
     \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
       {
         \par\medskip
-        \noindent\textbf{\__pxtfg_text:nnn{Resum~del~Treball}
-          {Resumen~del~Trabajo}{Project~Summary}}\par\smallskip
+        \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
         \tl_use:N \l_tmpa_tl\par
       }
     \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
       {\clearpage\__pxtfg_print_abstract:n {ES}}
     \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
       {\clearpage\__pxtfg_print_abstract:n {EN}}
+    }
   }
 
 % Automatic and legacy explicit calls must not duplicate preliminary material.

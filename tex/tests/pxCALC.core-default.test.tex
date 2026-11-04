@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pxCORE}
+\begin{document}
+\makeatletter
+\@ifpackageloaded{pxCALC}{\PackageError{core-off}{CALC loaded without opt-in}{}}{}
+\makeatother
+\typeout{PXCORE-DEFAULT-PASS}
+\end{document}

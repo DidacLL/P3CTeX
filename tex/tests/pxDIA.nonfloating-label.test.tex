@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{hyperref,pxDIA}
+\begin{document}
+\section{Prior content}\label{sec:prior}
+\pxTCompiler[caption={Decorative, unnumbered}]{A}{B}{C}
+\ExplSyntaxOn
+\int_compare:nNnF {\value{figure}} = {0}
+  {\PackageError{pxDIA-reference}{Unlabelled diagram changed counters}{}}
+\ExplSyntaxOff
+\pxTCompiler[caption={Referenced, nonfloating},label={diag:nonfloat}]{A}{B}{C}
+\ExplSyntaxOn
+\int_compare:nNnF {\value{figure}} = {1}
+  {\PackageError{pxDIA-reference}{Nonfloating label did not number figure}{}}
+\ExplSyntaxOff
+\pxTCompiler[float=htbp,caption={Referenced float},label={diag:float}]{A}{B}{C}
+\ExplSyntaxOn
+\int_compare:nNnF {\value{figure}} = {2}
+  {\PackageError{pxDIA-reference}{Floating figure numbering changed}{}}
+\ExplSyntaxOff
+\ref{diag:nonfloat}, \ref{diag:float} and \ref{sec:prior}.
+Named diagram: \nameref{diag:nonfloat}.\listoffigures
+% On subsequent passes the saved name must describe the object, not its section.
+\makeatletter
+\@ifundefined{r@diag:nonfloat}{}{
+  \ifnum\pdfstrcmp{\getrefbykeydefault{diag:nonfloat}{name}{}}{Referenced, nonfloating}=0\else
+    \PackageError{named-reference}{Object reference retained another heading's name}{}\fi
+}
+\makeatother
+\end{document}

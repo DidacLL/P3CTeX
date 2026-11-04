@@ -1,0 +1,18 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{pxANX}
+\begin{document}
+\section{Main body}\label{sec:main}
+\begin{figure}[ht]\centering\rule{1cm}{1cm}\caption{Body figure}\label{fig:main}\end{figure}
+\pxAddAnnex[label=ann:first]{First annex}{
+  \subsection{Annex text}\label{sec:annex}
+  \begin{figure}[ht]\centering\rule{1cm}{1cm}\caption{Annex figure}\label{fig:annex}\end{figure}
+}
+\section{Later body}\label{sec:later}
+\ifnum\value{section}=2\else\PackageError{pxANX-test}{Main section changed}{}\fi
+\pxPrintAnnexes
+\ifnum\value{pxannex}=1\else\PackageError{pxANX-test}{Expected one annex}{}\fi
+Annex: \Cref{ann:first}, \Cref{fig:annex}, main: \Cref{sec:main}.
+\end{document}

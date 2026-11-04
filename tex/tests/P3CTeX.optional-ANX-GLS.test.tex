@@ -1,0 +1,8 @@
+\documentclass[PAC,no-cover,no-toc]{P3CTeX}
+\makeatletter
+\@ifpackageloaded{pxANX}{\PackageError{optionality}{Unexpected annex module}{}}{}
+\@ifpackageloaded{pxGLS}{\PackageError{optionality}{Unexpected glossary module}{}}{}
+\@ifpackageloaded{glossaries}{\PackageError{optionality}{Unexpected glossary engine}{}}{}
+\@ifpackageloaded{pxMEM}{\PackageError{optionality}{Unexpected MEM document profile}{}}{}
+\makeatother
+\begin{document}PAC without optional annexes or glossaries.\end{document}

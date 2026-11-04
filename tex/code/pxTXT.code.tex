@@ -47,9 +47,144 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 \newcommand{\pxDEFpxcodelistname}{Codi~font}
 \newcommand{\pxDEFpxcmdname}{Comanda}
 \newcommand{\pxDEFpxcmdlistname}{Comandes~de~Consola}
+% TFG-specific localized headings (only used when pxTFG is selected).
+\newcommand{\pxDEFtfgworkcard}{Fitxa~del~Treball~Final}
+\newcommand{\pxDEFtfgtitle}{Títol}
+\newcommand{\pxDEFtfgstudent}{Estudiant}
+\newcommand{\pxDEFtfgdegree}{Titulació}
+\newcommand{\pxDEFtfgactivity}{Activitat}
+\newcommand{\pxDEFtfgtutor}{Tutor/a}
+\newcommand{\pxDEFtfgpra}{PRA}
+\newcommand{\pxDEFtfgarea}{Àrea}
+\newcommand{\pxDEFtfgcredits}{Crèdits}
+\newcommand{\pxDEFtfglanguage}{Idioma}
+\newcommand{\pxDEFtfglanguagevalue}{Català}
+\newcommand{\pxDEFtfgkeywords}{Paraules~clau}
+\newcommand{\pxDEFtfgdate}{Data}
+\newcommand{\pxDEFtfgconsultant}{Consultor/a}
+\newcommand{\pxDEFtfglicence}{Drets~i~llicència}
+\newcommand{\pxDEFtfgsummary}{Resum~del~Treball}
+\newcommand{\pxDEFtfgabstractcat}{Resum}
+\newcommand{\pxDEFtfgabstractes}{Resumen}
+\newcommand{\pxDEFtfgabstracten}{Abstract}
 %% \_pxcore_set_language_spanish
 %% Replace all pxTXT public strings with their Spanish translations; called by the P3CTeX es key.
+% Diagram strings belong to the existing CAT/ES/EN catalog.
+\newcommand{\pxDEFdiagcompilation}{Temps~de~compilaci\'o}
+\newcommand{\pxDEFdiagexecution}{Temps~d'execuci\'o}
+\newcommand{\pxDEFdiagactual}{Classes~Reals}
+\newcommand{\pxDEFdiagpred}{Prediccions}
+\newcommand{\pxDEFdiaginput}{Entrada}
+\newcommand{\pxDEFdiagtoken}{Testimoni}
+\newcommand{\pxDEFdiagvalue}{Valor}
+\newcommand{\pxDEFdiaganalysisphases}{Fases~d'an\`alisi}
+\newcommand{\pxDEFdiagsynthesisphases}{Fases~de~s\'intesi}
+\newcommand{\pxDEFdiaglexer}{Analitzador\\l\`exic}
+\newcommand{\pxDEFdiagtokenization}{Divisi\'o~en\\testimonis}
+\newcommand{\pxDEFdiagparser}{Analitzador\\sint\`actic}
+\newcommand{\pxDEFdiaggrammarcheck}{Verificaci\'o\\regles\\gramaticals}
+\newcommand{\pxDEFdiagsemantic}{Analitzador\\sem\`antic}
+\newcommand{\pxDEFdiagcodegen}{Generaci\'o\\de~codi}
+\newcommand{\pxDEFdiagoptimization}{Optimitzaci\'o\\de~codi}
+\newcommand{\pxDEFdiagsourceprogram}{Programa\\font}
+\newcommand{\pxDEFdiagintermediate}{Codi\\intermedi}
+\newcommand{\pxDEFdiagobjectprogram}{Programa\\objecte}
+\newcommand{\pxDEFdiagsymboltable}{Taula~de~s\'imbols}
+\newcommand{\pxDEFdiagerrormanagement}{Gesti\'o~d'errors}
+\newcommand{\pxDEFdiagsourcelanguage}{Llenguatge\\font}
+\newcommand{\pxDEFdiagtargetlanguage}{Llenguatge\\objecte\\i~plataforma}
+
+\newcommand{\pxDEFpmepic}{Èpica}
+\newcommand{\pxDEFpmand}{I}
+\newcommand{\pxDEFglossaryname}{Glossari}
+\newcommand{\pxDEFacronymname}{Acrònims}
+\newcommand{\pxDEFpmacceptance}{Criteris~d'acceptació}
+\newcommand{\pxDEFpmasa}{Com~a}
+\newcommand{\pxDEFpmgiven}{Donat}
+\newcommand{\pxDEFpmiwant}{Vull}
+\newcommand{\pxDEFpmopportunities}{Oportunitats}
+\newcommand{\pxDEFpmscenario}{Escenari}
+\newcommand{\pxDEFpmsothat}{Per~tal~de}
+\newcommand{\pxDEFpmstory}{Història~d'usuari}
+\newcommand{\pxDEFpmstrengths}{Fortaleses}
+\newcommand{\pxDEFpmthen}{Aleshores}
+\newcommand{\pxDEFpmthreats}{Amenaces}
+\newcommand{\pxDEFpmweaknesses}{Debilitats}
+\newcommand{\pxDEFpmwhen}{Quan}
+\newcommand{\pxDEFpmpostconditions}{Postcondicions}
+\newcommand{\pxDEFpmmainflow}{Flux~principal}
+\newcommand{\pxDEFpmalternatives}{Alternatives}
+\newcommand{\pxDEFpmactors}{Actors}
+\newcommand{\pxDEFpmusecase}{Cas~d'ús}
+\newcommand{\pxDEFpmpreconditions}{Precondicions}
+\newcommand{\pxDEFsourcename}{Font}
 \newcommand{\_pxcore_set_language_spanish}{
+\renewcommand{\pxDEFpmepic}{Épica}
+\renewcommand{\pxDEFpmand}{Y}
+\renewcommand{\pxDEFglossaryname}{Glosario}
+\renewcommand{\pxDEFacronymname}{Acrónimos}
+	\renewcommand{\pxDEFsourcename}{Fuente}
+	\renewcommand{\pxDEFpmpreconditions}{Precondiciones}
+	\renewcommand{\pxDEFpmusecase}{Caso~de~uso}
+	\renewcommand{\pxDEFpmactors}{Actores}
+	\renewcommand{\pxDEFpmalternatives}{Alternativas}
+	\renewcommand{\pxDEFpmmainflow}{Flujo~principal}
+	\renewcommand{\pxDEFpmpostconditions}{Postcondiciones}
+	\renewcommand{\pxDEFpmacceptance}{Criterios~de~aceptación}
+	\renewcommand{\pxDEFpmasa}{Como}
+	\renewcommand{\pxDEFpmgiven}{Dado}
+	\renewcommand{\pxDEFpmiwant}{Quiero}
+	\renewcommand{\pxDEFpmopportunities}{Oportunidades}
+	\renewcommand{\pxDEFpmscenario}{Escenario}
+	\renewcommand{\pxDEFpmsothat}{Para}
+	\renewcommand{\pxDEFpmstory}{Historia~de~usuario}
+	\renewcommand{\pxDEFpmstrengths}{Fortalezas}
+	\renewcommand{\pxDEFpmthen}{Entonces}
+	\renewcommand{\pxDEFpmthreats}{Amenazas}
+	\renewcommand{\pxDEFpmweaknesses}{Debilidades}
+	\renewcommand{\pxDEFpmwhen}{Cuando}
+
+	\renewcommand{\pxDEFdiagtargetlanguage}{Lenguaje\\objeto~y\\plataforma}
+	\renewcommand{\pxDEFdiagsourcelanguage}{Lenguaje\\fuente}
+	\renewcommand{\pxDEFdiagerrormanagement}{Gestión~de~errores}
+	\renewcommand{\pxDEFdiagsymboltable}{Tabla~de~símbolos}
+	\renewcommand{\pxDEFdiagobjectprogram}{Programa\\objeto}
+	\renewcommand{\pxDEFdiagintermediate}{Código\\intermedio}
+	\renewcommand{\pxDEFdiagsourceprogram}{Programa\\fuente}
+	\renewcommand{\pxDEFdiagoptimization}{Optimización\\de~código}
+	\renewcommand{\pxDEFdiagcodegen}{Generación\\de~código}
+	\renewcommand{\pxDEFdiagsemantic}{Analizador\\semántico}
+	\renewcommand{\pxDEFdiaggrammarcheck}{Verificación\\de~reglas\\gramaticales}
+	\renewcommand{\pxDEFdiagparser}{Analizador\\sintáctico}
+	\renewcommand{\pxDEFdiagtokenization}{División~en\\tokens}
+	\renewcommand{\pxDEFdiaglexer}{Analizador\\léxico}
+	\renewcommand{\pxDEFdiagsynthesisphases}{Fases~de~síntesis}
+	\renewcommand{\pxDEFdiaganalysisphases}{Fases~de~análisis}
+	\renewcommand{\pxDEFdiagvalue}{Valor}
+	\renewcommand{\pxDEFdiagtoken}{Testimonio}
+	\renewcommand{\pxDEFdiaginput}{Entrada}
+	\renewcommand{\pxDEFdiagpred}{Predicciones}
+	\renewcommand{\pxDEFdiagactual}{Clases~reales}
+	\renewcommand{\pxDEFdiagexecution}{Tiempo~de~ejecución}
+	\renewcommand{\pxDEFdiagcompilation}{Tiempo~de~compilación}
+
+	% TFG-specific localized headings.
+	\renewcommand{\pxDEFtfgworkcard}{Ficha~del~Trabajo~Final}
+	\renewcommand{\pxDEFtfgtitle}{Título}
+	\renewcommand{\pxDEFtfgstudent}{Estudiante}
+	\renewcommand{\pxDEFtfgdegree}{Titulación}
+	\renewcommand{\pxDEFtfgactivity}{Actividad}
+	\renewcommand{\pxDEFtfgtutor}{Tutor/a}
+	\renewcommand{\pxDEFtfgpra}{PRA}
+	\renewcommand{\pxDEFtfgarea}{Área}
+	\renewcommand{\pxDEFtfgcredits}{Créditos}
+	\renewcommand{\pxDEFtfglanguage}{Idioma}
+	\renewcommand{\pxDEFtfglanguagevalue}{Castellano}
+	\renewcommand{\pxDEFtfgkeywords}{Palabras~clave}
+	\renewcommand{\pxDEFtfgdate}{Fecha}
+	\renewcommand{\pxDEFtfgconsultant}{Consultor/a}
+	\renewcommand{\pxDEFtfglicence}{Derechos~y~licencia}
+	\renewcommand{\pxDEFtfgsummary}{Resumen~del~Trabajo}
 	\renewcommand{\pxDEFtocname}{Índice}
 	\renewcommand{\pxDEFnoplagi}[1]{ Yo~	\textbf{ ##1 } \label{{alumne}}
 		,~declaro~que~ostento~la~autoría~total~y~plena~de~todas~las~tareas~que~se~llevan~a~cabo~en~el~presente~documento.~
@@ -68,6 +203,72 @@ No~he~compartit~els~enunciats~amb~ningú~i~l'únic~ajut~que~he~rebut~ha~estat~a~
 %% \_pxcore_set_language_english
 %% Replace all pxTXT public strings with their English translations; called by the P3CTeX en key.
 \newcommand{\_pxcore_set_language_english}{
+\renewcommand{\pxDEFpmepic}{Epic}
+\renewcommand{\pxDEFpmand}{And}
+\renewcommand{\pxDEFglossaryname}{Glossary}
+\renewcommand{\pxDEFacronymname}{Acronyms}
+	\renewcommand{\pxDEFsourcename}{Source}
+	\renewcommand{\pxDEFpmpreconditions}{Preconditions}
+	\renewcommand{\pxDEFpmusecase}{Use~case}
+	\renewcommand{\pxDEFpmactors}{Actors}
+	\renewcommand{\pxDEFpmalternatives}{Alternatives}
+	\renewcommand{\pxDEFpmmainflow}{Main~flow}
+	\renewcommand{\pxDEFpmpostconditions}{Postconditions}
+	\renewcommand{\pxDEFpmacceptance}{Acceptance~criteria}
+	\renewcommand{\pxDEFpmasa}{As~a}
+	\renewcommand{\pxDEFpmgiven}{Given}
+	\renewcommand{\pxDEFpmiwant}{I~want}
+	\renewcommand{\pxDEFpmopportunities}{Opportunities}
+	\renewcommand{\pxDEFpmscenario}{Scenario}
+	\renewcommand{\pxDEFpmsothat}{So~that}
+	\renewcommand{\pxDEFpmstory}{User~story}
+	\renewcommand{\pxDEFpmstrengths}{Strengths}
+	\renewcommand{\pxDEFpmthen}{Then}
+	\renewcommand{\pxDEFpmthreats}{Threats}
+	\renewcommand{\pxDEFpmweaknesses}{Weaknesses}
+	\renewcommand{\pxDEFpmwhen}{When}
+
+	\renewcommand{\pxDEFdiagtargetlanguage}{Target\\language~and\\platform}
+	\renewcommand{\pxDEFdiagsourcelanguage}{Source\\language}
+	\renewcommand{\pxDEFdiagerrormanagement}{Error~handling}
+	\renewcommand{\pxDEFdiagsymboltable}{Symbol~table}
+	\renewcommand{\pxDEFdiagobjectprogram}{Object\\program}
+	\renewcommand{\pxDEFdiagintermediate}{Intermediate\\code}
+	\renewcommand{\pxDEFdiagsourceprogram}{Source\\program}
+	\renewcommand{\pxDEFdiagoptimization}{Code\\optimization}
+	\renewcommand{\pxDEFdiagcodegen}{Code\\generation}
+	\renewcommand{\pxDEFdiagsemantic}{Semantic\\analyzer}
+	\renewcommand{\pxDEFdiaggrammarcheck}{Grammar\\rule\\checking}
+	\renewcommand{\pxDEFdiagparser}{Syntax\\analyzer}
+	\renewcommand{\pxDEFdiagtokenization}{Tokenization}
+	\renewcommand{\pxDEFdiaglexer}{Lexical\\analyzer}
+	\renewcommand{\pxDEFdiagsynthesisphases}{Synthesis~stages}
+	\renewcommand{\pxDEFdiaganalysisphases}{Analysis~stages}
+	\renewcommand{\pxDEFdiagvalue}{Value}
+	\renewcommand{\pxDEFdiagtoken}{Token}
+	\renewcommand{\pxDEFdiaginput}{Input}
+	\renewcommand{\pxDEFdiagpred}{Predictions}
+	\renewcommand{\pxDEFdiagactual}{Actual~classes}
+	\renewcommand{\pxDEFdiagexecution}{Execution~time}
+	\renewcommand{\pxDEFdiagcompilation}{Compilation~time}
+
+    % TFG labels share the same language-selected catalog as PAC/PR.
+    \renewcommand{\pxDEFtfgworkcard}{Final~Project~Information}
+    \renewcommand{\pxDEFtfgtitle}{Title}
+    \renewcommand{\pxDEFtfgstudent}{Student}
+    \renewcommand{\pxDEFtfgdegree}{Degree}
+    \renewcommand{\pxDEFtfgactivity}{Activity}
+    \renewcommand{\pxDEFtfgtutor}{Supervisor}
+    \renewcommand{\pxDEFtfgpra}{PRA}
+    \renewcommand{\pxDEFtfgarea}{Area}
+    \renewcommand{\pxDEFtfgcredits}{Credits}
+    \renewcommand{\pxDEFtfglanguage}{Language}
+    \renewcommand{\pxDEFtfglanguagevalue}{English}
+    \renewcommand{\pxDEFtfgkeywords}{Keywords}
+    \renewcommand{\pxDEFtfgdate}{Date}
+    \renewcommand{\pxDEFtfgconsultant}{Consultant}
+    \renewcommand{\pxDEFtfglicence}{Rights~and~licence}
+    \renewcommand{\pxDEFtfgsummary}{Project~Summary}
 	\renewcommand{\pxDEFtocname}{Table~of~Contents}
 	\renewcommand{\pxDEFnoplagi}[1]{I,~\textbf{ ##1 }	\label{alumne},~declare~that~I~hold~the~total~and~full~authorship~of~all~the~tasks~that~are~carried~out~in~this~document.~I~am~the~only~one~who~has~elaborated~each~exercise.~I~have~not~shared~the~statements~with~anyone~and~the~only~help~I~have~received~has~been~through~the~UOC~classroom~and~teachers~there.}
 	\renewcommand{\pxDEFpximgname}{Picture}
