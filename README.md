@@ -155,7 +155,7 @@ Override only what you need: `bibliography-style=plain`, `bibliography-all=false
 
 For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
 
-The independent class option `setPreamble={path/to/file.tex}` imports a configuration-only file at class-load completion. It does not call a user shortcut, is too late to select new packages, and cannot import another `\documentclass`. To reuse a preamble that owns the class declaration, keep the regular `\input` workflow.
+Advanced class option: `setPreamble={path/to/file.tex}` imports a configuration-only file when the class finishes loading. This is not the recommended student workflow and does not call `\LoadPreamble`, load additional modules, or import another `\documentclass`. For shared or subject preambles that own the class declaration, use ordinary `\input` instead.
 
 
 **Troubleshooting:** If you see errors like `File 'P3CTeX.code.tex' not found`, the auxiliary code in `tex/code/` is not on the search path. Use **Option C** (per-document) with both `tex/latex` and `tex/code`, or set `TEXINPUTS` to include them before building.
