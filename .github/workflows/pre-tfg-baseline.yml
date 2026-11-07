@@ -6,17 +6,27 @@ on:
       - "examples/**"
       - ".github/workflows/pre-tfg-baseline.yml"
   workflow_dispatch:
+
 jobs:
   class-config-regression:
+    name: Class defaults, module options and bibliography (TeX Live)
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
-      - run: echo "Core starts"
+      - uses: actions/checkout@v4
+      - name: Compile core and configuration regression suite
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash /work/tex/tests/run-full-ci-once.sh core
+
   source-loading:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Source loading starts"
+      - run: echo 'Source stub'
   miktex-install:
     runs-on: windows-latest
     steps:
-      - run: Write-Output "MiKTeX starts"
+      - run: Write-Output 'MiKTeX stub'
         shell: pwsh
