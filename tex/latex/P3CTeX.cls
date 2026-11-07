@@ -40,7 +40,7 @@
 	Provides a professional and convenient environment for UOC students. By Scvria Sofware
 }
 
-\LoadClass{article} % Base class
+\LoadClass[a4paper]{article} % A4 baseline; preserve cover \newgeometry/\restoregeometry
 \RequirePackage{arev} % Fonts
 % TFG and MEM may register class-owned presentation hooks while class
 % options are being processed; ordinary PAC/PR documents leave them empty.
@@ -145,19 +145,24 @@
 		}{\__iftoc:nn{\PECTeXprintTOC}{\UseHook{P3CTeX/before-toc}}}
 	}
 }
-% Simple BibTeX convenience; \cite and \bibliography remain native and optional.
-\NewDocumentCommand\pxBibliography{O{plain} m}
-  {\bibliographystyle{#1}\bibliography{#2}}
+% Print after annexes and glossaries so their citations are included.
+% Without a configured file, the bibliography remains optional.
+\AddToHook{enddocument}[P3CTeX/bibliography]{
+	\bool_if:NT \l__pxdoc_bib_auto_bool
+		{\tl_if_blank:VF \l__pxdoc_bib_path_tl
+			{\__pxdoc_print_bibliography:}}
+}
+\DeclareHookRule{enddocument}{P3CTeX/bibliography}{after}{pxANX}
+\DeclareHookRule{enddocument}{P3CTeX/bibliography}{after}{pxGLS}
+% Explicit BibTeX output, with the same renderer and optional per-call style.
+% Printing manually disables the automatic copy; native BibTeX remains available.
+\NewDocumentCommand\pxBibliography{O{} m}{
+	\tl_set:Nn \l__pxdoc_bib_path_tl {#2}
+	\tl_if_blank:nF {#1}{\tl_set:Nn \l__pxdoc_bib_style_tl {#1}}
+	\bool_set_false:N \l__pxdoc_bib_auto_bool
+	\__pxdoc_print_bibliography:
+}
 
 %% \PECTeX
 %% Typeset the stylised P3CTeX project logo/name.
 \def\PECTeX{P\kern-.1ex\raise0.6ex\hbox{\resizebox{1ex}{1ex}{3}}\kern-.3ex\raise-0.5ex\hbox{C}\kern-.4ex\TeX\kern1ex }
-%\makeatletter
-%\def\pxBib#1{
-%	\newpage
-%	\nocite{*}
-%	\addcontentsline{toc}{section}{Referències}
-%	\bibliographystyle{abbrvnat}
-%	\bibliography{ #1 }
-%}
-%\makeatother

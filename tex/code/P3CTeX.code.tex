@@ -49,8 +49,21 @@
 % Glossary support is class-owned, optional and defaults to no-index.
 \tl_new:N \l__pxdoc_glossary_backend_tl
 \tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}
-%\bool_new:N \l_pxdoc_usebibliography_bool
-%\bool_set_false:N \l_pxdoc_usebibliography_bool
+% Optional native BibTeX output. Selecting a file enables end-of-document printing.
+\bool_new:N \l__pxdoc_bib_auto_bool
+\bool_set_true:N \l__pxdoc_bib_auto_bool
+\bool_new:N \l__pxdoc_bib_all_bool
+\bool_set_true:N \l__pxdoc_bib_all_bool
+\bool_new:N \l__pxdoc_bib_toc_bool
+\bool_set_true:N \l__pxdoc_bib_toc_bool
+\tl_new:N \l__pxdoc_bib_path_tl
+\tl_new:N \l__pxdoc_bib_style_tl
+\tl_set:Nn \l__pxdoc_bib_style_tl {abbrvnat}
+% Preserve the full option list passed to independent pxCORE modules.
+\tl_new:N \l__pxdoc_unknown_tl
+\tl_set:Nn \l__pxdoc_unknown_tl {default}
+% Keep graphics options as unexpanded actions until pxGDX is initialized.
+\tl_new:N \l__pxdoc_gdx_pending_tl
 %% =================================
 %% ===== P3CTeX KEYS DEFINITION ====
 %% =================================
@@ -77,9 +90,34 @@
 		glossary-backend / noindex .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}},
 		glossary-backend / external .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {external}},
 		glossary-backend .initial:n = noindex,
-%	bibliography			.tl_set:N 		= \l__pxdoc_bibpath_tl,
-%		bibliography			.initial:n	= {},
-%	references			.meta:n		={usebibliography={true}, bibpath={#1}},
+	cover-config .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\tl_put_right:Nn \l__pxdoc_gdx_pending_tl
+				{\pxGDX_config:n {cover-config={#1}}}}
+			{\pxGDX_config:n {cover-config={#1}}}
+	},
+	page-config .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\tl_put_right:Nn \l__pxdoc_gdx_pending_tl
+				{\pxGDX_config:n {page-config={#1}}}}
+			{\pxGDX_config:n {page-config={#1}}}
+	},
+	pdf-config .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\tl_put_right:Nn \l__pxdoc_gdx_pending_tl
+				{\pxGDX_config:n {pdf-config={#1}}}}
+			{\pxGDX_config:n {pdf-config={#1}}}
+	},
+	% The path only selects a file. Auto-output is a separate setting so
+	% bibliography-auto=false works regardless of key order.
+	bibliography .tl_set:N = \l__pxdoc_bib_path_tl,
+	bibliography-style .tl_set:N = \l__pxdoc_bib_style_tl,
+	bibliography-auto .bool_set:N = \l__pxdoc_bib_auto_bool,
+		bibliography-auto .default:n = true,
+	bibliography-all .bool_set:N = \l__pxdoc_bib_all_bool,
+		bibliography-all .default:n = true,
+	bibliography-toc .bool_set:N = \l__pxdoc_bib_toc_bool,
+		bibliography-toc .default:n = true,
 	preamble		.bool_set:N 		=\l_pxdoc_usepreamble_bool,
 		preamble		.initial:n 		=	false,
 		preamble		.default:n 		=	true,
@@ -124,8 +162,19 @@
 	print-doc 	.bool_set:N 		=		\l_pxcore_pxdoc_use_bool,
 		print-doc	.initial:n 		= 		false,
 		print-doc	.default:n 		= 		true,
-	unknown 	.tl_set:N	 		= 	\l__pxdoc_unknown_tl,
-	unknown 	.initial:n	 		= 	{default}
+	unknown .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{
+				% Preserve all load-time module options and their unexpanded values.
+				\tl_put_right:Nx \l__pxdoc_unknown_tl
+					{,\l_keys_key_str
+					 \tl_if_blank:nF {#1} {={\exp_not:n {#1}}}}
+			}
+			{
+				\ClassError{P3CTeX}{Unknown or load-time-only configuration key}
+					{Select modules in \string\documentclass; configure loaded packages with their setup commands.}
+			}
+	}
 }
 %% =================================
 %% == P3CTeX/data KEYS DEFINITION ==
@@ -203,7 +252,44 @@
 %% Execute one branch according to the glossary flag.
 %% #1 - code when glossary support is enabled.  #2 - code otherwise.
 \cs_new:Nn \__ifglossary:nn {\bool_if:NTF	\l_pxdoc_useglossary_bool{#1}{#2}}
-%\cs_new:Nn \__ifbibliography:nn {\tl_if_blank:VTF \l__pxdoc_bibpath_tl {#2} {#1}}
+% Letter-only helper because etoolbox re-tokenizes patched LaTeX2e commands.
+\cs_new_protected:Npn \pxDocMemBibToc {
+	\bool_if:NT \l__pxdoc_bib_toc_bool
+		{\phantomsection
+		 \addcontentsline{toc}{chapter}{\pxDEFbibname}}
+}
+% Shared printer for automatic output and the explicit \pxBibliography command.
+% Keep the article bibliography native; MEM only changes its heading level.
+\cs_new_protected:Npn \__pxdoc_print_bibliography: {
+	\tl_if_blank:VTF \l__pxdoc_bib_path_tl
+		{\ClassWarning{P3CTeX}{Bibliography file not configured}}
+		{
+			\clearpage
+			\bool_if:NT \l__pxdoc_bib_all_bool {\nocite{*}}
+			\renewcommand{\refname}{\pxDEFbibname}
+			\bibliographystyle{\tl_use:N \l__pxdoc_bib_style_tl}
+			\bool_if:NTF \l__pxdoc_mem_bool
+				{
+					\group_begin:
+					% MEM has chapters, but article's thebibliography uses \section*.
+					% Patch only the heading locally; leave BibTeX/list formatting native.
+					\patchcmd{\thebibliography}
+						{\section*{\refname}}
+						{\chapter*{\refname}\pxDocMemBibToc}
+						{}
+						{\ClassError{P3CTeX}{Cannot adapt MEM bibliography heading}
+							{The bibliography environment did not match article's heading.}}
+					\bibliography{\tl_use:N \l__pxdoc_bib_path_tl}
+					\group_end:
+				}
+				{
+					\bool_if:NT \l__pxdoc_bib_toc_bool
+						{\phantomsection
+						 \addcontentsline{toc}{section}{\pxDEFbibname}}
+					\bibliography{\tl_use:N \l__pxdoc_bib_path_tl}
+				}
+		}
+}
 %% =================================
 %% ======= LOAD P3CTeX DATA ========
 %% =================================
@@ -235,7 +321,7 @@
 		text-subtitle	 ={\l__pxdata_activity_tl},
 		text-subsubtitle ={\l__pxdata_subj_code_tl},
 		text-author		 ={\l__pxdata_student_tl},
-		text-date		 ={\today},
+		text-date		 ={\l__px_date_tl},
 		text-auxtext	 ={ },
 	},
 	page-config={
@@ -246,5 +332,11 @@
 		course-name	={\l__pxdata_course_tl}
 	}
 }
+% Resolve direct graphics class options once, after metadata defaults.
+% Runtime \PECTeXconfig and \PECTeXcover calls must not reprocess them.
+\ProcessKeysOptions{gdxSTYLE}
+\ProcessKeysOptions{gdxCOVER}
+% Explicit nested class graphics settings take precedence.
+\tl_use:N \l__pxdoc_gdx_pending_tl
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
 \endinput

@@ -1,0 +1,14 @@
+\documentclass[
+  CAT,MEM,no-cover,no-toc,
+  bibliography={fixtures/pxBibliography.references},
+  bibliography-all=false
+]{P3CTeX}
+% MEM uses chapter headings. An annex-only citation must precede the bibliography.
+\begin{document}
+\tableofcontents
+\chapter{Introducció}
+El text principal no cita cap referència.
+\pxAddAnnex{Material annex}{
+  Citació des de l'annex: \cite{p3ctex-demo}.
+}
+\end{document}

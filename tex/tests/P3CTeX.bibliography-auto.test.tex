@@ -1,0 +1,16 @@
+\documentclass[
+  CAT,no-cover,no-toc,
+  bibliography={fixtures/pxBibliography.references},
+  bibliography-style=plain,
+  bibliography-all,
+  bibliography-toc
+]{P3CTeX}
+\ExplSyntaxOn
+\bool_if:NF \l__pxdoc_bib_auto_bool
+  {\errmessage{Bibliography path did not enable automatic printing}}
+\tl_if_eq:NnF \l__pxdoc_bib_style_tl {plain}
+  {\errmessage{Bibliography style key was discarded}}
+\ExplSyntaxOff
+\begin{document}
+The class adds all references, including uncited entries, at the end.
+\end{document}

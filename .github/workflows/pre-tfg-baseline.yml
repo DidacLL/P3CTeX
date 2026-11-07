@@ -1,14 +1,67 @@
 name: Pre-TFG baseline verification
 on:
+  pull_request:
+    paths:
+      - "tex/**"
+      - "examples/**"
+      - ".github/workflows/pre-tfg-baseline.yml"
   workflow_dispatch:
 
 jobs:
+  class-config-regression:
+    name: Class defaults, module options and bibliography (TeX Live)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
+      - name: Compile core and configuration regression suite
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash /work/tex/tests/run-full-ci-once.sh core
+
+  library-regression:
+    name: Library regression / ${{ matrix.suite }} (TeX Live)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [integration, diagrams, listings, pmcalc, docs]
+    steps:
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
+      - name: Compile selected module and document suite
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash /work/tex/tests/run-full-ci-once.sh "${{ matrix.suite }}"
+
   source-loading:
     name: Source loading / original examples / options (TeX Live)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
       - name: Compile unchanged sources
         shell: bash
         run: |
@@ -19,9 +72,15 @@ jobs:
               kpsewhich pxSRC.code.tex
               cd /work/examples/UOCTemplates/MinimalTemplate/PAC1
               pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
+              bibtex MinimalTemplatePAC
+              test -s MinimalTemplatePAC.bbl
+              pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
               pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
               test -s MinimalTemplatePAC.pdf
               cd /work/examples/UOCTemplates/ExtendedTemplate/PAC1
+              pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
+              bibtex ExtendedTemplatePAC
+              test -s ExtendedTemplatePAC.bbl
               pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
               pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
               test -s ExtendedTemplatePAC.pdf
@@ -41,12 +100,68 @@ jobs:
                 pdflatex -halt-on-error -interaction=nonstopmode "$filename"
               done
             '
+  visual-review:
+    name: Representative PDF artifacts (PAC / PR / MEM)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the PR without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
+      - name: Compile representative outputs (with BibTeX where appropriate)
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest bash -euc '
+              mkdir -p /work/.visual-review
+              compile_pdf() {
+                dir="$1"
+                name="$2"
+                label="$3"
+                bib="$4"
+                cd "/work/$dir"
+                pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > /dev/null
+                if [ "$bib" = yes ]; then
+                  BIBINPUTS=".:/work/tex/tests//:" bibtex "$name" > /dev/null
+                  test -s "$name.bbl"
+                fi
+                pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > /dev/null
+                pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > /dev/null
+                test -s "$name.pdf"
+                cp "$name.pdf" "/work/.visual-review/$label.pdf"
+                echo "PDF ready: $label.pdf"
+              }
+              compile_pdf examples/UOCTemplates/MinimalTemplate/PAC1 MinimalTemplatePAC PAC-Minimal yes
+              compile_pdf examples/UOCTemplates/ExtendedTemplate/PAC1 ExtendedTemplatePAC PAC-Extended yes
+              compile_pdf examples/UOCTemplates/TFGTemplate/PR1 PR1 TFG-PR no
+              compile_pdf examples/UOCTemplates/TFGTemplate/MEM MEM TFG-MEM no
+              compile_pdf tex/tests P3CTeX.bibliography-mem.test MEM-Bibliography yes
+            '
+      - name: Prepare local artifact uploader
+        shell: bash
+        run: |
+          npm install --prefix .github/actions/upload-visual-review \
+            --no-package-lock --no-save --no-audit --no-fund --silent @actions/artifact@2
+      - name: Upload review PDFs via repository-local action
+        uses: ./.github/actions/upload-visual-review
+
   miktex-install:
     name: Actual MiKTeX registered-root loading
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
       - name: Install MiKTeX
         run: choco install miktex --yes --no-progress
         shell: pwsh

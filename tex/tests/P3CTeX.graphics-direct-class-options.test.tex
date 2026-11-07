@@ -1,0 +1,30 @@
+\documentclass[
+  CAT,no-cover,no-toc,
+  maincolor=red,
+  doc-name={DIRECT-CLASS},
+  cover-config={text-minititle={NESTED-CLASS}}
+]{P3CTeX}
+% Direct graphics class options are applied once during initialization.
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__gdx_cover_color_tl {red}
+  {\errmessage{Direct class cover option disappeared}}
+\tl_if_eq:NnF \l__gdx_layout_docnm_tl {DIRECT-CLASS}
+  {\errmessage{Direct class page option disappeared}}
+\tl_if_eq:NnF \l__gdx_cover_minititle_tl {NESTED-CLASS}
+  {\errmessage{Nested graphics option lost precedence}}
+\ExplSyntaxOff
+\PECTeXconfig{cover-config={maincolor=blue},page-config={doc-name={PREAMBLE}}}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__gdx_cover_color_tl {blue}
+  {\errmessage{Preamble cover override was overwritten by class options}}
+\tl_if_eq:NnF \l__gdx_layout_docnm_tl {PREAMBLE}
+  {\errmessage{Preamble page override was overwritten by class options}}
+\ExplSyntaxOff
+\begin{document}
+\PECTeXcover{maincolor=green}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__gdx_cover_color_tl {green}
+  {\errmessage{Document cover override was overwritten by class options}}
+\ExplSyntaxOff
+Graphics configuration stays at its intended execution point.
+\end{document}

@@ -1,0 +1,9 @@
+\documentclass[
+  CAT,no-cover,no-toc,setPreamble={fixtures/pxPreamble.shared.tex}
+]{P3CTeX}
+\ifcsname pxPreambleLoaded\endcsname\else
+  \errmessage{setPreamble did not import the configuration file}
+\fi
+\begin{document}
+\pxPreambleLoaded: a preamble was imported.
+\end{document}

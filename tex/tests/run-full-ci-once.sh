@@ -37,7 +37,38 @@ run_document() {
       ok=0
       break
     fi
+    if [[ "$pass" -eq 1 && "$name" == P3CTeX.bibliography-*.test ]] && grep -Fq '\bibdata' "$out/$name.aux"; then
+      if ! (cd "$out" && BIBINPUTS="/work/tex/tests//:" bibtex "$name" > bibtex.log 2>&1); then
+        echo "FAIL $relative (BibTeX)"
+        tail -n 30 "$out/bibtex.log" || true
+        ok=0
+        break
+      fi
+    fi
   done
+  # Verify that TOC entries use the document's real heading level,
+  # not merely that a PDF was produced.
+  if ((ok==1)) && [[ "$name" == "P3CTeX.bibliography-auto.test" ]]; then
+    if ! grep -Fq '\contentsline {section}{Referències}' "$out/$name.aux"; then
+      echo "FAIL $relative (article bibliography TOC level)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.bibliography-mem.test" ]]; then
+    if ! grep -Fq '\contentsline {chapter}{Referències}' "$out/$name.aux" ||
+       ! grep -Fq '\citation{p3ctex-demo}' "$out/$name.aux" ||
+       ! grep -Fq 'p3ctex-demo' "$out/$name.bbl"; then
+      echo "FAIL $relative (MEM bibliography TOC level / annex citation)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.bibliography-mem-no-toc.test" ]]; then
+    if grep -Fq '\contentsline {chapter}{Referències}' "$out/$name.aux" ||
+       grep -Fq '\contentsline {section}{Referències}' "$out/$name.aux"; then
+      echo "FAIL $relative (bibliography-toc=false ignored by MEM)"
+      ok=0
+    fi
+  fi
   if ((ok==1)) && [[ "$kind" == "document" && ! -s "$out/$name.pdf" ]]; then
     echo "FAIL $relative (expected PDF not produced)"
     ok=0

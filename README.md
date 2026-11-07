@@ -35,9 +35,9 @@ P3CTeX/
 │   ├── latex/          # .cls and .sty files (document class + packages)
 │   ├── code/           # expl3 internals (.code.tex)
 │   ├── doc/            # Package manuals (LaTeX source)
-│   ├── examples/       # Example documents
 │   └── tests/          # Regression test suites + gate runners
 ├── workflow/           # Agentic development workflow documentation
+├── examples/           # PAC/PR and TFG example documents
 ├── scripts/            # Build utilities
 ├── LICENSE             # GPL v3
 └── README.md
@@ -133,6 +133,31 @@ pdflatex test.tex
 
 If the PDF is generated without errors, the setup is correct.
 
+#### Configuration: short defaults, detailed options
+
+Use `default` for the standard `PRP`, `UML`, `SRC`, `TAB`, `LST` bundle; add optional modules or override their flags at class loading:
+
+```latex
+\documentclass[CAT,default,DIA,UMLconfig={maincolor=red}]{P3CTeX}
+```
+
+`DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, and `MEM` remain opt-in. Choose modules at class loading, not through a later `\PECTeXconfig` call. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
+
+Bibliography is optional. Configure it with one key, typically in your subject's preamble:
+
+```latex
+\PECTeXconfig{bibliography={../references}}
+```
+
+The class uses `abbrvnat`, prints at the end of the document, includes all entries by default, and adds a localized bibliography heading to the TOC. The title is taken from `pxTXT` (Catalan, Spanish or English). The bibliography file is resolved using TeX's current working directory and search paths. In the UOC examples, `MINPreamble.tex` and `ExtendedPreamble.tex` each select their own subject-level `../references` file; the global `SharedPreamble.tex` does not assume that path.
+
+Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
+
+For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
+
+Advanced class option: `setPreamble={path/to/file.tex}` imports a configuration-only file when the class finishes loading. This is not the recommended student workflow and does not call `\LoadPreamble`, load additional modules, or import another `\documentclass`. For shared or subject preambles that own the class declaration, use ordinary `\input` instead.
+
+
 **Troubleshooting:** If you see errors like `File 'P3CTeX.code.tex' not found`, the auxiliary code in `tex/code/` is not on the search path. Use **Option C** (per-document) with both `tex/latex` and `tex/code`, or set `TEXINPUTS` to include them before building.
 
 ---
@@ -157,7 +182,7 @@ If the PDF is generated without errors, the setup is correct.
 |--------|-----------|
 | `P3CTeX.cls` | Classe de document principal |
 | `pxCORE.sty` | Nucli de càrrega i configuració |
-| `pxGDX.sty` | Sistema de disseny (colors corporatius, tipografia) |
+| `pxGDX.code.tex` | Sistema de disseny intern, carregat per `P3CTeX.cls` |
 | `pxPRP.sty` | Mapes de propietats |
 | `pxUML.sty` | Diagrames UML |
 | `pxSRC.sty` | Llistats de codi font |
@@ -178,7 +203,7 @@ Els manuals (font LaTeX) viuen a `tex/doc/`:
 | `tex/doc/pxSRC.tex` | Llistats de codi font |
 | `tex/doc/pxTAB.tex` | Taules |
 
-Un document d'exemple complet es troba a `tex/examples/P3CTeX-example.tex` (PDF precompilat a l'arrel: `P3CTeX-example.pdf`).
+Un document d'exemple complet es troba a `examples/P3CTeX-example.tex` (PDF precompilat a l'arrel: `P3CTeX-example.pdf`).
 
 ---
 
@@ -208,7 +233,7 @@ powershell -File tests/run-pxTAB-tests.ps1
 # Build documentation (from tex/ directory, with TEXINPUTS=.;./latex;./code)
 pdflatex -interaction=nonstopmode doc/pxTAB.tex
 
-# Build example document (from tex/examples/)
+# Build example document (from examples/)
 pdflatex -interaction=nonstopmode P3CTeX-example.tex
 ```
 

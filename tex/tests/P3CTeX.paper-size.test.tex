@@ -1,0 +1,21 @@
+\documentclass[CAT,cover,no-toc]{P3CTeX}
+% Cover geometry must not silently change the intended A4 media size.
+\ExplSyntaxOn
+\dim_compare:nNnF {\paperwidth} > {209mm}
+  {\errmessage{Class paper width is below A4}}
+\dim_compare:nNnF {\paperwidth} < {211mm}
+  {\errmessage{Class paper width is above A4}}
+\dim_compare:nNnF {\paperheight} > {296mm}
+  {\errmessage{Class paper height is below A4}}
+\dim_compare:nNnF {\paperheight} < {298mm}
+  {\errmessage{Class paper height is above A4}}
+\ExplSyntaxOff
+\begin{document}
+\ExplSyntaxOn
+\dim_compare:nNnF {\paperwidth} > {209mm}
+  {\errmessage{Paper width changed after cover geometry restoration}}
+\dim_compare:nNnF {\paperheight} > {296mm}
+  {\errmessage{Paper height changed after cover geometry restoration}}
+\ExplSyntaxOff
+A4 paper-size regression test.
+\end{document}

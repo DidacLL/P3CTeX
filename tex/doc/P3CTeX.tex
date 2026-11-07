@@ -7,13 +7,12 @@
 %   set TEXINPUTS=.;./latex;./code;
 %   pdflatex -interaction=nonstopmode doc/P3CTeX.tex
 %-----------------------------------------------------------------------------
-\documentclass{P3CTeX}
+\documentclass[default]{P3CTeX}
 \PECTeXcover{defaultcover}
 \PECTeXconfig{
 	cover,
 	toc,
 	no-plagi,
-	default,
 	data=documentation}
 \renewcommand{\pxDEFnoplagi}[1]
 { P3CTeX by~	\textbf{ #1 } \label{alumne} is a \LaTeX repository created during my

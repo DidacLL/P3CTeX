@@ -1,0 +1,15 @@
+\documentclass[
+  CAT,no-cover,no-toc,default,DIA,
+  UMLconfig={maincolor=red},
+  diagrams-config={maincolor=blue}
+]{P3CTeX}
+% Optional packages must receive detailed options, not only boolean selection.
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__pxuml_main_color_tl {red}
+  {\errmessage{UMLconfig did not reach pxUML}}
+\tl_if_eq:NnF \l__pxdiag_maincolor_tl {blue}
+  {\errmessage{diagrams-config did not reach pxDIA}}
+\ExplSyntaxOff
+\begin{document}
+Module-specific personalization.
+\end{document}

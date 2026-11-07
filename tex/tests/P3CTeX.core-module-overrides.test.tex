@@ -1,0 +1,17 @@
+\documentclass[CAT,default,UML=false,SRC=false,CALC,PM=false,no-cover,no-toc]{P3CTeX}
+% Explicit module options override default, without dropping other options.
+\ifcsname pxUMLClass\endcsname
+  \errmessage{UML=false was discarded}
+\fi
+\ifcsname pxIMG\endcsname
+  \errmessage{SRC=false was discarded}
+\fi
+\ifcsname pxSolve\endcsname\else
+  \errmessage{CALC selection was discarded}
+\fi
+\ifcsname pxTable\endcsname\else
+  \errmessage{Default TAB selection was discarded}
+\fi
+\begin{document}
+Explicit overrides and opt-in modules.
+\end{document}
