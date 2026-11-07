@@ -52,6 +52,7 @@
 % Optional native BibTeX output. Selecting a file enables end-of-document printing.
 \bool_new:N \l__pxdoc_bib_auto_bool
 \bool_new:N \l__pxdoc_bib_all_bool
+\bool_set_true:N \l__pxdoc_bib_all_bool
 \bool_new:N \l__pxdoc_bib_toc_bool
 \bool_set_true:N \l__pxdoc_bib_toc_bool
 \tl_new:N \l__pxdoc_bib_path_tl
@@ -259,7 +260,8 @@
 			\clearpage
 			\bool_if:NT \l__pxdoc_bib_all_bool {\nocite{*}}
 			\bool_if:NT \l__pxdoc_bib_toc_bool
-				{\addcontentsline{toc}{section}{\refname}}
+				{\addcontentsline{toc}{section}{\pxDEFbibname}}
+			\renewcommand{\refname}{\pxDEFbibname}
 			\bibliographystyle{\tl_use:N \l__pxdoc_bib_style_tl}
 			\bibliography{\tl_use:N \l__pxdoc_bib_path_tl}
 		}
