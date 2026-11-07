@@ -167,7 +167,7 @@
 				% Preserve all load-time module options and their unexpanded values.
 				\tl_put_right:Nx \l__pxdoc_unknown_tl
 					{,\l_keys_key_str
-					 \quark_if_no_value:nF {#1} {={\exp_not:n {#1}}}}
+					 \tl_if_blank:nF {#1} {={\exp_not:n {#1}}}}
 			}
 			{
 				\ClassError{P3CTeX}{Unknown or load-time-only configuration key}
