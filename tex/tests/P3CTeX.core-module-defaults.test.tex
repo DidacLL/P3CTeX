@@ -1,0 +1,14 @@
+\documentclass[CAT,default,no-cover,no-toc]{P3CTeX}
+% The convenient standard bundle must be loaded by the class.
+\ifcsname pxUMLClass\endcsname\else
+  \errmessage{Default must load pxUML}
+\fi
+\ifcsname pxIMG\endcsname\else
+  \errmessage{Default must load pxSRC}
+\fi
+\ifcsname pxTable\endcsname\else
+  \errmessage{Default must load pxTAB}
+\fi
+\begin{document}
+Default module bundle.
+\end{document}
