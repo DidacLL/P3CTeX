@@ -1,0 +1,25 @@
+\documentclass[
+  CAT,no-cover,no-toc,
+  cover-config={text-minititle={FROM-CLASS}},
+  page-config={doc-name={CLASS-HEADER}}
+]{P3CTeX}
+% Preamble configuration runs after class/package initialization.
+\PECTeXconfig{cover-config={text-minititle={FROM-PREAMBLE}}}
+\PECTeXpage{doc-name={PREAMBLE-HEADER}}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__gdx_cover_minititle_tl {FROM-PREAMBLE}
+  {\errmessage{Preamble cover settings were overwritten by class option reprocessing}}
+\tl_if_eq:NnF \l__gdx_layout_docnm_tl {PREAMBLE-HEADER}
+  {\errmessage{Preamble header settings were overwritten by class option reprocessing}}
+\ExplSyntaxOff
+\begin{document}
+\PECTeXconfig{cover-config={text-minititle={FROM-DOCUMENT}}}
+\PECTeXpage{doc-name={DOCUMENT-HEADER}}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__gdx_cover_minititle_tl {FROM-DOCUMENT}
+  {\errmessage{Document cover settings were overwritten by class option reprocessing}}
+\tl_if_eq:NnF \l__gdx_layout_docnm_tl {DOCUMENT-HEADER}
+  {\errmessage{Document header settings were overwritten by class option reprocessing}}
+\ExplSyntaxOff
+Class, preamble and document scope are distinct.
+\end{document}
