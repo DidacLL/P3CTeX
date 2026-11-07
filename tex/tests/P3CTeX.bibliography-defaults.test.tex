@@ -1,0 +1,11 @@
+\documentclass[CAT,no-cover,no-toc,bibliography={fixtures/pxBibliography.references}]{P3CTeX}
+\ExplSyntaxOn
+\bool_if:NF \l__pxdoc_bib_auto_bool {\errmessage{Bibliography must be automatic when a file is configured}}
+\bool_if:NF \l__pxdoc_bib_all_bool {\errmessage{Default bibliography should include uncited entries}}
+\bool_if:NF \l__pxdoc_bib_toc_bool {\errmessage{Default bibliography should appear in the TOC}}
+\tl_if_eq:NnF \l__pxdoc_bib_style_tl {abbrvnat} {\errmessage{Default bibliography style changed}}
+\str_if_eq:eeF {\pxDEFbibname} {Referències} {\errmessage{Catalan bibliography title is not localized}}
+\ExplSyntaxOff
+\begin{document}
+Default one-key bibliography.
+\end{document}
