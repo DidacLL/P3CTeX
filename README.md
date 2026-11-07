@@ -143,7 +143,7 @@ Use `default` for the standard `PRP`, `UML`, `SRC`, `TAB`, `LST` bundle; add opt
 
 `DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, and `MEM` remain opt-in. Choose modules at class loading, not through a later `\PECTeXconfig` call. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
 
-Bibliography is optional. Configure it with one key, typically in your shared preamble:
+Bibliography is optional. Configure it with one key, typically in your subject's preamble:
 
 ```latex
 \PECTeXconfig{bibliography={../references}}
