@@ -62,6 +62,13 @@ run_document() {
       ok=0
     fi
   fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.bibliography-mem-no-toc.test" ]]; then
+    if grep -Fq '\contentsline {chapter}{Referències}' "$out/$name.aux" ||
+       grep -Fq '\contentsline {section}{Referències}' "$out/$name.aux"; then
+      echo "FAIL $relative (bibliography-toc=false ignored by MEM)"
+      ok=0
+    fi
+  fi
   if ((ok==1)) && [[ "$kind" == "document" && ! -s "$out/$name.pdf" ]]; then
     echo "FAIL $relative (expected PDF not produced)"
     ok=0
