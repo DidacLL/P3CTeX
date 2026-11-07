@@ -149,11 +149,13 @@ Bibliography is optional. Configure it with one key, typically in your shared pr
 \PECTeXconfig{bibliography={../references}}
 ```
 
-The class uses `abbrvnat`, prints at the end of the document, includes all entries by default, and adds a localized bibliography heading to the TOC. The title is taken from `pxTXT` (Catalan, Spanish or English). The path is resolved relative to the compiled document, not the preamble file. The shared `SharedPreamble.tex` example sets this once for the Minimal and Extended templates.
+The class uses `abbrvnat`, prints at the end of the document, includes all entries by default, and adds a localized bibliography heading to the TOC. The title is taken from `pxTXT` (Catalan, Spanish or English). The bibliography file is resolved using TeX's current working directory and search paths. In the UOC examples, `MINPreamble.tex` and `ExtendedPreamble.tex` each select their own subject-level `../references` file; the global `SharedPreamble.tex` does not assume that path.
 
 Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
 
-For shared configuration, either import a user-defined subject preamble with `\input{../SubjectPreamble.tex}` and its own `\LoadPreamble` shortcut, or use `setPreamble={path/to/file.tex}` **as a class option**. The automatically imported file must contain configuration only, not another `\documentclass`.
+For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
+
+The independent class option `setPreamble={path/to/file.tex}` imports a configuration-only file at class-load completion. It does not call a user shortcut, is too late to select new packages, and cannot import another `\documentclass`. To reuse a preamble that owns the class declaration, keep the regular `\input` workflow.
 
 
 **Troubleshooting:** If you see errors like `File 'P3CTeX.code.tex' not found`, the auxiliary code in `tex/code/` is not on the search path. Use **Option C** (per-document) with both `tex/latex` and `tex/code`, or set `TEXINPUTS` to include them before building.
