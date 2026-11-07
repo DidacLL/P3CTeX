@@ -19,14 +19,9 @@
 		#3
 	}
 }
-\AtEndDocument{
-	\newpage
-	%------ Cites i bibliografia -------
-	%------ pots emplenar manualment l'arxiu referencies.bib com l'exemple mostrat, o bé exportar a LaTeX des del teu gestor de bibliografia com mendeley, zotero...
-	% per defecte LaTeX nomes inclou aquelles referencies bibliografiques que hagim utilitzat en el document, si volem que les inclogui totes, citades o no, hem d'incloure la linia seguent:
-	\nocite{*}
-	%% ---- mes info : https://bibtex.eu/es/
-	\bibliographystyle{abbrvnat}
-	\bibliography{../references} %% Relative to the PAC Document loading them all
+% Configure BibTeX once for every assessment using this subject preamble.
+\PECTeXconfig{
+	bibliography={../references},
+	bibliography-style=abbrvnat,
+	bibliography-all
 }
-
