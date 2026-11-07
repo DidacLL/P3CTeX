@@ -109,8 +109,8 @@ jobs:
         shell: bash
         run: |
           git init -q
-          git remote add origin "https://github.com/\${GITHUB_REPOSITORY}.git"
-          git fetch --depth=1 origin "\${GITHUB_REF}"
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
           git checkout -q --detach FETCH_HEAD
       - name: Compile representative outputs (with BibTeX where appropriate)
         shell: bash
