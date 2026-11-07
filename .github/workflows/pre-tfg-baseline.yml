@@ -142,28 +142,13 @@ jobs:
               compile_pdf examples/UOCTemplates/TFGTemplate/MEM MEM TFG-MEM no
               compile_pdf tex/tests P3CTeX.bibliography-mem.test MEM-Bibliography yes
             '
-      - name: Upload review PDFs as an Actions artifact
-        shell: bash
-        run: |
-          # Use the official artifact client directly; uses: actions/checkout
-          # was rejected at workflow startup on this repository.
-          npm install --prefix "$RUNNER_TEMP/p3ctex-artifact" --no-package-lock --no-audit --no-fund --silent @actions/artifact@2
-          NODE_PATH="$RUNNER_TEMP/p3ctex-artifact/node_modules" node <<'NODE'
-          const fs = require("node:fs");
-          const path = require("node:path");
-          const {DefaultArtifactClient} = require("@actions/artifact");
-          const artifact = new DefaultArtifactClient();
-          const dir = path.join(process.env.GITHUB_WORKSPACE, ".visual-review");
-          const files = fs.readdirSync(dir)
-            .filter(name => name.endsWith(".pdf"))
-            .map(name => path.join(dir, name));
-          if (files.length !== 5) {
-            throw new Error("Expected five PDFs; got " + files.length);
-          }
-          artifact.uploadArtifact("p3ctex-visual-review", files, dir, {retentionDays: 7})
-            .then(result => console.log("Uploaded " + files.length + " PDFs; artifact ID " + result.id))
-            .catch(error => { console.error(error); process.exitCode = 1; });
-          NODE
+      - name: Upload review PDFs as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p3ctex-visual-review
+          path: .visual-review/*.pdf
+          if-no-files-found: error
+          retention-days: 7
 
   miktex-install:
     name: Actual MiKTeX registered-root loading
