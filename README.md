@@ -35,9 +35,9 @@ P3CTeX/
 │   ├── latex/          # .cls and .sty files (document class + packages)
 │   ├── code/           # expl3 internals (.code.tex)
 │   ├── doc/            # Package manuals (LaTeX source)
-│   ├── examples/       # Example documents
 │   └── tests/          # Regression test suites + gate runners
 ├── workflow/           # Agentic development workflow documentation
+├── examples/           # PAC/PR and TFG example documents
 ├── scripts/            # Build utilities
 ├── LICENSE             # GPL v3
 └── README.md
@@ -133,6 +133,28 @@ pdflatex test.tex
 
 If the PDF is generated without errors, the setup is correct.
 
+#### Configuration: short defaults, detailed options
+
+Use \`default\` for the standard \`PRP\`, \`UML\`, \`SRC\`, \`TAB\`, \`LST\` bundle; add optional modules or override their flags at class loading:
+
+\`\`\`latex
+\documentclass[CAT,default,DIA,UMLconfig={maincolor=red}]{P3CTeX}
+\`\`\`
+
+\`DIA\`, \`CALC\`, \`PM\`, \`ANX\`, \`GLS\`, \`TFG\`, and \`MEM\` remain opt-in. Choose modules at class loading, not through a later \`\PECTeXconfig\` call. Detailed presentation configuration is available through class \`cover-config={...}\`, \`page-config={...}\` and \`pdf-config={...}\` or the corresponding \`\PECTeXcover\`, \`\PECTeXpage\` and \`\PECTeXpdf\` commands.
+
+Bibliography is optional. To have the class print a BibTeX bibliography automatically at the end of the document, use:
+
+\`\`\`latex
+\documentclass[CAT,default,bibliography={../references},
+               bibliography-style=abbrvnat,bibliography-all]{P3CTeX}
+\`\`\`
+
+Omit \`bibliography-all\` to include only cited entries. Use \`bibliography-toc=false\` to omit its table-of-contents entry, or \`bibliography-auto=false\` to suppress automatic output. Manual \`\pxBibliography[plain]{../references}\` uses the same printer, while native \`\bibliographystyle\` and \`\bibliography\` remain available.
+
+For shared configuration, either import a user-defined subject preamble with \`\input{../SubjectPreamble.tex}\` and its own \`\LoadPreamble\` shortcut, or use \`setPreamble={path/to/file.tex}\` **as a class option**. The automatically imported file must contain configuration only, not another \`\documentclass\`.
+
+
 **Troubleshooting:** If you see errors like `File 'P3CTeX.code.tex' not found`, the auxiliary code in `tex/code/` is not on the search path. Use **Option C** (per-document) with both `tex/latex` and `tex/code`, or set `TEXINPUTS` to include them before building.
 
 ---
@@ -157,7 +179,7 @@ If the PDF is generated without errors, the setup is correct.
 |--------|-----------|
 | `P3CTeX.cls` | Classe de document principal |
 | `pxCORE.sty` | Nucli de càrrega i configuració |
-| `pxGDX.sty` | Sistema de disseny (colors corporatius, tipografia) |
+| `pxGDX.code.tex` | Sistema de disseny intern, carregat per `P3CTeX.cls` |
 | `pxPRP.sty` | Mapes de propietats |
 | `pxUML.sty` | Diagrames UML |
 | `pxSRC.sty` | Llistats de codi font |
@@ -178,7 +200,7 @@ Els manuals (font LaTeX) viuen a `tex/doc/`:
 | `tex/doc/pxSRC.tex` | Llistats de codi font |
 | `tex/doc/pxTAB.tex` | Taules |
 
-Un document d'exemple complet es troba a `tex/examples/P3CTeX-example.tex` (PDF precompilat a l'arrel: `P3CTeX-example.pdf`).
+Un document d'exemple complet es troba a `examples/P3CTeX-example.tex` (PDF precompilat a l'arrel: `P3CTeX-example.pdf`).
 
 ---
 
@@ -208,7 +230,7 @@ powershell -File tests/run-pxTAB-tests.ps1
 # Build documentation (from tex/ directory, with TEXINPUTS=.;./latex;./code)
 pdflatex -interaction=nonstopmode doc/pxTAB.tex
 
-# Build example document (from tex/examples/)
+# Build example document (from examples/)
 pdflatex -interaction=nonstopmode P3CTeX-example.tex
 ```
 
