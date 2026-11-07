@@ -3,9 +3,9 @@
 %% Minimal version of a preamble loader, it sets the subject information and expects the assessestment short and full name.
 %% #1 Assessement short name
 %% #2 Assessement full name
-%% #3 P3CTeX options (optional, if not present it loads anyway)
-%% Usage: \LoadPreamble{PR1}{Primera Practica de la Evaluacio Continua}{PAC, no-plagi}
-\def\LoadPreamble#1#2#3 {
+%% #3 Optional extra P3CTeX document settings, enclosed in braces.
+%% Usage: \LoadPreamble{PR1}{Primera Pràctica}{PAC,no-plagi}
+\NewDocumentCommand{\LoadPreamble}{m m G{}}{
 	\PECTeXconfig{
 		data= {
 			subj-fullname	= {Minimal Template},
