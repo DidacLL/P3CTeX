@@ -6,11 +6,11 @@
 %% Exemple de programació LaTeX avançada
 %% Definim un command utilitzant la sintaxi de xparse on:
 %% #1 's' Si hi ha un * entre el nom i el primer parametre llavors #1=True
-%% #2 'O{PR}'Argument [opcional], si no és present posa PR per defecte.
+%% #2 'O{}' Argument [opcional] per sobreescriure la configuració PR per defecte.
 %% #3 'm' Argument {obligatori}
 %% #4 'O{#2}' Argument [opcional] si no és present s'hi posa el mateix valor que #2
 %% USAGE: \LoadPreamble*[PR,no-toc]{PR2}{Segona Pràctica}
-\NewDocumentCommand{\LoadPreamble}{s O{PR} m O{#2}}{
+\NewDocumentCommand{\LoadPreamble}{s O{} m O{#2}}{
 	% configuració de les metadades utilitzades en les capçaleres peus de pagina i la portada
 	\PECTeXconfig{
 		data= {
@@ -21,7 +21,7 @@
 			ca-shortname	= {#3},
 			date			= {\today}
 		},
-		#2 	%% backdoor to set configs
+		PR, #2 %% PR preset, followed by per-document overrides
 	}
 	% HaCkTeX
 	\IfBooleanF{#1}{ %% Si no té * s'executa la portada modificada
@@ -40,3 +40,6 @@
 		}
 	}
 }
+
+% Bibliography file for this subject (relative to the activity's working directory).
+\PECTeXconfig{bibliography={../references}}
