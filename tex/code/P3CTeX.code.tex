@@ -253,17 +253,38 @@
 %% #1 - code when glossary support is enabled.  #2 - code otherwise.
 \cs_new:Nn \__ifglossary:nn {\bool_if:NTF	\l_pxdoc_useglossary_bool{#1}{#2}}
 % Shared printer for automatic output and the explicit \pxBibliography command.
+% Keep the article bibliography native; MEM only changes its heading level.
 \cs_new_protected:Npn \__pxdoc_print_bibliography: {
 	\tl_if_blank:VTF \l__pxdoc_bib_path_tl
 		{\ClassWarning{P3CTeX}{Bibliography file not configured}}
 		{
 			\clearpage
 			\bool_if:NT \l__pxdoc_bib_all_bool {\nocite{*}}
-			\bool_if:NT \l__pxdoc_bib_toc_bool
-				{\addcontentsline{toc}{section}{\pxDEFbibname}}
 			\renewcommand{\refname}{\pxDEFbibname}
 			\bibliographystyle{\tl_use:N \l__pxdoc_bib_style_tl}
-			\bibliography{\tl_use:N \l__pxdoc_bib_path_tl}
+			\bool_if:NTF \l__pxdoc_mem_bool
+				{
+					\group_begin:
+					% MEM has chapters, but article's thebibliography uses \section*.
+					% Patch only the heading locally; leave BibTeX/list formatting native.
+					\patchcmd{\thebibliography}
+						{\section*{\refname}}
+						{\chapter*{\refname}
+							\bool_if:NT \l__pxdoc_bib_toc_bool
+								{\phantomsection
+								 \addcontentsline{toc}{chapter}{\pxDEFbibname}}}
+						{}
+						{\ClassError{P3CTeX}{Cannot adapt MEM bibliography heading}
+							{The bibliography environment did not match article's heading.}}
+					\bibliography{\tl_use:N \l__pxdoc_bib_path_tl}
+					\group_end:
+				}
+				{
+					\bool_if:NT \l__pxdoc_bib_toc_bool
+						{\phantomsection
+						 \addcontentsline{toc}{section}{\pxDEFbibname}}
+					\bibliography{\tl_use:N \l__pxdoc_bib_path_tl}
+				}
 		}
 }
 %% =================================
