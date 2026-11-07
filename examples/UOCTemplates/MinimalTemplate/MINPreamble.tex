@@ -1,11 +1,10 @@
 \input{../../SharedPreamble.tex} %% Relative to the PAC Document loading them all
 
-%% Minimal version of a preamble loader, it sets the subject information and expects the assessestment short and full name.
-%% #1 Assessement short name
-%% #2 Assessement full name
-%% #3 Optional extra P3CTeX document settings, enclosed in braces.
-%% Usage: \LoadPreamble{PR1}{Primera Pràctica}{PAC,no-plagi}
-\NewDocumentCommand{\LoadPreamble}{m m G{}}{
+%% A simple user shortcut for activity-specific metadata.
+%% \LoadPreamble{PAC1}{Títol complet}
+%% \LoadPreamble[no-cover,no-toc]{PAC1}{Títol complet}
+%% Extra class options, if any, override the PR preset.
+\newcommand{\LoadPreamble}[3][]{
 	\PECTeXconfig{
 		data= {
 			subj-fullname	= {Minimal Template},
@@ -16,6 +15,9 @@
 			date			= {\today}
 		},
 		PR, %SET PR AS DEFAULT DESIGN, STILL CAN BE OVERWRITED OR SIMPLY QUIT THAT LINE
-		#3
+		#1
 	}
 }
+
+% The shared bibliography file belongs to this subject, not every P3CTeX document.
+\PECTeXconfig{bibliography={../references}}
