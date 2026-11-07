@@ -142,13 +142,13 @@ jobs:
               compile_pdf examples/UOCTemplates/TFGTemplate/MEM MEM TFG-MEM no
               compile_pdf tex/tests P3CTeX.bibliography-mem.test MEM-Bibliography yes
             '
-      - name: Upload review PDFs as a workflow artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: p3ctex-visual-review
-          path: .visual-review/*.pdf
-          if-no-files-found: error
-          retention-days: 7
+      - name: Prepare local artifact uploader
+        shell: bash
+        run: |
+          npm install --prefix .github/actions/upload-visual-review \
+            --no-package-lock --no-save --no-audit --no-fund --silent @actions/artifact@2
+      - name: Upload review PDFs via repository-local action
+        uses: ./.github/actions/upload-visual-review
 
   miktex-install:
     name: Actual MiKTeX registered-root loading
