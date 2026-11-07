@@ -17,8 +17,8 @@ jobs:
       - name: Compile core and configuration regression suite
         shell: bash
         run: |
-          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \\
-            ghcr.io/xu-cheng/texlive-debian:latest \\
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ghcr.io/xu-cheng/texlive-debian:latest \
             bash /work/tex/tests/run-full-ci-once.sh core
 
   source-loading:
