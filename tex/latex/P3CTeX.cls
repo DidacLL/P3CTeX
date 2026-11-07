@@ -40,7 +40,7 @@
 	Provides a professional and convenient environment for UOC students. By Scvria Sofware
 }
 
-\LoadClass{article} % Base class
+\LoadClass[a4paper]{article} % A4 baseline; preserve cover \newgeometry/\restoregeometry
 \RequirePackage{arev} % Fonts
 % TFG and MEM may register class-owned presentation hooks while class
 % options are being processed; ordinary PAC/PR documents leave them empty.
