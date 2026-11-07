@@ -8,9 +8,9 @@
 %% #1 's' Si hi ha un * entre el nom i el primer parametre llavors #1=True
 %% #2 'O{}' Argument [opcional] per sobreescriure la configuració PR per defecte.
 %% #3 'm' Argument {obligatori}
-%% #4 'O{#2}' Argument [opcional] si no és present s'hi posa el mateix valor que #2
+%% #4 'O{#3}' Títol complet opcional; per defecte, el nom curt de l'activitat
 %% USAGE: \LoadPreamble*[no-toc]{PR2}[Segona Pràctica]
-\NewDocumentCommand{\LoadPreamble}{s O{} m O{#2}}{
+\NewDocumentCommand{\LoadPreamble}{s O{} m O{#3}}{
 	% configuració de les metadades utilitzades en les capçaleres peus de pagina i la portada
 	\PECTeXconfig{
 		data= {
