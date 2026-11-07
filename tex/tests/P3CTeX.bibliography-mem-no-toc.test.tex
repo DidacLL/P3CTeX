@@ -1,0 +1,11 @@
+\documentclass[
+  CAT,MEM,no-cover,no-toc,
+  bibliography={fixtures/pxBibliography.references}
+]{P3CTeX}
+% A preamble-level opt-out must suppress only the bibliography TOC entry.
+\PECTeXconfig{bibliography-toc=false}
+\begin{document}
+\tableofcontents
+\chapter{Introducció}
+La bibliografia existeix, però no ha d'aparèixer a l'índex.
+\end{document}
