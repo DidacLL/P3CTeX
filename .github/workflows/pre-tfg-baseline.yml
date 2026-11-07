@@ -37,9 +37,15 @@ jobs:
               kpsewhich pxSRC.code.tex
               cd /work/examples/UOCTemplates/MinimalTemplate/PAC1
               pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
+              bibtex MinimalTemplatePAC
+              test -s MinimalTemplatePAC.bbl
+              pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
               pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
               test -s MinimalTemplatePAC.pdf
               cd /work/examples/UOCTemplates/ExtendedTemplate/PAC1
+              pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
+              bibtex ExtendedTemplatePAC
+              test -s ExtendedTemplatePAC.bbl
               pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
               pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
               test -s ExtendedTemplatePAC.pdf
