@@ -308,7 +308,11 @@
 		course-name	={\l__pxdata_course_tl}
 	}
 }
-% Apply any class-level graphics overrides after the normal metadata defaults.
+% Resolve direct graphics class options once, after metadata defaults.
+% Runtime \PECTeXconfig and \PECTeXcover calls must not reprocess them.
+\ProcessKeysOptions{gdxSTYLE}
+\ProcessKeysOptions{gdxCOVER}
+% Explicit nested class graphics settings take precedence.
 \tl_use:N \l__pxdoc_gdx_pending_tl
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
 \endinput
