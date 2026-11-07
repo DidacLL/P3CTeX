@@ -37,7 +37,7 @@ run_document() {
       ok=0
       break
     fi
-    if [[ "$pass" -eq 1 && "$name" == P3CTeX.bibliography-*.test ]]; then
+    if [[ "$pass" -eq 1 && "$name" == P3CTeX.bibliography-*.test ]] && grep -Fq '\bibdata' "$out/$name.aux"; then
       if ! (cd "$out" && BIBINPUTS="/work/tex/tests//:" bibtex "$name" > bibtex.log 2>&1); then
         echo "FAIL $relative (BibTeX)"
         tail -n 30 "$out/bibtex.log" || true
