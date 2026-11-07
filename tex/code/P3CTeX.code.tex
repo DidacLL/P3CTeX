@@ -51,6 +51,7 @@
 \tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}
 % Optional native BibTeX output. Selecting a file enables end-of-document printing.
 \bool_new:N \l__pxdoc_bib_auto_bool
+\bool_set_true:N \l__pxdoc_bib_auto_bool
 \bool_new:N \l__pxdoc_bib_all_bool
 \bool_set_true:N \l__pxdoc_bib_all_bool
 \bool_new:N \l__pxdoc_bib_toc_bool
@@ -107,10 +108,9 @@
 				{\pxGDX_config:n {pdf-config={#1}}}}
 			{\pxGDX_config:n {pdf-config={#1}}}
 	},
-	bibliography .code:n = {
-		\tl_set:Nn \l__pxdoc_bib_path_tl {#1}
-		\bool_set_true:N \l__pxdoc_bib_auto_bool
-	},
+	% The path only selects a file. Auto-output is a separate setting so
+	% bibliography-auto=false works regardless of key order.
+	bibliography .tl_set:N = \l__pxdoc_bib_path_tl,
 	bibliography-style .tl_set:N = \l__pxdoc_bib_style_tl,
 	bibliography-auto .bool_set:N = \l__pxdoc_bib_auto_bool,
 		bibliography-auto .default:n = true,
