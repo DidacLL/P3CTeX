@@ -100,6 +100,70 @@ jobs:
                 pdflatex -halt-on-error -interaction=nonstopmode "$filename"
               done
             '
+  visual-review:
+    name: Representative PDF artifacts (PAC / PR / MEM)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the PR without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/\${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "\${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
+      - name: Compile representative outputs (with BibTeX where appropriate)
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            -e TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:" \
+            ghcr.io/xu-cheng/texlive-debian:latest bash -euc '
+              mkdir -p /work/.visual-review
+              compile_pdf() {
+                dir="$1"
+                name="$2"
+                label="$3"
+                bib="$4"
+                cd "/work/$dir"
+                pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > /dev/null
+                if [ "$bib" = yes ]; then
+                  BIBINPUTS=".:/work/tex/tests//:" bibtex "$name" > /dev/null
+                  test -s "$name.bbl"
+                fi
+                pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > /dev/null
+                pdflatex -halt-on-error -interaction=nonstopmode "$name.tex" > /dev/null
+                test -s "$name.pdf"
+                cp "$name.pdf" "/work/.visual-review/$label.pdf"
+                echo "PDF ready: $label.pdf"
+              }
+              compile_pdf examples/UOCTemplates/MinimalTemplate/PAC1 MinimalTemplatePAC PAC-Minimal yes
+              compile_pdf examples/UOCTemplates/ExtendedTemplate/PAC1 ExtendedTemplatePAC PAC-Extended yes
+              compile_pdf examples/UOCTemplates/TFGTemplate/PR1 PR1 TFG-PR no
+              compile_pdf examples/UOCTemplates/TFGTemplate/MEM MEM TFG-MEM no
+              compile_pdf tex/tests P3CTeX.bibliography-mem.test MEM-Bibliography yes
+            '
+      - name: Upload review PDFs as an Actions artifact
+        shell: bash
+        run: |
+          # Use the official artifact client directly; uses: actions/checkout
+          # was rejected at workflow startup on this repository.
+          npm install --prefix "$RUNNER_TEMP/p3ctex-artifact" --no-package-lock --no-audit --no-fund --silent @actions/artifact@2
+          NODE_PATH="$RUNNER_TEMP/p3ctex-artifact/node_modules" node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const artifact = require("@actions/artifact");
+          const dir = path.join(process.env.GITHUB_WORKSPACE, ".visual-review");
+          const files = fs.readdirSync(dir)
+            .filter(name => name.endsWith(".pdf"))
+            .map(name => path.join(dir, name));
+          if (files.length !== 5) {
+            throw new Error("Expected five PDFs; got " + files.length);
+          }
+          artifact.uploadArtifact("p3ctex-visual-review", files, dir, {retentionDays: 7})
+            .then(result => console.log("Uploaded " + files.length + " PDFs; artifact ID " + result.id))
+            .catch(error => { console.error(error); process.exitCode = 1; });
+          NODE
+
   miktex-install:
     name: Actual MiKTeX registered-root loading
     runs-on: windows-latest
