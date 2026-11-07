@@ -46,12 +46,12 @@
 	UML			.bool_set:N 	= \l_pxcore_uml_use_bool,
 		UML			.initial:n	= false,
 		UML			.default:n	= true,
-	UMLconfig	.tl_set_x:N 	= \l_pxcore_uml_config_tl,
+	UMLconfig	.tl_set:N 	= \l_pxcore_uml_config_tl,
 		UMLconfig	.initial:n	= {},
 	SRC			.bool_set:N 	= \l_pxcore_src_use_bool,
 		SRC			.initial:n	= false,
 		SRC			.default:n	= true,
-	SRCconfig	.tl_set_x:N 	= \l_pxcore_src_config_tl,
+	SRCconfig	.tl_set:N 	= \l_pxcore_src_config_tl,
 		SRCconfig	.initial:n	= {},
 	TAB			.bool_set:N 	= \l_pxcore_tab_use_bool,
 		TAB			.initial:n	= false,
@@ -85,7 +85,7 @@
         DIA         .default:n = true,
     diagrams    .meta:n = { DIA = #1 },
         diagrams    .default:n = true,
-    diagrams-config .tl_set_x:N = \l_pxcore_dia_config_tl,
+    diagrams-config .tl_set:N = \l_pxcore_dia_config_tl,
         diagrams-config .initial:n = {},
     PM          .bool_set:N = \l_pxcore_pm_use_bool,
         PM          .initial:n = false,
@@ -107,7 +107,7 @@
 		SYNTAX		.default:n	= true,
 	unknown		.code:n ={}
 }
-\ProcessKeysOptions{ pxCORE }
+\ProcessKeysPackageOptions{ pxCORE }
 %% =================================
 %% Module-selection flags are consumed here during package loading.
 %% Changing them later with \pxCOREsetup changes state only; it does not re-run these \RequirePackage branches.
