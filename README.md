@@ -143,14 +143,15 @@ Use `default` for the standard `PRP`, `UML`, `SRC`, `TAB`, `LST` bundle; add opt
 
 `DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, and `MEM` remain opt-in. Choose modules at class loading, not through a later `\PECTeXconfig` call. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
 
-Bibliography is optional. To have the class print a BibTeX bibliography automatically at the end of the document, use:
+Bibliography is optional. Configure it with one key, typically in your shared preamble:
 
 ```latex
-\documentclass[CAT,default,bibliography={../references},
-               bibliography-style=abbrvnat,bibliography-all]{P3CTeX}
+\PECTeXconfig{bibliography={../references}}
 ```
 
-Omit `bibliography-all` to include only cited entries. Use `bibliography-toc=false` to omit its table-of-contents entry, or `bibliography-auto=false` to suppress automatic output. Manual `\pxBibliography[plain]{../references}` uses the same printer, while native `\bibliographystyle` and `\bibliography` remain available.
+The class uses `abbrvnat`, prints at the end of the document, includes all entries by default, and adds a localized bibliography heading to the TOC. The title is taken from `pxTXT` (Catalan, Spanish or English). The path is resolved relative to the compiled document, not the preamble file. The shared `SharedPreamble.tex` example sets this once for the Minimal and Extended templates.
+
+Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
 
 For shared configuration, either import a user-defined subject preamble with `\input{../SubjectPreamble.tex}` and its own `\LoadPreamble` shortcut, or use `setPreamble={path/to/file.tex}` **as a class option**. The automatically imported file must contain configuration only, not another `\documentclass`.
 
