@@ -60,6 +60,8 @@
 % Preserve the full option list passed to independent pxCORE modules.
 \tl_new:N \l__pxdoc_unknown_tl
 \tl_set:Nn \l__pxdoc_unknown_tl {default}
+% Keep graphics options as unexpanded actions until pxGDX is initialized.
+\tl_new:N \l__pxdoc_gdx_pending_tl
 %% =================================
 %% ===== P3CTeX KEYS DEFINITION ====
 %% =================================
@@ -86,6 +88,24 @@
 		glossary-backend / noindex .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {noindex}},
 		glossary-backend / external .code:n = {\tl_set:Nn \l__pxdoc_glossary_backend_tl {external}},
 		glossary-backend .initial:n = noindex,
+	cover-config .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\tl_put_right:Nn \l__pxdoc_gdx_pending_tl
+				{\pxGDX_config:n {cover-config={#1}}}}
+			{\pxGDX_config:n {cover-config={#1}}}
+	},
+	page-config .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\tl_put_right:Nn \l__pxdoc_gdx_pending_tl
+				{\pxGDX_config:n {page-config={#1}}}}
+			{\pxGDX_config:n {page-config={#1}}}
+	},
+	pdf-config .code:n = {
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{\tl_put_right:Nn \l__pxdoc_gdx_pending_tl
+				{\pxGDX_config:n {pdf-config={#1}}}}
+			{\pxGDX_config:n {pdf-config={#1}}}
+	},
 	bibliography .code:n = {
 		\tl_set:Nn \l__pxdoc_bib_path_tl {#1}
 		\bool_set_true:N \l__pxdoc_bib_auto_bool
@@ -279,5 +299,7 @@
 		course-name	={\l__pxdata_course_tl}
 	}
 }
+% Apply any class-level graphics overrides after the normal metadata defaults.
+\tl_use:N \l__pxdoc_gdx_pending_tl
 \RenewDocumentCommand{\contentsname}{}{\pxDEFtocname}
 \endinput
