@@ -41,14 +41,9 @@
 	}
 }
 
-% Exemple de macro que es carregara al final de cada document de l'assignatura
-\AtEndDocument{
-	\newpage
-	%------ Cites i bibliografia -------
-	%------ pots emplenar manualment l'arxiu referencies.bib com l'exemple mostrat, o bé exportar a LaTeX des del teu gestor de bibliografia com mendeley, zotero...
-	% per defecte LaTeX nomes inclou aquelles referencies bibliografiques que hagim utilitzat en el document, si volem que les inclogui totes, citades o no, hem d'incloure la linia seguent:
-	\nocite{*}
-	%% ---- mes info : https://bibtex.eu/es/
-	\bibliographystyle{abbrvnat}
-	\bibliography{../references} %% Relative to the PAC Document loading them all
+% Shared BibTeX setup; a document may override it with \PECTeXconfig.
+\PECTeXconfig{
+	bibliography={../references},
+	bibliography-style=abbrvnat,
+	bibliography-all
 }
