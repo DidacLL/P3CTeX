@@ -162,10 +162,17 @@
 		print-doc	.initial:n 		= 		false,
 		print-doc	.default:n 		= 		true,
 	unknown .code:n = {
-		% Keep each module key and its unexpanded value; never overwrite earlier keys.
-		\tl_put_right:Nx \l__pxdoc_unknown_tl
-			{,\l_keys_key_str
-			 \quark_if_no_value:nF {#1} {={\exp_not:n {#1}}}}
+		\bool_if:NTF \l__pxdoc_loading_bool
+			{
+				% Preserve all load-time module options and their unexpanded values.
+				\tl_put_right:Nx \l__pxdoc_unknown_tl
+					{,\l_keys_key_str
+					 \quark_if_no_value:nF {#1} {={\exp_not:n {#1}}}}
+			}
+			{
+				\ClassError{P3CTeX}{Unknown or load-time-only configuration key}
+					{Select modules in \string\documentclass; configure loaded packages with their setup commands.}
+			}
 	}
 }
 %% =================================
