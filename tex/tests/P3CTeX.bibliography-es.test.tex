@@ -1,0 +1,8 @@
+\documentclass[ES,no-cover,no-toc,bibliography={fixtures/pxBibliography.references}]{P3CTeX}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFbibname} {Referencias}
+  {\errmessage{Spanish bibliography title is not localized}}
+\ExplSyntaxOff
+\begin{document}
+Bibliografía automática.
+\end{document}

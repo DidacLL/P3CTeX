@@ -1,14 +1,44 @@
 name: Pre-TFG baseline verification
 on:
+  pull_request:
+    paths:
+      - "tex/**"
+      - "examples/**"
+      - ".github/workflows/pre-tfg-baseline.yml"
   workflow_dispatch:
 
 jobs:
+  class-config-regression:
+    name: Class defaults, module options and bibliography (TeX Live)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
+      - name: Compile core and configuration regression suite
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash /work/tex/tests/run-full-ci-once.sh core
+
   source-loading:
     name: Source loading / original examples / options (TeX Live)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
       - name: Compile unchanged sources
         shell: bash
         run: |
@@ -19,9 +49,15 @@ jobs:
               kpsewhich pxSRC.code.tex
               cd /work/examples/UOCTemplates/MinimalTemplate/PAC1
               pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
+              bibtex MinimalTemplatePAC
+              test -s MinimalTemplatePAC.bbl
+              pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
               pdflatex -halt-on-error -interaction=nonstopmode MinimalTemplatePAC.tex
               test -s MinimalTemplatePAC.pdf
               cd /work/examples/UOCTemplates/ExtendedTemplate/PAC1
+              pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
+              bibtex ExtendedTemplatePAC
+              test -s ExtendedTemplatePAC.bbl
               pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
               pdflatex -halt-on-error -interaction=nonstopmode ExtendedTemplatePAC.tex
               test -s ExtendedTemplatePAC.pdf
@@ -46,7 +82,13 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
       - name: Install MiKTeX
         run: choco install miktex --yes --no-progress
         shell: pwsh

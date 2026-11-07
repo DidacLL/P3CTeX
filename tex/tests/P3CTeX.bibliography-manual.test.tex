@@ -1,0 +1,11 @@
+\documentclass[
+  CAT,no-cover,no-toc,bibliography={fixtures/pxBibliography.references}
+]{P3CTeX}
+\begin{document}
+Explicit citations remain native: \cite{p3ctex-demo}.
+\pxBibliography[plain]{fixtures/pxBibliography.references}
+\ExplSyntaxOn
+\bool_if:NT \l__pxdoc_bib_auto_bool
+  {\errmessage{Manual bibliography would be duplicated at end}}
+\ExplSyntaxOff
+\end{document}

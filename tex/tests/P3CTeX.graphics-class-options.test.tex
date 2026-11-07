@@ -1,0 +1,18 @@
+\documentclass[
+  CAT,no-cover,no-toc,
+  cover-config={text-minititle={CUSTOM-COVER}},
+  page-config={doc-name={CUSTOM-HEADER}},
+  pdf-config={pdf-title={CUSTOM-PDF}}
+]{P3CTeX}
+% User-specified detailed settings must win over class metadata defaults.
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__gdx_cover_minititle_tl {CUSTOM-COVER}
+  {\errmessage{Class cover-config was lost}}
+\tl_if_eq:NnF \l__gdx_layout_docnm_tl {CUSTOM-HEADER}
+  {\errmessage{Class page-config was lost}}
+\tl_if_eq:NnF \l__px_pdf_title_tl {CUSTOM-PDF}
+  {\errmessage{Class pdf-config was lost}}
+\ExplSyntaxOff
+\begin{document}
+Custom presentation options.
+\end{document}

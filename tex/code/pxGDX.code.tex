@@ -532,13 +532,11 @@
 	\restoregeometry
 }
 %% \pxGDX_process:
-%% Reprocess gdxSTYLE/gdxCOVER/pxGDX package options, rebuild page styles and apply PDF settings.
+%% Rebuild page styles and PDF settings from the current graphic configuration.
+%% Option processing belongs to the class/package loader, never to this routine.
 \cs_new:Nn \pxGDX_process: {
-	\ProcessKeysOptions{ gdxSTYLE }
 	\__gdx_def_styles:
 	\pagestyle{uocstyle}
-	\ProcessKeysOptions{ gdxCOVER }
-	\ProcessKeysOptions{ pxGDX }
 	\color{primaryColor}
 	\__px_apply_pdf:
 }

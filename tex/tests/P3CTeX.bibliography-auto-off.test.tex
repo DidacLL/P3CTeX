@@ -1,0 +1,15 @@
+\documentclass[CAT,no-cover,no-toc]{P3CTeX}
+% The explicit off switch wins regardless of whether the path comes first.
+\PECTeXconfig{bibliography-auto=false,bibliography={fixtures/pxBibliography.references}}
+\ExplSyntaxOn
+\bool_if:NT \l__pxdoc_bib_auto_bool
+  {\errmessage{Path must not override bibliography-auto=false}}
+\ExplSyntaxOff
+\PECTeXconfig{bibliography={fixtures/pxBibliography.references},bibliography-auto=false}
+\ExplSyntaxOn
+\bool_if:NT \l__pxdoc_bib_auto_bool
+  {\errmessage{bibliography-auto=false was discarded}}
+\ExplSyntaxOff
+\begin{document}
+This document must not generate a bibliography automatically.
+\end{document}
