@@ -27,6 +27,29 @@ jobs:
             ghcr.io/xu-cheng/texlive-debian:latest \
             bash /work/tex/tests/run-full-ci-once.sh core
 
+  library-regression:
+    name: Library regression / ${{ matrix.suite }} (TeX Live)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [integration, diagrams, listings, pmcalc, docs]
+    steps:
+      - name: Check out this PR or branch without external actions
+        shell: bash
+        run: |
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_REF}"
+          git checkout -q --detach FETCH_HEAD
+      - name: Compile selected module and document suite
+        shell: bash
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ghcr.io/xu-cheng/texlive-debian:latest \
+            bash /work/tex/tests/run-full-ci-once.sh "${{ matrix.suite }}"
+
   source-loading:
     name: Source loading / original examples / options (TeX Live)
     runs-on: ubuntu-latest
