@@ -151,7 +151,8 @@ jobs:
           NODE_PATH="$RUNNER_TEMP/p3ctex-artifact/node_modules" node <<'NODE'
           const fs = require("node:fs");
           const path = require("node:path");
-          const artifact = require("@actions/artifact");
+          const {DefaultArtifactClient} = require("@actions/artifact");
+          const artifact = new DefaultArtifactClient();
           const dir = path.join(process.env.GITHUB_WORKSPACE, ".visual-review");
           const files = fs.readdirSync(dir)
             .filter(name => name.endsWith(".pdf"))
