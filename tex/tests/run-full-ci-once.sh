@@ -46,6 +46,22 @@ run_document() {
       fi
     fi
   done
+  # Verify that TOC entries use the document's real heading level,
+  # not merely that a PDF was produced.
+  if ((ok==1)) && [[ "$name" == "P3CTeX.bibliography-auto.test" ]]; then
+    if ! grep -Fq '\contentsline {section}' "$out/$name.aux"; then
+      echo "FAIL $relative (article bibliography TOC level)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.bibliography-mem.test" ]]; then
+    if ! grep -Fq '\contentsline {chapter}' "$out/$name.aux" ||
+       ! grep -Fq '\citation{p3ctex-demo}' "$out/$name.aux" ||
+       ! grep -Fq 'p3ctex-demo' "$out/$name.bbl"; then
+      echo "FAIL $relative (MEM bibliography TOC level / annex citation)"
+      ok=0
+    fi
+  fi
   if ((ok==1)) && [[ "$kind" == "document" && ! -s "$out/$name.pdf" ]]; then
     echo "FAIL $relative (expected PDF not produced)"
     ok=0
