@@ -145,11 +145,15 @@
 		}{\__iftoc:nn{\PECTeXprintTOC}{\UseHook{P3CTeX/before-toc}}}
 	}
 }
-% Print the configured bibliography at the end of the document when enabled.
-% Annex and glossary modules register their end-of-document hooks first.
+% Print after annexes and glossaries so their citations are included.
+% Without a configured file, the bibliography remains optional.
 \AddToHook{enddocument}[P3CTeX/bibliography]{
-	\bool_if:NT \l__pxdoc_bib_auto_bool {\__pxdoc_print_bibliography:}
+	\bool_if:NT \l__pxdoc_bib_auto_bool
+		{\tl_if_blank:VF \l__pxdoc_bib_path_tl
+			{\__pxdoc_print_bibliography:}}
 }
+\DeclareHookRule{enddocument}{P3CTeX/bibliography}{after}{pxANX}
+\DeclareHookRule{enddocument}{P3CTeX/bibliography}{after}{pxGLS}
 % Explicit BibTeX output, with the same renderer and optional per-call style.
 % Printing manually disables the automatic copy; native BibTeX remains available.
 \NewDocumentCommand\pxBibliography{O{} m}{
