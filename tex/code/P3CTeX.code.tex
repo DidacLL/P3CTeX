@@ -252,6 +252,12 @@
 %% Execute one branch according to the glossary flag.
 %% #1 - code when glossary support is enabled.  #2 - code otherwise.
 \cs_new:Nn \__ifglossary:nn {\bool_if:NTF	\l_pxdoc_useglossary_bool{#1}{#2}}
+% Letter-only helper because etoolbox re-tokenizes patched LaTeX2e commands.
+\cs_new_protected:Npn \pxDocMemBibToc {
+	\bool_if:NT \l__pxdoc_bib_toc_bool
+		{\phantomsection
+		 \addcontentsline{toc}{chapter}{\pxDEFbibname}}
+}
 % Shared printer for automatic output and the explicit \pxBibliography command.
 % Keep the article bibliography native; MEM only changes its heading level.
 \cs_new_protected:Npn \__pxdoc_print_bibliography: {
@@ -269,10 +275,7 @@
 					% Patch only the heading locally; leave BibTeX/list formatting native.
 					\patchcmd{\thebibliography}
 						{\section*{\refname}}
-						{\chapter*{\refname}
-							\bool_if:NT \l__pxdoc_bib_toc_bool
-								{\phantomsection
-								 \addcontentsline{toc}{chapter}{\pxDEFbibname}}}
+						{\chapter*{\refname}\pxDocMemBibToc}
 						{}
 						{\ClassError{P3CTeX}{Cannot adapt MEM bibliography heading}
 							{The bibliography environment did not match article's heading.}}
