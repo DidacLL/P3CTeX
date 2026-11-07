@@ -1,0 +1,4 @@
+name: Upload visual-review PDFs
+runs:
+  using: node20
+  main: index.cjs
