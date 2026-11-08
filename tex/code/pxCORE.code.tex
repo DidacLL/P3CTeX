@@ -102,6 +102,9 @@
         GLS         .default:n = true,
     glossaries .meta:n = {GLS = #1},
         glossaries .default:n = true,
+    AI          .bool_set:N = \l_pxcore_ai_use_bool,
+        AI          .initial:n = false,
+        AI          .default:n = true,
     SYNTAX		.bool_set:N 	= \l_pxcore_syntax_use_bool,
 		SYNTAX		.initial:n	= false,
 		SYNTAX		.default:n	= true,
@@ -134,6 +137,7 @@
 \bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
 \bool_if:NT \l_pxcore_anx_use_bool { \RequirePackage{pxANX} }
 \bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
+\bool_if:NT \l_pxcore_ai_use_bool { \RequirePackage{pxAI} }
 \bool_if:NT \l_pxcore_dia_use_bool {
     \tl_if_blank:VTF \l_pxcore_dia_config_tl
       { \RequirePackage{pxDIA} }
