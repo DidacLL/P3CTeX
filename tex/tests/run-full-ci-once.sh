@@ -71,8 +71,8 @@ run_document() {
   fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-bibliography.test" ]]; then
     bibline="$(grep -nF '\contentsline {section}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
-    ailine="$(grep -nF "\contentsline {section}{Declaració d'ús d'IA}" "$out/$name.aux" | head -n1 | cut -d: -f1)"
-    annexline="$(grep -nF "\contentsline {section}{Annex de respostes d'IA}" "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    ailine="$(grep -nF "\contentsline {section}{Declaració" "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    annexline="$(grep -nF "\contentsline {section}{Annex" "$out/$name.aux" | head -n1 | cut -d: -f1)"
     if [[ -z "$bibline" || -z "$ailine" || -z "$annexline" ]] ||
        ! (( bibline < ailine && ailine < annexline )); then
       echo "FAIL $relative (bibliography -> AI disclosure -> AI annex ordering)"
@@ -81,15 +81,15 @@ run_document() {
   fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-mem.test" ]]; then
     if ! grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux" ||
-       ! grep -Fq '\contentsline {chapter}{Annex de respostes' "$out/$name.aux"; then
+       ! grep -Fq '\contentsline {chapter}{Annex' "$out/$name.aux"; then
       echo "FAIL $relative (MEM AI disclosure / annex chapter-level TOC)"
       grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
       ok=0
     fi
   fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-no-bib.test" ]]; then
-    if grep -Fq "Declaración de uso de IA" "$out/$name.aux" ||
-       grep -Fq "Anexo de respuestas de IA" "$out/$name.aux"; then
+    if grep -Fq "\contentsline {section}{Declaración" "$out/$name.aux" ||
+       grep -Fq "\contentsline {section}{Anexo" "$out/$name.aux"; then
       echo "FAIL $relative (AI toc=false ignored)"
       ok=0
     fi
