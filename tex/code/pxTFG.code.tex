@@ -135,7 +135,9 @@
     \noindent\__pxtfg_cc_intro:
     \cs_if_exist:NTF \href
       {
-        \href{#2}{
+        % Hyperref needs the URI punctuation tokenized as ordinary characters,
+        % not expl3 letter-category ':' (which creates a file: link).
+        \exp_args:Ne \href {\tl_to_str:n {#2}} {
           \__pxtfg_cc_name:\space #1\space
           \__pxtfg_cc_jurisdiction:n {#1}\space
           de\space Creative\space Commons
