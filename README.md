@@ -160,9 +160,7 @@ Override only what you need: `bibliography-style=plain`, `bibliography-all=false
 \PECTeXconfig{ai-config={statement={He revisat i contrastat les propostes de l'eina.}}}
 \begin{document}
 Aquest fragment ha rebut suport
-\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}
-  [Proposa un esquema]
-  <../ai-responses/structure.txt>.
+\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}[Proposa un esquema].
 \end{document}
 ~~~
 
