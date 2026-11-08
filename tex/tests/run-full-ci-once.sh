@@ -87,8 +87,8 @@ run_document() {
     fi
   fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-no-bib.test" ]]; then
-    if grep -Fq "Declaración de uso de IA" "$out/$name.toc" ||
-       grep -Fq "Anexo de respuestas de IA" "$out/$name.toc"; then
+    if grep -Fq "Declaración de uso de IA" "$out/$name.aux" ||
+       grep -Fq "Anexo de respuestas de IA" "$out/$name.aux"; then
       echo "FAIL $relative (AI toc=false ignored)"
       ok=0
     fi
