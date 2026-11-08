@@ -121,8 +121,7 @@
 	bibliography-toc .bool_set:N = \l__pxdoc_bib_toc_bool,
 		bibliography-toc .default:n = true,
 	% Student-friendly load-time combinations; never load modules at runtime.
-	ai-annexes .meta:n = {AI, ANX},
-	ai-bibliography .meta:n = {AI, bibliography={#1}, bibliography-auto=true},
+	% Optional convenience for a complete document, not aliases for two keys.
 	ai-full .meta:n = {AI, ANX, bibliography={#1}, bibliography-auto=true},
 	% Like page-config, delayed at class loading and immediate in the preamble.
 	ai-config .code:n =
