@@ -153,29 +153,47 @@ The class uses `abbrvnat`, prints at the end of the document, includes all entri
 
 Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
 
-**Optional AI-use disclosure.** The class loads AI assistance support only when selected at class loading. The simplest mode prints a disclosure page after the bibliography, with links from the document:
+**Optional AI-use disclosure.** Add `AI` to the class options if this activity uses AI assistance. It records what the tool contributed and prints a disclosure at the end of the document, after the bibliography.
 
 ~~~latex
 \documentclass[CAT,PR,AI]{P3CTeX}
-\PECTeXconfig{ai-config={statement={He revisat i contrastat les propostes de l'eina.}}}
 \begin{document}
 Aquest fragment ha rebut suport
 \pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}[Proposa un esquema].
 \end{document}
 ~~~
 
-The optional `<response-file>` is used **only when `ANX` is enabled**. Otherwise it is ignored: there is no AI annex and no broken response link, while the disclosure still lists the tool, its use, and the optional prompt. With `ANX`, full responses become ordinary numbered `pxANX` annexes, before the bibliography, and the disclosure links back to them. The disclosure itself remains after the bibliography.
-
-Common class-load shortcuts avoid verbose combinations:
+If a whole document used AI but no passage needs a separate reference, provide a statement instead:
 
 ~~~latex
-\documentclass[CAT,AI]{P3CTeX}                             % disclosure only
-\documentclass[CAT,ai-annexes]{P3CTeX}                     % AI + ANX
-\documentclass[CAT,ai-bibliography={../references}]{P3CTeX} % AI + bibliography
-\documentclass[CAT,ai-full={../references}]{P3CTeX}       % AI + ANX + bibliography
+\PECTeXconfig{ai-config={
+    statement={He utilitzat IA per contrastar algunes idees, i he revisat el resultat.}
+}}
 ~~~
 
-Select these module combinations in `\documentclass`, not later in `\PECTeXconfig`. The `ai-config={statement={...},toc=false}` key works both as a class option and in `\PECTeXconfig` from a shared preamble or an individual document; later calls override earlier values. Independent module users may also call `\pxAIsetup` directly. The disclosure and headings are localized through `pxTXT` (CAT/ES/EN), and optional response files are included verbatim without executing them as LaTeX. The existing no-plagiarism declaration is separate, so its wording should be checked against the disclosed collaboration.
+The module **does not print a disclosure** when no `\pxAIref` is present and no custom statement was supplied. Selecting `AI` in a shared preamble alone does not claim AI use.
+
+To include the complete responses, also select the existing `ANX` module:
+
+~~~latex
+\documentclass[CAT,PR,AI,ANX]{P3CTeX}
+% The optional <path> is used only when ANX is explicitly selected.
+\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}
+  [Proposa un esquema]
+  <../ai-responses/structure.txt>
+~~~
+
+`\pxAIref{tool}{how-used}[optional prompt]<optional response path>` always records an inline link and its contribution. The path is ignored without `ANX` and creates no broken link. With `ANX`, the existing numbered annex mechanism inserts response text verbatim **before** the bibliography. The AI disclosure remains after the bibliography. MEM does not implicitly enable AI response annexes merely because its implementation loads the annex package.
+
+For a new document that needs AI disclosure, full responses, and bibliography together, one convenience preset genuinely eliminates repeated setup:
+
+~~~latex
+\documentclass[CAT,PR,ai-full={../references}]{P3CTeX}
+~~~
+
+Otherwise compose the ordinary keys directly, for example `AI,bibliography={../references}` or `AI,ANX`. There are no separate presets for combinations that are already this short.
+
+`ai-config={statement={...},toc=false}` works in `\documentclass` or `\PECTeXconfig` in shared and document-specific preambles; later configuration overrides earlier values. The headings and default statement use `pxTXT` localization (CAT, ES, EN). The independent module command `\pxAIsetup` remains available. The existing no-plagiarism declaration is separate and should be consistent with any declared assistance.
 
 For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
 
