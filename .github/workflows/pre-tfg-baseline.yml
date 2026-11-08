@@ -142,6 +142,7 @@ jobs:
               compile_pdf examples/UOCTemplates/TFGTemplate/MEM MEM TFG-MEM no
               compile_pdf tex/tests P3CTeX.bibliography-mem.test MEM-Bibliography yes
               compile_pdf tex/tests P3CTeX.ai-bibliography.test AI-Disclosure yes
+              compile_pdf tex/tests P3CTeX.ai-full.test AI-Full-Annex yes
             '
       - name: Prepare local artifact uploader
         shell: bash
