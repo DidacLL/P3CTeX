@@ -159,23 +159,29 @@
 \cs_new_protected:Npn \__pxtfg_abstract:nn #1#2
   {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1}{#2}}
 
+% Chapter headings in MEM, section headings in PR. Both use the TOC.
+\cs_new_protected:Npn \__pxtfg_heading:n #1
+  {
+    \cs_if_exist:NTF \chapter
+      {
+        \chapter*{#1}
+        \cs_if_exist:NT \phantomsection {\phantomsection}
+        \addcontentsline{toc}{chapter}{#1}
+      }
+      {
+        \section*{#1}
+        \cs_if_exist:NT \phantomsection {\phantomsection}
+        \addcontentsline{toc}{section}{#1}
+      }
+  }
+
 \cs_new_protected:Npn \__pxtfg_print_abstract:n #1
   {
     \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
       {
-        \cs_if_exist:NTF \chapter
-          {\chapter*{\str_case:nn {#1}
+        \__pxtfg_heading:n
+          {\str_case:nn {#1}
             {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}
-           \phantomsection
-           \addcontentsline{toc}{chapter}
-             {\str_case:nn {#1}
-               {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}}
-          {\section*{\str_case:nn {#1}
-            {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}
-           \phantomsection
-           \addcontentsline{toc}{section}
-             {\str_case:nn {#1}
-               {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}}
         \tl_use:N \l_tmpa_tl\par
       }
   }
@@ -251,15 +257,15 @@
       }
   }
 
-% Optional cover metadata, without adding empty lines for missing fields.
+% Optional cover metadata, without empty rows for missing values.
+\cs_new_protected:Npn \__pxtfg_cover_row:nN #1#2
+  {\tl_if_blank:VF #2 {\textbf{#1:}~\tl_use:N #2\par}}
+
 \cs_new_protected:Npn \__pxtfg_cover_details:
   {
-    \tl_if_blank:VF \l__pxtfg_tutor_tl
-      {\textbf{\pxDEFtfgconsultant:}~\tl_use:N \l__pxtfg_tutor_tl\par}
-    \tl_if_blank:VF \l__pxtfg_pra_tl
-      {\textbf{\pxDEFtfgpra:}~\tl_use:N \l__pxtfg_pra_tl\par}
-    \tl_if_blank:VF \l__pxtfg_area_tl
-      {\textbf{\pxDEFtfgarea:}~\tl_use:N \l__pxtfg_area_tl\par}
+    \__pxtfg_cover_row:nN {\pxDEFtfgconsultant} \l__pxtfg_tutor_tl
+    \__pxtfg_cover_row:nN {\pxDEFtfgpra} \l__pxtfg_pra_tl
+    \__pxtfg_cover_row:nN {\pxDEFtfgarea} \l__pxtfg_area_tl
   }
 
 % ================================================================
