@@ -71,19 +71,47 @@ run_document() {
   fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-bibliography.test" ]]; then
     bibline="$(grep -nF '\contentsline {section}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
-    ailine="$(grep -nF "\contentsline {section}{Declaració" "$out/$name.aux" | head -n1 | cut -d: -f1)"
-    annexline="$(grep -nF "\contentsline {section}{Annex" "$out/$name.aux" | head -n1 | cut -d: -f1)"
-    if [[ -z "$bibline" || -z "$ailine" || -z "$annexline" ]] ||
-       ! (( bibline < ailine && ailine < annexline )); then
-      echo "FAIL $relative (bibliography -> AI disclosure -> AI annex ordering)"
+    ailine="$(grep -nF '\contentsline {section}{Declaració' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    if [[ -z "$bibline" || -z "$ailine" ]] ||
+       ! (( bibline < ailine )) ||
+       grep -Fq '\contentsline {section}{Annex' "$out/$name.aux"; then
+      echo "FAIL $relative (AI + bibliography must not print ANX responses)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-full.test" ]]; then
+    annexline="$(grep -nF '\contentsline {section}{Annex' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    bibline="$(grep -nF '\contentsline {section}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    ailine="$(grep -nF '\contentsline {section}{Declaració' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    if [[ -z "$annexline" || -z "$bibline" || -z "$ailine" ]] ||
+       ! (( annexline < bibline && bibline < ailine )); then
+      echo "FAIL $relative (ANX -> bibliography -> AI disclosure ordering)"
+      grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
       ok=0
     fi
   fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-mem.test" ]]; then
-    if ! grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux" ||
-       ! grep -Fq '\contentsline {chapter}{Annex' "$out/$name.aux"; then
-      echo "FAIL $relative (MEM AI disclosure / annex chapter-level TOC)"
+    annexline="$(grep -nF '\contentsline {chapter}{Annex' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    bibline="$(grep -nF '\contentsline {chapter}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    ailine="$(grep -nF '\contentsline {chapter}{Declaració' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    if [[ -z "$annexline" || -z "$bibline" || -z "$ailine" ]] ||
+       ! (( annexline < bibline && bibline < ailine )); then
+      echo "FAIL $relative (MEM ANX -> bibliography -> AI disclosure ordering)"
       grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-mem-no-anx.test" ]]; then
+    if ! grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux" ||
+       grep -Fq '\contentsline {chapter}{Annex' "$out/$name.aux"; then
+      echo "FAIL $relative (MEM must honor explicit ANX opt-in)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-annexes.test" ]]; then
+    if ! grep -Fq '\contentsline {section}{Anexo' "$out/$name.aux" ||
+       ! grep -Fq '\contentsline {section}{Declaración' "$out/$name.aux"; then
+      echo "FAIL $relative (ai-annexes wrapper must print both entries)"
       ok=0
     fi
   fi
