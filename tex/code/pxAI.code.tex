@@ -1,0 +1,115 @@
+% All records are held until enddocument so the disclosure follows BibTeX.
+\ProvidesExplFile{pxAI.code.tex}{2026/11/08}{0.1}
+  {AI assistance records and disclosure rendering}
+\int_new:N \g__pxai_ref_int
+\seq_new:N \g__pxai_refs_seq
+\seq_new:N \g__pxai_responses_seq
+\tl_new:N \l__pxai_statement_tl
+\bool_new:N \l__pxai_toc_bool
+\keys_define:nn {pxAI}
+  {
+    statement .tl_set:N = \l__pxai_statement_tl,
+    statement .initial:n = {},
+    toc .bool_set:N = \l__pxai_toc_bool,
+    toc .initial:n = true
+  }
+
+% Keep the supplied text intact; expand only the numeric reference identifier.
+\cs_new_protected:Npn \__pxai_register:nnnn #1#2#3#4
+  {
+    \int_gincr:N \g__pxai_ref_int
+    \seq_gput_right:Nx \g__pxai_refs_seq
+      {
+        \exp_not:N \__pxai_entry:nnnn
+          {\int_use:N \g__pxai_ref_int}
+          {\exp_not:n {#1}}
+          {\exp_not:n {#2}}
+          {\exp_not:n {#3}}
+      }
+    \tl_if_blank:nF {#4}
+      {
+        \seq_gput_right:Nx \g__pxai_responses_seq
+          {
+            \exp_not:N \__pxai_response:nnn
+              {\int_use:N \g__pxai_ref_int}
+              {\exp_not:n {#1}}
+              {\exp_not:n {#4}}
+          }
+      }
+    \hyperlink{pxai:ref:\int_use:N \g__pxai_ref_int}
+      {\textsuperscript{\normalfont[AI-\int_use:N \g__pxai_ref_int]}}
+  }
+
+\cs_new_protected:Npn \__pxai_heading:n #1
+  {
+    \cs_if_exist:NTF \chapter
+      {
+        \chapter*{#1}
+        \bool_if:NT \l__pxai_toc_bool
+          {\phantomsection\addcontentsline{toc}{chapter}{#1}}
+      }
+      {
+        \section*{#1}
+        \bool_if:NT \l__pxai_toc_bool
+          {\phantomsection\addcontentsline{toc}{section}{#1}}
+      }
+  }
+
+\cs_new_protected:Npn \__pxai_entry:nnnn #1#2#3#4
+  {
+    \par\medskip
+    \noindent\hypertarget{pxai:ref:#1}{}
+    \textbf{[AI-#1]~#2}\par
+    \noindent #3\par
+    \tl_if_blank:nF {#4}
+      {\noindent\textit{\pxDEFaiPrompt:}~#4\par}
+    \seq_if_empty:NF \g__pxai_responses_seq
+      {
+        % Render only the link corresponding to this entry's annex, if any.
+        \seq_map_inline:Nn \g__pxai_responses_seq
+          {\__pxai_if_response:nn {#1} {##1}}
+      }
+  }
+
+% A response record is a stored call to \__pxai_response:nnn.
+% Store cross-reference links alongside the response, avoiding list searches.
+\cs_new_protected:Npn \__pxai_if_response:nn #1#2 {}
+
+\cs_new_protected:Npn \__pxai_response:nnn #1#2#3
+  {
+    \par\medskip
+    \cs_if_exist:NTF \chapter
+      {\section*{[AI-#1]~#2}}
+      {\subsection*{[AI-#1]~#2}}
+    \hypertarget{pxai:annex:#1}{}
+    \IfFileExists{#3}
+      {
+        \VerbatimInput[
+          breaklines=true,
+          breakanywhere=true,
+          fontsize=\small
+        ]{#3}
+      }
+      {
+        \PackageError{pxAI}{AI response file not found: #3}
+          {The path must be valid relative to the compiling document.}
+      }
+    \par
+  }
+
+\cs_new_protected:Npn \__pxai_print:
+  {
+    \clearpage
+    \__pxai_heading:n {\pxDEFaiTitle}
+    \tl_if_blank:VTF \l__pxai_statement_tl
+      {\pxDEFaiStatement}
+      {\tl_use:N \l__pxai_statement_tl}
+    \seq_map_inline:Nn \g__pxai_refs_seq {##1}
+    \seq_if_empty:NF \g__pxai_responses_seq
+      {
+        \clearpage
+        \__pxai_heading:n {\pxDEFaiAnnex}
+        \seq_map_inline:Nn \g__pxai_responses_seq {##1}
+      }
+  }
+\endinput
