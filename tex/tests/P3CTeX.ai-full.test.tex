@@ -1,12 +1,12 @@
 \documentclass[
   CAT,ai-full={fixtures/pxBibliography.references},no-cover,no-toc,
-  ai-config={statement={Class-level AI statement.}}
+  ai-config={statement={ClassStatement}}
 ]{P3CTeX}
-\PECTeXconfig{ai-config={statement={Document-level AI statement.}}}
+\PECTeXconfig{ai-config={statement={DocumentStatement}}}
 \ExplSyntaxOn
 \bool_if:NF \l_pxcore_ai_use_bool {\errmessage{AI meta did not select AI}}
 \bool_if:NF \l_pxcore_anx_use_bool {\errmessage{AI full meta did not select ANX}}
-\tl_if_eq:NnF \l__pxai_statement_tl {Document-level AI statement.}
+\tl_if_eq:NnF \l__pxai_statement_tl {DocumentStatement}
   {\errmessage{PECTeXconfig did not override class-level AI configuration}}
 \ExplSyntaxOff
 \begin{document}
