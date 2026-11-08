@@ -24,8 +24,20 @@
 
 \NewDocumentCommand{\pxAIsetup}{m}
   {\keys_set:nn {pxAI} {#1}}
-\NewDocumentCommand{\pxAIref}{m +m O{} D<>{}}
-  {\__pxai_register:nnnn {#1}{#2}{#3}{#4}}
+% babel-spanish can activate < and >. Normalize only while reading the
+% optional path; restore the document catcodes immediately afterwards.
+\NewDocumentCommand{\pxAIref}{}
+  {
+    \group_begin:
+    \char_set_catcode_other:n {60}
+    \char_set_catcode_other:n {62}
+    \__pxai_ref_parse:
+  }
+\NewDocumentCommand{\__pxai_ref_parse:}{m +m O{} D<>{}}
+  {
+    \__pxai_register:nnnn {#1}{#2}{#3}{#4}
+    \group_end:
+  }
 
 % AI response files are queued through pxANX only when its key is selected.
 % The normal order remains annexes -> glossary -> bibliography -> disclosure.
