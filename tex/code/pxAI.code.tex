@@ -20,11 +20,12 @@
     \int_gincr:N \g__pxai_ref_int
     \seq_gput_right:Nx \g__pxai_refs_seq
       {
-        \exp_not:N \__pxai_entry:nnnn
+        \exp_not:N \__pxai_entry:nnnnn
           {\int_use:N \g__pxai_ref_int}
           {\exp_not:n {#1}}
           {\exp_not:n {#2}}
           {\exp_not:n {#3}}
+          {\exp_not:n {#4}}
       }
     \tl_if_blank:nF {#4}
       {
@@ -55,7 +56,7 @@
       }
   }
 
-\cs_new_protected:Npn \__pxai_entry:nnnn #1#2#3#4
+\cs_new_protected:Npn \__pxai_entry:nnnnn #1#2#3#4#5
   {
     \par\medskip
     \noindent\hypertarget{pxai:ref:#1}{}
@@ -63,17 +64,13 @@
     \noindent #3\par
     \tl_if_blank:nF {#4}
       {\noindent\textit{\pxDEFaiPrompt:}~#4\par}
-    \seq_if_empty:NF \g__pxai_responses_seq
+    \tl_if_blank:nF {#5}
       {
-        % Render only the link corresponding to this entry's annex, if any.
-        \seq_map_inline:Nn \g__pxai_responses_seq
-          {\__pxai_if_response:nn {#1} {##1}}
+        \noindent
+        \hyperlink{pxai:annex:#1}{\pxDEFaiFullResponse}
+        \par
       }
   }
-
-% A response record is a stored call to \__pxai_response:nnn.
-% Store cross-reference links alongside the response, avoiding list searches.
-\cs_new_protected:Npn \__pxai_if_response:nn #1#2 {}
 
 \cs_new_protected:Npn \__pxai_response:nnn #1#2#3
   {
