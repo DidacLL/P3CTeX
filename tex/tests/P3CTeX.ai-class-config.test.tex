@@ -1,0 +1,20 @@
+\documentclass[
+  EN,AI,no-cover,no-toc,
+  ai-config={statement={Initial class-level statement.},toc=false}
+]{P3CTeX}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__pxai_statement_tl {Initial class-level statement.}
+  {\errmessage{Class ai-config was not forwarded after loading pxAI}}
+\bool_if:NT \l__pxai_toc_bool
+  {\errmessage{Class ai-config toc=false was not applied}}
+\ExplSyntaxOff
+\PECTeXconfig{ai-config={statement={Later preamble override.},toc=true}}
+\ExplSyntaxOn
+\tl_if_eq:NnF \l__pxai_statement_tl {Later preamble override.}
+  {\errmessage{Later PECTeXconfig override was ignored}}
+\bool_if:NF \l__pxai_toc_bool
+  {\errmessage{Later PECTeXconfig toc=true was ignored}}
+\ExplSyntaxOff
+\begin{document}
+\pxAIref{GPT 6.1 Terra}{Proofreading only.}.
+\end{document}
