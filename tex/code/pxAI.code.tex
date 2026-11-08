@@ -3,7 +3,6 @@
   {AI assistance records and disclosure rendering}
 \int_new:N \g__pxai_ref_int
 \seq_new:N \g__pxai_refs_seq
-\seq_new:N \g__pxai_responses_seq
 \tl_new:N \l__pxai_statement_tl
 \bool_new:N \l__pxai_toc_bool
 \keys_define:nn {pxAI}
@@ -27,14 +26,13 @@
           {\exp_not:n {#3}}
           {\exp_not:n {#4}}
       }
+    % Only pxANX owns annex output; a path without ANX is ignored.
     \tl_if_blank:nF {#4}
       {
-        \seq_gput_right:Nx \g__pxai_responses_seq
+        \cs_if_exist:NT \pxAddAnnex
           {
-            \exp_not:N \__pxai_response:nnn
-              {\int_use:N \g__pxai_ref_int}
-              {\exp_not:n {#1}}
-              {\exp_not:n {#4}}
+            \exp_args:Ne \__pxai_queue_annex:nnn
+              {\int_use:N \g__pxai_ref_int} {#1} {#4}
           }
       }
     \hyperlink{pxai:ref:\int_use:N \g__pxai_ref_int}
@@ -66,32 +64,36 @@
       {\noindent\textit{\pxDEFaiPrompt{}:}~#4\par}
     \tl_if_blank:nF {#5}
       {
-        \noindent
-        \hyperlink{pxai:annex:#1}{\pxDEFaiFullResponse}
-        \par
+        \cs_if_exist:NT \pxAddAnnex
+          {
+            \noindent
+            \hyperlink{pxai:annex:#1}{\pxDEFaiFullResponse}
+            \par
+          }
       }
   }
 
-\cs_new_protected:Npn \__pxai_response:nnn #1#2#3
+% Reuse the existing pxANX deferred annex queue, numbering, and TOC style.
+% These annexes are printed before bibliography by pxANX's existing hook.
+\cs_new_protected:Npn \__pxai_queue_annex:nnn #1#2#3
   {
-    \par\medskip
-    \cs_if_exist:NTF \chapter
-      {\section*{[AI-#1]~#2}}
-      {\subsection*{[AI-#1]~#2}}
-    \hypertarget{pxai:annex:#1}{}
-    \IfFileExists{#3}
+    \pxAddAnnex[name={\pxDEFaiAnnex}]
+      {[AI-#1]~#2}
       {
-        \VerbatimInput[
-          breaklines=true,
-          breakanywhere=true,
-          fontsize=\small
-        ]{#3}
+        \hypertarget{pxai:annex:#1}{}
+        \IfFileExists{#3}
+          {
+            \VerbatimInput[
+              breaklines=true,
+              breakanywhere=true,
+              fontsize=\small
+            ]{#3}
+          }
+          {
+            \PackageError{pxAI}{AI response file not found: #3}
+              {The path must be valid relative to the compiling document.}
+          }
       }
-      {
-        \PackageError{pxAI}{AI response file not found: #3}
-          {The path must be valid relative to the compiling document.}
-      }
-    \par
   }
 
 \cs_new_protected:Npn \__pxai_print:
@@ -102,11 +104,5 @@
       {\pxDEFaiStatement}
       {\tl_use:N \l__pxai_statement_tl}
     \seq_map_inline:Nn \g__pxai_refs_seq {##1}
-    \seq_if_empty:NF \g__pxai_responses_seq
-      {
-        \clearpage
-        \__pxai_heading:n {\pxDEFaiAnnex}
-        \seq_map_inline:Nn \g__pxai_responses_seq {##1}
-      }
   }
 \endinput
