@@ -1,8 +1,8 @@
 \documentclass[
-  CAT,ai-full={fixtures/pxBibliography.references},no-cover,no-toc,
+  CAT,ai-full,no-cover,no-toc,
   ai-config={statement={ClassStatement}}
 ]{P3CTeX}
-\PECTeXconfig{ai-config={statement={DocumentStatement}}}
+\PECTeXconfig{bibliography={fixtures/pxBibliography.references},ai-config={statement={DocumentStatement}}}
 \ExplSyntaxOn
 \bool_if:NF \l_pxcore_ai_use_bool {\errmessage{AI meta did not select AI}}
 \bool_if:NF \l_pxcore_anx_use_bool {\errmessage{AI full meta did not select ANX}}
