@@ -27,8 +27,8 @@
 \NewDocumentCommand{\pxAIref}{m +m O{} D<>{}}
   {\__pxai_register:nnnn {#1}{#2}{#3}{#4}}
 
-% Other modules can be omitted. A disclosure is always the final endmatter
-% section: ordinary annexes -> glossary -> bibliography -> AI -> AI responses.
+% AI response files are queued through pxANX only when its key is selected.
+% The normal order remains annexes -> glossary -> bibliography -> disclosure.
 \AddToHook{enddocument}[pxAI]{\__pxai_print:}
 \DeclareHookRule{enddocument}{pxAI}{after}{pxANX}
 \DeclareHookRule{enddocument}{pxAI}{after}{pxGLS}
