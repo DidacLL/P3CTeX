@@ -7,7 +7,6 @@
 \bool_new:N \l__pxtfg_auto_bool
 \bool_new:N \l__pxtfg_card_bool
 \bool_new:N \l__pxtfg_abstracts_bool
-\bool_new:N \l__pxtfg_licence_bool
 \bool_new:N \g__pxtfg_card_printed_bool
 \bool_new:N \g__pxtfg_frontmatter_printed_bool
 \prop_new:N \g__pxtfg_abstracts_prop
@@ -29,9 +28,7 @@
     workcard .bool_set:N = \l__pxtfg_card_bool,
     workcard .initial:n = true,
     abstracts .bool_set:N = \l__pxtfg_abstracts_bool,
-    abstracts .initial:n = true,
-    licence-page .bool_set:N = \l__pxtfg_licence_bool,
-    licence-page .initial:n = false
+    abstracts .initial:n = true
   }
 
 % ================================================================
@@ -134,7 +131,7 @@
       }
   }
 
-% Retain the explicit separate-licence-page command for existing documents.
+% Explicit \pxTFGlicencepage is independent of automatic work-card layout.
 \cs_new_protected:Npn \__pxtfg_licence_page:
   {
     \tl_if_blank:VF \l__pxtfg_licence_tl
@@ -245,14 +242,8 @@
         \end{tabular}
         \par
         \__pxtfg_cat_summary:
-        \bool_if:NF \l__pxtfg_licence_bool
-          {
-            \tl_if_blank:VF \l__pxtfg_licence_tl
-              {
-                \vspace{\fill}
-                \noindent\__pxtfg_licence_content:
-              }
-          }
+        \vspace{\fill}
+        \noindent\__pxtfg_licence_content:
         \clearpage
       }
   }
@@ -276,7 +267,6 @@
     \bool_if:NF \g__pxtfg_frontmatter_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
-        \bool_if:NT \l__pxtfg_licence_bool {\__pxtfg_licence_page:}
         \bool_if:NTF \l__pxtfg_card_bool
           {\__pxtfg_card:}
           {\__pxtfg_cat_summary:}
