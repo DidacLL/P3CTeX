@@ -134,10 +134,15 @@
         \space\tl_use:N \l__pxtfg_licence_tl\par
         \tl_if_blank:VTF \l__pxtfg_licence_text_tl
           {
-            \str_case:en {\tl_to_str:V \l__pxtfg_licence_tl}
+            % Normalize spaces before comparing codes: under expl3,
+            % unescaped spaces in case-list tokens are ignored at definition.
+            \tl_set:Nx \l_tmpa_tl
+              {\tl_upper_case:n {\tl_to_str:V \l__pxtfg_licence_tl}}
+            \regex_replace_all:nnN {\s+} {} \l_tmpa_tl
+            \exp_args:NV \str_case:nn \l_tmpa_tl
               {
-                {CC BY-NC-SA 3.0}{\__pxtfg_cc_terms:n {3.0}}
-                {CC BY-NC-SA 4.0}{\__pxtfg_cc_terms:n {4.0}}
+                {CCBY-NC-SA3.0}{\__pxtfg_cc_terms:n {3.0}}
+                {CCBY-NC-SA4.0}{\__pxtfg_cc_terms:n {4.0}}
               }
           }
           {\tl_use:N \l__pxtfg_licence_text_tl\par}
