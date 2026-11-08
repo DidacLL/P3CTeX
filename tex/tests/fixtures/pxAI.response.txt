@@ -1,0 +1,4 @@
+Full AI response for the first referenced contribution.
+The assistant proposed a possible outline and the author reviewed it.
+Sample raw prompt fragments: {curly braces}, [square brackets], #tags, $symbols, and 100% plain text.
+This intentionally long line exercises wrapping: one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty twenty-one twenty-two twenty-three twenty-four twenty-five twenty-six twenty-seven twenty-eight twenty-nine thirty thirty-one.
