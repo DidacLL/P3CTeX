@@ -42,8 +42,8 @@ follow the TOC, or the work card when there is no TOC.
 Automatic printing is the default. `print=manual` and the existing
 `\pxTFGfrontmatter`, `\pxTFGworkcard`, `\pxTFGabstracts` and
 `\pxTFGcoverdetails` commands allow explicit placement. The separate
-licence-only page remains available through `\pxTFGlicencepage` or
-`licence-page=true`. Bundled CC artwork is used for recognised codes only.
+licence-only page remains available through the explicit
+`\pxTFGlicencepage` command. Bundled CC artwork is used for recognised codes only.
 
 The existing `glossary` option continues to use standard `glossaries`
 entries and prints used entries; MEM adjusts only its heading hierarchy
