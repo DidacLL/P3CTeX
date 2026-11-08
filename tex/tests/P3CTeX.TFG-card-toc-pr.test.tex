@@ -1,10 +1,16 @@
 \documentclass[CAT,TFG,PR,no-cover,toc]{P3CTeX}
 \PECTeXconfig{
   data={student={Example Student},grade={Enginyeria Informàtica},
-    subj-fullname={Projecte},subj-shortname={TFG},
+    subj-fullname={Aplicacions amb inferència local, sobirania de les dades i arquitectures agentiques per a equips personals},subj-shortname={TFG},
     ca-fullname={Pla de Treball},ca-shortname={PR1}}
 }
-\pxTFGsetup{tutor={Example tutor},licence={CC BY-NC-SA 4.0},abstracts=false}
+\pxTFGsetup{
+  tutor={Example tutor},pra={Example coordinator},
+  area={Intel·ligència artificial},credits={12},
+  keywords={Intel·ligència artificial, inferència local, models de llenguatge,
+    sobirania de dades, sistemes autònoms i aplicacions agentiques},
+  licence={CC BY-NC-SA 3.0},abstracts=false
+}
 % The first shipout belongs to the work card and licence, not the TOC.
 \AddToHook{P3CTeX/before-toc}[verify-pr-card-page]{
   \ifnum\value{page}=2\relax\else
