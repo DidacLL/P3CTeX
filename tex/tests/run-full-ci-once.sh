@@ -108,10 +108,23 @@ run_document() {
       ok=0
     fi
   fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-unused.test" ]]; then
+    if grep -Fq '\contentsline {section}{Declaració' "$out/$name.aux" ||
+       grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux"; then
+      echo "FAIL $relative (AI key alone must not print a declaration)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-statement-only.test" ]]; then
+    if ! grep -Fq '\contentsline {section}{Declaració' "$out/$name.aux"; then
+      echo "FAIL $relative (explicit disclosure text must print without AI references)"
+      ok=0
+    fi
+  fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-annexes.test" ]]; then
     if ! grep -Fq '\contentsline {section}{Anexo' "$out/$name.aux" ||
        ! grep -Fq '\contentsline {section}{Declaración' "$out/$name.aux"; then
-      echo "FAIL $relative (ai-annexes wrapper must print both entries)"
+      echo "FAIL $relative (AI + ANX must print the disclosure and response annex)"
       grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
       ok=0
     fi
