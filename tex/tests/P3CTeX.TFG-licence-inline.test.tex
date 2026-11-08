@@ -12,9 +12,10 @@
   {\errmessage{Separate TFG licence page must be opt-in}}
 \ExplSyntaxOff
 \begin{document}
-% With short metadata the card and the beginning of the document fit page 1.
-\ifnum\value{page}>1
-  \errmessage{TFG licence added an unwanted preliminary page}
+% The card and its licence occupy page 1, even without a TOC.
+% Body content starts on page 2; there is no compact in-content layout.
+\ifnum\value{page}=2\relax\else
+  \errmessage{TFG card and licence must occupy a dedicated page}
 \fi
 \section{Introducció}
 La llicència s'ha integrat a la fitxa del treball.
