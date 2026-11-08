@@ -1,0 +1,19 @@
+\documentclass[
+  CAT,ai-full={fixtures/pxBibliography.references},no-cover,no-toc,
+  ai-config={statement={Class-level AI statement.}}
+]{P3CTeX}
+\PECTeXconfig{ai-config={statement={Document-level AI statement.}}}
+\ExplSyntaxOn
+\bool_if:NF \l_pxcore_ai_use_bool {\errmessage{AI meta did not select AI}}
+\bool_if:NF \l_pxcore_anx_use_bool {\errmessage{AI full meta did not select ANX}}
+\tl_if_eq:NnF \l__pxai_statement_tl {Document-level AI statement.}
+  {\errmessage{PECTeXconfig did not override class-level AI configuration}}
+\ExplSyntaxOff
+\begin{document}
+\section{Exercici}
+Consulta documentada \pxAIref{GPT 6.1 Terra}
+  {Proposta d'esquema revisada i validada.}
+  [Proposa una estructura breu.]
+  <fixtures/pxAI.response.txt>.
+\cite{p3ctex-demo}
+\end{document}
