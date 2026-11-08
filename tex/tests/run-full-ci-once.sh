@@ -79,6 +79,14 @@ run_document() {
       ok=0
     fi
   fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-full-no-bib.test" ]]; then
+    if grep -Fq '\bibdata{' "$out/$name.aux" ||
+       ! grep -Fq '\contentsline {section}{Annex' "$out/$name.aux" ||
+       ! grep -Fq '\contentsline {section}{Declaració' "$out/$name.aux"; then
+      echo "FAIL $relative (AI full without bibliography must print annex and disclosure only)"
+      ok=0
+    fi
+  fi
   if ((ok==1)) && [[ "$name" == "P3CTeX.ai-full.test" ]]; then
     annexline="$(grep -nF '\contentsline {section}{Annex' "$out/$name.aux" | head -n1 | cut -d: -f1)"
     bibline="$(grep -nF '\contentsline {section}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
