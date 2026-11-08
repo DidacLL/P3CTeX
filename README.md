@@ -153,21 +153,21 @@ The class uses `abbrvnat`, prints at the end of the document, includes all entri
 
 Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
 
-**Optional AI-use disclosure.** Select \`AI\` with \`\\documentclass\` when you want a documented AI-assistance page, independent of the PAC/PR/TFG/MEM layout:
+**Optional AI-use disclosure.** Select `AI` with `\documentclass` when you want a documented AI-assistance page, independent of the PAC/PR/TFG/MEM layout:
 
-\`\`\`latex
-\\documentclass[CAT,PR,AI]{P3CTeX}
-\\PECTeXconfig{bibliography={../references}} % optional
-\\pxAIsetup{statement={He utilitzat eines d'IA per revisar idees i estructura.}}
-\\begin{document}
+```latex
+\documentclass[CAT,PR,AI]{P3CTeX}
+\PECTeXconfig{bibliography={../references}} % optional
+\pxAIsetup{statement={He utilitzat eines d'IA per revisar idees i estructura.}}
+\begin{document}
 Aquest fragment s'ha revisat amb suport extern
-\\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura i suggeriments.}
+\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura i suggeriments.}
   [Proposa una estructura per a aquests punts.]
   <../ai-responses/structure.txt>.
-\\end{document}
-\`\`\`
+\end{document}
+```
 
-\`\\pxAIref{tool}{how-it-was-used}[optional prompt]<optional response-file>\` inserts a linked superscript marker such as \`[AI-1]\`. At the end, the module prints the localized disclosure page **after the bibliography** (or simply at the end if there is no bibliography). Each record lists the tool, what it contributed, and any supplied prompt. If a plain-text response file is specified, the disclosure links to a separate **AI response annex** printed after the disclosure; files are included verbatim, not executed as LaTeX. Relative file paths are resolved from the document's compilation directory. The annex is independent of \`ANX\`, and MEM uses chapter-level headings. \`\\pxAIsetup{toc=false}\` omits the disclosure and AI annex from the TOC. A disclosure page is printed whenever \`AI\` is selected, even if there are no individual references. The default statement and headings follow \`CAT\`, \`ES\`, or \`EN\`; customize the statement in a subject preamble if needed. The existing no-plagiarism declaration remains separate, so review its wording for consistency with any disclosed assistance.
+`\pxAIref{tool}{how-it-was-used}[optional prompt]<optional response-file>` inserts a linked superscript marker such as `[AI-1]`. At the end, the module prints the localized disclosure page **after the bibliography** (or simply at the end if there is no bibliography). Each record lists the tool, what it contributed, and any supplied prompt. If a plain-text response file is specified, the disclosure links to a separate **AI response annex** printed after the disclosure; files are included verbatim, not executed as LaTeX. Relative file paths are resolved from the document's compilation directory. The annex is independent of `ANX`, and MEM uses chapter-level headings. `\pxAIsetup{toc=false}` omits the disclosure and AI annex from the TOC. A disclosure page is printed whenever `AI` is selected, even if there are no individual references. The default statement and headings follow `CAT`, `ES`, or `EN`; customize the statement in a subject preamble if needed. The existing no-plagiarism declaration remains separate, so review its wording for consistency with any disclosed assistance.
 
 For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
 
