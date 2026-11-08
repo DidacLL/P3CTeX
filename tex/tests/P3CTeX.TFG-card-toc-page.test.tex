@@ -1,0 +1,27 @@
+\documentclass[CAT,TFG,MEM,no-cover,toc]{P3CTeX}
+\PECTeXconfig{
+  data={student={Example Student},grade={Enginyeria Informàtica},
+    subj-fullname={Projecte},subj-shortname={TFG},
+    ca-fullname={Memòria},ca-shortname={MEM}}
+}
+\pxTFGsetup{
+  tutor={Example tutor},pra={Example PRA},area={Enginyeria},
+  credits={12},keywords={sistemes, eines},
+  licence={CC BY-NC-SA 4.0}
+}
+\pxTFGabstract{CAT}{Resum breu del projecte.}
+\pxTFGabstract{ES}{Resumen del proyecto.}
+\pxTFGabstract{EN}{Project abstract.}
+\pxMEMsetup{figures=false,tables=false}
+% At this point \PECTeXprintTOC has just shipped the contents page.
+% A page counter of 2 proves that the work card, licence and TOC all fit page 1.
+\AddToHook{P3CTeX/after-toc}[verify-tfg-card-toc]{
+  \ifnum\value{page}=2\relax\else
+    \errmessage{TFG card, licence and TOC must share the first page}
+  \fi
+}
+\DeclareHookRule{P3CTeX/after-toc}{verify-tfg-card-toc}{before}{pxTFG}
+\begin{document}
+\chapter{Introducció}
+The translated abstracts follow the TOC instead of separating it from the card.
+\end{document}

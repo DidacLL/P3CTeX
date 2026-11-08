@@ -188,10 +188,9 @@
 
 \cs_new_protected:Npn \__pxtfg_card_render:
   {
-    % Preliminary work card: like the UOC template, omit it from the TOC.
-    \cs_if_exist:NTF \chapter
-      {\chapter*{\pxDEFtfgworkcard}}
-      {\section*{\pxDEFtfgworkcard}}
+    % The work card sits above the TOC, even in MEM documents: a chapter
+    % heading would force a page break and leave the contents elsewhere.
+    \section*{\pxDEFtfgworkcard}
     \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
       \__pxtfg_row:nn
         {\pxDEFtfgtitle}{\l__pxdata_subj_name_tl}
@@ -247,25 +246,33 @@
     \__pxtfg_print_abstract:n {EN}
   }
 
-% The information sheet contains the Catalan summary; other supplied
-% summaries follow on separate pages.
-\cs_new_protected:Npn \__pxtfg_frontmatter_render:
+% The information sheet retains the Catalan summary. If a TOC is enabled,
+% print the other-language abstracts only after the TOC; their intentional
+% \clearpage commands must not separate the work card from the contents.
+\cs_new_protected:Npn \__pxtfg_other_abstracts:
+  {
+    \bool_if:NT \l__pxtfg_abstracts_bool
+      {
+        \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
+          {\clearpage\__pxtfg_print_abstract:n {ES}}
+        \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
+          {\clearpage\__pxtfg_print_abstract:n {EN}}
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_frontmatter_render:n #1
   {
     \bool_if:NT \l__pxtfg_licence_bool {\pxTFGlicencepage}
     \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:}
     \bool_if:NT \l__pxtfg_abstracts_bool
-    {
-    \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
       {
-        \par\medskip
-        \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
-        \tl_use:N \l_tmpa_tl\par
+        \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
+          {
+            \par\medskip
+            \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
+            \tl_use:N \l_tmpa_tl\par
+          }
       }
-    \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
-      {\clearpage\__pxtfg_print_abstract:n {ES}}
-    \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
-      {\clearpage\__pxtfg_print_abstract:n {EN}}
-    }
+    \str_if_eq:nnT {#1} {full} {\__pxtfg_other_abstracts:}
   }
 
 % Automatic and legacy explicit calls must not duplicate preliminary material.
@@ -279,12 +286,29 @@
         \__pxtfg_card_render:
       }
   }
+% Explicit calls and documents without a TOC preserve the full sequence.
 \cs_new_protected:Npn \__pxtfg_frontmatter:
   {
     \bool_if:NF \g__pxtfg_frontmatter_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
-        \__pxtfg_frontmatter_render:
+        \__pxtfg_frontmatter_render:n {full}
       }
+  }
+% A document with a TOC prints only the card/licence/CAT summary ahead of it.
+\cs_new_protected:Npn \__pxtfg_auto_frontmatter:
+  {
+    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
+        \bool_if:NTF \l_pxdoc_usetoc_bool
+          {\__pxtfg_frontmatter_render:n {pre-toc}}
+          {\__pxtfg_frontmatter_render:n {full}}
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_auto_after_toc:
+  {
+    \bool_if:NT \g__pxtfg_frontmatter_printed_bool
+      {\__pxtfg_other_abstracts:}
   }
 \endinput
