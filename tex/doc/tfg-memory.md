@@ -30,19 +30,21 @@ The independent pxANX module owns annexes, and MEM activates it. Annexes are que
 and printed at document end, preserving the main counters. Annex references
 use their own Hyperref destinations and are named for Cleveref when loaded.
 
-`\pxTFGsetup` keeps tutor, PRA, area, credits, keywords, licence and
-presentation options within TFG. Declare CAT/ES/EN summaries separately with
-`\pxTFGabstract{CAT|ES|EN}{...}`. In automatic mode (the default), TFG supplies
-its licence page, project information sheet, Catalan summary and available
-Spanish/English abstracts before the existing class TOC. For explicit placement,
-set `print=manual` and use `\pxTFGfrontmatter` or its individual
-`\pxTFGworkcard`, `\pxTFGabstracts`, `\pxTFGcoverdetails` commands.
-`\pxTFGlicencepage` remains available explicitly and reuses bundled artwork
-for recognized CC codes when present; unrecognized descriptions receive no
-assumed CC artwork. `licence-page=false` excludes it from automatic preliminaries.
-Artwork lookup depends on the source tree or TeX installation exposing
-`tex/code/licenc/`.
+\pxTFGsetup keeps tutor, PRA, area, credits, keywords, licence and
+presentation options within TFG. Declare CAT/ES/EN summaries with
+\pxTFGabstract{CAT|ES|EN}{...}. By default, the work card occupies
+its own page with the Catalan summary (when provided) directly below the
+metadata, a flexible vertical space, and the Creative Commons licence at the
+bottom. The TOC starts on the next page. Spanish/English abstracts follow the
+TOC; without a TOC, they follow the card.
 
+Automatic printing is the default. For explicit placement, use
+print=manual and the existing \pxTFGfrontmatter or
+\pxTFGworkcard, \pxTFGabstracts and \pxTFGcoverdetails
+commands. A standalone licence-only page remains available through
+\pxTFGlicencepage or licence-page=true. These do
+not replace the work-card layout. Recognised CC codes use bundled artwork;
+custom licence descriptions do not assume CC artwork.
 The existing `glossary` option continues to use standard `glossaries`
 entries and prints used entries; MEM adjusts only its heading hierarchy
 and CAT/ES/EN titles. Standard LaTeX/BibTeX/biblatex bibliography commands
