@@ -153,21 +153,31 @@ The class uses `abbrvnat`, prints at the end of the document, includes all entri
 
 Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
 
-**Optional AI-use disclosure.** Select `AI` with `\documentclass` when you want a documented AI-assistance page, independent of the PAC/PR/TFG/MEM layout:
+**Optional AI-use disclosure.** The class loads AI assistance support only when selected at class loading. The simplest mode prints a disclosure page after the bibliography, with links from the document:
 
-```latex
+~~~latex
 \documentclass[CAT,PR,AI]{P3CTeX}
-\PECTeXconfig{bibliography={../references}} % optional
-\pxAIsetup{statement={He utilitzat eines d'IA per revisar idees i estructura.}}
+\PECTeXconfig{ai-config={statement={He revisat i contrastat les propostes de l'eina.}}}
 \begin{document}
-Aquest fragment s'ha revisat amb suport extern
-\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura i suggeriments.}
-  [Proposa una estructura per a aquests punts.]
+Aquest fragment ha rebut suport
+\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}
+  [Proposa un esquema]
   <../ai-responses/structure.txt>.
 \end{document}
-```
+~~~
 
-`\pxAIref{tool}{how-it-was-used}[optional prompt]<optional response-file>` inserts a linked superscript marker such as `[AI-1]`. At the end, the module prints the localized disclosure page **after the bibliography** (or simply at the end if there is no bibliography). Each record lists the tool, what it contributed, and any supplied prompt. If a plain-text response file is specified, the disclosure links to a separate **AI response annex** printed after the disclosure; files are included verbatim, not executed as LaTeX. Relative file paths are resolved from the document's compilation directory. The annex is independent of `ANX`, and MEM uses chapter-level headings. `\pxAIsetup{toc=false}` omits the disclosure and AI annex from the TOC. A disclosure page is printed whenever `AI` is selected, even if there are no individual references. The default statement and headings follow `CAT`, `ES`, or `EN`; customize the statement in a subject preamble if needed. The existing no-plagiarism declaration remains separate, so review its wording for consistency with any disclosed assistance.
+The optional `<response-file>` is used **only when `ANX` is enabled**. Otherwise it is ignored: there is no AI annex and no broken response link, while the disclosure still lists the tool, its use, and the optional prompt. With `ANX`, full responses become ordinary numbered `pxANX` annexes, before the bibliography, and the disclosure links back to them. The disclosure itself remains after the bibliography.
+
+Common class-load shortcuts avoid verbose combinations:
+
+~~~latex
+\documentclass[CAT,AI]{P3CTeX}                             % disclosure only
+\documentclass[CAT,ai-annexes]{P3CTeX}                     % AI + ANX
+\documentclass[CAT,ai-bibliography={../references}]{P3CTeX} % AI + bibliography
+\documentclass[CAT,ai-full={../references}]{P3CTeX}       % AI + ANX + bibliography
+~~~
+
+Select these module combinations in `\documentclass`, not later in `\PECTeXconfig`. The `ai-config={statement={...},toc=false}` key works both as a class option and in `\PECTeXconfig` from a shared preamble or an individual document; later calls override earlier values. Independent module users may also call `\pxAIsetup` directly. The disclosure and headings are localized through `pxTXT` (CAT/ES/EN), and optional response files are included verbatim without executing them as LaTeX. The existing no-plagiarism declaration is separate, so its wording should be checked against the disclosed collaboration.
 
 For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
 
