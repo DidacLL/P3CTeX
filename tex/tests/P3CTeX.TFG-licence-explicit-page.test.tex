@@ -2,15 +2,16 @@
 \PECTeXconfig{data={student={Example Student},
   grade={Enginyeria Informàtica},subj-fullname={Projecte},
   subj-shortname={TFG},ca-fullname={Informe},ca-shortname={TFG}}}
-\pxTFGsetup{licence={CC BY-NC-SA 3.0},licence-page=true,
+\pxTFGsetup{print=manual,licence={CC BY-NC-SA 3.0},
   licence-text={Custom licence description.},abstracts=false}
 \ExplSyntaxOn
-\bool_if:NF \l__pxtfg_licence_bool
-  {\errmessage{Explicit licence-page=true was ignored}}
+\keys_if_exist:nnT {pxTFG}{licence-page}
+  {\errmessage{Removed licence-page option still exists}}
 \ExplSyntaxOff
 \begin{document}
-\ifnum\value{page}<2
-  \errmessage{Explicit licence page is missing}
+\pxTFGlicencepage
+\ifnum\value{page}=2\relax\else
+  \errmessage{Explicit licence-only page was not printed}
 \fi
 \section{Introducció}
 The separately requested licence page remains available.
