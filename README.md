@@ -153,6 +153,10 @@ The class uses `abbrvnat`, prints at the end of the document, includes all entri
 
 Override only what you need: `bibliography-style=plain`, `bibliography-all=false`, `bibliography-toc=false`, or `bibliography-auto=false`. Explicit `\pxBibliography[plain]{../references}` and native `\bibliographystyle` / `\bibliography` remain available.
 
+For TFG documents, the licence now appears **on the work card** by default. A recognized `licence={CC BY-NC-SA 3.0}` or `4.0` prints a short description of the terms and a link to Creative Commons. Use `licence-text={...}` to supply your own wording. A dedicated page is optional: `\pxTFGsetup{licence-page=true}` or the explicit `\pxTFGlicencepage` command. The licence identifier alone is not a reproduction of the complete legal text.
+
+Existing subject-owned preambles remain valid. A shortcut declared with `\NewDocumentCommand{\LoadPreamble}{s O{PR} m O{#2}}` can pass `DIA`, `ANX`, `TFG`, `MEM` and other recognized pxCORE module options through `\PECTeXconfig` in the preamble. For example, `\LoadPreamble*[DIA,ANX]{Informe}[Arquitectura]`. This loads optional modules before `\begin{document}`; module loading is not supported after the document has started. Class-independent settings (cover, metadata, bibliography) continue to work in either place.
+
 For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
 
 Advanced class option: `setPreamble={path/to/file.tex}` imports a configuration-only file when the class finishes loading. This is not the recommended student workflow and does not call `\LoadPreamble`, load additional modules, or import another `\documentclass`. For shared or subject preambles that own the class declaration, use ordinary `\input` instead.
