@@ -19,7 +19,7 @@
 \@ifclassloaded{P3CTeX}
   {
     \AddToHook{P3CTeX/before-toc}[pxTFG]
-      {\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_auto_frontmatter:}}
+      {\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_frontmatter:}}
     \AddToHook{P3CTeX/after-toc}[pxTFG]
       {\bool_if:NT \l__pxtfg_auto_bool {\__pxtfg_auto_after_toc:}}
     % MEM lists belong after the abstracts, never between the card and TOC.
