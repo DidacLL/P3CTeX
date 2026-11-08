@@ -89,8 +89,13 @@
 % These annexes are printed before bibliography by pxANX's existing hook.
 \cs_new_protected:Npn \__pxai_queue_annex:nnn #1#2#3
   {
-    \pxAddAnnex[name={\pxDEFaiAnnex},
-      toc=\bool_if:NTF \l__pxai_toc_bool {true}{false}]
+    \bool_if:NTF \l__pxai_toc_bool
+      {\__pxai_add_annex:nnnn {#1}{#2}{#3}{true}}
+      {\__pxai_add_annex:nnnn {#1}{#2}{#3}{false}}
+  }
+\cs_new_protected:Npn \__pxai_add_annex:nnnn #1#2#3#4
+  {
+    \pxAddAnnex[name={\pxDEFaiAnnex},toc=#4]
       {[AI-#1]~#2}
       {
         \hypertarget{pxai:annex:#1}{}
