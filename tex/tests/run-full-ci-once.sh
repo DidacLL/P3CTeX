@@ -83,6 +83,7 @@ run_document() {
     if ! grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux" ||
        ! grep -Fq '\contentsline {chapter}{Annex de respostes' "$out/$name.aux"; then
       echo "FAIL $relative (MEM AI disclosure / annex chapter-level TOC)"
+      grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
       ok=0
     fi
   fi
