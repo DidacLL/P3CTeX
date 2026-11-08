@@ -1,0 +1,25 @@
+\documentclass[CAT,TFG,PR,no-cover,toc]{P3CTeX}
+\PECTeXconfig{
+  data={student={Example Student},grade={Enginyeria Informàtica},
+    subj-fullname={Projecte},subj-shortname={TFG},
+    ca-fullname={Pla de Treball},ca-shortname={PR1}}
+}
+\pxTFGsetup{tutor={Example tutor},licence={CC BY-NC-SA 4.0},abstracts=false}
+% The first shipout belongs to the work card and licence, not the TOC.
+\AddToHook{P3CTeX/before-toc}[verify-pr-card-page]{
+  \ifnum\value{page}=2\relax\else
+    \errmessage{PR work card and licence did not occupy one page}
+  \fi
+}
+\DeclareHookRule{P3CTeX/before-toc}{verify-pr-card-page}{after}{pxTFG}
+% The second shipout belongs to the TOC; body begins on page 3.
+\AddToHook{P3CTeX/after-toc}[verify-pr-toc-page]{
+  \ifnum\value{page}=3\relax\else
+    \errmessage{PR work card and licence share the TOC page}
+  \fi
+}
+\DeclareHookRule{P3CTeX/after-toc}{verify-pr-toc-page}{before}{pxTFG}
+\begin{document}
+\section{Objectius}
+Pla de treball.
+\end{document}

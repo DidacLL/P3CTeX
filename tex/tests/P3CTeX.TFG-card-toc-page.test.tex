@@ -13,11 +13,18 @@
 \pxTFGabstract{ES}{Resumen del proyecto.}
 \pxTFGabstract{EN}{Project abstract.}
 \pxMEMsetup{figures=false,tables=false}
-% At this point \PECTeXprintTOC has just shipped the contents page.
-% A page counter of 2 proves that the work card, licence and TOC all fit page 1.
-\AddToHook{P3CTeX/after-toc}[verify-tfg-card-toc]{
+% The TFG card, licence and Catalan summary must occupy page 1.
+% The before-toc hook must have finished that page before the TOC starts.
+\AddToHook{P3CTeX/before-toc}[verify-tfg-card-page]{
   \ifnum\value{page}=2\relax\else
-    \errmessage{TFG card, licence and TOC must share the first page}
+    \errmessage{TFG card and licence must occupy one dedicated page}
+  \fi
+}
+\DeclareHookRule{P3CTeX/before-toc}{verify-tfg-card-page}{after}{pxTFG}
+% A one-page TOC then advances to page 3, before translated abstracts.
+\AddToHook{P3CTeX/after-toc}[verify-tfg-card-toc]{
+  \ifnum\value{page}=3\relax\else
+    \errmessage{TFG card and licence must not share the TOC page}
   \fi
 }
 \DeclareHookRule{P3CTeX/after-toc}{verify-tfg-card-toc}{before}{pxTFG}

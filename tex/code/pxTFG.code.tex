@@ -295,14 +295,18 @@
         \__pxtfg_frontmatter_render:n {full}
       }
   }
-% A document with a TOC prints only the card/licence/CAT summary ahead of it.
+% Keep the TFG work card, licence and CAT summary on a preliminary
+% page of their own. The TOC starts on the following page.
 \cs_new_protected:Npn \__pxtfg_auto_frontmatter:
   {
     \bool_if:NF \g__pxtfg_frontmatter_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
         \bool_if:NTF \l_pxdoc_usetoc_bool
-          {\__pxtfg_frontmatter_render:n {pre-toc}}
+          {
+            \__pxtfg_frontmatter_render:n {pre-toc}
+            \bool_if:NT \l__pxtfg_card_bool {\clearpage}
+          }
           {\__pxtfg_frontmatter_render:n {full}}
       }
   }
