@@ -141,7 +141,7 @@ Use `default` for the standard `PRP`, `UML`, `SRC`, `TAB`, `LST` bundle; add opt
 \documentclass[CAT,default,DIA,UMLconfig={maincolor=red}]{P3CTeX}
 ```
 
-`DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, and `MEM` remain opt-in. Choose modules at class loading, not through a later `\PECTeXconfig` call. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
+`DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, and `MEM` remain opt-in. Choose modules in `\documentclass` or pass module keys through `\PECTeXconfig` in a shared/document preamble before `\begin{document}`. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
 
 Bibliography is optional. Configure it with one key, typically in your subject's preamble:
 
