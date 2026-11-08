@@ -1,0 +1,11 @@
+\documentclass[ES,AI,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{ai-config={statement={Colaboración con IA declarada en términos propios.},toc=false}}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFaiTitle} {Declaración\space{}de\space{}uso\space{}de\space{}IA}
+  {\errmessage{The AI disclosure was not localized to Spanish}}
+\ExplSyntaxOff
+\begin{document}
+La declaración se imprime sin bibliografía ni anexos.
+\pxAIref{GPT 6.1 Terra}{Revisión de la estructura.}
+  <fixtures/pxAI.response.txt>.
+\end{document}

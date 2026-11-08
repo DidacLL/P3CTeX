@@ -1,0 +1,15 @@
+\documentclass[
+  CAT,AI,bibliography={fixtures/pxBibliography.references},no-cover,no-toc
+]{P3CTeX}
+\PECTeXconfig{ai-config={statement={He emprat eines d'IA per revisar l'estructura del document i he verificat les propostes.}}}
+\begin{document}
+\section{Exercici}
+He consultat una eina per ordenar les idees
+\pxAIref{GPT 6.1 Terra}{Proposta d'estructura i revisió posterior feta per l'autor.}
+  [Organitza aquests punts en un esquema.]
+  <fixtures/pxAI.response.txt>.
+També he utilitzat una eina per detectar errades
+\pxAIref{Una altra eina}{Correcció de faltes d'ortografia.}
+  [Revisa només l'ortografia del fragment.].
+\cite{p3ctex-demo}
+\end{document}

@@ -1,0 +1,11 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{pxAI}
+\ExplSyntaxOn
+\str_if_eq:eeF {\pxDEFaiTitle} {AI\space{}assistance\space{}disclosure}
+  {\errmessage{Independent AI package did not select English text}}
+\ExplSyntaxOff
+\begin{document}
+An ordinary article can load the module independently
+\pxAIref{An AI tool}{Summarized a technical passage.}.
+\end{document}

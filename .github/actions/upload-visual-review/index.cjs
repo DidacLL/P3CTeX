@@ -8,8 +8,8 @@ async function main() {
   const files = fs.readdirSync(dir)
     .filter(name => name.endsWith('.pdf'))
     .map(name => path.join(dir, name));
-  if (files.length !== 7) {
-    throw new Error('Expected seven review PDFs; found ' + files.length);
+  if (files.length !== 9) {
+    throw new Error('Expected nine review PDFs; found ' + files.length);
   }
   const client = new DefaultArtifactClient();
   const result = await client.uploadArtifact(

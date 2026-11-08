@@ -9,7 +9,7 @@ pdf_less=0
 skipped=0
 export TEXINPUTS=".:/work/tex/latex//:/work/tex/code//:"
 case "$suite" in
-  core) patterns="P3CTeX*.tex pxCORE*.tex pxGDX*.tex pxPRP*.tex pxORL*.tex pxTAB*.tex pxUML*.tex pxSRC*.tex" ;;
+  core) patterns="P3CTeX*.tex pxCORE*.tex pxGDX*.tex pxPRP*.tex pxORL*.tex pxTAB*.tex pxUML*.tex pxSRC*.tex pxAI*.tex" ;;
   diagrams) patterns="pxDIA*.tex" ;;
   listings) patterns="pxLST*.tex" ;;
   pmcalc) patterns="pxPM*.tex pxCALC*.tex" ;;
@@ -37,7 +37,7 @@ run_document() {
       ok=0
       break
     fi
-    if [[ "$pass" -eq 1 && "$name" == P3CTeX.bibliography-*.test ]] && grep -Fq '\bibdata' "$out/$name.aux"; then
+    if [[ "$pass" -eq 1 && ( "$name" == P3CTeX.bibliography-*.test || "$name" == P3CTeX.ai-*.test ) ]] && grep -Fq '\bibdata' "$out/$name.aux"; then
       if ! (cd "$out" && BIBINPUTS="/work/tex/tests//:" bibtex "$name" > bibtex.log 2>&1); then
         echo "FAIL $relative (BibTeX)"
         tail -n 30 "$out/bibtex.log" || true
@@ -66,6 +66,81 @@ run_document() {
     if grep -Fq '\contentsline {chapter}{Referències}' "$out/$name.aux" ||
        grep -Fq '\contentsline {section}{Referències}' "$out/$name.aux"; then
       echo "FAIL $relative (bibliography-toc=false ignored by MEM)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-bibliography.test" ]]; then
+    bibline="$(grep -nF '\contentsline {section}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    ailine="$(grep -nF '\contentsline {section}{Declaració' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    if [[ -z "$bibline" || -z "$ailine" ]] ||
+       ! (( bibline < ailine )) ||
+       grep -Fq '\contentsline {section}{Annex' "$out/$name.aux"; then
+      echo "FAIL $relative (AI + bibliography must not print ANX responses)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-full-no-bib.test" ]]; then
+    if grep -Fq '\bibdata{' "$out/$name.aux" ||
+       ! grep -Fq '\contentsline {section}{Annex' "$out/$name.aux" ||
+       ! grep -Fq '\contentsline {section}{Declaració' "$out/$name.aux"; then
+      echo "FAIL $relative (AI full without bibliography must print annex and disclosure only)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-full.test" ]]; then
+    annexline="$(grep -nF '\contentsline {section}{Annex' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    bibline="$(grep -nF '\contentsline {section}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    ailine="$(grep -nF '\contentsline {section}{Declaració' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    if [[ -z "$annexline" || -z "$bibline" || -z "$ailine" ]] ||
+       ! (( annexline < bibline && bibline < ailine )); then
+      echo "FAIL $relative (ANX -> bibliography -> AI disclosure ordering)"
+      grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-mem.test" ]]; then
+    annexline="$(grep -nF '\contentsline {chapter}{Annex' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    bibline="$(grep -nF '\contentsline {chapter}{Referències}' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    ailine="$(grep -nF '\contentsline {chapter}{Declaració' "$out/$name.aux" | head -n1 | cut -d: -f1)"
+    if [[ -z "$annexline" || -z "$bibline" || -z "$ailine" ]] ||
+       ! (( annexline < bibline && bibline < ailine )); then
+      echo "FAIL $relative (MEM ANX -> bibliography -> AI disclosure ordering)"
+      grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-mem-no-anx.test" ]]; then
+    if ! grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux" ||
+       grep -Fq '\contentsline {chapter}{Annex' "$out/$name.aux"; then
+      echo "FAIL $relative (MEM must honor explicit ANX opt-in)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-unused.test" ]]; then
+    if grep -Fq '\contentsline {section}{Declaració' "$out/$name.aux" ||
+       grep -Fq '\contentsline {chapter}{Declaració' "$out/$name.aux"; then
+      echo "FAIL $relative (AI key alone must not print a declaration)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-statement-only.test" ]]; then
+    if ! grep -Fq '\contentsline {section}{Declaració' "$out/$name.aux"; then
+      echo "FAIL $relative (explicit disclosure text must print without AI references)"
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-annexes.test" ]]; then
+    if ! grep -Fq '\contentsline {section}{Anexo' "$out/$name.aux" ||
+       ! grep -Fq '\contentsline {section}{Declaración' "$out/$name.aux"; then
+      echo "FAIL $relative (AI + ANX must print the disclosure and response annex)"
+      grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
+      ok=0
+    fi
+  fi
+  if ((ok==1)) && [[ "$name" == "P3CTeX.ai-no-bib.test" ]]; then
+    if grep -Fq "\contentsline {section}{Declaración" "$out/$name.aux" ||
+       grep -Fq "\contentsline {section}{Anexo" "$out/$name.aux"; then
+      echo "FAIL $relative (AI toc=false ignored)"
       ok=0
     fi
   fi

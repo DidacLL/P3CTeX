@@ -1,0 +1,15 @@
+\documentclass[CAT,ai-full,no-cover,no-toc]{P3CTeX}
+% Full AI disclosure is not coupled to the existence or path of a .bib file.
+\ExplSyntaxOn
+\bool_if:NF \l_pxcore_ai_use_bool
+  {\errmessage{ai-full must enable AI}}
+\bool_if:NF \l_pxcore_anx_use_bool
+  {\errmessage{ai-full must enable ANX}}
+\ExplSyntaxOff
+\begin{document}
+\section{Activitat}
+He revisat el resultat suggerit
+\pxAIref{GPT 6.1 Terra}
+  {Contrast d'una proposta revisada per l'estudiant}
+  <fixtures/pxAI.response.txt>.
+\end{document}

@@ -1,0 +1,48 @@
+% Optional disclosure of AI-assisted work in P3CTeX documents.
+% Public API: \pxAIsetup{statement=...,toc=true|false}
+% \pxAIref{tool}{use}[prompt]<plain-text response path>
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3,xparse,hyperref,fvextra}
+\ProvidesExplPackage{pxAI}{2026/11/08}{0.1}
+  {Optional AI assistance disclosure and linked response annex}
+
+% P3CTeX initializes pxTXT before pxCORE loads this module. When loaded
+% independently, reuse the same table and respect the current babel language.
+\cs_if_exist:NF \pxDEFaiTitle
+  {
+    \file_input:n {pxTXT.code.tex}
+    \cs_if_exist:NT \languagename
+      {
+        \str_case:en {\languagename}
+          {
+            {spanish}{\_pxcore_set_language_spanish}
+            {english}{\_pxcore_set_language_english}
+          }
+      }
+  }
+\file_input:n {pxAI.code.tex}
+
+\NewDocumentCommand{\pxAIsetup}{m}
+  {\keys_set:nn {pxAI} {#1}}
+% babel-spanish can activate < and >. Normalize only while reading the
+% optional path; restore the document catcodes immediately afterwards.
+\NewDocumentCommand{\pxAIref}{}
+  {
+    \group_begin:
+    \char_set_catcode_other:n {60}
+    \char_set_catcode_other:n {62}
+    \__pxai_ref_parse:
+  }
+\NewDocumentCommand{\__pxai_ref_parse:}{m +m O{} D<>{}}
+  {
+    \__pxai_register:nnnn {#1}{#2}{#3}{#4}
+    \group_end:
+  }
+
+% AI response files are queued through pxANX only when its key is selected.
+% The normal order remains annexes -> glossary -> bibliography -> disclosure.
+\AddToHook{enddocument}[pxAI]{\__pxai_print:}
+\DeclareHookRule{enddocument}{pxAI}{after}{pxANX}
+\DeclareHookRule{enddocument}{pxAI}{after}{pxGLS}
+\DeclareHookRule{enddocument}{pxAI}{after}{P3CTeX/bibliography}
+\endinput

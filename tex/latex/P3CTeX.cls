@@ -65,6 +65,13 @@
           {Move module keys to \string\documentclass\space or the preamble configuration.}}
         {\exp_args:NV \pxCOREload \l__pxdoc_runtime_core_tl}
     }
+  % Handles ai-config before AI in one preamble key list.
+  \tl_if_empty:NF \l__pxdoc_ai_pending_tl
+    {\cs_if_exist:NTF \pxAIsetup
+      {\tl_use:N \l__pxdoc_ai_pending_tl
+       \tl_clear:N \l__pxdoc_ai_pending_tl}
+      {\ClassError{P3CTeX}{AI configuration requires AI module}
+        {Enable AI in class or preamble options.}}}
 }
 %% \PECTeXprintCover*
 %% Print the configured pxGDX cover and start the following content on a new page.

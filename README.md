@@ -141,7 +141,7 @@ Use `default` for the standard `PRP`, `UML`, `SRC`, `TAB`, `LST` bundle; add opt
 \documentclass[CAT,default,DIA,UMLconfig={maincolor=red}]{P3CTeX}
 ```
 
-`DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, and `MEM` remain opt-in. Choose modules in `\documentclass` or pass module keys through `\PECTeXconfig` in a shared/document preamble before `\begin{document}`. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
+`DIA`, `CALC`, `PM`, `ANX`, `GLS`, `TFG`, `MEM`, and `AI` remain opt-in. Choose modules in `\documentclass` or pass module keys through `\PECTeXconfig` in a shared/document preamble before `\begin{document}`. Detailed presentation configuration is available through class `cover-config={...}`, `page-config={...}` and `pdf-config={...}` or the corresponding `\PECTeXcover`, `\PECTeXpage` and `\PECTeXpdf` commands.
 
 Bibliography is optional. Configure it with one key, typically in your subject's preamble:
 
@@ -156,6 +156,54 @@ Override only what you need: `bibliography-style=plain`, `bibliography-all=false
 For TFG documents, the licence appears **on the work card** by default, as in the UOC memory template's formal Creative Commons notice, with the appropriate CC logo and hyperlink. For `licence={CC BY-NC-SA 3.0}` the notice identifies *Reconeixement-NoComercial-CompartirIgual 3.0 Espanya*; `CC BY-NC-SA 4.0` is identified as *4.0 Internacional*. It is not a paraphrase of licence permissions or a copy of the full legal code. Use `licence-text={...}` for a custom notice. Neither the work card nor the licence generates a TOC entry. A separate licence page is optional via `\pxTFGsetup{licence-page=true}` or the explicit `\pxTFGlicencepage` command.
 
 Existing subject-owned preambles remain valid. A shortcut declared with `\NewDocumentCommand{\LoadPreamble}{s O{PR} m O{#2}}` can pass `DIA`, `ANX`, `TFG`, `MEM` and other recognized pxCORE module options through `\PECTeXconfig` in the preamble. For example, `\LoadPreamble*[DIA,ANX]{Informe}[Arquitectura]`. This loads optional modules before `\begin{document}`; module loading is not supported after the document has started. Class-independent settings (cover, metadata, bibliography) continue to work in either place.
+
+**Optional AI-use disclosure.** Select `AI` in the class options or a per-document preamble if this activity uses AI assistance. It records what the tool contributed and prints a disclosure at the end of the document, after the bibliography.
+
+~~~latex
+\documentclass[CAT,PR,AI]{P3CTeX}
+\begin{document}
+Aquest fragment ha rebut suport
+\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}[Proposa un esquema].
+\end{document}
+~~~
+
+If a whole document used AI but no passage needs a separate reference, provide a statement instead:
+
+~~~latex
+\PECTeXconfig{ai-config={
+    statement={He utilitzat IA per contrastar algunes idees, i he revisat el resultat.}
+}}
+~~~
+
+The module **does not print a disclosure** when no `\pxAIref` is present and no custom statement was supplied. Selecting `AI` in a shared preamble alone does not claim AI use.
+
+To include the complete responses, also select the existing `ANX` module:
+
+~~~latex
+\documentclass[CAT,PR,AI,ANX]{P3CTeX}
+% The optional <path> is used only when ANX is explicitly selected.
+\pxAIref{GPT 6.1 Terra}{Revisió de l'estructura}
+  [Proposa un esquema]
+  <../ai-responses/structure.txt>
+~~~
+
+`\pxAIref{tool}{how-used}[optional prompt]<optional response path>` always records an inline link and its contribution. The path is ignored without `ANX` and creates no broken link. With `ANX`, the existing numbered annex mechanism inserts response text verbatim **before** the bibliography. The AI disclosure remains after the bibliography. MEM does not implicitly enable AI response annexes merely because its implementation loads the annex package.
+
+Bibliography configuration is independent of AI. Set its file once in the subject preamble, as usual:
+
+~~~latex
+\PECTeXconfig{bibliography={../references}}
+~~~
+
+If you want the complete AI disclosure workflow, `ai-full` is an optional **value-free** preset that enables `AI`, `ANX` and automatic bibliography output **when a bibliography file has been configured**:
+
+~~~latex
+\documentclass[CAT,PR,ai-full]{P3CTeX}
+~~~
+
+It does not accept a bibliography path. Without a configured bibliography file, no bibliography is printed. The straightforward alternatives `AI,ANX` and `AI,bibliography={../references}` remain valid; no extra aliases are needed.
+
+`ai-config={statement={...},toc=false}` works in `\documentclass` or `\PECTeXconfig` in shared and document-specific preambles; later configuration overrides earlier values. The headings and default statement use `pxTXT` localization (CAT, ES, EN). The independent module command `\pxAIsetup` remains available. The existing no-plagiarism declaration is separate and should be consistent with any declared assistance.
 
 For shared configuration, the simplest workflow remains `\input{../SubjectPreamble.tex}`. A subject can define a plain `\newcommand` shortcut for activity-specific metadata without `xparse`, as in `MINPreamble.tex`. That example applies `PR` by default, and permits per-document overrides: `\LoadPreamble[no-cover,no-toc]{PAC1}{Full title}`.
 

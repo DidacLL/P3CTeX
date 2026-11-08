@@ -69,6 +69,8 @@
   {\bool_gset_true:N \g__pxdoc_document_started_bool}
 % Keep graphics options as unexpanded actions until pxGDX is initialized.
 \tl_new:N \l__pxdoc_gdx_pending_tl
+% Keep AI settings until pxCORE has loaded the optional pxAI module.
+\tl_new:N \l__pxdoc_ai_pending_tl
 %% =================================
 %% ===== P3CTeX KEYS DEFINITION ====
 %% =================================
@@ -123,6 +125,22 @@
 		bibliography-all .default:n = true,
 	bibliography-toc .bool_set:N = \l__pxdoc_bib_toc_bool,
 		bibliography-toc .default:n = true,
+	% Optional full-disclosure preset; bibliography file remains configured
+	% exclusively by the independent bibliography key in the subject preamble.
+	ai-full .meta:n = {AI, ANX, bibliography-auto=true},
+	% Like page-config, delayed at class loading and immediate in the preamble.
+	ai-config .code:n =
+	  {
+	    \bool_if:NTF \l__pxdoc_loading_bool
+	      {\tl_put_right:Nn \l__pxdoc_ai_pending_tl
+	        {\pxAIsetup{#1}}}
+	      {
+	        \cs_if_exist:NTF \pxAIsetup
+	          {\pxAIsetup{#1}}
+	          {\tl_put_right:Nn \l__pxdoc_ai_pending_tl
+	            {\pxAIsetup{#1}}}
+	      }
+	  },
 	preamble		.bool_set:N 		=\l_pxdoc_usepreamble_bool,
 		preamble		.initial:n 		=	false,
 		preamble		.default:n 		=	true,
@@ -322,6 +340,15 @@
 \bool_if:NT \l__pxdoc_tfg_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,TFG}}
 \bool_if:NT \l__pxdoc_mem_bool {\tl_put_right:Nn \l__pxdoc_unknown_tl {,MEM}}
 \RequirePackage[\l__pxdoc_unknown_tl]{pxCORE} %% Pass unknown keys to pxCORE
+% Class-level AI configuration follows the optional module load.
+\tl_if_empty:NF \l__pxdoc_ai_pending_tl
+  {
+    \cs_if_exist:NTF \pxAIsetup
+      {\tl_use:N \l__pxdoc_ai_pending_tl
+       \tl_clear:N \l__pxdoc_ai_pending_tl}
+      {\ClassError{P3CTeX}{AI configuration needs the AI module}
+        {Add AI to the \string\documentclass\space options.}}
+  }
 % Load cleveref after optional math modules (pxCALC -> amsmath).
 \RequirePackage{cleveref}
 \pxGDX_config:n { %% Pass P3CTeX / data keys to pxCORE

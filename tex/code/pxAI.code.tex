@@ -1,0 +1,135 @@
+% All records are held until enddocument so the disclosure follows BibTeX.
+\ProvidesExplFile{pxAI.code.tex}{2026/11/08}{0.1}
+  {AI assistance records and disclosure rendering}
+\int_new:N \g__pxai_ref_int
+\seq_new:N \g__pxai_refs_seq
+\tl_new:N \l__pxai_statement_tl
+\bool_new:N \l__pxai_toc_bool
+\keys_define:nn {pxAI}
+  {
+    statement .tl_set:N = \l__pxai_statement_tl,
+    statement .initial:n = {},
+    toc .bool_set:N = \l__pxai_toc_bool,
+    toc .initial:n = true
+  }
+
+% MEM can load pxANX internally even when the ANX class key is off.
+% Honor the user's actual ANX selection, not mere package availability.
+\cs_new_protected:Npn \__pxai_if_annex:n #1
+  {
+    \cs_if_exist:NT \pxAddAnnex
+      {
+        \cs_if_exist:NTF \l_pxcore_anx_use_bool
+          {\bool_if:NT \l_pxcore_anx_use_bool {#1}}
+          {#1} % Explicit independent pxANX loading outside pxCORE.
+      }
+  }
+
+% Keep the supplied text intact; expand only the numeric reference identifier.
+\cs_new_protected:Npn \__pxai_register:nnnn #1#2#3#4
+  {
+    \int_gincr:N \g__pxai_ref_int
+    \seq_gput_right:Nx \g__pxai_refs_seq
+      {
+        \exp_not:N \__pxai_entry:nnnnn
+          {\int_use:N \g__pxai_ref_int}
+          {\exp_not:n {#1}}
+          {\exp_not:n {#2}}
+          {\exp_not:n {#3}}
+          {\exp_not:n {#4}}
+      }
+    % Only pxANX owns annex output; a path without ANX is ignored.
+    \tl_if_blank:nF {#4}
+      {
+        \__pxai_if_annex:n
+          {
+            \exp_args:Ne \__pxai_queue_annex:nnn
+              {\int_use:N \g__pxai_ref_int} {#1} {#4}
+          }
+      }
+    \hyperlink{pxai:ref:\int_use:N \g__pxai_ref_int}
+      {\textsuperscript{\normalfont[AI-\int_use:N \g__pxai_ref_int]}}
+  }
+
+\cs_new_protected:Npn \__pxai_heading:n #1
+  {
+    \cs_if_exist:NTF \chapter
+      {
+        \chapter*{#1}
+        \bool_if:NT \l__pxai_toc_bool
+          {\phantomsection\addcontentsline{toc}{chapter}{#1}}
+      }
+      {
+        \section*{#1}
+        \bool_if:NT \l__pxai_toc_bool
+          {\phantomsection\addcontentsline{toc}{section}{#1}}
+      }
+  }
+
+\cs_new_protected:Npn \__pxai_entry:nnnnn #1#2#3#4#5
+  {
+    \par\medskip
+    \noindent\hypertarget{pxai:ref:#1}{}
+    \textbf{[AI-#1]~#2}\par
+    \noindent #3\par
+    \tl_if_blank:nF {#4}
+      {\noindent\textit{\pxDEFaiPrompt{}:}~#4\par}
+    \tl_if_blank:nF {#5}
+      {
+        \__pxai_if_annex:n
+          {
+            \noindent
+            \hyperlink{pxai:annex:#1}{\pxDEFaiFullResponse}
+            \par
+          }
+      }
+  }
+
+% Reuse the existing pxANX deferred annex queue, numbering, and TOC style.
+% These annexes are printed before bibliography by pxANX's existing hook.
+\cs_new_protected:Npn \__pxai_queue_annex:nnn #1#2#3
+  {
+    \bool_if:NTF \l__pxai_toc_bool
+      {\__pxai_add_annex:nnnn {#1}{#2}{#3}{true}}
+      {\__pxai_add_annex:nnnn {#1}{#2}{#3}{false}}
+  }
+\cs_new_protected:Npn \__pxai_add_annex:nnnn #1#2#3#4
+  {
+    \pxAddAnnex[name={\pxDEFaiAnnex},toc=#4]
+      {[AI-#1]~#2}
+      {
+        \hypertarget{pxai:annex:#1}{}
+        \IfFileExists{#3}
+          {
+            \VerbatimInput[
+              breaklines=true,
+              breakanywhere=true,
+              fontsize=\small
+            ]{#3}
+          }
+          {
+            \PackageError{pxAI}{AI response file not found: #3}
+              {The path must be valid relative to the compiling document.}
+          }
+      }
+  }
+
+% Loading AI does not itself assert that AI was used.
+% A custom statement may legitimately disclose collaboration without footnotes.
+\cs_new_protected:Npn \__pxai_print:
+  {
+    \tl_if_blank:VTF \l__pxai_statement_tl
+      {\int_compare:nNnT {\g__pxai_ref_int} > {0}
+        {\__pxai_print_content:}}
+      {\__pxai_print_content:}
+  }
+\cs_new_protected:Npn \__pxai_print_content:
+  {
+    \clearpage
+    \__pxai_heading:n {\pxDEFaiTitle}
+    \tl_if_blank:VTF \l__pxai_statement_tl
+      {\pxDEFaiStatement}
+      {\tl_use:N \l__pxai_statement_tl}
+    \seq_map_inline:Nn \g__pxai_refs_seq {##1}
+  }
+\endinput
