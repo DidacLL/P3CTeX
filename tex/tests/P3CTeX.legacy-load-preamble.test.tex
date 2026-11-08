@@ -1,0 +1,16 @@
+% Existing \LoadPreamble optional keys must work without \PassOptionsToClass.
+\input{fixtures/pxLegacyTFG.preamble.tex}
+\LoadPreamble*[diagrams-config={maincolor=blue},DIA,ANX,no-cover,no-toc]
+  {Informe}[Arquitectura del sistema]
+\ExplSyntaxOn
+\cs_if_exist:NF \pxDiagramSetup
+  {\errmessage{DIA requested by LoadPreamble was not loaded}}
+\cs_if_exist:NF \pxAddAnnex
+  {\errmessage{ANX requested by LoadPreamble was not loaded}}
+\tl_if_eq:NnF \l__pxdiag_maincolor_tl {blue}
+  {\errmessage{DIA configuration from LoadPreamble was lost}}
+\ExplSyntaxOff
+\begin{document}
+\section{Result}
+The existing preamble is accepted and its modules are loaded.
+\end{document}
