@@ -1,0 +1,21 @@
+\documentclass[CAT,TFG,no-cover,no-toc]{P3CTeX}
+\PECTeXconfig{data={student={Example Student},
+  grade={Enginyeria Informàtica},subj-fullname={Projecte},
+  subj-shortname={TFG},ca-fullname={Informe},ca-shortname={TFG}}}
+\pxTFGsetup{
+  tutor={Example tutor},
+  licence={CC BY-NC-SA 3.0},
+  abstracts=false
+}
+\ExplSyntaxOn
+\bool_if:NT \l__pxtfg_licence_bool
+  {\errmessage{Separate TFG licence page must be opt-in}}
+\ExplSyntaxOff
+\begin{document}
+% With short metadata the card and the beginning of the document fit page 1.
+\ifnum\value{page}>1
+  \errmessage{TFG licence added an unwanted preliminary page}
+\fi
+\section{Introducció}
+La llicència s'ha integrat a la fitxa del treball.
+\end{document}

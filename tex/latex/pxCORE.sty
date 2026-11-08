@@ -84,6 +84,13 @@
 \NewDocumentCommand{\pxCOREsetup}{m}
   { \keys_set:nn { pxCORE } { #1 } }
 
+% Class adapter for late module selection in a document preamble.
+% Apply the whole key list before loading any new package (order independent).
+% Ordinary \pxCOREsetup intentionally remains state-only for compatibility.
+\NewDocumentCommand{\pxCOREload}{m}
+  {\keys_set:nn {pxCORE} {#1}\__pxcore_load_selected:}
+\@onlypreamble\pxCOREload
+
 % Branch on pxCORE debug flag (set via [debug] or \pxCOREsetup{debug=<bool>}).
 %% \pxCOREIfDebugTF{<true code>}{<false code>}
 %% Branch on the current pxCORE debug flag.

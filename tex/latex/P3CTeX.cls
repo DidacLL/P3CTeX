@@ -52,9 +52,20 @@
 %% ===== PCKG PUBLIC LaTeX2e API ===
 %% =================================
 %% \PECTeXconfig{<key=value,...>}
-%% Apply P3CTeX class keys after loading; accepts the same keys as the P3CTeX key family.
-%% #1 - comma-separated class configuration.
-\NewDocumentCommand{\PECTeXconfig}{+m}{\keys_set:nn {P3CTeX}{#1}}
+%% Apply class settings immediately. Known pxCORE module keys are also
+%% accepted in the preamble (including those forwarded by \LoadPreamble).
+%% Batch the module options first, then require newly selected packages.
+\NewDocumentCommand{\PECTeXconfig}{+m}{
+  \tl_clear:N \l__pxdoc_runtime_core_tl
+  \keys_set:nn {P3CTeX}{#1}
+  \tl_if_empty:NF \l__pxdoc_runtime_core_tl
+    {
+      \bool_if:NTF \g__pxdoc_document_started_bool
+        {\ClassError{P3CTeX}{Modules can only be loaded in the preamble}
+          {Move module keys to \string\documentclass\space or the preamble configuration.}}
+        {\exp_args:NV \pxCOREload \l__pxdoc_runtime_core_tl}
+    }
+}
 %% \PECTeXprintCover*
 %% Print the configured pxGDX cover and start the following content on a new page.
 %% * - enable the no-plagiarism text in the cover before rendering.

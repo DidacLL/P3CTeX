@@ -69,6 +69,16 @@ run_document() {
       ok=0
     fi
   fi
+  if ((ok==1)) && [[ "$name" == P3CTeX.TFG-licence-*.test ]]; then
+    # UOC preliminary work cards and licences are not index sections.
+    if grep -Fq '\contentsline {section}{Fitxa' "$out/$name.aux" ||
+       grep -Fq '\contentsline {chapter}{Fitxa' "$out/$name.aux" ||
+       grep -Fq '\contentsline {section}{Llicència' "$out/$name.aux" ||
+       grep -Fq '\contentsline {chapter}{Llicència' "$out/$name.aux"; then
+      echo "FAIL $relative (TFG work card/licence unexpectedly added to TOC)"
+      ok=0
+    fi
+  fi
   if ((ok==1)) && [[ "$kind" == "document" && ! -s "$out/$name.pdf" ]]; then
     echo "FAIL $relative (expected PDF not produced)"
     ok=0
