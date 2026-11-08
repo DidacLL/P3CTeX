@@ -112,6 +112,7 @@ run_document() {
     if ! grep -Fq '\contentsline {section}{Anexo' "$out/$name.aux" ||
        ! grep -Fq '\contentsline {section}{Declaración' "$out/$name.aux"; then
       echo "FAIL $relative (ai-annexes wrapper must print both entries)"
+      grep -F 'contentsline' "$out/$name.aux" | tail -n 12 || true
       ok=0
     fi
   fi
