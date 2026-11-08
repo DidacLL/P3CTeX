@@ -114,7 +114,16 @@
       }
   }
 
+% Loading AI does not itself assert that AI was used.
+% A custom statement may legitimately disclose collaboration without footnotes.
 \cs_new_protected:Npn \__pxai_print:
+  {
+    \tl_if_blank:VTF \l__pxai_statement_tl
+      {\int_compare:nNnT {\g__pxai_ref_int} > {0}
+        {\__pxai_print_content:}}
+      {\__pxai_print_content:}
+  }
+\cs_new_protected:Npn \__pxai_print_content:
   {
     \clearpage
     \__pxai_heading:n {\pxDEFaiTitle}
