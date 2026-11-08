@@ -122,8 +122,8 @@
 		bibliography-toc .default:n = true,
 	% Student-friendly load-time combinations; never load modules at runtime.
 	ai-annexes .meta:n = {AI, ANX},
-	ai-bibliography .meta:n = {AI, bibliography={#1}},
-	ai-full .meta:n = {AI, ANX, bibliography={#1}},
+	ai-bibliography .meta:n = {AI, bibliography={#1}, bibliography-auto=true},
+	ai-full .meta:n = {AI, ANX, bibliography={#1}, bibliography-auto=true},
 	% Like page-config, delayed at class loading and immediate in the preamble.
 	ai-config .code:n =
 	  {
