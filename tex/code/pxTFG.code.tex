@@ -170,10 +170,9 @@
           {\noindent\tl_use:N \l__pxtfg_licence_text_tl\par}
       }
   }
-% Work card, Catalan summary and licence form one clearly defined layout.
-% In 'dedicated' mode, the flexible space pushes the licence to page bottom.
+% One work-card layout. The licence remains on the same dedicated page.
 \bool_new:N \g__pxtfg_card_printed_bool
-\cs_new_protected:Npn \__pxtfg_card_render:n #1
+\cs_new_protected:Npn \__pxtfg_card_render:
   {
     \section*{\pxDEFtfgworkcard}
     \noindent
@@ -191,31 +190,27 @@
       \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
     \end{tabular}
     \par
-    \str_if_eq:nnT {#1} {dedicated} {\__pxtfg_cat_summary:}
+    \__pxtfg_cat_summary:
     \bool_if:NF \l__pxtfg_licence_bool
       {
         \tl_if_blank:VF \l__pxtfg_licence_tl
           {
-            \str_if_eq:nnTF {#1} {dedicated}
-              {\vspace{\fill}}
-              {\medskip}
+            \vspace{\fill}
             \noindent\__pxtfg_licence_content:
           }
       }
-    \par\bigskip
   }
 
-% Print only once, whether called automatically or by \pxTFGworkcard.
-\cs_new_protected:Npn \__pxtfg_card:n #1
+% The public work-card command and automatic front matter use this same page.
+\cs_new_protected:Npn \__pxtfg_card:
   {
     \bool_if:NF \g__pxtfg_card_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_card_printed_bool
-        \__pxtfg_card_render:n {#1}
+        \__pxtfg_card_render:
+        \clearpage
       }
   }
-\cs_new_protected:Npn \__pxtfg_card:
-  {\__pxtfg_card:n {inline}}
 
 %% Cover detail content uses the cover's own width/alignment, not negative offsets.
 %% Empty optional fields contribute no empty headings or fixed vertical gaps.
@@ -268,34 +263,21 @@
       }
   }
 
-% One front-matter flow: no separate flags or duplicate rendering paths.
-% 'dedicated' is used only for automatic TFG output with a TOC.
+% Print preliminary material once. The card always occupies its own page.
+% Non-Catalan abstracts follow the TOC, or the card when the TOC is disabled.
 \bool_new:N \g__pxtfg_frontmatter_printed_bool
-\cs_new_protected:Npn \__pxtfg_frontmatter:n #1
+\cs_new_protected:Npn \__pxtfg_frontmatter:
   {
     \bool_if:NF \g__pxtfg_frontmatter_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
         \bool_if:NT \l__pxtfg_licence_bool {\__pxtfg_licence_page:}
-        \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:n {#1}}
-        \str_if_eq:nnTF {#1} {dedicated}
-          {
-            \bool_if:NF \l__pxtfg_card_bool {\__pxtfg_cat_summary:}
-            \bool_if:NT \l__pxtfg_card_bool {\clearpage}
-          }
-          {
-            \__pxtfg_cat_summary:
-            \__pxtfg_other_abstracts:
-          }
+        \bool_if:NTF \l__pxtfg_card_bool
+          {\__pxtfg_card:}
+          {\__pxtfg_cat_summary:}
+        \bool_if:NF \l_pxdoc_usetoc_bool
+          {\__pxtfg_other_abstracts:}
       }
-  }
-\cs_new_protected:Npn \__pxtfg_frontmatter:
-  {\__pxtfg_frontmatter:n {inline}}
-\cs_new_protected:Npn \__pxtfg_auto_frontmatter:
-  {
-    \bool_if:NTF \l_pxdoc_usetoc_bool
-      {\__pxtfg_frontmatter:n {dedicated}}
-      {\__pxtfg_frontmatter:n {inline}}
   }
 \cs_new_protected:Npn \__pxtfg_auto_after_toc:
   {
