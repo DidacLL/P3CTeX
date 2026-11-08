@@ -1,0 +1,15 @@
+% Regression fixture for a real shared preamble owning \documentclass.
+\documentclass[PR,CAT,default,TFG]{P3CTeX}
+\NewDocumentCommand{\LoadPreamble}{s O{PR} m O{#2}}{
+  \PECTeXconfig{
+    data={student={Regression Student},grade={Software Engineering},
+      subj-fullname={Final Project},subj-shortname={TFG},
+      ca-fullname={#4},ca-shortname={#3}},
+    no-plagi=false,bibliography-auto=false,
+    #2
+  }
+  \IfBooleanT{#1}{\PECTeXconfig{bibliography-auto=false}}
+  \pxTFGsetup{tutor={Example supervisor},credits={12},
+    licence={CC BY-NC-SA 3.0}}
+}
+\endinput
