@@ -1,68 +1,29 @@
-\ProvidesExplFile{pxTFG.code.tex}{2026/11/02}{v0.4}
-  {TFG presentation, information sheet and multilingual abstracts}
-% Metadata and licence internals belong here; public commands live in pxTFG.sty.
-\keys_define:nn { pxTFG }
-{
-  tutor    .tl_set:N = \l__pxtfg_tutor_tl,
-  tutor    .initial:n = {},
-  pra      .tl_set:N = \l__pxtfg_pra_tl,
-  pra      .initial:n = {},
-  area     .tl_set:N = \l__pxtfg_area_tl,
-  area     .initial:n = {},
-  credits  .tl_set:N = \l__pxtfg_credits_tl,
-  credits  .initial:n = {},
-  keywords .tl_set:N = \l__pxtfg_keywords_tl,
-  keywords .initial:n = {},
-  licence  .tl_set:N = \l__pxtfg_licence_tl,
-  licence  .initial:n = {},
-  licence-text .tl_set:N = \l__pxtfg_licence_text_tl,
-  licence-text .initial:n = {},
-  licence-icon .tl_set:N = \l__pxtfg_licence_icon_tl,
-  licence-icon .initial:n = {}
-}
+\ProvidesExplFile{pxTFG.code.tex}{2026/11/08}{v0.5}
+  {TFG work card, licence and abstracts}
 
-% Manual licence page: reuse bundled CC artwork for recognised codes.
-% Other licence descriptions are printed without an assumed logo or legal text.
-\cs_new_protected:Npn \__pxtfg_licence_artwork:
-  {
-    \tl_set:Nx \l_tmpa_tl {\tl_lower_case:n {\tl_to_str:V \l__pxtfg_licence_tl}}
-    \regex_replace_all:nnN {[^a-z]} {} \l_tmpa_tl
-    \str_case:enT {\tl_use:N \l_tmpa_tl}
-      {{ccby}{}{ccbync}{}{ccbyncnd}{}{ccbyncsa}{}{ccbynd}{}{ccbysa}{}}
-      {
-        \clist_map_inline:nn {licenc/,../code/licenc/,tex/code/licenc/}
-          {
-            \tl_set:Nx \l_tmpb_tl {##1\l_tmpa_tl.png}
-            \exp_args:NV \file_if_exist:nT \l_tmpb_tl
-              {\includegraphics[height=1cm,keepaspectratio]{\l_tmpb_tl}\par\medskip
-               \clist_map_break:}
-          }
-      }
-  }
-\cs_new_protected:Npn \__pxtfg_licence_page:
-  {
-    \tl_if_blank:VF \l__pxtfg_licence_tl
-      {
-        \clearpage\thispagestyle{empty}
-        \group_begin:
-        \parindent=0pt\vspace*{\fill}
-        \begin{minipage}{.85\linewidth}
-          \__pxtfg_licence_content:
-        \end{minipage}
-        \par\vspace*{\fill}
-        \group_end:\clearpage
-      }
-  }
-
-
+% ================================================================
+% Configuration
+% ================================================================
 \bool_new:N \l__pxtfg_auto_bool
 \bool_new:N \l__pxtfg_card_bool
 \bool_new:N \l__pxtfg_abstracts_bool
 \bool_new:N \l__pxtfg_licence_bool
+\bool_new:N \g__pxtfg_card_printed_bool
+\bool_new:N \g__pxtfg_frontmatter_printed_bool
+\prop_new:N \g__pxtfg_abstracts_prop
+
 \keys_define:nn {pxTFG}
   {
+    tutor        .tl_set:N = \l__pxtfg_tutor_tl,
+    pra          .tl_set:N = \l__pxtfg_pra_tl,
+    area         .tl_set:N = \l__pxtfg_area_tl,
+    credits      .tl_set:N = \l__pxtfg_credits_tl,
+    keywords     .tl_set:N = \l__pxtfg_keywords_tl,
+    licence      .tl_set:N = \l__pxtfg_licence_tl,
+    licence-text .tl_set:N = \l__pxtfg_licence_text_tl,
+    licence-icon .tl_set:N = \l__pxtfg_licence_icon_tl,
     print .choice:,
-    print / auto .code:n = {\bool_set_true:N \l__pxtfg_auto_bool},
+    print / auto   .code:n = {\bool_set_true:N \l__pxtfg_auto_bool},
     print / manual .code:n = {\bool_set_false:N \l__pxtfg_auto_bool},
     print .initial:n = auto,
     workcard .bool_set:N = \l__pxtfg_card_bool,
@@ -72,85 +33,87 @@
     licence-page .bool_set:N = \l__pxtfg_licence_bool,
     licence-page .initial:n = false
   }
-\prop_new:N \g__pxtfg_abstracts_prop
 
-\cs_new_protected:Npn \__pxtfg_heading:n #1
+% ================================================================
+% Licence: CC badge and formal notice
+% ================================================================
+\cs_new_protected:Npn \__pxtfg_licence_artwork:
   {
-    \cs_if_exist:NTF \chapter
-      {\chapter*{#1}\cs_if_exist:NT \phantomsection {\phantomsection}\addcontentsline{toc}{chapter}{#1}}
-      {\section*{#1}\cs_if_exist:NT \phantomsection {\phantomsection}\addcontentsline{toc}{section}{#1}}
+    % A recognised CC code selects the bundled PNG; custom licences do not.
+    \tl_set:Nx \l_tmpa_tl
+      {\tl_lower_case:n {\tl_to_str:V \l__pxtfg_licence_tl}}
+    \regex_replace_all:nnN {[^a-z]} {} \l_tmpa_tl
+    \str_case:enT {\tl_use:N \l_tmpa_tl}
+      {{ccby}{}{ccbync}{}{ccbyncnd}{}{ccbyncsa}{}{ccbynd}{}{ccbysa}{}}
+      {
+        \clist_map_inline:nn {licenc/,../code/licenc/,tex/code/licenc/}
+          {
+            \tl_set:Nx \l_tmpb_tl {##1\l_tmpa_tl.png}
+            \exp_args:NV \file_if_exist:nT \l_tmpb_tl
+              {
+                \includegraphics[height=1cm,keepaspectratio]{\l_tmpb_tl}
+                \par\medskip
+                \clist_map_break:
+              }
+          }
+      }
   }
-\cs_new:Npn \__pxtfg_row:nn #1#2
-  {\textbf{#1} & #2 \\[0.65ex]}
 
-% Use the same UOC-style licence notice on the card or on an explicitly
-% requested separate page. The template uses a CC logo and the formal notice,
-% not a paraphrase of licence permissions.
-\cs_new_protected:Npn \__pxtfg_cc_intro:
+\cs_new:Npn \__pxtfg_cc_text:n #1
   {
     \str_case:enF {\languagename}
       {
-        {catalan}{Aquesta\space obra\space està\space subjecta\space a
-          \space una\space llicència\space de\space}
-        {spanish}{Esta\space obra\space está\space sujeta\space a
-          \space una\space licencia\space de\space}
-        {english}{This\space work\space is\space licensed\space under\space}
+        {catalan}
+          {
+            Aquesta\space obra\space està\space subjecta\space a\space
+            una\space llicència\space de\space
+            Reconeixement-NoComercial-CompartirIgual\space #1\space
+            \str_if_eq:nnTF {#1}{3.0}{Espanya}{Internacional}
+            \space de\space Creative\space Commons
+          }
+        {spanish}
+          {
+            Esta\space obra\space está\space sujeta\space a\space
+            una\space licencia\space de\space
+            Reconocimiento-NoComercial-CompartirIgual\space #1\space
+            \str_if_eq:nnTF {#1}{3.0}{España}{Internacional}
+            \space de\space Creative\space Commons
+          }
+        {english}
+          {
+            This\space work\space is\space licensed\space under\space
+            Attribution-NonCommercial-ShareAlike\space #1\space
+            \str_if_eq:nnTF {#1}{3.0}{Spain}{International}
+            \space by\space Creative\space Commons
+          }
       }
-      {Aquesta\space obra\space està\space subjecta\space a
-        \space una\space llicència\space de\space}
+      {Creative\space Commons\space CC\space BY-NC-SA\space #1}
   }
-\cs_new:Npn \__pxtfg_cc_name:
-  {
-    \str_case:enF {\languagename}
-      {
-        {catalan}{Reconeixement-NoComercial-CompartirIgual}
-        {spanish}{Reconocimiento-NoComercial-CompartirIgual}
-        {english}{Attribution-NonCommercial-ShareAlike}
-      }
-      {Reconeixement-NoComercial-CompartirIgual}
-  }
-\cs_new:Npn \__pxtfg_cc_jurisdiction:n #1
-  {
-    \str_if_eq:nnTF {#1} {3.0}
-      {
-        \str_case:enF {\languagename}
-          {{catalan}{Espanya}{spanish}{España}{english}{Spain}}
-          {Espanya}
-      }
-      {
-        \str_case:enF {\languagename}
-          {{catalan}{Internacional}{spanish}{Internacional}{english}{International}}
-          {Internacional}
-      }
-  }
+
 \cs_new_protected:Npn \__pxtfg_cc_notice:nn #1#2
   {
-    \noindent\__pxtfg_cc_intro:
+    \noindent
     \cs_if_exist:NTF \href
       {
-        % Hyperref needs the URI punctuation tokenized as ordinary characters,
-        % not expl3 letter-category ':' (which creates a file: link).
-        \exp_args:Ne \href {\tl_to_str:n {#2}} {
-          \__pxtfg_cc_name:\space #1\space
-          \__pxtfg_cc_jurisdiction:n {#1}\space
-          de\space Creative\space Commons
-        }
+        % Convert expl3 URL punctuation to ordinary characters for hyperref.
+        \exp_args:Ne \href {\tl_to_str:n {#2}}
+          {\__pxtfg_cc_text:n {#1}}
       }
-      {
-        \__pxtfg_cc_name:\space #1\space
-        \__pxtfg_cc_jurisdiction:n {#1}\space
-        de\space Creative\space Commons
-      }
+      {\__pxtfg_cc_text:n {#1}}
     \par
   }
+
 \cs_new_protected:Npn \__pxtfg_licence_content:
   {
     \tl_if_blank:VF \l__pxtfg_licence_tl
       {
         \tl_if_blank:VTF \l__pxtfg_licence_icon_tl
           {\__pxtfg_licence_artwork:}
-          {\includegraphics[height=1cm,keepaspectratio]
-             {\l__pxtfg_licence_icon_tl}\par\medskip}
+          {
+            \includegraphics[height=1cm,keepaspectratio]
+              {\l__pxtfg_licence_icon_tl}
+            \par\medskip
+          }
         \tl_if_blank:VTF \l__pxtfg_licence_text_tl
           {
             \tl_set:Nx \l_tmpa_tl
@@ -170,73 +133,59 @@
           {\noindent\tl_use:N \l__pxtfg_licence_text_tl\par}
       }
   }
-% Work card, Catalan summary and licence form one clearly defined layout.
-% In 'dedicated' mode, the flexible space pushes the licence to page bottom.
-\bool_new:N \g__pxtfg_card_printed_bool
-\cs_new_protected:Npn \__pxtfg_card_render:n #1
-  {
-    \section*{\pxDEFtfgworkcard}
-    \noindent
-    \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
-      \__pxtfg_row:nn {\pxDEFtfgtitle}    {\l__pxdata_subj_name_tl}
-      \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
-      \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
-      \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
-      \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
-      \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
-      \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
-      \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
-      \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
-      \__pxtfg_row:nn {\pxDEFtfgkeywords} {\l__pxtfg_keywords_tl}
-      \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
-    \end{tabular}
-    \par
-    \str_if_eq:nnT {#1} {dedicated} {\__pxtfg_cat_summary:}
-    \bool_if:NF \l__pxtfg_licence_bool
-      {
-        \tl_if_blank:VF \l__pxtfg_licence_tl
-          {
-            \str_if_eq:nnTF {#1} {dedicated}
-              {\vspace{\fill}}
-              {\medskip}
-            \noindent\__pxtfg_licence_content:
-          }
-      }
-    \par\bigskip
-  }
 
-% Print only once, whether called automatically or by \pxTFGworkcard.
-\cs_new_protected:Npn \__pxtfg_card:n #1
+% Retain the explicit separate-licence-page command for existing documents.
+\cs_new_protected:Npn \__pxtfg_licence_page:
   {
-    \bool_if:NF \g__pxtfg_card_printed_bool
+    \tl_if_blank:VF \l__pxtfg_licence_tl
       {
-        \bool_gset_true:N \g__pxtfg_card_printed_bool
-        \__pxtfg_card_render:n {#1}
+        \clearpage
+        \thispagestyle{empty}
+        \group_begin:
+          \parindent=0pt
+          \vspace*{\fill}
+          \begin{minipage}{.85\linewidth}
+            \__pxtfg_licence_content:
+          \end{minipage}
+          \par\vspace*{\fill}
+        \group_end:
+        \clearpage
       }
   }
-\cs_new_protected:Npn \__pxtfg_card:
-  {\__pxtfg_card:n {inline}}
 
-%% Cover detail content uses the cover's own width/alignment, not negative offsets.
-%% Empty optional fields contribute no empty headings or fixed vertical gaps.
-\cs_new_protected:Npn \__pxtfg_cover_row:nN #1#2
-  {\tl_if_blank:VF #2 {\textbf{#1:}~\tl_use:N #2\par}}
-\cs_new_protected:Npn \__pxtfg_cover_details:
-  {\__pxtfg_cover_row:nN {\pxDEFtfgconsultant}\l__pxtfg_tutor_tl
-   \__pxtfg_cover_row:nN {\pxDEFtfgpra}\l__pxtfg_pra_tl
-   \__pxtfg_cover_row:nN {\pxDEFtfgarea}\l__pxtfg_area_tl}
+% ================================================================
+% Abstracts
+% ================================================================
 \cs_new_protected:Npn \__pxtfg_abstract:nn #1#2
-  {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1} {#2}}
+  {\prop_gput:Nnn \g__pxtfg_abstracts_prop {#1}{#2}}
+
+% Chapter headings in MEM, section headings in PR. Both use the TOC.
+\cs_new_protected:Npn \__pxtfg_heading:n #1
+  {
+    \cs_if_exist:NTF \chapter
+      {
+        \chapter*{#1}
+        \cs_if_exist:NT \phantomsection {\phantomsection}
+        \addcontentsline{toc}{chapter}{#1}
+      }
+      {
+        \section*{#1}
+        \cs_if_exist:NT \phantomsection {\phantomsection}
+        \addcontentsline{toc}{section}{#1}
+      }
+  }
 
 \cs_new_protected:Npn \__pxtfg_print_abstract:n #1
   {
     \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
       {
         \__pxtfg_heading:n
-          {\str_case:nn {#1} {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}
-        \tl_use:N \l_tmpa_tl \par
+          {\str_case:nn {#1}
+            {{CAT}{\pxDEFtfgabstractcat}{ES}{\pxDEFtfgabstractes}{EN}{\pxDEFtfgabstracten}}}
+        \tl_use:N \l_tmpa_tl\par
       }
   }
+
 \cs_new_protected:Npn \__pxtfg_abstracts:
   {
     \__pxtfg_print_abstract:n {CAT}
@@ -244,7 +193,6 @@
     \__pxtfg_print_abstract:n {EN}
   }
 
-% Abstracts: CAT shares the work card; ES/EN follow the TOC.
 \cs_new_protected:Npn \__pxtfg_cat_summary:
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
@@ -257,6 +205,7 @@
           }
       }
   }
+
 \cs_new_protected:Npn \__pxtfg_other_abstracts:
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
@@ -268,38 +217,71 @@
       }
   }
 
-% One front-matter flow: no separate flags or duplicate rendering paths.
-% 'dedicated' is used only for automatic TFG output with a TOC.
-\bool_new:N \g__pxtfg_frontmatter_printed_bool
-\cs_new_protected:Npn \__pxtfg_frontmatter:n #1
+% ================================================================
+% TFG work card: one dedicated page, with the licence at the bottom
+% ================================================================
+\cs_new:Npn \__pxtfg_row:nn #1#2
+  {\textbf{#1} & #2 \\[0.65ex]}
+
+\cs_new_protected:Npn \__pxtfg_card:
+  {
+    \bool_if:NF \g__pxtfg_card_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_card_printed_bool
+        \section*{\pxDEFtfgworkcard}
+        \noindent
+        \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
+          \__pxtfg_row:nn {\pxDEFtfgtitle}    {\l__pxdata_subj_name_tl}
+          \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
+          \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
+          \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
+          \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
+          \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
+          \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
+          \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
+          \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
+          \__pxtfg_row:nn {\pxDEFtfgkeywords} {\l__pxtfg_keywords_tl}
+          \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
+        \end{tabular}
+        \par
+        \__pxtfg_cat_summary:
+        \bool_if:NF \l__pxtfg_licence_bool
+          {
+            \tl_if_blank:VF \l__pxtfg_licence_tl
+              {
+                \vspace{\fill}
+                \noindent\__pxtfg_licence_content:
+              }
+          }
+        \clearpage
+      }
+  }
+
+% Optional cover metadata, without empty rows for missing values.
+\cs_new_protected:Npn \__pxtfg_cover_row:nN #1#2
+  {\tl_if_blank:VF #2 {\textbf{#1:}~\tl_use:N #2\par}}
+
+\cs_new_protected:Npn \__pxtfg_cover_details:
+  {
+    \__pxtfg_cover_row:nN {\pxDEFtfgconsultant} \l__pxtfg_tutor_tl
+    \__pxtfg_cover_row:nN {\pxDEFtfgpra} \l__pxtfg_pra_tl
+    \__pxtfg_cover_row:nN {\pxDEFtfgarea} \l__pxtfg_area_tl
+  }
+
+% ================================================================
+% Preliminary sequence
+% ================================================================
+\cs_new_protected:Npn \__pxtfg_frontmatter:
   {
     \bool_if:NF \g__pxtfg_frontmatter_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
         \bool_if:NT \l__pxtfg_licence_bool {\__pxtfg_licence_page:}
-        \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:n {#1}}
-        \str_if_eq:nnTF {#1} {dedicated}
-          {
-            \bool_if:NF \l__pxtfg_card_bool {\__pxtfg_cat_summary:}
-            \bool_if:NT \l__pxtfg_card_bool {\clearpage}
-          }
-          {
-            \__pxtfg_cat_summary:
-            \__pxtfg_other_abstracts:
-          }
+        \bool_if:NTF \l__pxtfg_card_bool
+          {\__pxtfg_card:}
+          {\__pxtfg_cat_summary:}
+        \bool_if:NF \l_pxdoc_usetoc_bool
+          {\__pxtfg_other_abstracts:}
       }
-  }
-\cs_new_protected:Npn \__pxtfg_frontmatter:
-  {\__pxtfg_frontmatter:n {inline}}
-\cs_new_protected:Npn \__pxtfg_auto_frontmatter:
-  {
-    \bool_if:NTF \l_pxdoc_usetoc_bool
-      {\__pxtfg_frontmatter:n {dedicated}}
-      {\__pxtfg_frontmatter:n {inline}}
-  }
-\cs_new_protected:Npn \__pxtfg_auto_after_toc:
-  {
-    \bool_if:NT \g__pxtfg_frontmatter_printed_bool
-      {\bool_if:NT \l_pxdoc_usetoc_bool {\__pxtfg_other_abstracts:}}
   }
 \endinput

@@ -30,18 +30,20 @@ The independent pxANX module owns annexes, and MEM activates it. Annexes are que
 and printed at document end, preserving the main counters. Annex references
 use their own Hyperref destinations and are named for Cleveref when loaded.
 
-`\pxTFGsetup` keeps tutor, PRA, area, credits, keywords, licence and
-presentation options within TFG. Declare CAT/ES/EN summaries separately with
-`\pxTFGabstract{CAT|ES|EN}{...}`. In automatic mode (the default), TFG supplies
-its licence page, project information sheet, Catalan summary and available
-Spanish/English abstracts before the existing class TOC. For explicit placement,
-set `print=manual` and use `\pxTFGfrontmatter` or its individual
-`\pxTFGworkcard`, `\pxTFGabstracts`, `\pxTFGcoverdetails` commands.
-`\pxTFGlicencepage` remains available explicitly and reuses bundled artwork
-for recognized CC codes when present; unrecognized descriptions receive no
-assumed CC artwork. `licence-page=false` excludes it from automatic preliminaries.
-Artwork lookup depends on the source tree or TeX installation exposing
-`tex/code/licenc/`.
+`\pxTFGsetup` keeps tutor, PRA, area, credits, keywords and licence
+configuration within TFG. Declare language summaries with
+`\pxTFGabstract{CAT|ES|EN}{...}`.
+
+The work card occupies its own page: metadata at the top, the optional
+Catalan summary, `\vspace{\fill}`, and the licence at the bottom. The TOC,
+when enabled, starts on the following page; Spanish and English abstracts
+follow the TOC, or the work card when there is no TOC.
+
+Automatic printing is the default. `print=manual` and the existing
+`\pxTFGfrontmatter`, `\pxTFGworkcard`, `\pxTFGabstracts` and
+`\pxTFGcoverdetails` commands allow explicit placement. The separate
+licence-only page remains available through `\pxTFGlicencepage` or
+`licence-page=true`. Bundled CC artwork is used for recognised codes only.
 
 The existing `glossary` option continues to use standard `glossaries`
 entries and prints used entries; MEM adjusts only its heading hierarchy
