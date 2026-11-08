@@ -39,13 +39,6 @@
           }
       }
   }
-\cs_new:Npn \__pxtfg_licence_heading:
-  {
-    \cs_if_exist:NTF \languagename
-      {\str_case:enF {\languagename}
-        {{catalan}{Llicència}{spanish}{Licencia}{english}{Licence}}{Licence}}
-      {Licence}
-  }
 \cs_new_protected:Npn \__pxtfg_licence_page:
   {
     \tl_if_blank:VF \l__pxtfg_licence_tl
@@ -177,47 +170,52 @@
           {\noindent\tl_use:N \l__pxtfg_licence_text_tl\par}
       }
   }
-\cs_new_protected:Npn \__pxtfg_licence_on_card:
+% Work card, Catalan summary and licence form one clearly defined layout.
+% In 'dedicated' mode, the flexible space pushes the licence to page bottom.
+\bool_new:N \g__pxtfg_card_printed_bool
+\cs_new_protected:Npn \__pxtfg_card_render:n #1
   {
-    \tl_if_blank:VF \l__pxtfg_licence_tl
-      {
-        \par\nobreak\medskip\nobreak
-        \__pxtfg_licence_content:
-      }
-  }
-
-\cs_new_protected:Npn \__pxtfg_card_render:
-  {
-    % The work card sits above the TOC, even in MEM documents: a chapter
-    % heading would force a page break and leave the contents elsewhere.
     \section*{\pxDEFtfgworkcard}
+    \noindent
     \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
-      \__pxtfg_row:nn
-        {\pxDEFtfgtitle}{\l__pxdata_subj_name_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgstudent}{\l__pxdata_student_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgdegree}{\l__pxdata_course_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgactivity}{\l__pxdata_activity_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgtutor}{\l__pxtfg_tutor_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgpra}{\l__pxtfg_pra_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgarea}{\l__pxtfg_area_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgcredits}{\l__pxtfg_credits_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
-      \__pxtfg_row:nn
-        {\pxDEFtfgkeywords}{\l__pxtfg_keywords_tl}
-      \__pxtfg_row:nn
-        {\pxDEFtfgdate}{\l__px_date_tl}
+      \__pxtfg_row:nn {\pxDEFtfgtitle}    {\l__pxdata_subj_name_tl}
+      \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
+      \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
+      \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
+      \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
+      \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
+      \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
+      \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
+      \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
+      \__pxtfg_row:nn {\pxDEFtfgkeywords} {\l__pxtfg_keywords_tl}
+      \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
     \end{tabular}
-    \bool_if:NF \l__pxtfg_licence_bool {\__pxtfg_licence_on_card:}
+    \par
+    \str_if_eq:nnT {#1} {dedicated} {\__pxtfg_cat_summary:}
+    \bool_if:NF \l__pxtfg_licence_bool
+      {
+        \tl_if_blank:VF \l__pxtfg_licence_tl
+          {
+            \str_if_eq:nnTF {#1} {dedicated}
+              {\vspace{\fill}}
+              {\medskip}
+            \noindent\__pxtfg_licence_content:
+          }
+      }
     \par\bigskip
   }
+
+% Print only once, whether called automatically or by \pxTFGworkcard.
+\cs_new_protected:Npn \__pxtfg_card:n #1
+  {
+    \bool_if:NF \g__pxtfg_card_printed_bool
+      {
+        \bool_gset_true:N \g__pxtfg_card_printed_bool
+        \__pxtfg_card_render:n {#1}
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_card:
+  {\__pxtfg_card:n {inline}}
 
 %% Cover detail content uses the cover's own width/alignment, not negative offsets.
 %% Empty optional fields contribute no empty headings or fixed vertical gaps.
@@ -246,9 +244,19 @@
     \__pxtfg_print_abstract:n {EN}
   }
 
-% The information sheet retains the Catalan summary. If a TOC is enabled,
-% print the other-language abstracts only after the TOC; their intentional
-% \clearpage commands must not separate the work card from the contents.
+% Abstracts: CAT shares the work card; ES/EN follow the TOC.
+\cs_new_protected:Npn \__pxtfg_cat_summary:
+  {
+    \bool_if:NT \l__pxtfg_abstracts_bool
+      {
+        \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
+          {
+            \par\medskip
+            \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
+            \tl_use:N \l_tmpa_tl\par
+          }
+      }
+  }
 \cs_new_protected:Npn \__pxtfg_other_abstracts:
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
@@ -259,60 +267,39 @@
           {\clearpage\__pxtfg_print_abstract:n {EN}}
       }
   }
-\cs_new_protected:Npn \__pxtfg_frontmatter_render:n #1
-  {
-    \bool_if:NT \l__pxtfg_licence_bool {\pxTFGlicencepage}
-    \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:}
-    \bool_if:NT \l__pxtfg_abstracts_bool
-      {
-        \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
-          {
-            \par\medskip
-            \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
-            \tl_use:N \l_tmpa_tl\par
-          }
-      }
-    \str_if_eq:nnT {#1} {full} {\__pxtfg_other_abstracts:}
-  }
 
-% Automatic and legacy explicit calls must not duplicate preliminary material.
-\bool_new:N \g__pxtfg_card_printed_bool
+% One front-matter flow: no separate flags or duplicate rendering paths.
+% 'dedicated' is used only for automatic TFG output with a TOC.
 \bool_new:N \g__pxtfg_frontmatter_printed_bool
-\cs_new_protected:Npn \__pxtfg_card:
-  {
-    \bool_if:NF \g__pxtfg_card_printed_bool
-      {
-        \bool_gset_true:N \g__pxtfg_card_printed_bool
-        \__pxtfg_card_render:
-      }
-  }
-% Explicit calls and documents without a TOC preserve the full sequence.
-\cs_new_protected:Npn \__pxtfg_frontmatter:
+\cs_new_protected:Npn \__pxtfg_frontmatter:n #1
   {
     \bool_if:NF \g__pxtfg_frontmatter_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
-        \__pxtfg_frontmatter_render:n {full}
-      }
-  }
-% Keep the TFG work card, licence and CAT summary on a preliminary
-% page of their own. The TOC starts on the following page.
-\cs_new_protected:Npn \__pxtfg_auto_frontmatter:
-  {
-    \bool_if:NF \g__pxtfg_frontmatter_printed_bool
-      {
-        \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
-        \bool_if:NTF \l_pxdoc_usetoc_bool
+        \bool_if:NT \l__pxtfg_licence_bool {\__pxtfg_licence_page:}
+        \bool_if:NT \l__pxtfg_card_bool {\__pxtfg_card:n {#1}}
+        \str_if_eq:nnTF {#1} {dedicated}
           {
-            \__pxtfg_frontmatter_render:n {pre-toc}
+            \bool_if:NF \l__pxtfg_card_bool {\__pxtfg_cat_summary:}
             \bool_if:NT \l__pxtfg_card_bool {\clearpage}
           }
-          {\__pxtfg_frontmatter_render:n {full}}
+          {
+            \__pxtfg_cat_summary:
+            \__pxtfg_other_abstracts:
+          }
       }
+  }
+\cs_new_protected:Npn \__pxtfg_frontmatter:
+  {\__pxtfg_frontmatter:n {inline}}
+\cs_new_protected:Npn \__pxtfg_auto_frontmatter:
+  {
+    \bool_if:NTF \l_pxdoc_usetoc_bool
+      {\__pxtfg_frontmatter:n {dedicated}}
+      {\__pxtfg_frontmatter:n {inline}}
   }
 \cs_new_protected:Npn \__pxtfg_auto_after_toc:
   {
     \bool_if:NT \g__pxtfg_frontmatter_printed_bool
-      {\__pxtfg_other_abstracts:}
+      {\bool_if:NT \l_pxdoc_usetoc_bool {\__pxtfg_other_abstracts:}}
   }
 \endinput
