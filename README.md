@@ -185,13 +185,19 @@ To include the complete responses, also select the existing `ANX` module:
 
 `\pxAIref{tool}{how-used}[optional prompt]<optional response path>` always records an inline link and its contribution. The path is ignored without `ANX` and creates no broken link. With `ANX`, the existing numbered annex mechanism inserts response text verbatim **before** the bibliography. The AI disclosure remains after the bibliography. MEM does not implicitly enable AI response annexes merely because its implementation loads the annex package.
 
-For a new document that needs AI disclosure, full responses, and bibliography together, one convenience preset genuinely eliminates repeated setup:
+Bibliography configuration is independent of AI. Set its file once in the subject preamble, as usual:
 
 ~~~latex
-\documentclass[CAT,PR,ai-full={../references}]{P3CTeX}
+\PECTeXconfig{bibliography={../references}}
 ~~~
 
-Otherwise compose the ordinary keys directly, for example `AI,bibliography={../references}` or `AI,ANX`. There are no separate presets for combinations that are already this short.
+If you want the complete AI disclosure workflow, `ai-full` is an optional **value-free** preset that enables `AI`, `ANX` and automatic bibliography output **when a bibliography file has been configured**:
+
+~~~latex
+\documentclass[CAT,PR,ai-full]{P3CTeX}
+~~~
+
+It does not accept a bibliography path. Without a configured bibliography file, no bibliography is printed. The straightforward alternatives `AI,ANX` and `AI,bibliography={../references}` remain valid; no extra aliases are needed.
 
 `ai-config={statement={...},toc=false}` works in `\documentclass` or `\PECTeXconfig` in shared and document-specific preambles; later configuration overrides earlier values. The headings and default statement use `pxTXT` localization (CAT, ES, EN). The independent module command `\pxAIsetup` remains available. The existing no-plagiarism declaration is separate and should be consistent with any declared assistance.
 
