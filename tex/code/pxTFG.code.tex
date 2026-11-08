@@ -49,21 +49,16 @@
 \cs_new_protected:Npn \__pxtfg_licence_page:
   {
     \tl_if_blank:VF \l__pxtfg_licence_tl
-      {\clearpage\thispagestyle{empty}
-       \group_begin:
-       \parindent=0pt\vspace*{\fill}
-       \begin{minipage}{.85\linewidth}
-         \tl_if_blank:VTF \l__pxtfg_licence_icon_tl
-           {\__pxtfg_licence_artwork:}
-           {\includegraphics[height=1cm,keepaspectratio]
-              {\l__pxtfg_licence_icon_tl}\par\medskip}
-         \textbf{\__pxtfg_licence_heading:}\par\smallskip
-         \tl_use:N \l__pxtfg_licence_tl\par
-         \tl_if_blank:VF \l__pxtfg_licence_text_tl
-           {\medskip\tl_use:N \l__pxtfg_licence_text_tl\par}
-       \end{minipage}
-       \par\vspace*{\fill}
-       \group_end:\clearpage}
+      {
+        \clearpage\thispagestyle{empty}
+        \group_begin:
+        \parindent=0pt\vspace*{\fill}
+        \begin{minipage}{.85\linewidth}
+          \__pxtfg_licence_content:
+        \end{minipage}
+        \par\vspace*{\fill}
+        \group_end:\clearpage
+      }
   }
 
 
@@ -82,7 +77,7 @@
     abstracts .bool_set:N = \l__pxtfg_abstracts_bool,
     abstracts .initial:n = true,
     licence-page .bool_set:N = \l__pxtfg_licence_bool,
-    licence-page .initial:n = true
+    licence-page .initial:n = false
   }
 \prop_new:N \g__pxtfg_abstracts_prop
 
@@ -95,10 +90,108 @@
 \cs_new:Npn \__pxtfg_row:nn #1#2
   {\textbf{#1} & #2 \\[0.65ex]}
 
+% Use the same UOC-style licence notice on the card or on an explicitly
+% requested separate page. The template uses a CC logo and the formal notice,
+% not a paraphrase of licence permissions.
+\cs_new_protected:Npn \__pxtfg_cc_intro:
+  {
+    \str_case:enF {\languagename}
+      {
+        {catalan}{Aquesta\space obra\space està\space subjecta\space a
+          \space una\space llicència\space de\space}
+        {spanish}{Esta\space obra\space está\space sujeta\space a
+          \space una\space licencia\space de\space}
+        {english}{This\space work\space is\space licensed\space under\space}
+      }
+      {Aquesta\space obra\space està\space subjecta\space a
+        \space una\space llicència\space de\space}
+  }
+\cs_new:Npn \__pxtfg_cc_name:
+  {
+    \str_case:enF {\languagename}
+      {
+        {catalan}{Reconeixement-NoComercial-CompartirIgual}
+        {spanish}{Reconocimiento-NoComercial-CompartirIgual}
+        {english}{Attribution-NonCommercial-ShareAlike}
+      }
+      {Reconeixement-NoComercial-CompartirIgual}
+  }
+\cs_new:Npn \__pxtfg_cc_jurisdiction:n #1
+  {
+    \str_if_eq:nnTF {#1} {3.0}
+      {
+        \str_case:enF {\languagename}
+          {{catalan}{Espanya}{spanish}{España}{english}{Spain}}
+          {Espanya}
+      }
+      {
+        \str_case:enF {\languagename}
+          {{catalan}{Internacional}{spanish}{Internacional}{english}{International}}
+          {Internacional}
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_cc_notice:nn #1#2
+  {
+    \noindent\__pxtfg_cc_intro:
+    \cs_if_exist:NTF \href
+      {
+        % Hyperref needs the URI punctuation tokenized as ordinary characters,
+        % not expl3 letter-category ':' (which creates a file: link).
+        \exp_args:Ne \href {\tl_to_str:n {#2}} {
+          \__pxtfg_cc_name:\space #1\space
+          \__pxtfg_cc_jurisdiction:n {#1}\space
+          de\space Creative\space Commons
+        }
+      }
+      {
+        \__pxtfg_cc_name:\space #1\space
+        \__pxtfg_cc_jurisdiction:n {#1}\space
+        de\space Creative\space Commons
+      }
+    \par
+  }
+\cs_new_protected:Npn \__pxtfg_licence_content:
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {
+        \tl_if_blank:VTF \l__pxtfg_licence_icon_tl
+          {\__pxtfg_licence_artwork:}
+          {\includegraphics[height=1cm,keepaspectratio]
+             {\l__pxtfg_licence_icon_tl}\par\medskip}
+        \tl_if_blank:VTF \l__pxtfg_licence_text_tl
+          {
+            \tl_set:Nx \l_tmpa_tl
+              {\tl_upper_case:n {\tl_to_str:V \l__pxtfg_licence_tl}}
+            \regex_replace_all:nnN {\s+} {} \l_tmpa_tl
+            \exp_args:NV \str_case:nnF \l_tmpa_tl
+              {
+                {CCBY-NC-SA3.0}
+                  {\__pxtfg_cc_notice:nn {3.0}
+                    {https://creativecommons.org/licenses/by-nc-sa/3.0/es/}}
+                {CCBY-NC-SA4.0}
+                  {\__pxtfg_cc_notice:nn {4.0}
+                    {https://creativecommons.org/licenses/by-nc-sa/4.0/}}
+              }
+              {\noindent\tl_use:N \l__pxtfg_licence_tl\par}
+          }
+          {\noindent\tl_use:N \l__pxtfg_licence_text_tl\par}
+      }
+  }
+\cs_new_protected:Npn \__pxtfg_licence_on_card:
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {
+        \par\nobreak\medskip\nobreak
+        \__pxtfg_licence_content:
+      }
+  }
+
 \cs_new_protected:Npn \__pxtfg_card_render:
   {
-    \__pxtfg_heading:n
-      {\pxDEFtfgworkcard}
+    % Preliminary work card: like the UOC template, omit it from the TOC.
+    \cs_if_exist:NTF \chapter
+      {\chapter*{\pxDEFtfgworkcard}}
+      {\section*{\pxDEFtfgworkcard}}
     \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
       \__pxtfg_row:nn
         {\pxDEFtfgtitle}{\l__pxdata_subj_name_tl}
@@ -123,6 +216,7 @@
       \__pxtfg_row:nn
         {\pxDEFtfgdate}{\l__px_date_tl}
     \end{tabular}
+    \bool_if:NF \l__pxtfg_licence_bool {\__pxtfg_licence_on_card:}
     \par\bigskip
   }
 

@@ -141,6 +141,8 @@ jobs:
               compile_pdf examples/UOCTemplates/TFGTemplate/PR1 PR1 TFG-PR no
               compile_pdf examples/UOCTemplates/TFGTemplate/MEM MEM TFG-MEM no
               compile_pdf tex/tests P3CTeX.bibliography-mem.test MEM-Bibliography yes
+              compile_pdf tex/tests P3CTeX.TFG-licence-inline.test TFG-License-Inline no
+              compile_pdf tex/tests P3CTeX.TFG-licence-explicit-page.test TFG-License-Explicit no
               compile_pdf tex/tests P3CTeX.ai-bibliography.test AI-Disclosure yes
               compile_pdf tex/tests P3CTeX.ai-full.test AI-Full-Annex yes
             '

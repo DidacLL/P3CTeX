@@ -112,42 +112,43 @@
 }
 \ProcessKeysPackageOptions{ pxCORE }
 %% =================================
-%% Module-selection flags are consumed here during package loading.
-%% Changing them later with \pxCOREsetup changes state only; it does not re-run these \RequirePackage branches.
+%% Module selection works at class load and again in a document preamble.
+%% Reuse exactly one loader; already loaded packages are not reconfigured.
+%% The public \pxCOREload command applies keys and invokes this loader.
+%% =================================
 %% ===== LOAD SELECTED MODULES =====
 %% =================================
-\bool_if:NT \l_pxcore_uml_use_bool
-	{
-		\tl_if_blank:VTF \l_pxcore_uml_config_tl
-			{ \RequirePackage{pxUML} }
-			{ \RequirePackage[\l_pxcore_uml_config_tl]{pxUML} }
-	}
-\bool_if:NT \l_pxcore_prp_use_bool { \RequirePackage{pxPRP} }
-\bool_if:NT \l_pxcore_src_use_bool {
-	\tl_if_blank:VTF \l_pxcore_src_config_tl
-	{ \RequirePackage{pxSRC} }
-	{ \RequirePackage[\l_pxcore_src_config_tl]{pxSRC} }
-}
-\bool_if:NT \l_pxcore_tab_use_bool { \RequirePackage{pxTAB} }
-\bool_if:NT \l_pxcore_lst_use_bool { \RequirePackage{pxLST} }
-\bool_if:NT \l_pxcore_orl_use_bool { \RequirePackage{pxORL} }
-\bool_if:NT \l_pxcore_mem_use_bool { \RequirePackage{pxMEM} }
-\bool_if:NT \l_pxcore_tfg_use_bool { \RequirePackage{pxTFG} }
-\bool_if:NT \l_pxcore_calc_use_bool { \RequirePackage{pxCALC} }
-\bool_if:NT \l_pxcore_pm_use_bool { \RequirePackage{pxPM} }
-\bool_if:NT \l_pxcore_anx_use_bool { \RequirePackage{pxANX} }
-\bool_if:NT \l_pxcore_gls_use_bool { \RequirePackage{pxGLS} }
-\bool_if:NT \l_pxcore_ai_use_bool { \RequirePackage{pxAI} }
-\bool_if:NT \l_pxcore_dia_use_bool {
-    \tl_if_blank:VTF \l_pxcore_dia_config_tl
-      { \RequirePackage{pxDIA} }
-      { \RequirePackage[\l_pxcore_dia_config_tl]{pxDIA} }
-}
-\bool_if:NT \l_pxcore_lst_use_bool {}
-
-
-
-
-
+\cs_new_protected:Npn \__pxcore_require:n #1
+  {\@ifpackageloaded{#1}{}{\RequirePackage{#1}}}
+\cs_new_protected:Npn \__pxcore_load_selected:
+  {
+    \bool_if:NT \l_pxcore_uml_use_bool
+      {\@ifpackageloaded{pxUML}{}
+        {\tl_if_blank:VTF \l_pxcore_uml_config_tl
+          {\RequirePackage{pxUML}}
+          {\RequirePackage[\l_pxcore_uml_config_tl]{pxUML}}}}
+    \bool_if:NT \l_pxcore_prp_use_bool {\__pxcore_require:n {pxPRP}}
+    \bool_if:NT \l_pxcore_src_use_bool
+      {\@ifpackageloaded{pxSRC}{}
+        {\tl_if_blank:VTF \l_pxcore_src_config_tl
+          {\RequirePackage{pxSRC}}
+          {\RequirePackage[\l_pxcore_src_config_tl]{pxSRC}}}}
+    \bool_if:NT \l_pxcore_tab_use_bool {\__pxcore_require:n {pxTAB}}
+    \bool_if:NT \l_pxcore_lst_use_bool {\__pxcore_require:n {pxLST}}
+    \bool_if:NT \l_pxcore_orl_use_bool {\__pxcore_require:n {pxORL}}
+    \bool_if:NT \l_pxcore_mem_use_bool {\__pxcore_require:n {pxMEM}}
+    \bool_if:NT \l_pxcore_tfg_use_bool {\__pxcore_require:n {pxTFG}}
+    \bool_if:NT \l_pxcore_calc_use_bool {\__pxcore_require:n {pxCALC}}
+    \bool_if:NT \l_pxcore_pm_use_bool {\__pxcore_require:n {pxPM}}
+    \bool_if:NT \l_pxcore_anx_use_bool {\__pxcore_require:n {pxANX}}
+    \bool_if:NT \l_pxcore_gls_use_bool {\__pxcore_require:n {pxGLS}}
+    \bool_if:NT \l_pxcore_ai_use_bool {\__pxcore_require:n {pxAI}}
+    \bool_if:NT \l_pxcore_dia_use_bool
+      {\@ifpackageloaded{pxDIA}{}
+        {\tl_if_blank:VTF \l_pxcore_dia_config_tl
+          {\RequirePackage{pxDIA}}
+          {\RequirePackage[\l_pxcore_dia_config_tl]{pxDIA}}}}
+  }
+\__pxcore_load_selected:
 
 \endinput

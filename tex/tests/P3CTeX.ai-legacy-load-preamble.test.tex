@@ -1,0 +1,20 @@
+% Check legacy per-activity options after merging the loader and AI module.
+\input{fixtures/pxLegacyTFG.preamble.tex}
+% Deliberately configure AI before enabling the module in the same key list.
+\LoadPreamble*[ai-config={statement={PreambleAIStatement}},DIA,ANX,AI,no-cover,no-toc]
+  {Informe}[Arquitectura del sistema]
+\ExplSyntaxOn
+\cs_if_exist:NF \pxAIref
+  {\errmessage{AI from LoadPreamble was not loaded}}
+\cs_if_exist:NF \pxDiagramSetup
+  {\errmessage{DIA from LoadPreamble was not loaded}}
+\cs_if_exist:NF \pxAddAnnex
+  {\errmessage{ANX from LoadPreamble was not loaded}}
+\tl_if_eq:NnF \l__pxai_statement_tl {PreambleAIStatement}
+  {\errmessage{AI configuration before module selection was lost}}
+\ExplSyntaxOff
+\begin{document}
+\section{Informe}
+Text revisat \pxAIref{GPT 6.1 Terra}{Revisió d'una proposta}
+  <fixtures/pxAI.response.txt>.
+\end{document}
