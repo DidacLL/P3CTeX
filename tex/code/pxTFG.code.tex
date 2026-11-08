@@ -82,7 +82,7 @@
     abstracts .bool_set:N = \l__pxtfg_abstracts_bool,
     abstracts .initial:n = true,
     licence-page .bool_set:N = \l__pxtfg_licence_bool,
-    licence-page .initial:n = true
+    licence-page .initial:n = false
   }
 \prop_new:N \g__pxtfg_abstracts_prop
 
@@ -94,6 +94,55 @@
   }
 \cs_new:Npn \__pxtfg_row:nn #1#2
   {\textbf{#1} & #2 \\[0.65ex]}
+
+% The default is a compact licence note on the existing TFG work card.
+% A separate licence page remains available explicitly with licence-page=true.
+% These CC summaries are informative; the link leads to the official terms.
+\cs_new_protected:Npn \__pxtfg_cc_terms:n #1
+  {
+    \par\smallskip
+    \str_case:enF {\languagename}
+      {
+        {catalan}
+          {Es\space permet\space compartir\space i\space adaptar\space l'obra
+           \space amb\space reconeixement\space de\space l'autoria,
+           \space sense\space ús\space comercial\space i\space mantenint
+           \space la\space mateixa\space llicència.\space}
+        {spanish}
+          {Se\space permite\space compartir\space y\space adaptar\space la\space obra
+           \space con\space reconocimiento\space de\space la\space autoría,
+           \space sin\space uso\space comercial\space y\space manteniendo
+           \space la\space misma\space licencia.\space}
+        {english}
+          {You\space may\space share\space and\space adapt\space the\space work
+           \space with\space attribution,\space for\space noncommercial
+           \space purposes,\space under\space the\space same\space licence.\space}
+      }
+      {}
+    \cs_if_exist:NTF \href
+      {\href{https://creativecommons.org/licenses/by-nc-sa/#1/}
+         {Creative\space Commons\space #1}}
+      {https://creativecommons.org/licenses/by-nc-sa/#1/}
+    \par
+  }
+\cs_new_protected:Npn \__pxtfg_licence_on_card:
+  {
+    \tl_if_blank:VF \l__pxtfg_licence_tl
+      {
+        \par\medskip
+        \noindent\textbf{\__pxtfg_licence_heading:}:
+        \space\tl_use:N \l__pxtfg_licence_tl\par
+        \tl_if_blank:VTF \l__pxtfg_licence_text_tl
+          {
+            \str_case:en {\tl_to_str:V \l__pxtfg_licence_tl}
+              {
+                {CC BY-NC-SA 3.0}{\__pxtfg_cc_terms:n {3.0}}
+                {CC BY-NC-SA 4.0}{\__pxtfg_cc_terms:n {4.0}}
+              }
+          }
+          {\tl_use:N \l__pxtfg_licence_text_tl\par}
+      }
+  }
 
 \cs_new_protected:Npn \__pxtfg_card_render:
   {
@@ -123,6 +172,7 @@
       \__pxtfg_row:nn
         {\pxDEFtfgdate}{\l__px_date_tl}
     \end{tabular}
+    \bool_if:NF \l__pxtfg_licence_bool {\__pxtfg_licence_on_card:}
     \par\bigskip
   }
 
