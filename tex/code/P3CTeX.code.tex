@@ -62,6 +62,11 @@
 % Preserve the full option list passed to independent pxCORE modules.
 \tl_new:N \l__pxdoc_unknown_tl
 \tl_set:Nn \l__pxdoc_unknown_tl {default}
+% Options received from \PECTeXconfig in a subject/document preamble.
+\tl_new:N \l__pxdoc_runtime_core_tl
+\bool_new:N \g__pxdoc_document_started_bool
+\AddToHook{begindocument/before}[P3CTeX/module-selection-closed]
+  {\bool_gset_true:N \g__pxdoc_document_started_bool}
 % Keep graphics options as unexpanded actions until pxGDX is initialized.
 \tl_new:N \l__pxdoc_gdx_pending_tl
 %% =================================
@@ -129,13 +134,13 @@
 	PEC		.meta:n	={cover = {false}, toc ={ true }, no-plagi ={true}, es},
 	PR		.meta:n	={cover = {true} , toc ={ true }},
 	TFG .code:n =
-      {\bool_if:NTF \l__pxdoc_loading_bool
-        {\bool_set_true:N \l__pxdoc_tfg_bool}
-        {\ClassError{P3CTeX}{TFG must be selected at class loading}{Select TFG in \string\documentclass}}},
+      {\bool_set_true:N \l__pxdoc_tfg_bool
+       \bool_if:NF \l__pxdoc_loading_bool
+         {\tl_put_right:Nn \l__pxdoc_runtime_core_tl {,TFG}}},
 	MEM .code:n =
-      {\bool_if:NTF \l__pxdoc_loading_bool
-        {\bool_set_true:N \l__pxdoc_mem_bool}
-        {\ClassError{P3CTeX}{MEM must be selected at class loading}{Select MEM in \string\documentclass}}},
+      {\bool_set_true:N \l__pxdoc_mem_bool
+       \bool_if:NF \l__pxdoc_loading_bool
+         {\tl_put_right:Nn \l__pxdoc_runtime_core_tl {,MEM}}},
 	help	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={help}},
 	fake	.meta:n	={cover = {true} , toc ={ true }, no-plagi ={true}, en, data={example}},
 	EN		.meta:n	={en},
@@ -171,8 +176,15 @@
 					 \tl_if_blank:nF {#1} {={\exp_not:n {#1}}}}
 			}
 			{
-				\ClassError{P3CTeX}{Unknown or load-time-only configuration key}
-					{Select modules in \string\documentclass; configure loaded packages with their setup commands.}
+				% Permit known pxCORE keys in legacy \LoadPreamble optional
+				% arguments; batch them before package loading so options
+				% and module flags work regardless of list order.
+				\exp_args:NnV \keys_if_exist:nnTF {pxCORE} \l_keys_key_str
+					{\tl_put_right:Nx \l__pxdoc_runtime_core_tl
+						{,\l_keys_key_str
+						 \tl_if_blank:nF {#1} {={\exp_not:n {#1}}}}}
+					{\ClassError{P3CTeX}{Unknown configuration key}
+						{Check the class or pxCORE key name.}}
 			}
 	}
 }
