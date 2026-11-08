@@ -1,0 +1,15 @@
+\documentclass[CAT,MEM,AI,no-cover,no-toc]{P3CTeX}
+% MEM loads pxANX internally; this must not enable the AI annex option.
+\ExplSyntaxOn
+\cs_if_exist:NF \pxAddAnnex
+  {\errmessage{MEM was expected to provide its annex package}}
+\bool_if:NT \l_pxcore_anx_use_bool
+  {\errmessage{The document did not select ANX}}
+\ExplSyntaxOff
+\begin{document}
+\chapter{Introducció}
+Referència a l'eina, però sense annex de resposta:
+\pxAIref{GPT 6.1 Terra}
+  {Revisió de contingut.}
+  <fixtures/pxAI.response.txt>.
+\end{document}
