@@ -1,0 +1,12 @@
+\documentclass[
+  CAT,MEM,AI,GLS,no-cover,no-toc,
+  bibliography={fixtures/pxBibliography.references}
+]{P3CTeX}
+\pxAIsetup{toc=true}
+\begin{document}
+\chapter{Introducció}
+Explicació amb suport declarat
+\pxAIref{GPT 6.1 Terra}{Explicació revisada manualment.}
+  <fixtures/pxAI.response.txt>.
+\pxAddAnnex{Material complementari}{La referència bibliogràfica figura únicament a l'annex: \cite{p3ctex-demo}.}
+\end{document}
