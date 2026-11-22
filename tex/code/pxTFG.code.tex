@@ -201,7 +201,11 @@
         \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
           {
             \par\medskip
-            \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
+            \noindent
+            \str_if_eq:nnTF {#1}{EN}
+              {\textbf{\pxDEFtfgabstracten}}
+              {\textbf{\pxDEFtfgsummary}}
+            \par\smallskip
             \tl_use:N \l_tmpa_tl\par
           }
       }
