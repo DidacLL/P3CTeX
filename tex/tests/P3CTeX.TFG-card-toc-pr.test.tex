@@ -14,12 +14,14 @@
   area={Intel·ligència artificial},credits={12},
   keywords={Intel·ligència artificial, inferència local, models de llenguatge,
     sobirania de dades, sistemes autònoms i aplicacions agentiques},
-  licence={CC BY-NC-SA 3.0},abstracts=false
+  licence={CC BY-NC-SA 3.0}
 }
-% The first shipout belongs to the work card and licence, not the TOC.
+\pxTFGabstract{CAT}{El resum en català acompanya la fitxa principal.}
+\pxTFGabstract{EN}{The English summary belongs to the English information sheet.}
+% Both selected-language and English cards precede the TOC.
 \AddToHook{P3CTeX/before-toc}[verify-pr-card-page]{
   \ifnum\value{page}=3\relax\else
-    \errmessage{PR work card and licence did not occupy one page}
+    \errmessage{Both TFG cards must precede the TOC}
   \fi
 }
 \DeclareHookRule{P3CTeX/before-toc}{verify-pr-card-page}{after}{pxTFG}
