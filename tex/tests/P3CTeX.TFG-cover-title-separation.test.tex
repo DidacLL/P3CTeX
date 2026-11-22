@@ -21,7 +21,7 @@
 % The original GDX cover must still receive the generic subject, never the
 % research title. These are separate metadata owners.
 \ExplSyntaxOn
-\str_if_eq:eeF {\l__pxdata_subj_name_tl} {Treball Fi de Grau}
+\str_if_eq:eeF {\l__pxdata_subj_name_tl} {Treball~Fi~de~Grau}
   {\errmessage{Generic cover subject changed to the TFG project title}}
 \tl_if_eq:NNT \l__pxdata_subj_name_tl \l__pxtfg_title_tl
   {\errmessage{TFG project title must not alias the cover subject}}
