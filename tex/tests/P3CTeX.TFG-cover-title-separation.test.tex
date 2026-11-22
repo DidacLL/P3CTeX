@@ -1,0 +1,38 @@
+\documentclass[CAT,TFG,PR,cover,no-toc]{P3CTeX}
+\PECTeXconfig{data={
+  student={Example Student},
+  grade={Enginyeria Informàtica},
+  subj-fullname={Treball Fi de Grau},
+  subj-shortname={TFG},
+  subj-code={05.629},
+  ca-fullname={Pla de treball},
+  ca-shortname={PAC2}
+}}
+\pxTFGsetup{
+  title={Aplicacions AI-native amb inferència local i sobirania de l'usuari:
+    una prova de concepte en maquinari d'ús general},
+  title-en={AI-native applications with local inference and user sovereignty:
+    a proof of concept on general-purpose hardware},
+  keywords={intel·ligència artificial, inferència local},
+  keywords-en={artificial intelligence, local inference},
+  licence={CC BY-NC-SA 3.0},
+  abstracts=false
+}
+% The original GDX cover must still receive the generic subject, never the
+% research title. These are separate metadata owners.
+\ExplSyntaxOn
+\str_if_eq:eeF {\l__pxdata_subj_name_tl} {Treball Fi de Grau}
+  {\errmessage{Generic cover subject changed to the TFG project title}}
+\tl_if_eq:NNT \l__pxdata_subj_name_tl \l__pxtfg_title_tl
+  {\errmessage{TFG project title must not alias the cover subject}}
+\tl_if_eq:NNT \l__pxtfg_title_tl \l__pxtfg_title_en_tl
+  {\errmessage{Selected-language and English titles must be independent}}
+\ExplSyntaxOff
+\begin{document}
+% The ordinary cover is followed by local and English cards.
+\ifnum\value{page}=3\relax\else
+  \errmessage{Bilingual cards did not follow the cover correctly}
+\fi
+\section{Objectius}
+This fixture protects the unchanged cover and independent, long TFG title.
+\end{document}
