@@ -1,10 +1,13 @@
 \documentclass[CAT,TFG,MEM,no-cover,toc]{P3CTeX}
 \PECTeXconfig{
   data={student={Example Student},grade={Enginyeria Informàtica},
-    subj-fullname={Projecte},subj-shortname={TFG},
+    subj-fullname={Treball Fi de Grau},subj-shortname={TFG},
     ca-fullname={Memòria},ca-shortname={MEM}}
 }
 \pxTFGsetup{
+  title={Aplicacions d'intel·ligència artificial local},
+  title-en={Applications of local artificial intelligence},
+  keywords-en={Local AI, applications},
   tutor={Example tutor},pra={Example PRA},area={Enginyeria},
   credits={12},keywords={sistemes, eines},
   licence={CC BY-NC-SA 4.0}
@@ -13,18 +16,18 @@
 \pxTFGabstract{ES}{Resumen del proyecto.}
 \pxTFGabstract{EN}{Project abstract.}
 \pxMEMsetup{figures=false,tables=false}
-% The TFG card, licence and Catalan summary must occupy page 1.
-% The before-toc hook must have finished that page before the TOC starts.
+% The selected-language card and licence are on page 1; the English card on page 2.
+% The before-toc hook must have finished both cards before the TOC starts.
 \AddToHook{P3CTeX/before-toc}[verify-tfg-card-page]{
-  \ifnum\value{page}=2\relax\else
+  \ifnum\value{page}=3\relax\else
     \errmessage{TFG card and licence must occupy one dedicated page}
   \fi
 }
 \DeclareHookRule{P3CTeX/before-toc}{verify-tfg-card-page}{after}{pxTFG}
-% A one-page TOC then advances to page 3, before translated abstracts.
+% A one-page TOC then advances to page 4, before optional ES abstracts.
 \AddToHook{P3CTeX/after-toc}[verify-tfg-card-toc]{
-  \ifnum\value{page}=3\relax\else
-    \errmessage{TFG card and licence must not share the TOC page}
+  \ifnum\value{page}=4\relax\else
+    \errmessage{Bilingual TFG cards must precede the TOC}
   \fi
 }
 \DeclareHookRule{P3CTeX/after-toc}{verify-tfg-card-toc}{before}{pxTFG}
