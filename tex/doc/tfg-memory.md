@@ -30,14 +30,19 @@ The independent pxANX module owns annexes, and MEM activates it. Annexes are que
 and printed at document end, preserving the main counters. Annex references
 use their own Hyperref destinations and are named for Cleveref when loaded.
 
-`\pxTFGsetup` keeps tutor, PRA, area, credits, keywords and licence
-configuration within TFG. Declare language summaries with
-`\pxTFGabstract{CAT|ES|EN}{...}`.
+The class's `data={subj-fullname=...}` is the **cover subject**, not the
+research title. Keep it as the short label such as *Treball Fi de Grau*.
+The actual project titles belong only to `\pxTFGsetup{title=...,title-en=...}`;
+English keywords can be set with `keywords-en=...`. The shared preamble
+must not reuse the long research title as the cover subject.
 
-The work card occupies its own page: metadata at the top, the optional
-Catalan summary, `\vspace{\fill}`, and the licence at the bottom. The TOC,
-when enabled, starts on the following page; Spanish and English abstracts
-follow the TOC, or the work card when there is no TOC.
+TFG also owns tutor, PRA, area, credits, keywords and licence fields.
+Declare summaries separately with `\pxTFGabstract{CAT|ES|EN}{...}`.
+The first information sheet contains the project title, metadata, selected-
+language summary, and licence pushed towards the bottom by `\vspace{\fill}`.
+The second sheet contains the English title, metadata and English abstract.
+Both sheets precede the TOC. Additional non-selected summaries, if supplied,
+follow the TOC.
 
 Automatic printing is the default. `print=manual` and the existing
 `\pxTFGfrontmatter`, `\pxTFGworkcard`, `\pxTFGabstracts` and
