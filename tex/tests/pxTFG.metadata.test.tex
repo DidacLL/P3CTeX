@@ -1,9 +1,9 @@
 \documentclass{article}
 \usepackage{pxTFG}
 \pxTFGsetup{
-  title={Projecte real},
-  title-en={Actual project title},
-  keywords-en={Local inference, software engineering},
+  title={ProjecteCAT},
+  title-en={ProjectEN},
+  keywords-en={LocalInference},
   tutor={ExampleTutor},
   pra={PR1},
   area={Engineering},
@@ -12,11 +12,11 @@
   licence={CC-BY-SA}
 }
 \ExplSyntaxOn
-\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_title_tl} {Projecte real}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_title_tl} {ProjecteCAT}
  { \errmessage{Selected-language TFG title mismatch} }
-\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_title_en_tl} {Actual project title}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_title_en_tl} {ProjectEN}
  { \errmessage{English TFG title mismatch} }
-\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_keywords_en_tl} {Local inference, software engineering}
+\str_if_eq:eeF {\tl_to_str:V \l__pxtfg_keywords_en_tl} {LocalInference}
  { \errmessage{English keywords mismatch} }
 \str_if_eq:eeF {\tl_to_str:V \l__pxtfg_tutor_tl} {ExampleTutor}
  {\errmessage{TFG tutor mismatch}}
