@@ -395,35 +395,6 @@
 		\fancyfoot[R]{ \l__gdx_footer_right_tl}
 	}
 }
-% Measure the natural wrapped title and scale down only when it is taller
-% than the cover header. The source metadata and work-card fonts are untouched.
-\box_new:N \l__gdx_cover_title_box
-\cs_new_protected:Npn \__gdx_cover_fitted_title:
-  {
-    \hbox_set:Nn \l__gdx_cover_title_box
-      {
-        \parbox{\linewidth}
-          {
-            \centering
-            \l__gdx_cover_title_size_tl\bfseries
-            \l__gdx_cover_title_tl\par
-            \bool_if:NT \l__gdx_cover_subtitle_bool
-              {
-                \vspace{.3ex}
-                \normalfont\large \l__gdx_cover_subtitle_tl\par
-              }
-          }
-      }
-    \dim_compare:nNnTF
-      {\box_ht:N \l__gdx_cover_title_box + \box_dp:N \l__gdx_cover_title_box}
-      > {\l__gdx_cover_subheader_height}
-      {
-        \resizebox{!}{\l__gdx_cover_subheader_height}
-          {\box_use:N \l__gdx_cover_title_box}
-      }
-      {\box_use:N \l__gdx_cover_title_box}
-  }
-
 % COVER
 %% \pxGDX_print_cover:
 %% Render the cover from current gdxCOVER state using temporary cover geometry, then restore document geometry.
@@ -480,10 +451,12 @@
 				\end{minipage}
 				\begin{minipage}[b][\l__gdx_cover_subheader_height][b]{.7\textwidth}
 					% --- TÍTULO PRINCIPAL Y SUBTÍTULO ---
-					% Fit the cover title in its fixed-height panel without
-					% changing the subject title used by the TFG work card.
-					\parbox[b][\l__gdx_cover_subheader_height][t]{\linewidth}
-						{\centering\__gdx_cover_fitted_title:}
+					\parbox[b][\l__gdx_cover_subheader_height][t]{\linewidth} {
+						\centering\Huge\bfseries\l__gdx_cover_title_tl\par
+						\bool_if:NT\l__gdx_cover_subtitle_bool{
+							\parbox[c][\height][b]{\linewidth}{\centering\large\l__gdx_cover_subtitle_tl\par}
+						}
+					}
 				\end{minipage}
 				\par\bool_if:NT\l__gdx_cover_subsubtitle_bool{
 					\vspace{-1cm}\bool_if:NTF\l__gdx_cover_out_backtitle_bool{\__pxgdx_hfill:}{
