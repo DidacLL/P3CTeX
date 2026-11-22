@@ -13,6 +13,9 @@
 
 \keys_define:nn {pxTFG}
   {
+    title        .tl_set:N = \l__pxtfg_title_tl,
+    title-en     .tl_set:N = \l__pxtfg_title_en_tl,
+    keywords-en  .tl_set:N = \l__pxtfg_keywords_en_tl,
     tutor        .tl_set:N = \l__pxtfg_tutor_tl,
     pra          .tl_set:N = \l__pxtfg_pra_tl,
     area         .tl_set:N = \l__pxtfg_area_tl,
@@ -190,11 +193,12 @@
     \__pxtfg_print_abstract:n {EN}
   }
 
-\cs_new_protected:Npn \__pxtfg_cat_summary:
+% The work-card summary matches the document language.
+\cs_new_protected:Npn \__pxtfg_summary:n #1
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
       {
-        \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
+        \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
           {
             \par\medskip
             \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
@@ -202,49 +206,97 @@
           }
       }
   }
+\cs_new_protected:Npn \__pxtfg_selected_summary:
+  {
+    \str_case:enF {\languagename}
+      {
+        {spanish}{\__pxtfg_summary:n {ES}}
+        {english}{\__pxtfg_summary:n {EN}}
+      }
+      {\__pxtfg_summary:n {CAT}}
+  }
 
+% The English abstract now belongs to the English information sheet before
+% the TOC. Only additional, non-selected languages follow the TOC.
 \cs_new_protected:Npn \__pxtfg_other_abstracts:
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
       {
-        \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
-          {\clearpage\__pxtfg_print_abstract:n {ES}}
-        \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
-          {\clearpage\__pxtfg_print_abstract:n {EN}}
+        \str_case:enF {\languagename}
+          {
+            {spanish}
+              {
+                \prop_if_in:NnT \g__pxtfg_abstracts_prop {CAT}
+                  {\clearpage\__pxtfg_print_abstract:n {CAT}}
+              }
+            {english}
+              {
+                \prop_if_in:NnT \g__pxtfg_abstracts_prop {CAT}
+                  {\clearpage\__pxtfg_print_abstract:n {CAT}}
+                \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
+                  {\clearpage\__pxtfg_print_abstract:n {ES}}
+              }
+          }
+          {
+            \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
+              {\clearpage\__pxtfg_print_abstract:n {ES}}
+          }
       }
   }
 
 % ================================================================
-% TFG work card: one dedicated page, with the licence at the bottom
+% TFG work cards: the project title is independent of the cover subject.
+% This table is shared by the selected-language and English sheets.
+% Neither sheet reads P3CTeX/data/subj-fullname (the cover title).
 % ================================================================
 \cs_new:Npn \__pxtfg_row:nn #1#2
   {\textbf{#1} & #2 \\[0.65ex]}
+
+\cs_new_protected:Npn \__pxtfg_card_table:nn #1#2
+  {
+    \section*{\pxDEFtfgworkcard}
+    \noindent
+    \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
+      \__pxtfg_row:nn {\pxDEFtfgtitle}    {#1}
+      \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
+      \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
+      \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
+      \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
+      \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
+      \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
+      \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
+      \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
+      \__pxtfg_row:nn {\pxDEFtfgkeywords} {#2}
+      \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
+    \end{tabular}
+    \par
+  }
 
 \cs_new_protected:Npn \__pxtfg_card:
   {
     \bool_if:NF \g__pxtfg_card_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_card_printed_bool
-        \section*{\pxDEFtfgworkcard}
-        \noindent
-        \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
-          \__pxtfg_row:nn {\pxDEFtfgtitle}    {\l__pxdata_subj_name_tl}
-          \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
-          \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
-          \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
-          \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
-          \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
-          \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
-          \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
-          \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
-          \__pxtfg_row:nn {\pxDEFtfgkeywords} {\l__pxtfg_keywords_tl}
-          \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
-        \end{tabular}
-        \par
-        \__pxtfg_cat_summary:
+        % Selected-language card: keep the licence at the bottom.
+        \__pxtfg_card_table:nn
+          {\l__pxtfg_title_tl} {\l__pxtfg_keywords_tl}
+        \__pxtfg_selected_summary:
         \vspace{\fill}
         \noindent\__pxtfg_licence_content:
         \clearpage
+
+        % The English information sheet precedes the TOC, as in the UOC
+        % template. If the document itself is English, do not duplicate it.
+        \str_if_eq:eeF {\languagename}{english}
+          {
+            \group_begin:
+              \_pxcore_set_language_english
+              \__pxtfg_card_table:nn
+                {\l__pxtfg_title_en_tl} {\l__pxtfg_keywords_en_tl}
+              \__pxtfg_summary:n {EN}
+            \group_end:
+            \clearpage
+          }
       }
   }
 
@@ -269,7 +321,7 @@
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
         \bool_if:NTF \l__pxtfg_card_bool
           {\__pxtfg_card:}
-          {\__pxtfg_cat_summary:}
+          {\__pxtfg_selected_summary:}
         \bool_if:NF \l_pxdoc_usetoc_bool
           {\__pxtfg_other_abstracts:}
       }
