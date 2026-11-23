@@ -11,8 +11,24 @@
 \bool_new:N \g__pxtfg_frontmatter_printed_bool
 \prop_new:N \g__pxtfg_abstracts_prop
 
+% TODO (PR #20): The entire flat key-configuration approach is verbose,
+% a design smell, and marked for replacement. Keep these temporary TFG
+% entries in the existing \pxTFGsetup interface; do not add another setter.
+\tl_new:N \l__pxtfg_title_tl
+\tl_new:N \l__pxtfg_title_en_tl
+\tl_new:N \l__pxtfg_degree_en_tl
+\tl_new:N \l__pxtfg_activity_en_tl
+\tl_new:N \l__pxtfg_area_en_tl
+\tl_new:N \l__pxtfg_keywords_en_tl
+
 \keys_define:nn {pxTFG}
   {
+    title        .tl_set:N = \l__pxtfg_title_tl,
+    title-en     .tl_set:N = \l__pxtfg_title_en_tl,
+    degree-en    .tl_set:N = \l__pxtfg_degree_en_tl,
+    activity-en  .tl_set:N = \l__pxtfg_activity_en_tl,
+    area-en      .tl_set:N = \l__pxtfg_area_en_tl,
+    keywords-en  .tl_set:N = \l__pxtfg_keywords_en_tl,
     tutor        .tl_set:N = \l__pxtfg_tutor_tl,
     pra          .tl_set:N = \l__pxtfg_pra_tl,
     area         .tl_set:N = \l__pxtfg_area_tl,
@@ -190,60 +206,236 @@
     \__pxtfg_print_abstract:n {EN}
   }
 
-\cs_new_protected:Npn \__pxtfg_cat_summary:
+\cs_new_protected:Npn \__pxtfg_summary:n #1
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
       {
-        \prop_get:NnNT \g__pxtfg_abstracts_prop {CAT} \l_tmpa_tl
+        \prop_get:NnNT \g__pxtfg_abstracts_prop {#1} \l_tmpa_tl
           {
             \par\medskip
-            \noindent\textbf{\pxDEFtfgsummary}\par\smallskip
+            \noindent
+            \textbf{
+              \str_if_eq:nnTF {#1}{EN}
+                {\pxDEFtfgabstracten}
+                {\pxDEFtfgsummary}
+            }\par\smallskip
             \tl_use:N \l_tmpa_tl\par
           }
       }
+  }
+
+\cs_new_protected:Npn \__pxtfg_local_summary:
+  {
+    \str_case:enF {\languagename}
+      {
+        {spanish}{\__pxtfg_summary:n {ES}}
+        {english}{\__pxtfg_summary:n {EN}}
+      }
+      {\__pxtfg_summary:n {CAT}}
   }
 
 \cs_new_protected:Npn \__pxtfg_other_abstracts:
   {
     \bool_if:NT \l__pxtfg_abstracts_bool
       {
-        \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
-          {\clearpage\__pxtfg_print_abstract:n {ES}}
-        \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
-          {\clearpage\__pxtfg_print_abstract:n {EN}}
+        % The selected-language abstract is already in the local work card.
+        \str_if_eq:eeF {\languagename} {spanish}
+          {
+            \prop_if_in:NnT \g__pxtfg_abstracts_prop {ES}
+              {\clearpage\__pxtfg_print_abstract:n {ES}}
+          }
+        % Do not repeat the English abstract after the TOC when an English
+        % information card has already printed it before the TOC.
+        \str_if_eq:eeF {\languagename} {english}
+          {
+            \bool_if:NTF \l__pxtfg_card_bool
+              {
+                \tl_if_blank:VT \l__pxtfg_title_en_tl
+                  {
+                    \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
+                      {\clearpage\__pxtfg_print_abstract:n {EN}}
+                  }
+              }
+              {
+                \prop_if_in:NnT \g__pxtfg_abstracts_prop {EN}
+                  {\clearpage\__pxtfg_print_abstract:n {EN}}
+              }
+          }
       }
   }
 
 % ================================================================
-% TFG work card: one dedicated page, with the licence at the bottom
+% TFG work cards: selected-language card, then English before the TOC.
 % ================================================================
 \cs_new:Npn \__pxtfg_row:nn #1#2
   {\textbf{#1} & #2 \\[0.65ex]}
+
+% Missing translations are explicit; never silently repeat Catalan metadata
+% under an English label.
+\cs_new:Npn \__pxtfg_english_value:N #1
+  {\tl_if_blank:VTF #1 {\emph{Translation not provided}} {\tl_use:N #1}}
+
+% Language of the work, not language of this information card.
+\cs_new:Npn \__pxtfg_work_language_en:
+  {
+    \str_case:enF {\languagename}
+      {
+        {catalan}{Catalan}
+        {spanish}{Spanish}
+        {english}{English}
+      }
+      {\languagename}
+  }
+
+\cs_new_protected:Npn \__pxtfg_english_card:
+  {
+    \group_begin:
+      \_pxcore_set_language_english
+      \noindent\textbf{\pxDEFtfgworkcard}\par\smallskip
+      \noindent
+      \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
+        \__pxtfg_row:nn {\pxDEFtfgtitle}
+          {\__pxtfg_english_value:N \l__pxtfg_title_en_tl}
+        \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
+        \__pxtfg_row:nn {\pxDEFtfgdegree}
+          {\__pxtfg_english_value:N \l__pxtfg_degree_en_tl}
+        \__pxtfg_row:nn {\pxDEFtfgactivity}
+          {\__pxtfg_english_value:N \l__pxtfg_activity_en_tl}
+        \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
+        \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
+        \__pxtfg_row:nn {\pxDEFtfgarea}
+          {\__pxtfg_english_value:N \l__pxtfg_area_en_tl}
+        \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
+        \__pxtfg_row:nn {\pxDEFtfglanguage}{\__pxtfg_work_language_en:}
+        \__pxtfg_row:nn {\pxDEFtfgkeywords}
+          {\__pxtfg_english_value:N \l__pxtfg_keywords_en_tl}
+        \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
+      \end{tabular}
+      \par
+      \__pxtfg_summary:n {EN}
+    \group_end:
+  }
+
+\cs_new_protected:Npn \__pxtfg_local_card:
+  {
+    \noindent\textbf{\pxDEFtfgworkcard}\par\smallskip
+    \noindent
+    \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
+      \__pxtfg_row:nn {\pxDEFtfgtitle}    {\l__pxtfg_title_tl}
+      \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
+      \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
+      \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
+      \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
+      \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
+      \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
+      \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
+      \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
+      \__pxtfg_row:nn {\pxDEFtfgkeywords} {\l__pxtfg_keywords_tl}
+      \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
+    \end{tabular}
+    \par
+    \__pxtfg_local_summary:
+  }
+
+% Stack both language cards on the same page, Catalan above English.
+% Reserve space for the licence and scale both together if needed to fit.
+\box_new:N \l__pxtfg_local_card_box
+\box_new:N \l__pxtfg_english_card_box
+\box_new:N \l__pxtfg_licence_box
+\dim_new:N \l__pxtfg_cards_height_dim
+\dim_new:N \l__pxtfg_total_cards_height_dim
+\fp_new:N \l__pxtfg_card_scale_fp
 
 \cs_new_protected:Npn \__pxtfg_card:
   {
     \bool_if:NF \g__pxtfg_card_printed_bool
       {
         \bool_gset_true:N \g__pxtfg_card_printed_bool
-        \section*{\pxDEFtfgworkcard}
-        \noindent
-        \begin{tabular}{@{}p{.29\linewidth}p{.65\linewidth}@{}}
-          \__pxtfg_row:nn {\pxDEFtfgtitle}    {\l__pxdata_subj_name_tl}
-          \__pxtfg_row:nn {\pxDEFtfgstudent}  {\l__pxdata_student_tl}
-          \__pxtfg_row:nn {\pxDEFtfgdegree}   {\l__pxdata_course_tl}
-          \__pxtfg_row:nn {\pxDEFtfgactivity} {\l__pxdata_activity_tl}
-          \__pxtfg_row:nn {\pxDEFtfgtutor}    {\l__pxtfg_tutor_tl}
-          \__pxtfg_row:nn {\pxDEFtfgpra}      {\l__pxtfg_pra_tl}
-          \__pxtfg_row:nn {\pxDEFtfgarea}     {\l__pxtfg_area_tl}
-          \__pxtfg_row:nn {\pxDEFtfgcredits}  {\l__pxtfg_credits_tl}
-          \__pxtfg_row:nn {\pxDEFtfglanguage}{\pxDEFtfglanguagevalue}
-          \__pxtfg_row:nn {\pxDEFtfgkeywords} {\l__pxtfg_keywords_tl}
-          \__pxtfg_row:nn {\pxDEFtfgdate}     {\l__px_date_tl}
-        \end{tabular}
-        \par
-        \__pxtfg_cat_summary:
-        \vspace{\fill}
-        \noindent\__pxtfg_licence_content:
+        \tl_if_blank:VTF \l__pxtfg_title_en_tl
+          {
+            % Untranslated legacy TFGs keep the original single-card page.
+            \__pxtfg_local_card:
+            \vspace{\fill}
+            \noindent\__pxtfg_licence_content:
+          }
+          {
+            \str_if_eq:eeTF {\languagename} {english}
+              {
+                \__pxtfg_local_card:
+                \vspace{\fill}
+                \noindent\__pxtfg_licence_content:
+              }
+              {
+                \vbox_set:Nn \l__pxtfg_local_card_box
+                  {
+                    \hsize=\linewidth
+                    \linewidth=\hsize
+                    \columnwidth=\hsize
+                    \parindent=0pt
+                    \tabcolsep=2pt
+                    \footnotesize
+                    \__pxtfg_local_card:
+                  }
+                \vbox_set:Nn \l__pxtfg_english_card_box
+                  {
+                    \hsize=\linewidth
+                    \linewidth=\hsize
+                    \columnwidth=\hsize
+                    \parindent=0pt
+                    \tabcolsep=2pt
+                    \footnotesize
+                    \__pxtfg_english_card:
+                  }
+                \vbox_set:Nn \l__pxtfg_licence_box
+                  {
+                    \hsize=\linewidth
+                    \parindent=0pt
+                    \__pxtfg_licence_content:
+                  }
+                \dim_set:Nn \l__pxtfg_cards_height_dim
+                  {
+                    \textheight
+                    - \box_ht:N \l__pxtfg_licence_box
+                    - \box_dp:N \l__pxtfg_licence_box
+                    - 2\baselineskip
+                  }
+                \dim_set:Nn \l__pxtfg_total_cards_height_dim
+                  {
+                    \box_ht:N \l__pxtfg_local_card_box
+                    + \box_dp:N \l__pxtfg_local_card_box
+                    + \box_ht:N \l__pxtfg_english_card_box
+                    + \box_dp:N \l__pxtfg_english_card_box
+                  }
+                \fp_set:Nn \l__pxtfg_card_scale_fp
+                  {
+                    min
+                      (
+                        1,
+                        \dim_to_fp:n {\l__pxtfg_cards_height_dim}
+                        / \dim_to_fp:n {\l__pxtfg_total_cards_height_dim}
+                      )
+                  }
+                \noindent
+                \hbox_to_wd:nn {\linewidth}
+                  {
+                    \hfil
+                    \scalebox{\fp_to_decimal:N \l__pxtfg_card_scale_fp}
+                      {\box_use:N \l__pxtfg_local_card_box}
+                    \hfil
+                  }
+                \par\smallskip
+                \noindent
+                \hbox_to_wd:nn {\linewidth}
+                  {
+                    \hfil
+                    \scalebox{\fp_to_decimal:N \l__pxtfg_card_scale_fp}
+                      {\box_use:N \l__pxtfg_english_card_box}
+                    \hfil
+                  }
+                \par\vspace{\fill}
+                \noindent\box_use:N \l__pxtfg_licence_box
+              }
+          }
         \clearpage
       }
   }
@@ -269,7 +461,7 @@
         \bool_gset_true:N \g__pxtfg_frontmatter_printed_bool
         \bool_if:NTF \l__pxtfg_card_bool
           {\__pxtfg_card:}
-          {\__pxtfg_cat_summary:}
+          {\__pxtfg_local_summary:}
         \bool_if:NF \l_pxdoc_usetoc_bool
           {\__pxtfg_other_abstracts:}
       }
